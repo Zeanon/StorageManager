@@ -3,8 +3,8 @@ package de.zeanon.storage.internal.data.raw;
 import de.zeanon.storage.internal.base.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
-import de.zeanon.storage.internal.data.section.JsonSection;
-import de.zeanon.storage.internal.utils.LightningFileUtils;
+import de.zeanon.storage.internal.data.section.JsonFileSection;
+import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import de.zeanon.storage.internal.utils.datafiles.JsonUtils;
 import java.io.*;
@@ -29,10 +29,10 @@ public class JsonFile extends FlatFile {
 		super(file, FileType.JSON, reloadSetting);
 
 		if (this.create() && inputStream != null) {
-			LightningFileUtils.writeToFile(this.file, inputStream);
+			SMFileUtils.writeToFile(this.file, inputStream);
 		}
 
-		final JSONTokener jsonTokener = new JSONTokener(Objects.notNull(LightningFileUtils.createNewInputStream(this.file), "InputStream must not be null"));
+		final JSONTokener jsonTokener = new JSONTokener(Objects.notNull(SMFileUtils.createNewInputStream(this.file), "InputStream must not be null"));
 		this.fileData = new LocalFileData(new JSONObject(jsonTokener));
 		this.lastLoaded = System.currentTimeMillis();
 	}
@@ -40,7 +40,7 @@ public class JsonFile extends FlatFile {
 
 	@Override
 	public void reload() {
-		final JSONTokener jsonTokener = new JSONTokener(Objects.notNull(LightningFileUtils.createNewInputStream(this.file), "InputStream must not be null"));
+		final JSONTokener jsonTokener = new JSONTokener(Objects.notNull(SMFileUtils.createNewInputStream(this.file), "InputStream must not be null"));
 		this.fileData.loadData(new JSONObject(jsonTokener));
 		this.lastLoaded = System.currentTimeMillis();
 	}
@@ -162,7 +162,7 @@ public class JsonFile extends FlatFile {
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public JsonSection getSection(final @NotNull String sectionKey) {
+	public JsonFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -233,7 +233,7 @@ public class JsonFile extends FlatFile {
 	}
 
 
-	private static class LocalSection extends JsonSection {
+	private static class LocalSection extends JsonFileSection {
 
 		private LocalSection(final @NotNull String sectionKey, final @NotNull JsonFile jsonFile) {
 			super(sectionKey, jsonFile);

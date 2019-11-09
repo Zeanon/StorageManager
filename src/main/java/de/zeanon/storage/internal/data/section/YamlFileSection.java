@@ -9,11 +9,11 @@ import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings("unused")
-public class YamlSection extends FlatSection {
+public class YamlFileSection extends FlatSection {
 
 	private final YamlFile yamlFile;
 
-	protected YamlSection(final @NotNull String sectionKey, final @NotNull YamlFile yamlFile) {
+	protected YamlFileSection(final @NotNull String sectionKey, final @NotNull YamlFile yamlFile) {
 		super(sectionKey, yamlFile);
 		this.yamlFile = yamlFile;
 	}
@@ -27,11 +27,11 @@ public class YamlSection extends FlatSection {
 	}
 
 	@Override
-	public YamlSection getSection(final @NotNull String sectionKey) {
-		return new YamlSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.yamlFile);
+	public YamlFileSection getSection(final @NotNull String sectionKey) {
+		return new YamlFileSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.yamlFile);
 	}
 
-	protected YamlSection getYamlSectionInstance() {
+	protected YamlFileSection getYamlSectionInstance() {
 		return this;
 	}
 
@@ -42,9 +42,9 @@ public class YamlSection extends FlatSection {
 		} else if (obj == null || this.getClass() != obj.getClass()) {
 			return false;
 		} else {
-			YamlSection yamlSection = (YamlSection) obj;
-			return this.yamlFile.equals(yamlSection.yamlFile)
-				   && this.sectionKey.equals(yamlSection.sectionKey);
+			YamlFileSection yamlFileSection = (YamlFileSection) obj;
+			return this.yamlFile.equals(yamlFileSection.yamlFile)
+				   && this.sectionKey.equals(yamlFileSection.sectionKey);
 		}
 	}
 }

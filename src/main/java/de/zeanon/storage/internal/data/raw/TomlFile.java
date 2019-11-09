@@ -3,8 +3,8 @@ package de.zeanon.storage.internal.data.raw;
 import de.zeanon.storage.internal.base.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
-import de.zeanon.storage.internal.data.section.TomlSection;
-import de.zeanon.storage.internal.utils.LightningFileUtils;
+import de.zeanon.storage.internal.data.section.TomlFileSection;
+import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class TomlFile extends FlatFile {
 		super(file, FileType.TOML, reloadSetting);
 
 		if (this.create() && inputStream != null) {
-			LightningFileUtils.writeToFile(this.file, inputStream);
+			SMFileUtils.writeToFile(this.file, inputStream);
 		}
 
 		try {
@@ -159,7 +159,7 @@ public class TomlFile extends FlatFile {
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public TomlSection getSection(final @NotNull String sectionKey) {
+	public TomlFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -203,7 +203,7 @@ public class TomlFile extends FlatFile {
 	}
 
 
-	private static class LocalSection extends TomlSection {
+	private static class LocalSection extends TomlFileSection {
 
 		private LocalSection(final @NotNull String sectionKey, final @NotNull TomlFile tomlFile) {
 			super(sectionKey, tomlFile);

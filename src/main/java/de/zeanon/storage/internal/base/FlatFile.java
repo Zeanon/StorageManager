@@ -5,7 +5,7 @@ import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.base.interfaces.StorageBase;
 import de.zeanon.storage.internal.data.FileData;
 import de.zeanon.storage.internal.settings.Reload;
-import de.zeanon.storage.internal.utils.LightningFileUtils;
+import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.*;
 import java.nio.file.Files;
@@ -71,7 +71,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		if (inputStream == null) {
 			this.clearFile();
 		} else {
-			LightningFileUtils.writeToFile(this.file, inputStream);
+			SMFileUtils.writeToFile(this.file, inputStream);
 			this.reload();
 		}
 	}
@@ -116,7 +116,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		if (file == null) {
 			this.clearFile();
 		} else {
-			LightningFileUtils.writeToFile(this.file, LightningFileUtils.createNewInputStream(file));
+			SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(file));
 			this.reload();
 		}
 	}
@@ -128,7 +128,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		if (resource == null) {
 			this.clearFile();
 		} else {
-			LightningFileUtils.writeToFile(this.file, LightningFileUtils.createNewInputStream(resource));
+			SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(resource));
 			this.reload();
 		}
 	}
@@ -143,7 +143,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * @return true if it has changed.
 	 */
 	public boolean hasChanged() {
-		return LightningFileUtils.hasChanged(this.file, this.lastLoaded);
+		return SMFileUtils.hasChanged(this.file, this.lastLoaded);
 	}
 
 	/**
@@ -307,7 +307,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		if (this.file.exists()) {
 			return false;
 		} else {
-			LightningFileUtils.createFile(this.file);
+			SMFileUtils.createFile(this.file);
 			return true;
 		}
 	}

@@ -18,10 +18,10 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * Class for parsing a Lightning-Type File
+ * Class for parsing a Jarml-Type File
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class LightningEditor {
+public class JarmlEditor {
 
 	/**
 	 * Write the given Data to a File.

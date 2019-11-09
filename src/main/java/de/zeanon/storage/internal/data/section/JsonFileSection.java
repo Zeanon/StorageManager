@@ -8,21 +8,21 @@ import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings("unused")
-public class JsonSection extends FlatSection {
+public class JsonFileSection extends FlatSection {
 
 	private final JsonFile jsonFile;
 
-	protected JsonSection(final @NotNull String sectionKey, final @NotNull JsonFile jsonFile) {
+	protected JsonFileSection(final @NotNull String sectionKey, final @NotNull JsonFile jsonFile) {
 		super(sectionKey, jsonFile);
 		this.jsonFile = jsonFile;
 	}
 
 	@Override
-	public JsonSection getSection(final @NotNull String sectionKey) {
-		return new JsonSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.jsonFile);
+	public JsonFileSection getSection(final @NotNull String sectionKey) {
+		return new JsonFileSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.jsonFile);
 	}
 
-	protected JsonSection getJsonSectionInstance() {
+	protected JsonFileSection getJsonSectionInstance() {
 		return this;
 	}
 
@@ -33,9 +33,9 @@ public class JsonSection extends FlatSection {
 		} else if (obj == null || this.getClass() != obj.getClass()) {
 			return false;
 		} else {
-			JsonSection jsonSection = (JsonSection) obj;
-			return this.jsonFile.equals(jsonSection.jsonFile)
-				   && this.sectionKey.equals(jsonSection.sectionKey);
+			JsonFileSection jsonFileSection = (JsonFileSection) obj;
+			return this.jsonFile.equals(jsonFileSection.jsonFile)
+				   && this.sectionKey.equals(jsonFileSection.sectionKey);
 		}
 	}
 }

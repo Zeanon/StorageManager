@@ -4,16 +4,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.zeanon</groupId>
-    <artifactId>lightningstorage</artifactId>
-    <version>3.0.0-Beta-v3.80</version>
-    <name>LightningStorage</name>
+    <artifactId>storagemanager</artifactId>
+    <version>1.0.0</version>
+    <name>StorageManager</name>
     <description>Store data in a better way</description>
-    <url>https://github.com/Zeanon/LightningStorage</url>
+    <url>https://github.com/Zeanon/StorageManager</url>
 
     <licenses>
         <license>
             <name>Apache License 2.0</name>
-            <url>https://github.com/Zeanon/LightningStorage/blob/master/LICENSE</url>
+            <url>https://github.com/Zeanon/StorageManager/blob/master/LICENSE</url>
         </license>
     </licenses>
 

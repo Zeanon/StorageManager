@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.base.interfaces;
 
-import de.zeanon.storage.internal.utils.LightningFileUtils;
+import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.nio.file.Path;
@@ -25,15 +25,15 @@ public interface FileTypeBase {
 	}
 
 	default boolean isTypeOf(final @NotNull String filePath) {
-		return LightningFileUtils.getExtension(Objects.notNull(filePath, "FilePath must not be null")).equals(this.toLowerCase());
+		return SMFileUtils.getExtension(Objects.notNull(filePath, "FilePath must not be null")).equals(this.toLowerCase());
 	}
 
 	default boolean isTypeOf(final @NotNull Path filePath) {
-		return LightningFileUtils.getExtension(Objects.notNull(filePath, "FilePath must not be null")).equals(this.toLowerCase());
+		return SMFileUtils.getExtension(Objects.notNull(filePath, "FilePath must not be null")).equals(this.toLowerCase());
 	}
 
 	default boolean isTypeOf(final @NotNull File file) {
-		return LightningFileUtils.getExtension(Objects.notNull(file, "File must not be null")).equals(this.toLowerCase());
+		return SMFileUtils.getExtension(Objects.notNull(file, "File must not be null")).equals(this.toLowerCase());
 	}
 
 	String toLowerCase();

@@ -8,21 +8,21 @@ import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings("unused")
-public class TomlSection extends FlatSection {
+public class TomlFileSection extends FlatSection {
 
 	private final TomlFile tomlFile;
 
-	protected TomlSection(final @NotNull String sectionKey, final @NotNull TomlFile tomlFile) {
+	protected TomlFileSection(final @NotNull String sectionKey, final @NotNull TomlFile tomlFile) {
 		super(sectionKey, tomlFile);
 		this.tomlFile = tomlFile;
 	}
 
 	@Override
-	public TomlSection getSection(final @NotNull String sectionKey) {
-		return new TomlSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.tomlFile);
+	public TomlFileSection getSection(final @NotNull String sectionKey) {
+		return new TomlFileSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.tomlFile);
 	}
 
-	protected TomlSection getTomlSectionInstance() {
+	protected TomlFileSection getTomlSectionInstance() {
 		return this;
 	}
 
@@ -33,9 +33,9 @@ public class TomlSection extends FlatSection {
 		} else if (obj == null || this.getClass() != obj.getClass()) {
 			return false;
 		} else {
-			TomlSection tomlSection = (TomlSection) obj;
-			return this.tomlFile.equals(tomlSection.tomlFile)
-				   && this.sectionKey.equals(tomlSection.sectionKey);
+			TomlFileSection tomlFileSection = (TomlFileSection) obj;
+			return this.tomlFile.equals(tomlFileSection.tomlFile)
+				   && this.sectionKey.equals(tomlFileSection.sectionKey);
 		}
 	}
 }

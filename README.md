@@ -1,6 +1,6 @@
 
-# lightningstorage
-lightningstorage - A Library to store data in a better way.
+# storagemanager
+storagemanager - A Library to store data in a better way.
 
 
 
@@ -17,7 +17,7 @@ without being depended on Bukkit/BungeeCord. But there was nothing out there so 
 Of course there are a few libraries with bukkitlike methods but no one has the features that I need.
 ThunderBolt-2 for example only supports Json files but does not support nested objects.
 Now I'am publishing this library because I think libraries of high quality should be publicly available for everyone
-Now it is here: **LightningStorage**!
+Now it is here: **StorageManager**!
 
 <br>
 ### Table of contents:
@@ -30,16 +30,16 @@ Now it is here: **LightningStorage**!
 
 
 
-LightningStorage is extremely fast & good at **storing data reliably**! <br>
+StorageManager is extremely fast & good at **storing data reliably**! <br>
 It also supports **nested objects**!<br>
 Like bukkit it has a contains check - for both JSON and YAML.
-LightningStorage is licensed under the MIT license, which means that
+StorageManager is licensed under the MIT license, which means that
 you can also **use it in private projects** that are not open source.
 
 If you have any ideas to add or issues just open a issue page. I will do my best to help.
 
 <br>
-At the moment LightningStorage supports two file types:
+At the moment StorageManager supports two file types:
 
 #### Json:
 A very fast and slim file format.
@@ -102,7 +102,7 @@ The relocation is optional but heavily recommended.
 
 **Library's used**
 
-LightningStorage uses a powerful combination of libraries to provide best usability: 
+StorageManager uses a powerful combination of libraries to provide best usability: 
 
 >MIT-org.json Copyright (c) 2002 JSON.org <br>
 >YAMLBEANS - Copyright (c) 2008 Nathan Sweet, Copyright (c) 2006 Ola Bini <br>

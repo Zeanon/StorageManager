@@ -4,13 +4,13 @@ import de.zeanon.storage.internal.base.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
-import de.zeanon.storage.internal.data.config.LightningConfig;
+import de.zeanon.storage.internal.data.config.JarmlConfig;
 import de.zeanon.storage.internal.data.config.YamlConfig;
+import de.zeanon.storage.internal.data.raw.JarmlFile;
 import de.zeanon.storage.internal.data.raw.JsonFile;
-import de.zeanon.storage.internal.data.raw.LightningFile;
 import de.zeanon.storage.internal.data.raw.TomlFile;
 import de.zeanon.storage.internal.data.raw.YamlFile;
-import de.zeanon.storage.internal.utils.LightningFileUtils;
+import de.zeanon.storage.internal.utils.SMFileUtils;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -20,13 +20,13 @@ import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings("unused")
-public abstract class LightningStorage {
+public abstract class StorageManager {
 
 	private final File file;
 	private BufferedInputStream inputStream;
 	private ReloadSettingBase reloadSetting;
 
-	LightningStorage(final @NotNull File file) {
+	StorageManager(final @NotNull File file) {
 		this.file = file;
 	}
 
@@ -55,53 +55,53 @@ public abstract class LightningStorage {
 	}
 
 
-	public static LightningFileBuilder lightningFile(final @NotNull File file) {
-		return new LightningFileBuilder(file);
+	public static JarmlFileBuilder jarmlFile(final @NotNull File file) {
+		return new JarmlFileBuilder(file);
 	}
 
-	public static LightningFileBuilder lightningFile(final @NotNull Path file) {
-		return new LightningFileBuilder(file.toFile());
+	public static JarmlFileBuilder jarmlFile(final @NotNull Path file) {
+		return new JarmlFileBuilder(file.toFile());
 	}
 
-	public static LightningFileBuilder lightningFile(final @NotNull String name) {
-		return new LightningFileBuilder(new File(name));
+	public static JarmlFileBuilder jarmlFile(final @NotNull String name) {
+		return new JarmlFileBuilder(new File(name));
 	}
 
-	public static LightningFileBuilder lightningFile(final @NotNull String directory, final @NotNull String name) {
-		return new LightningFileBuilder(new File(directory, name));
+	public static JarmlFileBuilder jarmlFile(final @NotNull String directory, final @NotNull String name) {
+		return new JarmlFileBuilder(new File(directory, name));
 	}
 
-	public static LightningFileBuilder lightningFile(final @NotNull File directory, final @NotNull String name) {
-		return new LightningFileBuilder(new File(directory, name));
+	public static JarmlFileBuilder jarmlFile(final @NotNull File directory, final @NotNull String name) {
+		return new JarmlFileBuilder(new File(directory, name));
 	}
 
-	public static LightningFileBuilder lightningFile(final @NotNull Path directory, final @NotNull String name) {
-		return new LightningFileBuilder(new File(directory.toFile(), name));
+	public static JarmlFileBuilder jarmlFile(final @NotNull Path directory, final @NotNull String name) {
+		return new JarmlFileBuilder(new File(directory.toFile(), name));
 	}
 
 
-	public static LightningConfigBuilder lightningConfig(final @NotNull File file) {
-		return new LightningConfigBuilder(file);
+	public static JarmlConfigBuilder jarmlConfig(final @NotNull File file) {
+		return new JarmlConfigBuilder(file);
 	}
 
-	public static LightningConfigBuilder lightningConfig(final @NotNull Path file) {
-		return new LightningConfigBuilder(file.toFile());
+	public static JarmlConfigBuilder jarmlConfig(final @NotNull Path file) {
+		return new JarmlConfigBuilder(file.toFile());
 	}
 
-	public static LightningConfigBuilder lightningConfig(final @NotNull String name) {
-		return new LightningConfigBuilder(new File(name));
+	public static JarmlConfigBuilder jarmlConfig(final @NotNull String name) {
+		return new JarmlConfigBuilder(new File(name));
 	}
 
-	public static LightningConfigBuilder lightningConfig(final @NotNull String directory, final @NotNull String name) {
-		return new LightningConfigBuilder(new File(directory, name));
+	public static JarmlConfigBuilder jarmlConfig(final @NotNull String directory, final @NotNull String name) {
+		return new JarmlConfigBuilder(new File(directory, name));
 	}
 
-	public static LightningConfigBuilder lightningConfig(final @NotNull File directory, final @NotNull String name) {
-		return new LightningConfigBuilder(new File(directory, name));
+	public static JarmlConfigBuilder jarmlConfig(final @NotNull File directory, final @NotNull String name) {
+		return new JarmlConfigBuilder(new File(directory, name));
 	}
 
-	public static LightningConfigBuilder lightningConfig(final @NotNull Path directory, final @NotNull String name) {
-		return new LightningConfigBuilder(new File(directory.toFile(), name));
+	public static JarmlConfigBuilder jarmlConfig(final @NotNull Path directory, final @NotNull String name) {
+		return new JarmlConfigBuilder(new File(directory.toFile(), name));
 	}
 
 
@@ -180,21 +180,21 @@ public abstract class LightningStorage {
 	}
 
 
-	public abstract LightningStorage fromInputStream(final @Nullable BufferedInputStream inputStream);
+	public abstract StorageManager fromInputStream(final @Nullable BufferedInputStream inputStream);
 
-	public abstract LightningStorage fromFile(final @Nullable File file);
+	public abstract StorageManager fromFile(final @Nullable File file);
 
-	public abstract LightningStorage fromFile(final @Nullable Path file);
+	public abstract StorageManager fromFile(final @Nullable Path file);
 
-	public abstract LightningStorage fromFile(final @Nullable String directory, final @Nullable String name);
+	public abstract StorageManager fromFile(final @Nullable String directory, final @Nullable String name);
 
-	public abstract LightningStorage fromFile(final @Nullable File directory, final @Nullable String name);
+	public abstract StorageManager fromFile(final @Nullable File directory, final @Nullable String name);
 
-	public abstract LightningStorage fromFile(final @Nullable Path directory, final @Nullable String name);
+	public abstract StorageManager fromFile(final @Nullable Path directory, final @Nullable String name);
 
-	public abstract LightningStorage fromResource(final @Nullable String resource);
+	public abstract StorageManager fromResource(final @Nullable String resource);
 
-	public abstract LightningStorage reloadSetting(final @Nullable ReloadSettingBase reloadSetting);
+	public abstract StorageManager reloadSetting(final @Nullable ReloadSettingBase reloadSetting);
 
 	public abstract FlatFile create();
 
@@ -213,7 +213,7 @@ public abstract class LightningStorage {
 	 * @param file the File to be imported baseFrom.
 	 */
 	private void baseFromFile(final @Nullable File file) {
-		this.inputStream = file == null ? null : LightningFileUtils.createNewInputStream(file);
+		this.inputStream = file == null ? null : SMFileUtils.createNewInputStream(file);
 	}
 
 	/**
@@ -222,7 +222,7 @@ public abstract class LightningStorage {
 	 * @param file the File to be imported baseFrom.
 	 */
 	private void baseFromFile(final @Nullable Path file) {
-		this.inputStream = file == null ? null : LightningFileUtils.createNewInputStream(file.toFile());
+		this.inputStream = file == null ? null : SMFileUtils.createNewInputStream(file.toFile());
 	}
 
 	/**
@@ -233,7 +233,7 @@ public abstract class LightningStorage {
 	 */
 	private void baseFromFile(final @Nullable String directory, final @Nullable String name) {
 		if (name != null) {
-			this.inputStream = LightningFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory, name));
+			this.inputStream = SMFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory, name));
 		}
 	}
 
@@ -245,7 +245,7 @@ public abstract class LightningStorage {
 	 */
 	private void baseFromFile(final @Nullable File directory, final @Nullable String name) {
 		if (name != null) {
-			this.inputStream = LightningFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory, name));
+			this.inputStream = SMFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory, name));
 		}
 	}
 
@@ -257,7 +257,7 @@ public abstract class LightningStorage {
 	 */
 	private void baseFromFile(final @Nullable Path directory, final @Nullable String name) {
 		if (name != null) {
-			this.inputStream = LightningFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory.toFile(), name));
+			this.inputStream = SMFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory.toFile(), name));
 		}
 	}
 
@@ -267,7 +267,7 @@ public abstract class LightningStorage {
 	 * @param resource the internal resource to be imported baseFrom.
 	 */
 	private void baseFromResource(final @Nullable String resource) {
-		this.inputStream = resource == null ? null : LightningFileUtils.createNewInputStream(resource);
+		this.inputStream = resource == null ? null : SMFileUtils.createNewInputStream(resource);
 	}
 
 	/**
@@ -279,7 +279,7 @@ public abstract class LightningStorage {
 		this.reloadSetting = reloadSetting;
 	}
 
-	public static final class JsonFileBuilder extends LightningStorage {
+	public static final class JsonFileBuilder extends StorageManager {
 
 		private JsonFileBuilder(final @NotNull File file) {
 			super(file);
@@ -349,61 +349,61 @@ public abstract class LightningStorage {
 		}
 	}
 
-	public static final class LightningFileBuilder extends LightningStorage {
+	public static final class JarmlFileBuilder extends StorageManager {
 
 		private CommentSettingBase commentSetting;
 		private DataTypeBase dataType;
 
 
-		private LightningFileBuilder(final @NotNull File file) {
+		private JarmlFileBuilder(final @NotNull File file) {
 			super(file);
 		}
 
 
 		@Override
-		public final LightningFileBuilder fromInputStream(@Nullable BufferedInputStream inputStream) {
+		public final JarmlFileBuilder fromInputStream(@Nullable BufferedInputStream inputStream) {
 			super.baseFromInputStream(inputStream);
 			return this;
 		}
 
 		@Override
-		public final LightningFileBuilder fromFile(@Nullable File file) {
+		public final JarmlFileBuilder fromFile(@Nullable File file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final LightningFileBuilder fromFile(@Nullable Path file) {
+		public final JarmlFileBuilder fromFile(@Nullable Path file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final LightningFileBuilder fromFile(@Nullable String directory, @Nullable String name) {
+		public final JarmlFileBuilder fromFile(@Nullable String directory, @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final LightningFileBuilder fromFile(@Nullable File directory, @Nullable String name) {
+		public final JarmlFileBuilder fromFile(@Nullable File directory, @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final LightningFileBuilder fromFile(@Nullable Path directory, @Nullable String name) {
+		public final JarmlFileBuilder fromFile(@Nullable Path directory, @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final LightningFileBuilder fromResource(@Nullable String resource) {
+		public final JarmlFileBuilder fromResource(@Nullable String resource) {
 			super.baseFromResource(resource);
 			return this;
 		}
 
 		@Override
-		public final LightningFileBuilder reloadSetting(@Nullable ReloadSettingBase reloadSetting) {
+		public final JarmlFileBuilder reloadSetting(@Nullable ReloadSettingBase reloadSetting) {
 			super.baseReloadSetting(reloadSetting);
 			return this;
 		}
@@ -413,7 +413,7 @@ public abstract class LightningStorage {
 		 *
 		 * @param commentSetting the CommentSetting to be set(Default for Configs is true, otherwise it's false)
 		 */
-		public final LightningFileBuilder commentSetting(final CommentSettingBase commentSetting) {
+		public final JarmlFileBuilder commentSetting(final CommentSettingBase commentSetting) {
 			this.commentSetting = commentSetting;
 			return this;
 		}
@@ -423,81 +423,81 @@ public abstract class LightningStorage {
 		 *
 		 * @param dataType the DataType to be set(Default is AUTOMATIC, which depends on the FileType and the ReloadSetting)
 		 */
-		public final LightningFileBuilder dataType(final @Nullable DataTypeBase dataType) {
+		public final JarmlFileBuilder dataType(final @Nullable DataTypeBase dataType) {
 			this.dataType = dataType;
 			return this;
 		}
 
 
 		@Override
-		public final LightningFile create() {
-			return new LocalLightningFile(super.file, super.inputStream, super.reloadSetting, this.commentSetting, this.dataType);
+		public final JarmlFile create() {
+			return new LocalJarmlFile(super.file, super.inputStream, super.reloadSetting, this.commentSetting, this.dataType);
 		}
 
 
-		private static final class LocalLightningFile extends LightningFile {
+		private static final class LocalJarmlFile extends JarmlFile {
 
-			private LocalLightningFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
+			private LocalJarmlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 				super(file, inputStream, reloadSetting, commentSetting, dataType);
 			}
 		}
 	}
 
-	public static final class LightningConfigBuilder extends LightningStorage {
+	public static final class JarmlConfigBuilder extends StorageManager {
 
 		private CommentSettingBase commentSetting;
 		private DataTypeBase dataType;
 
 
-		private LightningConfigBuilder(final @NotNull File file) {
+		private JarmlConfigBuilder(final @NotNull File file) {
 			super(file);
 		}
 
 
 		@Override
-		public final LightningConfigBuilder fromInputStream(@Nullable BufferedInputStream inputStream) {
+		public final JarmlConfigBuilder fromInputStream(@Nullable BufferedInputStream inputStream) {
 			super.baseFromInputStream(inputStream);
 			return this;
 		}
 
 		@Override
-		public final LightningConfigBuilder fromFile(@Nullable File file) {
+		public final JarmlConfigBuilder fromFile(@Nullable File file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final LightningConfigBuilder fromFile(@Nullable Path file) {
+		public final JarmlConfigBuilder fromFile(@Nullable Path file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final LightningConfigBuilder fromFile(@Nullable String directory, @Nullable String name) {
+		public final JarmlConfigBuilder fromFile(@Nullable String directory, @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final LightningConfigBuilder fromFile(@Nullable File directory, @Nullable String name) {
+		public final JarmlConfigBuilder fromFile(@Nullable File directory, @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final LightningConfigBuilder fromFile(@Nullable Path directory, @Nullable String name) {
+		public final JarmlConfigBuilder fromFile(@Nullable Path directory, @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final LightningConfigBuilder fromResource(@Nullable String resource) {
+		public final JarmlConfigBuilder fromResource(@Nullable String resource) {
 			super.baseFromResource(resource);
 			return this;
 		}
 
 		@Override
-		public final LightningConfigBuilder reloadSetting(@Nullable ReloadSettingBase reloadSetting) {
+		public final JarmlConfigBuilder reloadSetting(@Nullable ReloadSettingBase reloadSetting) {
 			super.baseReloadSetting(reloadSetting);
 			return this;
 		}
@@ -507,7 +507,7 @@ public abstract class LightningStorage {
 		 *
 		 * @param commentSetting the CommentSetting to be set(Default for Configs is true, otherwise it's false)
 		 */
-		public final LightningConfigBuilder commentSetting(final CommentSettingBase commentSetting) {
+		public final JarmlConfigBuilder commentSetting(final CommentSettingBase commentSetting) {
 			this.commentSetting = commentSetting;
 			return this;
 		}
@@ -517,27 +517,27 @@ public abstract class LightningStorage {
 		 *
 		 * @param dataType the DataType to be set(Default is AUTOMATIC, which depends on the FileType and the ReloadSetting)
 		 */
-		public final LightningConfigBuilder dataType(final @Nullable DataTypeBase dataType) {
+		public final JarmlConfigBuilder dataType(final @Nullable DataTypeBase dataType) {
 			this.dataType = dataType;
 			return this;
 		}
 
 
 		@Override
-		public final LightningConfig create() {
-			return new LocalLightningConfig(super.file, super.inputStream, super.reloadSetting, this.commentSetting, this.dataType);
+		public final JarmlConfig create() {
+			return new LocalJarmlConfig(super.file, super.inputStream, super.reloadSetting, this.commentSetting, this.dataType);
 		}
 
 
-		private static final class LocalLightningConfig extends LightningConfig {
+		private static final class LocalJarmlConfig extends JarmlConfig {
 
-			private LocalLightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
+			private LocalJarmlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 				super(file, inputStream, reloadSetting, commentSetting, dataType);
 			}
 		}
 	}
 
-	public static final class TomlFileBuilder extends LightningStorage {
+	public static final class TomlFileBuilder extends StorageManager {
 
 		private TomlFileBuilder(final @NotNull File file) {
 			super(file);
@@ -607,7 +607,7 @@ public abstract class LightningStorage {
 		}
 	}
 
-	public static final class YamlFileBuilder extends LightningStorage {
+	public static final class YamlFileBuilder extends StorageManager {
 
 		private CommentSettingBase commentSetting;
 		private DataTypeBase dataType;
@@ -701,7 +701,7 @@ public abstract class LightningStorage {
 		}
 	}
 
-	public static final class YamlConfigBuilder extends LightningStorage {
+	public static final class YamlConfigBuilder extends StorageManager {
 
 		private CommentSettingBase commentSetting;
 		private DataTypeBase dataType;

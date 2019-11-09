@@ -5,10 +5,10 @@ import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
-import de.zeanon.storage.internal.data.section.LightningSection;
-import de.zeanon.storage.internal.utils.LightningFileUtils;
+import de.zeanon.storage.internal.data.section.JarmlFileSection;
+import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
-import de.zeanon.storage.internal.utils.editor.LightningEditor;
+import de.zeanon.storage.internal.utils.editor.JarmlEditor;
 import java.io.File;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -20,26 +20,26 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Class to manage Lightning-Type Files
+ * Class to manage Jarml-Type Files
  */
 @SuppressWarnings("unused")
-public class LightningFile extends CommentEnabledFile {
+public class JarmlFile extends CommentEnabledFile {
 
-	protected LightningFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
-		super(file, FileType.LIGHTNING, reloadSetting, commentSetting, dataType);
+	protected JarmlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
+		super(file, FileType.JARML, reloadSetting, commentSetting, dataType);
 
 		if (this.create() && inputStream != null) {
-			LightningFileUtils.writeToFile(this.file, inputStream);
+			SMFileUtils.writeToFile(this.file, inputStream);
 		}
 
-		this.fileData = new LocalFileData(LightningEditor.readData(this.file, this.getDataType(), this.getCommentSetting()));
+		this.fileData = new LocalFileData(JarmlEditor.readData(this.file, this.getDataType(), this.getCommentSetting()));
 		this.lastLoaded = System.currentTimeMillis();
 	}
 
 	@Override
 	public void reload() {
 		try {
-			this.fileData.loadData(LightningEditor.readData(this.file, this.getDataType(), this.getCommentSetting()));
+			this.fileData.loadData(JarmlEditor.readData(this.file, this.getDataType(), this.getCommentSetting()));
 			this.lastLoaded = System.currentTimeMillis();
 		} catch (IllegalArgumentException | IllegalStateException e) {
 			System.err.println("Exception while reloading '" + this.getAbsolutePath() + "'");
@@ -52,7 +52,7 @@ public class LightningFile extends CommentEnabledFile {
 	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
 			try {
-				LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+				JarmlEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
 				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -65,7 +65,7 @@ public class LightningFile extends CommentEnabledFile {
 	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(dataMap)) {
 			try {
-				LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+				JarmlEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
 				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -78,7 +78,7 @@ public class LightningFile extends CommentEnabledFile {
 	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(key, dataMap)) {
 			try {
-				LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+				JarmlEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
 				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -96,7 +96,7 @@ public class LightningFile extends CommentEnabledFile {
 		this.fileData.remove(key);
 
 		try {
-			LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+			JarmlEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 		} catch (IllegalStateException e) {
 			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -115,7 +115,7 @@ public class LightningFile extends CommentEnabledFile {
 		}
 
 		try {
-			LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+			JarmlEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 		} catch (IllegalStateException e) {
 			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -135,7 +135,7 @@ public class LightningFile extends CommentEnabledFile {
 		}
 
 		try {
-			LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+			JarmlEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 		} catch (IllegalStateException e) {
 			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -178,18 +178,18 @@ public class LightningFile extends CommentEnabledFile {
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public LightningSection getSection(final @NotNull String sectionKey) {
+	public JarmlFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
-	protected final LightningFile getLightningFileInstance() {
+	protected final JarmlFile getJarmlFileInstance() {
 		return this;
 	}
 
 	private Set<String> blockKeySet(final Map<String, Object> map) {
 		Set<String> tempSet = new HashSet<>();
 		for (String key : map.keySet()) {
-			if (map.get(key) != LightningEditor.LineType.COMMENT && map.get(key) != LightningEditor.LineType.BLANK_LINE) {
+			if (map.get(key) != JarmlEditor.LineType.COMMENT && map.get(key) != JarmlEditor.LineType.BLANK_LINE) {
 				tempSet.add(key);
 			}
 		}
@@ -204,7 +204,7 @@ public class LightningFile extends CommentEnabledFile {
 				for (String tempKey : this.keySet((Map<String, Object>) map.get(key))) {
 					tempSet.add(key + "." + tempKey);
 				}
-			} else if (map.get(key) != LightningEditor.LineType.COMMENT && map.get(key) != LightningEditor.LineType.BLANK_LINE) {
+			} else if (map.get(key) != JarmlEditor.LineType.COMMENT && map.get(key) != JarmlEditor.LineType.BLANK_LINE) {
 				tempSet.add(key);
 			}
 		}
@@ -218,16 +218,16 @@ public class LightningFile extends CommentEnabledFile {
 		} else if (obj == null || this.getClass() != obj.getClass()) {
 			return false;
 		} else {
-			LightningFile lightningFile = (LightningFile) obj;
-			return this.getCommentSetting() == lightningFile.getCommentSetting()
-				   && super.equals(lightningFile.getFlatFileInstance());
+			JarmlFile jarmlFile = (JarmlFile) obj;
+			return this.getCommentSetting() == jarmlFile.getCommentSetting()
+				   && super.equals(jarmlFile.getFlatFileInstance());
 		}
 	}
 
 
 	public enum FileType implements FileTypeBase {
 
-		LIGHTNING("ls");
+		JARML("jrml");
 
 
 		private final String extension;
@@ -248,10 +248,10 @@ public class LightningFile extends CommentEnabledFile {
 	}
 
 
-	private static class LocalSection extends LightningSection {
+	private static class LocalSection extends JarmlFileSection {
 
-		private LocalSection(final @NotNull String sectionKey, final @NotNull LightningFile lightningFile) {
-			super(sectionKey, lightningFile);
+		private LocalSection(final @NotNull String sectionKey, final @NotNull JarmlFile jarmlFile) {
+			super(sectionKey, jarmlFile);
 		}
 	}
 }

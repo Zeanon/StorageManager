@@ -8,10 +8,10 @@ import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
-import de.zeanon.storage.internal.data.section.YamlSection;
+import de.zeanon.storage.internal.data.section.YamlFileSection;
 import de.zeanon.storage.internal.settings.Comment;
 import de.zeanon.storage.internal.settings.DataType;
-import de.zeanon.storage.internal.utils.LightningFileUtils;
+import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import de.zeanon.storage.internal.utils.datafiles.YamlUtils;
 import de.zeanon.storage.internal.utils.editor.YamlEditor;
@@ -33,7 +33,7 @@ public class YamlFile extends CommentEnabledFile {
 		super(file, FileType.YAML, reloadSetting, commentSetting, dataType == null ? DataType.STANDARD : dataType);
 
 		if (this.create() && inputStream != null) {
-			LightningFileUtils.writeToFile(this.file, inputStream);
+			SMFileUtils.writeToFile(this.file, inputStream);
 		}
 
 		try {
@@ -144,7 +144,7 @@ public class YamlFile extends CommentEnabledFile {
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public YamlSection getSection(final @NotNull String sectionKey) {
+	public YamlFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -217,7 +217,7 @@ public class YamlFile extends CommentEnabledFile {
 	}
 
 
-	private static class LocalSection extends YamlSection {
+	private static class LocalSection extends YamlFileSection {
 
 		private LocalSection(final @NotNull String sectionKey, final @NotNull YamlFile yamlFile) {
 			super(sectionKey, yamlFile);

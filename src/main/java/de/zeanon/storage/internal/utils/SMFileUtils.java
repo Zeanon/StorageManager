@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.utils;
 
-import de.zeanon.storage.LightningStorage;
+import de.zeanon.storage.StorageManager;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.*;
 import java.nio.file.Files;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @SuppressWarnings("unused")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class LightningFileUtils {
+public class SMFileUtils {
 
 	public static void createFile(final @NotNull File file) {
 		Objects.checkNull(file);
@@ -59,7 +59,7 @@ public class LightningFileUtils {
 	 * @return BufferedInputStream containing the contents of the resource file.
 	 */
 	public static BufferedInputStream createNewInputStream(final @NotNull String resource) {
-		return new BufferedInputStream(Objects.notNull(LightningStorage.class.getClassLoader().getResourceAsStream(Objects.notNull(resource, "Resource must not be null"))));
+		return new BufferedInputStream(Objects.notNull(StorageManager.class.getClassLoader().getResourceAsStream(Objects.notNull(resource, "Resource must not be null"))));
 	}
 
 	/**
