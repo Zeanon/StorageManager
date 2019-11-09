@@ -19,13 +19,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public abstract class Builder {
+@SuppressWarnings("unused")
+public abstract class LightningStorage {
 
 	private final File file;
 	private BufferedInputStream inputStream;
 	private ReloadSettingBase reloadSetting;
 
-	Builder(final @NotNull File file) {
+	LightningStorage(final @NotNull File file) {
 		this.file = file;
 	}
 
@@ -179,21 +180,21 @@ public abstract class Builder {
 	}
 
 
-	public abstract Builder fromInputStream(final @Nullable BufferedInputStream inputStream);
+	public abstract LightningStorage fromInputStream(final @Nullable BufferedInputStream inputStream);
 
-	public abstract Builder fromFile(final @Nullable File file);
+	public abstract LightningStorage fromFile(final @Nullable File file);
 
-	public abstract Builder fromFile(final @Nullable Path file);
+	public abstract LightningStorage fromFile(final @Nullable Path file);
 
-	public abstract Builder fromFile(final @Nullable String directory, final @Nullable String name);
+	public abstract LightningStorage fromFile(final @Nullable String directory, final @Nullable String name);
 
-	public abstract Builder fromFile(final @Nullable File directory, final @Nullable String name);
+	public abstract LightningStorage fromFile(final @Nullable File directory, final @Nullable String name);
 
-	public abstract Builder fromFile(final @Nullable Path directory, final @Nullable String name);
+	public abstract LightningStorage fromFile(final @Nullable Path directory, final @Nullable String name);
 
-	public abstract Builder fromResource(final @Nullable String resource);
+	public abstract LightningStorage fromResource(final @Nullable String resource);
 
-	public abstract Builder reloadSetting(final @Nullable ReloadSettingBase reloadSetting);
+	public abstract LightningStorage reloadSetting(final @Nullable ReloadSettingBase reloadSetting);
 
 	public abstract FlatFile create();
 
@@ -278,7 +279,7 @@ public abstract class Builder {
 		this.reloadSetting = reloadSetting;
 	}
 
-	private static final class JsonFileBuilder extends Builder {
+	public static final class JsonFileBuilder extends LightningStorage {
 
 		private JsonFileBuilder(final @NotNull File file) {
 			super(file);
@@ -348,7 +349,7 @@ public abstract class Builder {
 		}
 	}
 
-	private static final class LightningFileBuilder extends Builder {
+	public static final class LightningFileBuilder extends LightningStorage {
 
 		private CommentSettingBase commentSetting;
 		private DataTypeBase dataType;
@@ -442,7 +443,7 @@ public abstract class Builder {
 		}
 	}
 
-	private static final class LightningConfigBuilder extends Builder {
+	public static final class LightningConfigBuilder extends LightningStorage {
 
 		private CommentSettingBase commentSetting;
 		private DataTypeBase dataType;
@@ -536,7 +537,7 @@ public abstract class Builder {
 		}
 	}
 
-	private static final class TomlFileBuilder extends Builder {
+	public static final class TomlFileBuilder extends LightningStorage {
 
 		private TomlFileBuilder(final @NotNull File file) {
 			super(file);
@@ -606,7 +607,7 @@ public abstract class Builder {
 		}
 	}
 
-	private static final class YamlFileBuilder extends Builder {
+	public static final class YamlFileBuilder extends LightningStorage {
 
 		private CommentSettingBase commentSetting;
 		private DataTypeBase dataType;
@@ -700,7 +701,7 @@ public abstract class Builder {
 		}
 	}
 
-	private static final class YamlConfigBuilder extends Builder {
+	public static final class YamlConfigBuilder extends LightningStorage {
 
 		private CommentSettingBase commentSetting;
 		private DataTypeBase dataType;
