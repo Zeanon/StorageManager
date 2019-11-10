@@ -39,19 +39,19 @@ public abstract class StorageManager {
 	}
 
 	public static JsonFileBuilder jsonFile(final @NotNull String name) {
-		return new JsonFileBuilder(new File(name + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(name + "." + JsonFile.FileType.JSON));
 	}
 
 	public static JsonFileBuilder jsonFile(final @NotNull String directory, final @NotNull String name) {
-		return new JsonFileBuilder(new File(directory, name + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(directory, name + "." + JsonFile.FileType.JSON));
 	}
 
 	public static JsonFileBuilder jsonFile(final @NotNull File directory, final @NotNull String name) {
-		return new JsonFileBuilder(new File(directory, name + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(directory, name + "." + JsonFile.FileType.JSON));
 	}
 
 	public static JsonFileBuilder jsonFile(final @NotNull Path directory, final @NotNull String name) {
-		return new JsonFileBuilder(new File(directory.toFile(), name + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(directory.toFile(), name + "." + JsonFile.FileType.JSON));
 	}
 
 
@@ -64,19 +64,19 @@ public abstract class StorageManager {
 	}
 
 	public static JarmlFileBuilder jarmlFile(final @NotNull String name) {
-		return new JarmlFileBuilder(new File(name + JarmlFile.FileType.JARML));
+		return new JarmlFileBuilder(new File(name + "." + JarmlFile.FileType.JARML));
 	}
 
 	public static JarmlFileBuilder jarmlFile(final @NotNull String directory, final @NotNull String name) {
-		return new JarmlFileBuilder(new File(directory, name + JarmlFile.FileType.JARML));
+		return new JarmlFileBuilder(new File(directory, name + "." + JarmlFile.FileType.JARML));
 	}
 
 	public static JarmlFileBuilder jarmlFile(final @NotNull File directory, final @NotNull String name) {
-		return new JarmlFileBuilder(new File(directory, name + JarmlFile.FileType.JARML));
+		return new JarmlFileBuilder(new File(directory, name + "." + JarmlFile.FileType.JARML));
 	}
 
 	public static JarmlFileBuilder jarmlFile(final @NotNull Path directory, final @NotNull String name) {
-		return new JarmlFileBuilder(new File(directory.toFile(), name + JarmlFile.FileType.JARML));
+		return new JarmlFileBuilder(new File(directory.toFile(), name + "." + JarmlFile.FileType.JARML));
 	}
 
 
@@ -89,19 +89,19 @@ public abstract class StorageManager {
 	}
 
 	public static JarmlConfigBuilder jarmlConfig(final @NotNull String name) {
-		return new JarmlConfigBuilder(new File(name + JarmlFile.FileType.JARML));
+		return new JarmlConfigBuilder(new File(name + "." + JarmlFile.FileType.JARML));
 	}
 
 	public static JarmlConfigBuilder jarmlConfig(final @NotNull String directory, final @NotNull String name) {
-		return new JarmlConfigBuilder(new File(directory, name + JarmlFile.FileType.JARML));
+		return new JarmlConfigBuilder(new File(directory, name + "." + JarmlFile.FileType.JARML));
 	}
 
 	public static JarmlConfigBuilder jarmlConfig(final @NotNull File directory, final @NotNull String name) {
-		return new JarmlConfigBuilder(new File(directory, name + JarmlFile.FileType.JARML));
+		return new JarmlConfigBuilder(new File(directory, name + "." + JarmlFile.FileType.JARML));
 	}
 
 	public static JarmlConfigBuilder jarmlConfig(final @NotNull Path directory, final @NotNull String name) {
-		return new JarmlConfigBuilder(new File(directory.toFile(), name + JarmlFile.FileType.JARML));
+		return new JarmlConfigBuilder(new File(directory.toFile(), name + "." + JarmlFile.FileType.JARML));
 	}
 
 
@@ -114,19 +114,19 @@ public abstract class StorageManager {
 	}
 
 	public static TomlFileBuilder tomlFile(final @NotNull String name) {
-		return new TomlFileBuilder(new File(name + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(name + "." + TomlFile.FileType.TOML));
 	}
 
 	public static TomlFileBuilder tomlFile(final @NotNull String directory, final @NotNull String name) {
-		return new TomlFileBuilder(new File(directory, name + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(directory, name + "." + TomlFile.FileType.TOML));
 	}
 
 	public static TomlFileBuilder tomlFile(final @NotNull File directory, final @NotNull String name) {
-		return new TomlFileBuilder(new File(directory, name + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(directory, name + "." + TomlFile.FileType.TOML));
 	}
 
 	public static TomlFileBuilder tomlFile(final @NotNull Path directory, final @NotNull String name) {
-		return new TomlFileBuilder(new File(directory.toFile(), name + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(directory.toFile(), name + "." + TomlFile.FileType.TOML));
 	}
 
 
@@ -139,19 +139,19 @@ public abstract class StorageManager {
 	}
 
 	public static YamlFileBuilder yamlFile(final @NotNull String name) {
-		return new YamlFileBuilder(new File(name + YamlFile.FileType.YAML));
+		return new YamlFileBuilder(new File(name + "." + YamlFile.FileType.YAML));
 	}
 
 	public static YamlFileBuilder yamlFile(final @NotNull String directory, final @NotNull String name) {
-		return new YamlFileBuilder(new File(directory, name + YamlFile.FileType.YAML));
+		return new YamlFileBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
 	}
 
 	public static YamlFileBuilder yamlFile(final @NotNull File directory, final @NotNull String name) {
-		return new YamlFileBuilder(new File(directory, name + YamlFile.FileType.YAML));
+		return new YamlFileBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
 	}
 
 	public static YamlFileBuilder yamlFile(final @NotNull Path directory, final @NotNull String name) {
-		return new YamlFileBuilder(new File(directory.toFile(), name + YamlFile.FileType.YAML));
+		return new YamlFileBuilder(new File(directory.toFile(), name + "." + YamlFile.FileType.YAML));
 	}
 
 	public static YamlConfigBuilder yamlConfig(final @NotNull File file) {
@@ -164,19 +164,19 @@ public abstract class StorageManager {
 	}
 
 	public static YamlConfigBuilder yamlConfig(final @NotNull String name) {
-		return new YamlConfigBuilder(new File(name + YamlFile.FileType.YAML));
+		return new YamlConfigBuilder(new File(name + "." + YamlFile.FileType.YAML));
 	}
 
 	public static YamlConfigBuilder yamlConfig(final @NotNull String directory, final @NotNull String name) {
-		return new YamlConfigBuilder(new File(directory, name + YamlFile.FileType.YAML));
+		return new YamlConfigBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
 	}
 
 	public static YamlConfigBuilder yamlConfig(final @NotNull File directory, final @NotNull String name) {
-		return new YamlConfigBuilder(new File(directory, name + YamlFile.FileType.YAML));
+		return new YamlConfigBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
 	}
 
 	public static YamlConfigBuilder yamlConfig(final @NotNull Path directory, final @NotNull String name) {
-		return new YamlConfigBuilder(new File(directory.toFile(), name + YamlFile.FileType.YAML));
+		return new YamlConfigBuilder(new File(directory.toFile(), name + "." + YamlFile.FileType.YAML));
 	}
 
 
