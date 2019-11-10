@@ -3,6 +3,7 @@ package de.zeanon.storage.internal.data;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import de.zeanon.storage.internal.utils.datafiles.JsonUtils;
 import java.util.*;
+import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -11,8 +12,9 @@ import org.json.JSONObject;
 /**
  * Class to handle the Nested HashMaps used to cache the Data read from the Files
  */
+@EqualsAndHashCode
 @SuppressWarnings("unused")
-public class FileData {
+public class FileData implements Comparable<FileData> {
 
 	private final Map<String, Object> localMap;
 
@@ -295,20 +297,8 @@ public class FileData {
 	}
 
 	@Override
-	public int hashCode() {
-		return this.localMap.hashCode();
-	}
-
-	@Override
-	public boolean equals(final @Nullable Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			FileData fileData = (FileData) obj;
-			return this.localMap.equals(fileData.localMap);
-		}
+	public int compareTo(final @NotNull FileData fileData) {
+		return Integer.compare(this.localMap.size(), fileData.localMap.size());
 	}
 
 	@Override

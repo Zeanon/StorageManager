@@ -19,6 +19,8 @@ import java.io.*;
 import java.util.List;
 import java.util.Map;
 import lombok.Cleanup;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +28,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Class to manage Yaml-Type Files
  */
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @SuppressWarnings({"unchecked", "unused"})
 public class YamlFile extends CommentEnabledFile {
 
@@ -148,10 +152,6 @@ public class YamlFile extends CommentEnabledFile {
 		return new LocalSection(sectionKey, this);
 	}
 
-	protected final YamlFile getYamlFileInstance() {
-		return this;
-	}
-
 	private void write(final @NotNull Map fileData) throws IOException {
 		@Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.file));
 		writer.write(fileData);
@@ -177,19 +177,6 @@ public class YamlFile extends CommentEnabledFile {
 			System.err.println("Error while writing to '" + getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
-		}
-	}
-
-	@Override
-	public boolean equals(final @Nullable Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			YamlFile yaml = (YamlFile) obj;
-			return this.getCommentSetting() == yaml.getCommentSetting()
-				   && super.equals(yaml.getFlatFileInstance());
 		}
 	}
 

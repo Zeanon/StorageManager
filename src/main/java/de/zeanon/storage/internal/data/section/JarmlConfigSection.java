@@ -3,10 +3,14 @@ package de.zeanon.storage.internal.data.section;
 import de.zeanon.storage.internal.data.config.JarmlConfig;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @SuppressWarnings("unused")
 public class JarmlConfigSection extends JarmlFileSection {
 
@@ -52,22 +56,5 @@ public class JarmlConfigSection extends JarmlFileSection {
 	@Override
 	public JarmlConfigSection getSection(final @NotNull String sectionKey) {
 		return new JarmlConfigSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.jarmlConfig);
-	}
-
-	protected JarmlConfigSection getJarmlConfigSectionInstance() {
-		return this;
-	}
-
-	@Override
-	public boolean equals(final @Nullable Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			JarmlConfigSection jarmlConfigSection = (JarmlConfigSection) obj;
-			return this.jarmlConfig.equals(jarmlConfigSection.jarmlConfig)
-				   && this.sectionKey.equals(jarmlConfigSection.sectionKey);
-		}
 	}
 }

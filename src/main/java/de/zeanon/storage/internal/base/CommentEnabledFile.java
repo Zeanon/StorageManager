@@ -8,20 +8,23 @@ import de.zeanon.storage.internal.settings.Comment;
 import de.zeanon.storage.internal.settings.DataType;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.File;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@ToString(callSuper = true)
 @SuppressWarnings("unused")
 public abstract class CommentEnabledFile extends FlatFile {
 
-	@Getter
-	@Setter
+
 	private CommentSettingBase commentSetting = Comment.SKIP;
-	@Getter
-	@Setter
 	private DataTypeBase dataType = DataType.AUTOMATIC;
 
 	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
@@ -47,18 +50,5 @@ public abstract class CommentEnabledFile extends FlatFile {
 	public synchronized void remove(final @NotNull String key, final @NotNull CommentSettingBase commentSetting) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.remove(Objects.notNull(key, "Key must not be null"));
-	}
-
-	@Override
-	public boolean equals(final @Nullable Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			CommentEnabledFile commentEnabledFile = (CommentEnabledFile) obj;
-			return this.commentSetting == commentEnabledFile.commentSetting
-				   && super.equals(commentEnabledFile);
-		}
 	}
 }

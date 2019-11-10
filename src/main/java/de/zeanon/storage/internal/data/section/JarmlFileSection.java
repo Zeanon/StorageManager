@@ -4,10 +4,14 @@ import de.zeanon.storage.internal.base.FlatSection;
 import de.zeanon.storage.internal.data.raw.JarmlFile;
 import de.zeanon.storage.internal.settings.Comment;
 import de.zeanon.storage.internal.utils.basic.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @SuppressWarnings("unused")
 public class JarmlFileSection extends FlatSection {
 
@@ -31,22 +35,5 @@ public class JarmlFileSection extends FlatSection {
 	@Override
 	public JarmlFileSection getSection(final @NotNull String sectionKey) {
 		return new JarmlFileSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.jarmlFile);
-	}
-
-	protected JarmlFileSection getJarmlFileInstance() {
-		return this;
-	}
-
-	@Override
-	public boolean equals(final @Nullable Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			JarmlFileSection jarmlFileSection = (JarmlFileSection) obj;
-			return this.jarmlFile.equals(jarmlFileSection.jarmlFile)
-				   && this.sectionKey.equals(jarmlFileSection.sectionKey);
-		}
 	}
 }

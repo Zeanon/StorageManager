@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.Cleanup;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
@@ -22,6 +24,8 @@ import org.json.JSONTokener;
 /**
  * Class to manage Json-Type Files
  */
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @SuppressWarnings("unused")
 public class JsonFile extends FlatFile {
 
@@ -166,10 +170,6 @@ public class JsonFile extends FlatFile {
 		return new LocalSection(sectionKey, this);
 	}
 
-	protected final JsonFile getJsonFileInstance() {
-		return this;
-	}
-
 	private Map getMapWithoutPath(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
@@ -195,18 +195,6 @@ public class JsonFile extends FlatFile {
 	private void write(final JSONObject object) throws IOException {
 		@Cleanup Writer writer = new PrintWriter(new FileWriter(this.file.getAbsolutePath()));
 		writer.write(object.toString(3));
-	}
-
-	@Override
-	public boolean equals(final @Nullable Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			JsonFile json = (JsonFile) obj;
-			return super.equals(json.getFlatFileInstance());
-		}
 	}
 
 

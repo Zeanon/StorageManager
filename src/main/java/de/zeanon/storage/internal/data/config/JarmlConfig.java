@@ -15,6 +15,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +24,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Extended JarmlFile with added methods for Config purposes
  */
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @SuppressWarnings("unused")
 public class JarmlConfig extends JarmlFile implements ConfigBase {
 
@@ -180,22 +184,6 @@ public class JarmlConfig extends JarmlFile implements ConfigBase {
 	@Override
 	public JarmlConfigSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
-	}
-
-	protected final JarmlConfig getJarmlConfigInstance() {
-		return this;
-	}
-
-	@Override
-	public boolean equals(final @Nullable Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			JarmlConfig config = (JarmlConfig) obj;
-			return super.equals(config.getJarmlFileInstance());
-		}
 	}
 
 

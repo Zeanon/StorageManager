@@ -5,14 +5,18 @@ import de.zeanon.storage.internal.utils.basic.Objects;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+@EqualsAndHashCode
+@ToString
 @SuppressWarnings("unused")
-public abstract class FlatSection implements StorageBase {
+public abstract class FlatSection implements StorageBase, Comparable<FlatSection> {
 
 	private final FlatFile flatFile;
 	@Getter
@@ -103,29 +107,12 @@ public abstract class FlatSection implements StorageBase {
 		return this.flatFile.blockKeySet(this.getSectionKey(key));
 	}
 
-	protected final FlatSection getSectionInstance() {
-		return this;
-	}
-
 	protected String getSectionKey(final @NotNull String key) {
 		return (this.sectionKey == null || this.sectionKey.isEmpty()) ? Objects.notNull(key, "Key must not be null") : this.sectionKey + "." + Objects.notNull(key, "Key must not be null");
 	}
 
 	@Override
-	public boolean equals(final @Nullable Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			FlatSection flatSection = (FlatSection) obj;
-			return this.flatFile.equals(flatSection.flatFile)
-				   && this.sectionKey.equals(flatSection.sectionKey);
-		}
-	}
-
-	@Override
-	public String toString() {
-		return "SectionKey: " + this.sectionKey + ", File: " + this.flatFile.toString();
+	public int compareTo(final @NotNull FlatSection flatSection) {
+		return this.flatFile.compareTo(flatSection.flatFile);
 	}
 }

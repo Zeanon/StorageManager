@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,6 +20,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Class to manage Toml-Type Files
  */
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @SuppressWarnings("unused")
 public class TomlFile extends FlatFile {
 
@@ -161,22 +165,6 @@ public class TomlFile extends FlatFile {
 	@Override
 	public TomlFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
-	}
-
-	protected final TomlFile getTomlFileInstance() {
-		return this;
-	}
-
-	@Override
-	public boolean equals(final @Nullable Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			TomlFile toml = (TomlFile) obj;
-			return super.equals(toml.getFlatFileInstance());
-		}
 	}
 
 

@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,6 +21,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Extended YamlFile with added methods for Config purposes
  */
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @SuppressWarnings("unused")
 public class YamlConfig extends YamlFile implements ConfigBase {
 
@@ -188,24 +192,6 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 				e.printStackTrace();
 				return new ArrayList<>();
 			}
-		}
-	}
-
-
-	protected final YamlConfig getConfigInstance() {
-		return this;
-	}
-
-	@Override
-	public boolean equals(final @Nullable Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			YamlConfig yamlConfig = (YamlConfig) obj;
-			return this.header.equals(yamlConfig.header)
-				   && super.equals(yamlConfig.getYamlFileInstance());
 		}
 	}
 }

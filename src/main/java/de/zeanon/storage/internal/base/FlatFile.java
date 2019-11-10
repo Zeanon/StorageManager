@@ -10,9 +10,7 @@ import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
-import lombok.Cleanup;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -21,8 +19,10 @@ import org.json.JSONObject;
 /**
  * Basic foundation for the Data Classes
  */
-@SuppressWarnings({"UnusedReturnValue", "unused", "WeakerAccess"})
+@EqualsAndHashCode
 @Getter
+@ToString
+@SuppressWarnings({"UnusedReturnValue", "unused", "WeakerAccess"})
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	protected final File file;
@@ -246,10 +246,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return this.reloadSetting.shouldReload(this);
 	}
 
-	protected final FlatFile getFlatFileInstance() {
-		return this;
-	}
-
 	/**
 	 * Checks if the File needs to be reloaded and does so if true.
 	 */
@@ -313,34 +309,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public int hashCode() {
-		return this.file.hashCode();
-	}
-
-	@Override
-	public boolean equals(final @Nullable Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			FlatFile flatFile = (FlatFile) obj;
-			return reloadSetting == flatFile.reloadSetting
-				   && this.fileData.equals(flatFile.fileData)
-				   && this.file.equals(flatFile.file)
-				   && fileType == flatFile.fileType
-				   && this.lastLoaded == flatFile.lastLoaded;
-		}
-	}
-
-	@Override
-	public int compareTo(final FlatFile flatFile) {
+	public int compareTo(final @NotNull FlatFile flatFile) {
 		return this.file.compareTo(flatFile.file);
-	}
-
-	@Override
-	public String toString() {
-		return this.file.getAbsolutePath();
 	}
 
 

@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +24,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Class to manage Jarml-Type Files
  */
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @SuppressWarnings("unused")
 public class JarmlFile extends CommentEnabledFile {
 
@@ -182,10 +186,6 @@ public class JarmlFile extends CommentEnabledFile {
 		return new LocalSection(sectionKey, this);
 	}
 
-	protected final JarmlFile getJarmlFileInstance() {
-		return this;
-	}
-
 	private Set<String> blockKeySet(final Map<String, Object> map) {
 		Set<String> tempSet = new HashSet<>();
 		for (String key : map.keySet()) {
@@ -209,19 +209,6 @@ public class JarmlFile extends CommentEnabledFile {
 			}
 		}
 		return tempSet;
-	}
-
-	@Override
-	public boolean equals(final @Nullable Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			JarmlFile jarmlFile = (JarmlFile) obj;
-			return this.getCommentSetting() == jarmlFile.getCommentSetting()
-				   && super.equals(jarmlFile.getFlatFileInstance());
-		}
 	}
 
 
