@@ -11,6 +11,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -19,9 +20,10 @@ import org.json.JSONObject;
 /**
  * Basic foundation for the Data Classes
  */
-@EqualsAndHashCode
 @Getter
 @ToString
+@EqualsAndHashCode
+@Accessors(fluent = true)
 @SuppressWarnings({"UnusedReturnValue", "unused", "WeakerAccess"})
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
@@ -29,6 +31,9 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	private final FileTypeBase fileType;
 	protected FileData fileData;
 	protected long lastLoaded;
+	/**
+	 * Default: INTELLIGENT
+	 */
 	@Setter
 	private ReloadSettingBase reloadSetting = Reload.INTELLIGENT;
 
@@ -39,7 +44,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			this.file = file;
 
 			if (reloadSetting != null) {
-				this.setReloadSetting(reloadSetting);
+				this.reloadSetting(reloadSetting);
 			}
 		} else {
 			throw new IllegalStateException("File '" + file.getAbsolutePath() + "' is not of type '" + fileType + "'");

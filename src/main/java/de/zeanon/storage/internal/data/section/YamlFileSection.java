@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
 public class YamlFileSection extends FlatSection {
 
@@ -23,15 +23,15 @@ public class YamlFileSection extends FlatSection {
 	}
 
 	public synchronized void set(final @NotNull String key, final @Nullable Object value, final @NotNull Comment commentSetting) {
-		this.yamlFile.set(this.getSectionKey(key), value, commentSetting);
+		this.yamlFile.set(this.sectionKey(key), value, commentSetting);
 	}
 
 	public synchronized void remove(final @NotNull String key, final @NotNull Comment commentSetting) {
-		this.yamlFile.remove(this.getSectionKey(key), commentSetting);
+		this.yamlFile.remove(this.sectionKey(key), commentSetting);
 	}
 
 	@Override
 	public YamlFileSection getSection(final @NotNull String sectionKey) {
-		return new YamlFileSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key must not be null"), this.yamlFile);
+		return new YamlFileSection(this.sectionKey() + "." + Objects.notNull(sectionKey, "Key must not be null"), this.yamlFile);
 	}
 }

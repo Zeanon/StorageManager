@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 
-@SuppressWarnings("unused")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@SuppressWarnings("unused")
 public class YamlEditor {
 
 	public static List<String> readComments(final @NotNull File file) throws IOException {

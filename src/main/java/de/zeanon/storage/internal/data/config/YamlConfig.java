@@ -21,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Extended YamlFile with added methods for Config purposes
  */
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
 public class YamlConfig extends YamlFile implements ConfigBase {
 
@@ -38,7 +38,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 
 	@Override
 	public List<String> getHeader() {
-		if (this.getCommentSetting() != Comment.PRESERVE) {
+		if (this.commentSetting() != Comment.PRESERVE) {
 			return new ArrayList<>();
 		} else if (!this.shouldReload()) {
 			return this.header;
@@ -109,7 +109,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 
 	@Override
 	public List<String> getFooter() {
-		if (this.getCommentSetting() != Comment.PRESERVE) {
+		if (this.commentSetting() != Comment.PRESERVE) {
 			return new ArrayList<>();
 		} else if (!this.shouldReload()) {
 			return this.footer;
@@ -179,7 +179,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 
 	@Override
 	public List<String> getComments() {
-		if (this.getCommentSetting() != Comment.PRESERVE) {
+		if (this.commentSetting() != Comment.PRESERVE) {
 			return new ArrayList<>();
 		} else if (!this.shouldReload()) {
 			return this.comments;

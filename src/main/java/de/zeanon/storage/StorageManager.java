@@ -15,20 +15,21 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+@RequiredArgsConstructor
+@Accessors(fluent = true)
 @SuppressWarnings("unused")
 public abstract class StorageManager {
 
 	private final File file;
 	private BufferedInputStream inputStream;
 	private ReloadSettingBase reloadSetting;
-
-	StorageManager(final @NotNull File file) {
-		this.file = file;
-	}
 
 	public static JsonFileBuilder jsonFile(final @NotNull File file) {
 		return new JsonFileBuilder(file);
@@ -210,7 +211,7 @@ public abstract class StorageManager {
 	/**
 	 * Import the given Data to the File if said does not exist.
 	 *
-	 * @param file the File to be imported baseFrom.
+	 * @param file the File to be imported from.
 	 */
 	private void baseFromFile(final @Nullable File file) {
 		this.inputStream = file == null ? null : SMFileUtils.createNewInputStream(file);
@@ -219,7 +220,7 @@ public abstract class StorageManager {
 	/**
 	 * Import the given Data to the File if said does not exist.
 	 *
-	 * @param file the File to be imported baseFrom.
+	 * @param file the File to be imported from.
 	 */
 	private void baseFromFile(final @Nullable Path file) {
 		this.inputStream = file == null ? null : SMFileUtils.createNewInputStream(file.toFile());
@@ -228,8 +229,8 @@ public abstract class StorageManager {
 	/**
 	 * Import the given Data to the File if said does not exist.
 	 *
-	 * @param directory the directory of the File to be imported baseFrom.
-	 * @param name      the name of the File to be imported baseFrom.
+	 * @param directory the directory of the File to be imported from.
+	 * @param name      the name of the File to be imported from.
 	 */
 	private void baseFromFile(final @Nullable String directory, final @Nullable String name) {
 		if (name != null) {
@@ -240,8 +241,8 @@ public abstract class StorageManager {
 	/**
 	 * Import the given Data to the File if said does not exist.
 	 *
-	 * @param directory the directory of the File to be imported baseFrom.
-	 * @param name      the name of the File to be imported baseFrom.
+	 * @param directory the directory of the File to be imported from.
+	 * @param name      the name of the File to be imported from.
 	 */
 	private void baseFromFile(final @Nullable File directory, final @Nullable String name) {
 		if (name != null) {
@@ -252,8 +253,8 @@ public abstract class StorageManager {
 	/**
 	 * Import the given Data to the File if said does not exist.
 	 *
-	 * @param directory the directory of the File to be imported baseFrom.
-	 * @param name      the name of the File to be imported baseFrom.
+	 * @param directory the directory of the File to be imported from.
+	 * @param name      the name of the File to be imported from.
 	 */
 	private void baseFromFile(final @Nullable Path directory, final @Nullable String name) {
 		if (name != null) {
@@ -264,7 +265,7 @@ public abstract class StorageManager {
 	/**
 	 * Import the given Data to the File if said does not exist.
 	 *
-	 * @param resource the internal resource to be imported baseFrom.
+	 * @param resource the internal resource to be imported from.
 	 */
 	private void baseFromResource(final @Nullable String resource) {
 		this.inputStream = resource == null ? null : SMFileUtils.createNewInputStream(resource);
@@ -279,6 +280,7 @@ public abstract class StorageManager {
 		this.reloadSetting = reloadSetting;
 	}
 
+
 	public static final class JsonFileBuilder extends StorageManager {
 
 		private JsonFileBuilder(final @NotNull File file) {
@@ -287,49 +289,49 @@ public abstract class StorageManager {
 
 
 		@Override
-		public final JsonFileBuilder fromInputStream(@Nullable BufferedInputStream inputStream) {
+		public final JsonFileBuilder fromInputStream(final @Nullable BufferedInputStream inputStream) {
 			super.baseFromInputStream(inputStream);
 			return this;
 		}
 
 		@Override
-		public final JsonFileBuilder fromFile(@Nullable File file) {
+		public final JsonFileBuilder fromFile(final @Nullable File file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final JsonFileBuilder fromFile(@Nullable Path file) {
+		public final JsonFileBuilder fromFile(final @Nullable Path file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final JsonFileBuilder fromFile(@Nullable String directory, @Nullable String name) {
+		public final JsonFileBuilder fromFile(final @Nullable String directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final JsonFileBuilder fromFile(@Nullable File directory, @Nullable String name) {
+		public final JsonFileBuilder fromFile(final @Nullable File directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final JsonFileBuilder fromFile(@Nullable Path directory, @Nullable String name) {
+		public final JsonFileBuilder fromFile(final @Nullable Path directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final JsonFileBuilder fromResource(@Nullable String resource) {
+		public final JsonFileBuilder fromResource(final @Nullable String resource) {
 			super.baseFromResource(resource);
 			return this;
 		}
 
 		@Override
-		public final JsonFileBuilder reloadSetting(@Nullable ReloadSettingBase reloadSetting) {
+		public final JsonFileBuilder reloadSetting(final @Nullable ReloadSettingBase reloadSetting) {
 			super.baseReloadSetting(reloadSetting);
 			return this;
 		}
@@ -349,9 +351,12 @@ public abstract class StorageManager {
 		}
 	}
 
+
 	public static final class ThunderFileBuilder extends StorageManager {
 
+		@Setter
 		private CommentSettingBase commentSetting;
+		@Setter
 		private DataTypeBase dataType;
 
 
@@ -361,70 +366,50 @@ public abstract class StorageManager {
 
 
 		@Override
-		public final ThunderFileBuilder fromInputStream(@Nullable BufferedInputStream inputStream) {
+		public final ThunderFileBuilder fromInputStream(final @Nullable BufferedInputStream inputStream) {
 			super.baseFromInputStream(inputStream);
 			return this;
 		}
 
 		@Override
-		public final ThunderFileBuilder fromFile(@Nullable File file) {
+		public final ThunderFileBuilder fromFile(final @Nullable File file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final ThunderFileBuilder fromFile(@Nullable Path file) {
+		public final ThunderFileBuilder fromFile(final @Nullable Path file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final ThunderFileBuilder fromFile(@Nullable String directory, @Nullable String name) {
+		public final ThunderFileBuilder fromFile(final @Nullable String directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final ThunderFileBuilder fromFile(@Nullable File directory, @Nullable String name) {
+		public final ThunderFileBuilder fromFile(final @Nullable File directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final ThunderFileBuilder fromFile(@Nullable Path directory, @Nullable String name) {
+		public final ThunderFileBuilder fromFile(final @Nullable Path directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final ThunderFileBuilder fromResource(@Nullable String resource) {
+		public final ThunderFileBuilder fromResource(final @Nullable String resource) {
 			super.baseFromResource(resource);
 			return this;
 		}
 
 		@Override
-		public final ThunderFileBuilder reloadSetting(@Nullable ReloadSettingBase reloadSetting) {
+		public final ThunderFileBuilder reloadSetting(final @Nullable ReloadSettingBase reloadSetting) {
 			super.baseReloadSetting(reloadSetting);
-			return this;
-		}
-
-		/**
-		 * Set the CommentSetting for the File.
-		 *
-		 * @param commentSetting the CommentSetting to be set(Default for Configs is true, otherwise it's false)
-		 */
-		public final ThunderFileBuilder commentSetting(final CommentSettingBase commentSetting) {
-			this.commentSetting = commentSetting;
-			return this;
-		}
-
-		/**
-		 * Set the way the Data is stored.
-		 *
-		 * @param dataType the DataType to be set(Default is AUTOMATIC, which depends on the FileType and the ReloadSetting)
-		 */
-		public final ThunderFileBuilder dataType(final @Nullable DataTypeBase dataType) {
-			this.dataType = dataType;
 			return this;
 		}
 
@@ -443,9 +428,12 @@ public abstract class StorageManager {
 		}
 	}
 
+
 	public static final class ThunderConfigBuilder extends StorageManager {
 
+		@Setter
 		private CommentSettingBase commentSetting;
+		@Setter
 		private DataTypeBase dataType;
 
 
@@ -455,70 +443,50 @@ public abstract class StorageManager {
 
 
 		@Override
-		public final ThunderConfigBuilder fromInputStream(@Nullable BufferedInputStream inputStream) {
+		public final ThunderConfigBuilder fromInputStream(final @Nullable BufferedInputStream inputStream) {
 			super.baseFromInputStream(inputStream);
 			return this;
 		}
 
 		@Override
-		public final ThunderConfigBuilder fromFile(@Nullable File file) {
+		public final ThunderConfigBuilder fromFile(final @Nullable File file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final ThunderConfigBuilder fromFile(@Nullable Path file) {
+		public final ThunderConfigBuilder fromFile(final @Nullable Path file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final ThunderConfigBuilder fromFile(@Nullable String directory, @Nullable String name) {
+		public final ThunderConfigBuilder fromFile(final @Nullable String directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final ThunderConfigBuilder fromFile(@Nullable File directory, @Nullable String name) {
+		public final ThunderConfigBuilder fromFile(final @Nullable File directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final ThunderConfigBuilder fromFile(@Nullable Path directory, @Nullable String name) {
+		public final ThunderConfigBuilder fromFile(final @Nullable Path directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final ThunderConfigBuilder fromResource(@Nullable String resource) {
+		public final ThunderConfigBuilder fromResource(final @Nullable String resource) {
 			super.baseFromResource(resource);
 			return this;
 		}
 
 		@Override
-		public final ThunderConfigBuilder reloadSetting(@Nullable ReloadSettingBase reloadSetting) {
+		public final ThunderConfigBuilder reloadSetting(final @Nullable ReloadSettingBase reloadSetting) {
 			super.baseReloadSetting(reloadSetting);
-			return this;
-		}
-
-		/**
-		 * Set the CommentSetting for the File.
-		 *
-		 * @param commentSetting the CommentSetting to be set(Default for Configs is true, otherwise it's false)
-		 */
-		public final ThunderConfigBuilder commentSetting(final CommentSettingBase commentSetting) {
-			this.commentSetting = commentSetting;
-			return this;
-		}
-
-		/**
-		 * Set the way the Data is stored.
-		 *
-		 * @param dataType the DataType to be set(Default is AUTOMATIC, which depends on the FileType and the ReloadSetting)
-		 */
-		public final ThunderConfigBuilder dataType(final @Nullable DataTypeBase dataType) {
-			this.dataType = dataType;
 			return this;
 		}
 
@@ -537,6 +505,7 @@ public abstract class StorageManager {
 		}
 	}
 
+
 	public static final class TomlFileBuilder extends StorageManager {
 
 		private TomlFileBuilder(final @NotNull File file) {
@@ -545,49 +514,49 @@ public abstract class StorageManager {
 
 
 		@Override
-		public final TomlFileBuilder fromInputStream(@Nullable BufferedInputStream inputStream) {
+		public final TomlFileBuilder fromInputStream(final @Nullable BufferedInputStream inputStream) {
 			super.baseFromInputStream(inputStream);
 			return this;
 		}
 
 		@Override
-		public final TomlFileBuilder fromFile(@Nullable File file) {
+		public final TomlFileBuilder fromFile(final @Nullable File file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final TomlFileBuilder fromFile(@Nullable Path file) {
+		public final TomlFileBuilder fromFile(final @Nullable Path file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final TomlFileBuilder fromFile(@Nullable String directory, @Nullable String name) {
+		public final TomlFileBuilder fromFile(final @Nullable String directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final TomlFileBuilder fromFile(@Nullable File directory, @Nullable String name) {
+		public final TomlFileBuilder fromFile(final @Nullable File directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final TomlFileBuilder fromFile(@Nullable Path directory, @Nullable String name) {
+		public final TomlFileBuilder fromFile(final @Nullable Path directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final TomlFileBuilder fromResource(@Nullable String resource) {
+		public final TomlFileBuilder fromResource(final @Nullable String resource) {
 			super.baseFromResource(resource);
 			return this;
 		}
 
 		@Override
-		public final TomlFileBuilder reloadSetting(@Nullable ReloadSettingBase reloadSetting) {
+		public final TomlFileBuilder reloadSetting(final @Nullable ReloadSettingBase reloadSetting) {
 			super.baseReloadSetting(reloadSetting);
 			return this;
 		}
@@ -607,8 +576,10 @@ public abstract class StorageManager {
 		}
 	}
 
+
 	public static final class YamlFileBuilder extends StorageManager {
 
+		@Setter
 		private CommentSettingBase commentSetting;
 
 
@@ -618,60 +589,50 @@ public abstract class StorageManager {
 
 
 		@Override
-		public final YamlFileBuilder fromInputStream(@Nullable BufferedInputStream inputStream) {
+		public final YamlFileBuilder fromInputStream(final @Nullable BufferedInputStream inputStream) {
 			super.baseFromInputStream(inputStream);
 			return this;
 		}
 
 		@Override
-		public final YamlFileBuilder fromFile(@Nullable File file) {
+		public final YamlFileBuilder fromFile(final @Nullable File file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final YamlFileBuilder fromFile(@Nullable Path file) {
+		public final YamlFileBuilder fromFile(final @Nullable Path file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final YamlFileBuilder fromFile(@Nullable String directory, @Nullable String name) {
+		public final YamlFileBuilder fromFile(final @Nullable String directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final YamlFileBuilder fromFile(@Nullable File directory, @Nullable String name) {
+		public final YamlFileBuilder fromFile(final @Nullable File directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final YamlFileBuilder fromFile(@Nullable Path directory, @Nullable String name) {
+		public final YamlFileBuilder fromFile(final @Nullable Path directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final YamlFileBuilder fromResource(@Nullable String resource) {
+		public final YamlFileBuilder fromResource(final @Nullable String resource) {
 			super.baseFromResource(resource);
 			return this;
 		}
 
 		@Override
-		public final YamlFileBuilder reloadSetting(@Nullable ReloadSettingBase reloadSetting) {
+		public final YamlFileBuilder reloadSetting(final @Nullable ReloadSettingBase reloadSetting) {
 			super.baseReloadSetting(reloadSetting);
-			return this;
-		}
-
-		/**
-		 * Set the CommentSetting for the File.
-		 *
-		 * @param commentSetting the CommentSetting to be set(Default for Configs is true, otherwise it's false)
-		 */
-		public final YamlFileBuilder commentSetting(final CommentSettingBase commentSetting) {
-			this.commentSetting = commentSetting;
 			return this;
 		}
 
@@ -690,8 +651,10 @@ public abstract class StorageManager {
 		}
 	}
 
+
 	public static final class YamlConfigBuilder extends StorageManager {
 
+		@Setter
 		private CommentSettingBase commentSetting;
 
 
@@ -701,60 +664,50 @@ public abstract class StorageManager {
 
 
 		@Override
-		public final YamlConfigBuilder fromInputStream(@Nullable BufferedInputStream inputStream) {
+		public final YamlConfigBuilder fromInputStream(final @Nullable BufferedInputStream inputStream) {
 			super.baseFromInputStream(inputStream);
 			return this;
 		}
 
 		@Override
-		public final YamlConfigBuilder fromFile(@Nullable File file) {
+		public final YamlConfigBuilder fromFile(final @Nullable File file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final YamlConfigBuilder fromFile(@Nullable Path file) {
+		public final YamlConfigBuilder fromFile(final @Nullable Path file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final YamlConfigBuilder fromFile(@Nullable String directory, @Nullable String name) {
+		public final YamlConfigBuilder fromFile(final @Nullable String directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final YamlConfigBuilder fromFile(@Nullable File directory, @Nullable String name) {
+		public final YamlConfigBuilder fromFile(final @Nullable File directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final YamlConfigBuilder fromFile(@Nullable Path directory, @Nullable String name) {
+		public final YamlConfigBuilder fromFile(final @Nullable Path directory, final @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final YamlConfigBuilder fromResource(@Nullable String resource) {
+		public final YamlConfigBuilder fromResource(final @Nullable String resource) {
 			super.baseFromResource(resource);
 			return this;
 		}
 
 		@Override
-		public final YamlConfigBuilder reloadSetting(@Nullable ReloadSettingBase reloadSetting) {
+		public final YamlConfigBuilder reloadSetting(final @Nullable ReloadSettingBase reloadSetting) {
 			super.baseReloadSetting(reloadSetting);
-			return this;
-		}
-
-		/**
-		 * Set the CommentSetting for the File.
-		 *
-		 * @param commentSetting the CommentSetting to be set(Default for Configs is true, otherwise it's false)
-		 */
-		public final YamlConfigBuilder commentSetting(final CommentSettingBase commentSetting) {
-			this.commentSetting = commentSetting;
 			return this;
 		}
 

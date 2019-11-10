@@ -20,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Class to manage Toml-Type Files
  */
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
 public class TomlFile extends FlatFile {
 
@@ -78,7 +78,7 @@ public class TomlFile extends FlatFile {
 	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(dataMap)) {
 			try {
-				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
+				com.electronwill.toml.Toml.write(fileData.toMap(), file());
 			} catch (IOException e) {
 				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();

@@ -24,8 +24,8 @@ import org.json.JSONTokener;
 /**
  * Class to manage Json-Type Files
  */
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
 public class JsonFile extends FlatFile {
 

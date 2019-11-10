@@ -14,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Basic utility methods for Files
  */
-@SuppressWarnings("unused")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@SuppressWarnings("unused")
 public class SMFileUtils {
 
 	public static void createFile(final @NotNull File file) {

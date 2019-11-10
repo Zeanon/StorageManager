@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
 public class ThunderConfigSection extends ThunderFileSection implements ConfigBase {
 
@@ -24,61 +24,61 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 
 	@Override
 	public List<String> getHeader() {
-		return this.thunderConfig.getHeader(this.getSectionKey());
+		return this.thunderConfig.getHeader(this.sectionKey());
 	}
 
 	@Override
 	public void setHeader(final @Nullable List<String> header) {
-		this.thunderConfig.setHeader(this.getSectionKey(), header);
+		this.thunderConfig.setHeader(this.sectionKey(), header);
 	}
 
 	public List<String> getHeader(final @NotNull String key) {
-		return this.thunderConfig.getHeader(this.getSectionKey(key));
+		return this.thunderConfig.getHeader(this.sectionKey(key));
 	}
 
 	public void setHeader(final @NotNull String key, final @Nullable List<String> header) {
-		this.thunderConfig.setHeader(this.getSectionKey(key), header);
+		this.thunderConfig.setHeader(this.sectionKey(key), header);
 	}
 
 
 	@Override
 	public List<String> getFooter() {
-		return this.thunderConfig.getFooter(this.getSectionKey());
+		return this.thunderConfig.getFooter(this.sectionKey());
 	}
 
 	@Override
 	public void setFooter(final @Nullable List<String> footer) {
-		this.thunderConfig.setFooter(this.getSectionKey(), footer);
+		this.thunderConfig.setFooter(this.sectionKey(), footer);
 	}
 
 	public List<String> getFooter(final @NotNull String key) {
-		return this.thunderConfig.getFooter(this.getSectionKey(key));
+		return this.thunderConfig.getFooter(this.sectionKey(key));
 	}
 
 	public void setFooter(final @NotNull String key, final @Nullable List<String> footer) {
-		this.thunderConfig.setFooter(this.getSectionKey(key), footer);
+		this.thunderConfig.setFooter(this.sectionKey(key), footer);
 	}
 
 
 	@Override
 	public List<String> getComments() {
-		return this.thunderConfig.getComments(this.getSectionKey());
+		return this.thunderConfig.getComments(this.sectionKey());
 	}
 
 	public List<String> getComments(final @NotNull String key) {
-		return this.thunderConfig.getComments(this.getSectionKey(key));
+		return this.thunderConfig.getComments(this.sectionKey(key));
 	}
 
 	public List<String> getBlockComments() {
-		return this.thunderConfig.getBlockComments(this.getSectionKey());
+		return this.thunderConfig.getBlockComments(this.sectionKey());
 	}
 
 	public List<String> getBlockComments(final @NotNull String key) {
-		return this.thunderConfig.getBlockComments(this.getSectionKey(key));
+		return this.thunderConfig.getBlockComments(this.sectionKey(key));
 	}
 
 	@Override
 	public ThunderConfigSection getSection(final @NotNull String sectionKey) {
-		return new ThunderConfigSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key must not be null"), this.thunderConfig);
+		return new ThunderConfigSection(this.sectionKey() + "." + Objects.notNull(sectionKey, "Key must not be null"), this.thunderConfig);
 	}
 }

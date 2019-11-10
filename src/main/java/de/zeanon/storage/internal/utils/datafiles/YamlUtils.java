@@ -12,16 +12,16 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Adds several utility Methods for Yaml-Files
  */
-@SuppressWarnings("unused")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@SuppressWarnings("unused")
 public class YamlUtils {
 
 
-	@SuppressWarnings("UnusedAssignment")
 	public static List<String> parseComments(final @NotNull File file, final @NotNull List<String> comments, final @NotNull List<String> updated) {
 		final List<String> keys;
 		final Map<String, List<String>> parsed;
 		try {
+			//noinspection UnusedAssignment
 			keys = YamlEditor.readKeys(file);
 			parsed = assignCommentsToKey(comments);
 		} catch (IOException e) {

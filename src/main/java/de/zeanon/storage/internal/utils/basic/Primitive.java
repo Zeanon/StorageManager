@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Parsing utilities for Primitive Types
  */
-@SuppressWarnings("unused")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@SuppressWarnings("unused")
 public class Primitive {
 
 	public static <T> T getFromDef(final @NotNull Object obj, final @NotNull Class<T> def) {

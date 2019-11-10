@@ -24,8 +24,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Class to manage Thunder-Type Files
  */
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
 public class ThunderFile extends CommentEnabledFile {
 
@@ -36,14 +36,14 @@ public class ThunderFile extends CommentEnabledFile {
 			SMFileUtils.writeToFile(this.file, inputStream);
 		}
 
-		this.fileData = new LocalFileData(ThunderEditor.readData(this.file, this.getDataType(), this.getCommentSetting()));
+		this.fileData = new LocalFileData(ThunderEditor.readData(this.file, this.dataType(), this.commentSetting()));
 		this.lastLoaded = System.currentTimeMillis();
 	}
 
 	@Override
 	public void reload() {
 		try {
-			this.fileData.loadData(ThunderEditor.readData(this.file, this.getDataType(), this.getCommentSetting()));
+			this.fileData.loadData(ThunderEditor.readData(this.file, this.dataType(), this.commentSetting()));
 			this.lastLoaded = System.currentTimeMillis();
 		} catch (IllegalArgumentException | IllegalStateException e) {
 			System.err.println("Exception while reloading '" + this.getAbsolutePath() + "'");
@@ -56,7 +56,7 @@ public class ThunderFile extends CommentEnabledFile {
 	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
 			try {
-				ThunderEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+				ThunderEditor.writeData(this.file, this.fileData.toMap(), this.commentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
 				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -69,7 +69,7 @@ public class ThunderFile extends CommentEnabledFile {
 	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(dataMap)) {
 			try {
-				ThunderEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+				ThunderEditor.writeData(this.file, this.fileData.toMap(), this.commentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
 				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -82,7 +82,7 @@ public class ThunderFile extends CommentEnabledFile {
 	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(key, dataMap)) {
 			try {
-				ThunderEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+				ThunderEditor.writeData(this.file, this.fileData.toMap(), this.commentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
 				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -100,7 +100,7 @@ public class ThunderFile extends CommentEnabledFile {
 		this.fileData.remove(key);
 
 		try {
-			ThunderEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+			ThunderEditor.writeData(this.file, this.fileData.toMap(), this.commentSetting());
 		} catch (IllegalStateException e) {
 			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -119,7 +119,7 @@ public class ThunderFile extends CommentEnabledFile {
 		}
 
 		try {
-			ThunderEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+			ThunderEditor.writeData(this.file, this.fileData.toMap(), this.commentSetting());
 		} catch (IllegalStateException e) {
 			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -139,7 +139,7 @@ public class ThunderFile extends CommentEnabledFile {
 		}
 
 		try {
-			ThunderEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+			ThunderEditor.writeData(this.file, this.fileData.toMap(), this.commentSetting());
 		} catch (IllegalStateException e) {
 			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 			e.printStackTrace();

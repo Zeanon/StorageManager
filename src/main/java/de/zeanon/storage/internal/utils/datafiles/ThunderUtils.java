@@ -17,8 +17,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Adds the utility methods, used by ThunderConfig
  */
-@SuppressWarnings("unused")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@SuppressWarnings("unused")
 public class ThunderUtils {
 
 	/**

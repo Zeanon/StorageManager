@@ -8,8 +8,8 @@ import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
 public class TomlFileSection extends FlatSection {
 
@@ -22,6 +22,6 @@ public class TomlFileSection extends FlatSection {
 
 	@Override
 	public TomlFileSection getSection(final @NotNull String sectionKey) {
-		return new TomlFileSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key must not be null"), this.tomlFile);
+		return new TomlFileSection(this.sectionKey() + "." + Objects.notNull(sectionKey, "Key must not be null"), this.tomlFile);
 	}
 }

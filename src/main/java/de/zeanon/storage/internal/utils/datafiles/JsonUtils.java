@@ -9,8 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-@SuppressWarnings({"unchecked", "WeakerAccess"})
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@SuppressWarnings({"unchecked", "WeakerAccess"})
 public class JsonUtils {
 
 	public static JSONObject getJsonFromMap(final @NotNull Map<String, Object> map) throws JSONException {

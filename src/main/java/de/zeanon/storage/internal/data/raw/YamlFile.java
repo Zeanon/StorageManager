@@ -27,8 +27,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Class to manage Yaml-Type Files
  */
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unchecked", "unused"})
 public class YamlFile extends CommentEnabledFile {
 
@@ -158,7 +158,7 @@ public class YamlFile extends CommentEnabledFile {
 
 	private void writeData() {
 		try {
-			if (this.getCommentSetting() != Comment.PRESERVE) {
+			if (this.commentSetting() != Comment.PRESERVE) {
 				this.write(Objects.notNull(this.fileData, "FileData must not be null").toMap());
 			} else {
 				final List<String> unEdited = YamlEditor.read(this.file);

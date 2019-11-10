@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 
-/*
-Utility Class to benchmark
+/**
+ * Utility Class to benchmark
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class LagCatcher {
 
 	private static final HashMap<String, Long> startTimes = new HashMap<>();
