@@ -32,6 +32,6 @@ public class YamlFileSection extends FlatSection {
 
 	@Override
 	public YamlFileSection getSection(final @NotNull String sectionKey) {
-		return new YamlFileSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.yamlFile);
+		return new YamlFileSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key must not be null"), this.yamlFile);
 	}
 }

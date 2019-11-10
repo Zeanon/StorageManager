@@ -57,29 +57,6 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		}
 	}
 
-	@Override
-	public List<String> getFooter() {
-		this.update();
-
-		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getFooter(fileData, this.getDataType(), this.getCommentSetting());
-		} else {
-			return new ArrayList<>();
-		}
-	}
-
-	@Override
-	public void setFooter(final @Nullable List<String> footer) {
-		this.update();
-
-		if (this.getCommentSetting() == Comment.PRESERVE) {
-			Map<String, Object> tempMap = ThunderUtils.setFooter(this.fileData, footer, this.getDataType(), this.getCommentSetting());
-			if (!this.fileData.toString().equals(tempMap.toString())) {
-				ThunderEditor.writeData(this.file, tempMap, this.getCommentSetting());
-			}
-		}
-	}
-
 	public List<String> getHeader(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 
@@ -100,6 +77,30 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			Map<String, Object> tempMap = ThunderUtils.setHeader(this.fileData, key, header, this.getDataType(), this.getCommentSetting());
 			if (!fileData.toString().equals(tempMap.toString())) {
+				ThunderEditor.writeData(this.file, tempMap, this.getCommentSetting());
+			}
+		}
+	}
+
+
+	@Override
+	public List<String> getFooter() {
+		this.update();
+
+		if (this.getCommentSetting() == Comment.PRESERVE) {
+			return ThunderUtils.getFooter(fileData, this.getDataType(), this.getCommentSetting());
+		} else {
+			return new ArrayList<>();
+		}
+	}
+
+	@Override
+	public void setFooter(final @Nullable List<String> footer) {
+		this.update();
+
+		if (this.getCommentSetting() == Comment.PRESERVE) {
+			Map<String, Object> tempMap = ThunderUtils.setFooter(this.fileData, footer, this.getDataType(), this.getCommentSetting());
+			if (!this.fileData.toString().equals(tempMap.toString())) {
 				ThunderEditor.writeData(this.file, tempMap, this.getCommentSetting());
 			}
 		}
@@ -129,6 +130,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 			}
 		}
 	}
+
 
 	@Override
 	public List<String> getComments() {

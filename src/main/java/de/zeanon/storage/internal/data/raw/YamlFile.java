@@ -10,7 +10,6 @@ import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.data.section.YamlFileSection;
 import de.zeanon.storage.internal.settings.Comment;
-import de.zeanon.storage.internal.settings.DataType;
 import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import de.zeanon.storage.internal.utils.datafiles.YamlUtils;
@@ -34,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 public class YamlFile extends CommentEnabledFile {
 
 	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
-		super(file, FileType.YAML, reloadSetting, commentSetting, dataType == null ? DataType.STANDARD : dataType);
+		super(file, FileType.YAML, reloadSetting, commentSetting, dataType);
 
 		if (this.create() && inputStream != null) {
 			SMFileUtils.writeToFile(this.file, inputStream);

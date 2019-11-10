@@ -610,7 +610,6 @@ public abstract class StorageManager {
 	public static final class YamlFileBuilder extends StorageManager {
 
 		private CommentSettingBase commentSetting;
-		private DataTypeBase dataType;
 
 
 		private YamlFileBuilder(final @NotNull File file) {
@@ -676,27 +675,17 @@ public abstract class StorageManager {
 			return this;
 		}
 
-		/**
-		 * Set the way the Data is stored.
-		 *
-		 * @param dataType the DataType to be set(Default is AUTOMATIC, which depends on the FileType and the ReloadSetting)
-		 */
-		public final YamlFileBuilder dataType(final @Nullable DataTypeBase dataType) {
-			this.dataType = dataType;
-			return this;
-		}
-
 
 		@Override
 		public final YamlFile create() {
-			return new LocalYamlFile(super.file, super.inputStream, super.reloadSetting, this.commentSetting, this.dataType);
+			return new LocalYamlFile(super.file, super.inputStream, super.reloadSetting, this.commentSetting);
 		}
 
 
 		private static final class LocalYamlFile extends YamlFile {
 
-			private LocalYamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
-				super(file, inputStream, reloadSetting, commentSetting, dataType);
+			private LocalYamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting) {
+				super(file, inputStream, reloadSetting, commentSetting, null);
 			}
 		}
 	}
@@ -704,7 +693,6 @@ public abstract class StorageManager {
 	public static final class YamlConfigBuilder extends StorageManager {
 
 		private CommentSettingBase commentSetting;
-		private DataTypeBase dataType;
 
 
 		private YamlConfigBuilder(final @NotNull File file) {
@@ -770,27 +758,17 @@ public abstract class StorageManager {
 			return this;
 		}
 
-		/**
-		 * Set the way the Data is stored.
-		 *
-		 * @param dataType the DataType to be set(Default is AUTOMATIC, which depends on the FileType and the ReloadSetting)
-		 */
-		public final YamlConfigBuilder dataType(final @Nullable DataTypeBase dataType) {
-			this.dataType = dataType;
-			return this;
-		}
-
 
 		@Override
 		public final YamlConfig create() {
-			return new LocalYamlConfig(super.file, super.inputStream, super.reloadSetting, this.commentSetting, this.dataType);
+			return new LocalYamlConfig(super.file, super.inputStream, super.reloadSetting, this.commentSetting);
 		}
 
 
 		private static final class LocalYamlConfig extends YamlConfig {
 
-			private LocalYamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
-				super(file, inputStream, reloadSetting, commentSetting, dataType);
+			private LocalYamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting) {
+				super(file, inputStream, reloadSetting, commentSetting, null);
 			}
 		}
 	}

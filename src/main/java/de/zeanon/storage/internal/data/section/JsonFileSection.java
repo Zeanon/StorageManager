@@ -22,6 +22,6 @@ public class JsonFileSection extends FlatSection {
 
 	@Override
 	public JsonFileSection getSection(final @NotNull String sectionKey) {
-		return new JsonFileSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.jsonFile);
+		return new JsonFileSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key must not be null"), this.jsonFile);
 	}
 }

@@ -51,7 +51,7 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 
 	@Override
 	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
-		this.flatFile.setAll(this.sectionKey, dataMap);
+		this.flatFile.setAll(this.getSectionKey(), dataMap);
 	}
 
 	@Override
@@ -60,11 +60,11 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 	}
 
 	public synchronized void set(final @Nullable Object value) {
-		this.flatFile.set(this.sectionKey, value);
+		this.flatFile.set(this.getSectionKey(), value);
 	}
 
 	public synchronized void remove() {
-		this.flatFile.remove(this.sectionKey);
+		this.flatFile.remove(this.getSectionKey());
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 
 	@Override
 	public synchronized void removeAll(final @NotNull List<String> keys) {
-		this.flatFile.removeAll(this.sectionKey, keys);
+		this.flatFile.removeAll(this.getSectionKey(), keys);
 	}
 
 	@Override
@@ -89,12 +89,12 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 
 	@Override
 	public Set<String> keySet() {
-		return this.flatFile.keySet(this.sectionKey);
+		return this.flatFile.keySet(this.getSectionKey());
 	}
 
 	@Override
 	public Set<String> blockKeySet() {
-		return this.flatFile.blockKeySet(this.sectionKey);
+		return this.flatFile.blockKeySet(this.getSectionKey());
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 	}
 
 	protected String getSectionKey(final @NotNull String key) {
-		return (this.sectionKey == null || this.sectionKey.isEmpty()) ? Objects.notNull(key, "Key must not be null") : this.sectionKey + "." + Objects.notNull(key, "Key must not be null");
+		return (this.getSectionKey() == null || this.getSectionKey().isEmpty()) ? Objects.notNull(key, "Key must not be null") : this.getSectionKey() + "." + Objects.notNull(key, "Key must not be null");
 	}
 
 	@Override

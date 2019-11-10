@@ -34,6 +34,6 @@ public class ThunderFileSection extends FlatSection {
 
 	@Override
 	public ThunderFileSection getSection(final @NotNull String sectionKey) {
-		return new ThunderFileSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.thunderFile);
+		return new ThunderFileSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key must not be null"), this.thunderFile);
 	}
 }
