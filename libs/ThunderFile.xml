@@ -1,5 +1,5 @@
 <NotepadPlus>
-    <UserLang name="JarmlFile" ext="jrml" udlVersion="2.1">
+    <UserLang name="ThunderFile" ext="tf" udlVersion="2.1">
         <Settings>
             <Global caseIgnored="yes" allowFoldOfComments="yes" foldCompact="no" forcePureLC="2" decimalSeparator="2"/>
             <Prefix Keywords1="yes" Keywords2="yes" Keywords3="no" Keywords4="no" Keywords5="no" Keywords6="no"

@@ -3,7 +3,7 @@ package de.zeanon.storage.internal.utils.datafiles;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.data.FileData;
-import de.zeanon.storage.internal.utils.editor.JarmlEditor;
+import de.zeanon.storage.internal.utils.editor.ThunderEditor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,11 +15,11 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Adds the utility methods, used by JarmlConfig
+ * Adds the utility methods, used by ThunderConfig
  */
 @SuppressWarnings("unused")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class JarmlUtils {
+public class ThunderUtils {
 
 	/**
 	 * Get the Header from a give FileData.
@@ -32,7 +32,7 @@ public class JarmlUtils {
 	public static List<String> getHeader(final @NotNull FileData fileData, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
 		List<String> returnList = dataType.getNewDataList(commentSetting, null);
 		for (String tempKey : fileData.blockKeySet()) {
-			if (fileData.get(tempKey) == JarmlEditor.LineType.COMMENT) {
+			if (fileData.get(tempKey) == ThunderEditor.LineType.COMMENT) {
 				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			} else {
 				return returnList;
@@ -54,7 +54,7 @@ public class JarmlUtils {
 	public static Map<String, Object> setHeader(final @NotNull FileData fileData, final @Nullable List<String> header, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
 		Map<String, Object> tempMap = fileData.toMap();
 		for (String tempKey : tempMap.keySet()) {
-			if (tempMap.get(tempKey) == JarmlEditor.LineType.COMMENT) {
+			if (tempMap.get(tempKey) == ThunderEditor.LineType.COMMENT) {
 				tempMap.remove(tempKey);
 			} else {
 				break;
@@ -64,7 +64,7 @@ public class JarmlUtils {
 		if (header != null) {
 			int commentLine = 0;
 			for (String comment : header) {
-				finalMap.put((comment.startsWith("#") ? comment : "#" + comment) + "{=}" + commentLine, JarmlEditor.LineType.COMMENT);
+				finalMap.put((comment.startsWith("#") ? comment : "#" + comment) + "{=}" + commentLine, ThunderEditor.LineType.COMMENT);
 				commentLine++;
 			}
 		}
@@ -88,7 +88,7 @@ public class JarmlUtils {
 			//noinspection unchecked
 			Map<String, Object> tempMap = (Map<String, Object>) fileData.get(key);
 			for (String tempKey : tempMap.keySet()) {
-				if (tempMap.get(tempKey) == JarmlEditor.LineType.COMMENT) {
+				if (tempMap.get(tempKey) == ThunderEditor.LineType.COMMENT) {
 					tempMap.remove(tempKey);
 				} else {
 					break;
@@ -98,7 +98,7 @@ public class JarmlUtils {
 			if (header != null) {
 				int commentLine = 0;
 				for (String comment : header) {
-					finalMap.put((comment.startsWith("#") ? comment : "#" + comment) + "{=}" + commentLine, JarmlEditor.LineType.COMMENT);
+					finalMap.put((comment.startsWith("#") ? comment : "#" + comment) + "{=}" + commentLine, ThunderEditor.LineType.COMMENT);
 					commentLine++;
 				}
 			}
@@ -121,7 +121,7 @@ public class JarmlUtils {
 		List<String> keyList = new ArrayList<>(fileData.blockKeySet());
 		Collections.reverse(keyList);
 		for (String tempKey : keyList) {
-			if (fileData.get(tempKey) == JarmlEditor.LineType.COMMENT) {
+			if (fileData.get(tempKey) == ThunderEditor.LineType.COMMENT) {
 				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			} else {
 				Collections.reverse(returnList);
@@ -147,7 +147,7 @@ public class JarmlUtils {
 		List<String> keyList = new ArrayList<>(tempMap.keySet());
 		Collections.reverse(keyList);
 		for (String tempKey : keyList) {
-			if (tempMap.get(tempKey) == JarmlEditor.LineType.COMMENT) {
+			if (tempMap.get(tempKey) == ThunderEditor.LineType.COMMENT) {
 				tempMap.remove(tempKey);
 			} else {
 				break;
@@ -157,7 +157,7 @@ public class JarmlUtils {
 		if (footer != null) {
 			int commentLine = 0;
 			for (String comment : footer) {
-				finalMap.put((comment.startsWith("#") ? comment : "#" + comment) + "{=}" + commentLine, JarmlEditor.LineType.COMMENT);
+				finalMap.put((comment.startsWith("#") ? comment : "#" + comment) + "{=}" + commentLine, ThunderEditor.LineType.COMMENT);
 				commentLine++;
 			}
 		}
@@ -182,7 +182,7 @@ public class JarmlUtils {
 			List<String> keyList = new ArrayList<>(tempMap.keySet());
 			Collections.reverse(keyList);
 			for (String tempKey : keyList) {
-				if (tempMap.get(tempKey) == JarmlEditor.LineType.COMMENT) {
+				if (tempMap.get(tempKey) == ThunderEditor.LineType.COMMENT) {
 					tempMap.remove(tempKey);
 				} else {
 					break;
@@ -192,7 +192,7 @@ public class JarmlUtils {
 			if (footer != null) {
 				int commentLine = 0;
 				for (String comment : footer) {
-					finalMap.put((comment.startsWith("#") ? comment : "#" + comment) + "{=}" + commentLine, JarmlEditor.LineType.COMMENT);
+					finalMap.put((comment.startsWith("#") ? comment : "#" + comment) + "{=}" + commentLine, ThunderEditor.LineType.COMMENT);
 					commentLine++;
 				}
 			}
@@ -214,7 +214,7 @@ public class JarmlUtils {
 	public static List<String> getHeader(final @NotNull FileData fileData, final @NotNull String key, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
 		List<String> returnList = dataType.getNewDataList(commentSetting, null);
 		for (String tempKey : fileData.blockKeySet(key)) {
-			if (fileData.get(key + "." + tempKey) == JarmlEditor.LineType.COMMENT) {
+			if (fileData.get(key + "." + tempKey) == ThunderEditor.LineType.COMMENT) {
 				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			} else {
 				return returnList;
@@ -237,7 +237,7 @@ public class JarmlUtils {
 		List<String> keyList = new ArrayList<>(fileData.blockKeySet(key));
 		Collections.reverse(keyList);
 		for (String tempKey : keyList) {
-			if (fileData.get(key + "." + tempKey) == JarmlEditor.LineType.COMMENT) {
+			if (fileData.get(key + "." + tempKey) == ThunderEditor.LineType.COMMENT) {
 				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			} else {
 				Collections.reverse(returnList);
@@ -249,7 +249,7 @@ public class JarmlUtils {
 	}
 
 	/**
-	 * Get the Comments from a given FileData compatible with JarmlFile.
+	 * Get the Comments from a given FileData compatible with ThunderFile.
 	 *
 	 * @param fileData       the FileData to be used.
 	 * @param dataType       the FileDataType to be used with the given FileData.
@@ -261,7 +261,7 @@ public class JarmlUtils {
 		List<String> returnList = dataType.getNewDataList(commentSetting, null);
 		List<String> keyList = deep ? new ArrayList<>(fileData.keySet()) : new ArrayList<>(fileData.blockKeySet());
 		for (String tempKey : keyList) {
-			if (fileData.get(tempKey) == JarmlEditor.LineType.COMMENT) {
+			if (fileData.get(tempKey) == ThunderEditor.LineType.COMMENT) {
 				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			}
 		}
@@ -269,7 +269,7 @@ public class JarmlUtils {
 	}
 
 	/**
-	 * Get the Comments from a given FileData compatible with JarmlFile.
+	 * Get the Comments from a given FileData compatible with ThunderFile.
 	 *
 	 * @param fileData       the FileData to be used.
 	 * @param key            the key of the SubBlock the Footer shall be getted from.
@@ -282,7 +282,7 @@ public class JarmlUtils {
 		List<String> returnList = dataType.getNewDataList(commentSetting, null);
 		List<String> keyList = deep ? new ArrayList<>(fileData.keySet(key)) : new ArrayList<>(fileData.blockKeySet(key));
 		for (String tempKey : keyList) {
-			if (fileData.get(key + "." + tempKey) == JarmlEditor.LineType.COMMENT) {
+			if (fileData.get(key + "." + tempKey) == ThunderEditor.LineType.COMMENT) {
 				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			}
 		}

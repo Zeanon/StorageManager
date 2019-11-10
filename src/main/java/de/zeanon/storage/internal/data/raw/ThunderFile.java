@@ -5,10 +5,10 @@ import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
-import de.zeanon.storage.internal.data.section.JarmlFileSection;
+import de.zeanon.storage.internal.data.section.ThunderFileSection;
 import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
-import de.zeanon.storage.internal.utils.editor.JarmlEditor;
+import de.zeanon.storage.internal.utils.editor.ThunderEditor;
 import java.io.File;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -22,28 +22,28 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Class to manage Jarml-Type Files
+ * Class to manage Thunder-Type Files
  */
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @SuppressWarnings("unused")
-public class JarmlFile extends CommentEnabledFile {
+public class ThunderFile extends CommentEnabledFile {
 
-	protected JarmlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
-		super(file, FileType.JARML, reloadSetting, commentSetting, dataType);
+	protected ThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
+		super(file, FileType.THUNDER, reloadSetting, commentSetting, dataType);
 
 		if (this.create() && inputStream != null) {
 			SMFileUtils.writeToFile(this.file, inputStream);
 		}
 
-		this.fileData = new LocalFileData(JarmlEditor.readData(this.file, this.getDataType(), this.getCommentSetting()));
+		this.fileData = new LocalFileData(ThunderEditor.readData(this.file, this.getDataType(), this.getCommentSetting()));
 		this.lastLoaded = System.currentTimeMillis();
 	}
 
 	@Override
 	public void reload() {
 		try {
-			this.fileData.loadData(JarmlEditor.readData(this.file, this.getDataType(), this.getCommentSetting()));
+			this.fileData.loadData(ThunderEditor.readData(this.file, this.getDataType(), this.getCommentSetting()));
 			this.lastLoaded = System.currentTimeMillis();
 		} catch (IllegalArgumentException | IllegalStateException e) {
 			System.err.println("Exception while reloading '" + this.getAbsolutePath() + "'");
@@ -56,7 +56,7 @@ public class JarmlFile extends CommentEnabledFile {
 	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
 			try {
-				JarmlEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+				ThunderEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
 				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -69,7 +69,7 @@ public class JarmlFile extends CommentEnabledFile {
 	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(dataMap)) {
 			try {
-				JarmlEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+				ThunderEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
 				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -82,7 +82,7 @@ public class JarmlFile extends CommentEnabledFile {
 	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(key, dataMap)) {
 			try {
-				JarmlEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+				ThunderEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
 				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -100,7 +100,7 @@ public class JarmlFile extends CommentEnabledFile {
 		this.fileData.remove(key);
 
 		try {
-			JarmlEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+			ThunderEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 		} catch (IllegalStateException e) {
 			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -119,7 +119,7 @@ public class JarmlFile extends CommentEnabledFile {
 		}
 
 		try {
-			JarmlEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+			ThunderEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 		} catch (IllegalStateException e) {
 			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -139,7 +139,7 @@ public class JarmlFile extends CommentEnabledFile {
 		}
 
 		try {
-			JarmlEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+			ThunderEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 		} catch (IllegalStateException e) {
 			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -182,14 +182,14 @@ public class JarmlFile extends CommentEnabledFile {
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public JarmlFileSection getSection(final @NotNull String sectionKey) {
+	public ThunderFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
 	private Set<String> blockKeySet(final Map<String, Object> map) {
 		Set<String> tempSet = new HashSet<>();
 		for (String key : map.keySet()) {
-			if (map.get(key) != JarmlEditor.LineType.COMMENT && map.get(key) != JarmlEditor.LineType.BLANK_LINE) {
+			if (map.get(key) != ThunderEditor.LineType.COMMENT && map.get(key) != ThunderEditor.LineType.BLANK_LINE) {
 				tempSet.add(key);
 			}
 		}
@@ -204,7 +204,7 @@ public class JarmlFile extends CommentEnabledFile {
 				for (String tempKey : this.keySet((Map<String, Object>) map.get(key))) {
 					tempSet.add(key + "." + tempKey);
 				}
-			} else if (map.get(key) != JarmlEditor.LineType.COMMENT && map.get(key) != JarmlEditor.LineType.BLANK_LINE) {
+			} else if (map.get(key) != ThunderEditor.LineType.COMMENT && map.get(key) != ThunderEditor.LineType.BLANK_LINE) {
 				tempSet.add(key);
 			}
 		}
@@ -214,7 +214,7 @@ public class JarmlFile extends CommentEnabledFile {
 
 	public enum FileType implements FileTypeBase {
 
-		JARML("jrml");
+		THUNDER("tf");
 
 
 		private final String extension;
@@ -235,10 +235,10 @@ public class JarmlFile extends CommentEnabledFile {
 	}
 
 
-	private static class LocalSection extends JarmlFileSection {
+	private static class LocalSection extends ThunderFileSection {
 
-		private LocalSection(final @NotNull String sectionKey, final @NotNull JarmlFile jarmlFile) {
-			super(sectionKey, jarmlFile);
+		private LocalSection(final @NotNull String sectionKey, final @NotNull ThunderFile thunderFile) {
+			super(sectionKey, thunderFile);
 		}
 	}
 }

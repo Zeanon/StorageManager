@@ -4,10 +4,10 @@ import de.zeanon.storage.internal.base.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
-import de.zeanon.storage.internal.data.config.JarmlConfig;
+import de.zeanon.storage.internal.data.config.ThunderConfig;
 import de.zeanon.storage.internal.data.config.YamlConfig;
-import de.zeanon.storage.internal.data.raw.JarmlFile;
 import de.zeanon.storage.internal.data.raw.JsonFile;
+import de.zeanon.storage.internal.data.raw.ThunderFile;
 import de.zeanon.storage.internal.data.raw.TomlFile;
 import de.zeanon.storage.internal.data.raw.YamlFile;
 import de.zeanon.storage.internal.utils.SMFileUtils;
@@ -55,53 +55,53 @@ public abstract class StorageManager {
 	}
 
 
-	public static JarmlFileBuilder jarmlFile(final @NotNull File file) {
-		return new JarmlFileBuilder(file);
+	public static ThunderFileBuilder thunderFile(final @NotNull File file) {
+		return new ThunderFileBuilder(file);
 	}
 
-	public static JarmlFileBuilder jarmlFile(final @NotNull Path file) {
-		return new JarmlFileBuilder(file.toFile());
+	public static ThunderFileBuilder thunderFile(final @NotNull Path file) {
+		return new ThunderFileBuilder(file.toFile());
 	}
 
-	public static JarmlFileBuilder jarmlFile(final @NotNull String name) {
-		return new JarmlFileBuilder(new File(name + "." + JarmlFile.FileType.JARML));
+	public static ThunderFileBuilder thunderFile(final @NotNull String name) {
+		return new ThunderFileBuilder(new File(name + "." + ThunderFile.FileType.THUNDER));
 	}
 
-	public static JarmlFileBuilder jarmlFile(final @NotNull String directory, final @NotNull String name) {
-		return new JarmlFileBuilder(new File(directory, name + "." + JarmlFile.FileType.JARML));
+	public static ThunderFileBuilder thunderFile(final @NotNull String directory, final @NotNull String name) {
+		return new ThunderFileBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
 	}
 
-	public static JarmlFileBuilder jarmlFile(final @NotNull File directory, final @NotNull String name) {
-		return new JarmlFileBuilder(new File(directory, name + "." + JarmlFile.FileType.JARML));
+	public static ThunderFileBuilder thunderFile(final @NotNull File directory, final @NotNull String name) {
+		return new ThunderFileBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
 	}
 
-	public static JarmlFileBuilder jarmlFile(final @NotNull Path directory, final @NotNull String name) {
-		return new JarmlFileBuilder(new File(directory.toFile(), name + "." + JarmlFile.FileType.JARML));
+	public static ThunderFileBuilder thunderFile(final @NotNull Path directory, final @NotNull String name) {
+		return new ThunderFileBuilder(new File(directory.toFile(), name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 
-	public static JarmlConfigBuilder jarmlConfig(final @NotNull File file) {
-		return new JarmlConfigBuilder(file);
+	public static ThunderConfigBuilder thunderConfig(final @NotNull File file) {
+		return new ThunderConfigBuilder(file);
 	}
 
-	public static JarmlConfigBuilder jarmlConfig(final @NotNull Path file) {
-		return new JarmlConfigBuilder(file.toFile());
+	public static ThunderConfigBuilder thunderConfig(final @NotNull Path file) {
+		return new ThunderConfigBuilder(file.toFile());
 	}
 
-	public static JarmlConfigBuilder jarmlConfig(final @NotNull String name) {
-		return new JarmlConfigBuilder(new File(name + "." + JarmlFile.FileType.JARML));
+	public static ThunderConfigBuilder thunderConfig(final @NotNull String name) {
+		return new ThunderConfigBuilder(new File(name + "." + ThunderFile.FileType.THUNDER));
 	}
 
-	public static JarmlConfigBuilder jarmlConfig(final @NotNull String directory, final @NotNull String name) {
-		return new JarmlConfigBuilder(new File(directory, name + "." + JarmlFile.FileType.JARML));
+	public static ThunderConfigBuilder thunderConfig(final @NotNull String directory, final @NotNull String name) {
+		return new ThunderConfigBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
 	}
 
-	public static JarmlConfigBuilder jarmlConfig(final @NotNull File directory, final @NotNull String name) {
-		return new JarmlConfigBuilder(new File(directory, name + "." + JarmlFile.FileType.JARML));
+	public static ThunderConfigBuilder thunderConfig(final @NotNull File directory, final @NotNull String name) {
+		return new ThunderConfigBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
 	}
 
-	public static JarmlConfigBuilder jarmlConfig(final @NotNull Path directory, final @NotNull String name) {
-		return new JarmlConfigBuilder(new File(directory.toFile(), name + "." + JarmlFile.FileType.JARML));
+	public static ThunderConfigBuilder thunderConfig(final @NotNull Path directory, final @NotNull String name) {
+		return new ThunderConfigBuilder(new File(directory.toFile(), name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 
@@ -349,61 +349,61 @@ public abstract class StorageManager {
 		}
 	}
 
-	public static final class JarmlFileBuilder extends StorageManager {
+	public static final class ThunderFileBuilder extends StorageManager {
 
 		private CommentSettingBase commentSetting;
 		private DataTypeBase dataType;
 
 
-		private JarmlFileBuilder(final @NotNull File file) {
+		private ThunderFileBuilder(final @NotNull File file) {
 			super(file);
 		}
 
 
 		@Override
-		public final JarmlFileBuilder fromInputStream(@Nullable BufferedInputStream inputStream) {
+		public final ThunderFileBuilder fromInputStream(@Nullable BufferedInputStream inputStream) {
 			super.baseFromInputStream(inputStream);
 			return this;
 		}
 
 		@Override
-		public final JarmlFileBuilder fromFile(@Nullable File file) {
+		public final ThunderFileBuilder fromFile(@Nullable File file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final JarmlFileBuilder fromFile(@Nullable Path file) {
+		public final ThunderFileBuilder fromFile(@Nullable Path file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final JarmlFileBuilder fromFile(@Nullable String directory, @Nullable String name) {
+		public final ThunderFileBuilder fromFile(@Nullable String directory, @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final JarmlFileBuilder fromFile(@Nullable File directory, @Nullable String name) {
+		public final ThunderFileBuilder fromFile(@Nullable File directory, @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final JarmlFileBuilder fromFile(@Nullable Path directory, @Nullable String name) {
+		public final ThunderFileBuilder fromFile(@Nullable Path directory, @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final JarmlFileBuilder fromResource(@Nullable String resource) {
+		public final ThunderFileBuilder fromResource(@Nullable String resource) {
 			super.baseFromResource(resource);
 			return this;
 		}
 
 		@Override
-		public final JarmlFileBuilder reloadSetting(@Nullable ReloadSettingBase reloadSetting) {
+		public final ThunderFileBuilder reloadSetting(@Nullable ReloadSettingBase reloadSetting) {
 			super.baseReloadSetting(reloadSetting);
 			return this;
 		}
@@ -413,7 +413,7 @@ public abstract class StorageManager {
 		 *
 		 * @param commentSetting the CommentSetting to be set(Default for Configs is true, otherwise it's false)
 		 */
-		public final JarmlFileBuilder commentSetting(final CommentSettingBase commentSetting) {
+		public final ThunderFileBuilder commentSetting(final CommentSettingBase commentSetting) {
 			this.commentSetting = commentSetting;
 			return this;
 		}
@@ -423,81 +423,81 @@ public abstract class StorageManager {
 		 *
 		 * @param dataType the DataType to be set(Default is AUTOMATIC, which depends on the FileType and the ReloadSetting)
 		 */
-		public final JarmlFileBuilder dataType(final @Nullable DataTypeBase dataType) {
+		public final ThunderFileBuilder dataType(final @Nullable DataTypeBase dataType) {
 			this.dataType = dataType;
 			return this;
 		}
 
 
 		@Override
-		public final JarmlFile create() {
-			return new LocalJarmlFile(super.file, super.inputStream, super.reloadSetting, this.commentSetting, this.dataType);
+		public final ThunderFile create() {
+			return new LocalThunderFile(super.file, super.inputStream, super.reloadSetting, this.commentSetting, this.dataType);
 		}
 
 
-		private static final class LocalJarmlFile extends JarmlFile {
+		private static final class LocalThunderFile extends ThunderFile {
 
-			private LocalJarmlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
+			private LocalThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 				super(file, inputStream, reloadSetting, commentSetting, dataType);
 			}
 		}
 	}
 
-	public static final class JarmlConfigBuilder extends StorageManager {
+	public static final class ThunderConfigBuilder extends StorageManager {
 
 		private CommentSettingBase commentSetting;
 		private DataTypeBase dataType;
 
 
-		private JarmlConfigBuilder(final @NotNull File file) {
+		private ThunderConfigBuilder(final @NotNull File file) {
 			super(file);
 		}
 
 
 		@Override
-		public final JarmlConfigBuilder fromInputStream(@Nullable BufferedInputStream inputStream) {
+		public final ThunderConfigBuilder fromInputStream(@Nullable BufferedInputStream inputStream) {
 			super.baseFromInputStream(inputStream);
 			return this;
 		}
 
 		@Override
-		public final JarmlConfigBuilder fromFile(@Nullable File file) {
+		public final ThunderConfigBuilder fromFile(@Nullable File file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final JarmlConfigBuilder fromFile(@Nullable Path file) {
+		public final ThunderConfigBuilder fromFile(@Nullable Path file) {
 			super.baseFromFile(file);
 			return this;
 		}
 
 		@Override
-		public final JarmlConfigBuilder fromFile(@Nullable String directory, @Nullable String name) {
+		public final ThunderConfigBuilder fromFile(@Nullable String directory, @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final JarmlConfigBuilder fromFile(@Nullable File directory, @Nullable String name) {
+		public final ThunderConfigBuilder fromFile(@Nullable File directory, @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final JarmlConfigBuilder fromFile(@Nullable Path directory, @Nullable String name) {
+		public final ThunderConfigBuilder fromFile(@Nullable Path directory, @Nullable String name) {
 			super.baseFromFile(directory, name);
 			return this;
 		}
 
 		@Override
-		public final JarmlConfigBuilder fromResource(@Nullable String resource) {
+		public final ThunderConfigBuilder fromResource(@Nullable String resource) {
 			super.baseFromResource(resource);
 			return this;
 		}
 
 		@Override
-		public final JarmlConfigBuilder reloadSetting(@Nullable ReloadSettingBase reloadSetting) {
+		public final ThunderConfigBuilder reloadSetting(@Nullable ReloadSettingBase reloadSetting) {
 			super.baseReloadSetting(reloadSetting);
 			return this;
 		}
@@ -507,7 +507,7 @@ public abstract class StorageManager {
 		 *
 		 * @param commentSetting the CommentSetting to be set(Default for Configs is true, otherwise it's false)
 		 */
-		public final JarmlConfigBuilder commentSetting(final CommentSettingBase commentSetting) {
+		public final ThunderConfigBuilder commentSetting(final CommentSettingBase commentSetting) {
 			this.commentSetting = commentSetting;
 			return this;
 		}
@@ -517,21 +517,21 @@ public abstract class StorageManager {
 		 *
 		 * @param dataType the DataType to be set(Default is AUTOMATIC, which depends on the FileType and the ReloadSetting)
 		 */
-		public final JarmlConfigBuilder dataType(final @Nullable DataTypeBase dataType) {
+		public final ThunderConfigBuilder dataType(final @Nullable DataTypeBase dataType) {
 			this.dataType = dataType;
 			return this;
 		}
 
 
 		@Override
-		public final JarmlConfig create() {
-			return new LocalJarmlConfig(super.file, super.inputStream, super.reloadSetting, this.commentSetting, this.dataType);
+		public final ThunderConfig create() {
+			return new LocalThunderConfig(super.file, super.inputStream, super.reloadSetting, this.commentSetting, this.dataType);
 		}
 
 
-		private static final class LocalJarmlConfig extends JarmlConfig {
+		private static final class LocalThunderConfig extends ThunderConfig {
 
-			private LocalJarmlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
+			private LocalThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 				super(file, inputStream, reloadSetting, commentSetting, dataType);
 			}
 		}

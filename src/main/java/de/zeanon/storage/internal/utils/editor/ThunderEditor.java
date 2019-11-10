@@ -18,10 +18,10 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * Class for parsing a Jarml-Type File
+ * Class for parsing a Thunder-Type File
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class JarmlEditor {
+public class ThunderEditor {
 
 	/**
 	 * Write the given Data to a File.
