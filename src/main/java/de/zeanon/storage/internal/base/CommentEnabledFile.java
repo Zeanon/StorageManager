@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -25,12 +24,11 @@ import org.jetbrains.annotations.Nullable;
  * @see FlatFile
  */
 @Getter
-@Setter
+@Accessors(chain = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@Accessors(fluent = true)
-@SuppressWarnings("unused")
-public abstract class CommentEnabledFile extends FlatFile {
+@SuppressWarnings({"unused", "UnusedReturnValue"})
+public abstract class CommentEnabledFile<C extends CommentEnabledFile> extends FlatFile<C> {
 
 
 	/**
@@ -45,11 +43,23 @@ public abstract class CommentEnabledFile extends FlatFile {
 	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, fileType, reloadSetting);
 		if (commentSetting != null) {
-			this.commentSetting(commentSetting);
+			this.setCommentSetting(commentSetting);
 		}
 		if (dataType != null) {
-			this.dataType(dataType);
+			this.setDataType(dataType);
 		}
+	}
+
+	public C setCommentSetting(final @NotNull CommentSettingBase commentSetting) {
+		this.commentSetting = commentSetting;
+		//noinspection unchecked
+		return (C) this;
+	}
+
+	public C setDataType(final @NotNull DataTypeBase dataType) {
+		this.dataType = dataType;
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	/**
@@ -57,9 +67,11 @@ public abstract class CommentEnabledFile extends FlatFile {
 	 *
 	 * @see FlatFile#reload().
 	 */
-	public void reload(final @NotNull CommentSettingBase commentSetting) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+	public C reload(final @NotNull CommentSettingBase commentSetting) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.reload();
+		//noinspection unchecked
+		return (C) this;
 	}
 
 
@@ -68,19 +80,25 @@ public abstract class CommentEnabledFile extends FlatFile {
 	 *
 	 * @see FlatFile#set(String, Object) .
 	 */
-	public synchronized void set(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @Nullable Object value) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+	public synchronized C set(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @Nullable Object value) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.set(key, value);
+		//noinspection unchecked
+		return (C) this;
 	}
 
-	public synchronized void setAll(final @NotNull CommentSettingBase commentSetting, final @NotNull Map<String, Object> dataMap) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+	public synchronized C setAll(final @NotNull CommentSettingBase commentSetting, final @NotNull Map<String, Object> dataMap) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.setAll(dataMap);
+		//noinspection unchecked
+		return (C) this;
 	}
 
-	public synchronized void setAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+	public synchronized C setAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.setAll(key, dataMap);
+		//noinspection unchecked
+		return (C) this;
 	}
 
 
@@ -89,28 +107,38 @@ public abstract class CommentEnabledFile extends FlatFile {
 	 *
 	 * @see FlatFile#remove(String).
 	 */
-	public synchronized void remove(final @NotNull CommentSettingBase commentSetting, final @NotNull String key) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+	public synchronized C remove(final @NotNull CommentSettingBase commentSetting, final @NotNull String key) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.remove(key);
+		//noinspection unchecked
+		return (C) this;
 	}
 
-	public synchronized void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String... keys) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+	public synchronized C removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String... keys) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.removeAll(keys);
+		//noinspection unchecked
+		return (C) this;
 	}
 
-	public synchronized void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull List<String> keys) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+	public synchronized C removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull List<String> keys) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.removeAll(keys);
+		//noinspection unchecked
+		return (C) this;
 	}
 
-	public synchronized void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull String... keys) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+	public synchronized C removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull String... keys) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.removeAll(key, keys);
+		//noinspection unchecked
+		return (C) this;
 	}
 
-	public synchronized void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull List<String> keys) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+	public synchronized C removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull List<String> keys) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.removeAll(key, keys);
+		//noinspection unchecked
+		return (C) this;
 	}
 }

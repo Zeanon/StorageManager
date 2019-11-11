@@ -23,20 +23,20 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class TomlFile extends FlatFile {
+public class TomlFile extends FlatFile<TomlFile> {
 
 	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting) {
 		super(file, FileType.TOML, reloadSetting);
 
 		if (this.create() && inputStream != null) {
-			SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(inputStream));
+			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
 		}
 
 		try {
-			this.fileData = new LocalFileData(com.electronwill.toml.Toml.read(this.file));
-			this.lastLoaded = System.currentTimeMillis();
+			this.setFileData(new LocalFileData(com.electronwill.toml.Toml.read(this.getFile())));
+			this.setLastLoaded(System.currentTimeMillis());
 		} catch (IOException e) {
-			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
+			System.err.println("Exception while reloading '" + this.getFile().getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
@@ -44,15 +44,16 @@ public class TomlFile extends FlatFile {
 
 
 	@Override
-	public void reload() {
+	public TomlFile reload() {
 		try {
-			this.fileData.loadData(com.electronwill.toml.Toml.read(this.file));
-			this.lastLoaded = System.currentTimeMillis();
+			this.getFileData().loadData(com.electronwill.toml.Toml.read(this.getFile()));
+			this.setLastLoaded(System.currentTimeMillis());
 		} catch (IOException e) {
-			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
+			System.err.println("Exception while reloading '" + this.getFile().getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
+		return this;
 	}
 
 	/**
@@ -62,97 +63,103 @@ public class TomlFile extends FlatFile {
 	 * @param value The value you want to set in your file
 	 */
 	@Override
-	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
+	public synchronized TomlFile set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
 			try {
-				com.electronwill.toml.Toml.write(this.fileData.toMap(), this.file);
+				com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
 			} catch (IOException e) {
-				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
+				System.err.println("Error while writing to '" + this.getFile().getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
+	public synchronized TomlFile setAll(final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(dataMap)) {
 			try {
-				com.electronwill.toml.Toml.write(fileData.toMap(), file());
+				com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
 			} catch (IOException e) {
-				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
+				System.err.println("Error while writing to '" + this.getFile().getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+	public synchronized TomlFile setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(key, dataMap)) {
 			try {
-				com.electronwill.toml.Toml.write(this.fileData.toMap(), this.file);
+				com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
 			} catch (IOException e) {
-				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
+				System.err.println("Error while writing to '" + this.getFile().getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void remove(final @NotNull String key) {
+	public synchronized TomlFile remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 
 		this.update();
 
-		this.fileData.remove(key);
+		this.getFileData().remove(key);
 
 		try {
-			com.electronwill.toml.Toml.write(this.fileData.toMap(), this.file);
+			com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
 		} catch (IOException e) {
-			System.err.println("Exception while writing to Toml file '" + this.file.getAbsolutePath() + "'");
+			System.err.println("Exception while writing to Toml file '" + this.getFile().getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull List<String> keys) {
+	public synchronized TomlFile removeAll(final @NotNull List<String> keys) {
 		Objects.checkNull(keys, "List must not be null");
 
 		this.update();
 
 		for (String key : keys) {
-			this.fileData.remove(key);
+			this.getFileData().remove(key);
 		}
 
 		try {
-			com.electronwill.toml.Toml.write(this.fileData.toMap(), this.file);
+			com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
 		} catch (IOException e) {
-			System.err.println("Exception while writing to Toml file '" + this.file.getAbsolutePath() + "'");
+			System.err.println("Exception while writing to Toml file '" + this.getFile().getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
+	public synchronized TomlFile removeAll(final @NotNull String key, final @NotNull List<String> keys) {
 		Objects.checkNull(keys, "List must not be null");
 
 		this.update();
 
 		for (String tempKey : keys) {
-			this.fileData.remove(key + "." + tempKey);
+			this.getFileData().remove(key + "." + tempKey);
 		}
 
 		try {
-			com.electronwill.toml.Toml.write(this.fileData.toMap(), this.file);
+			com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
 		} catch (IOException e) {
-			System.err.println("Exception while writing to Toml file '" + this.file.getAbsolutePath() + "'");
+			System.err.println("Exception while writing to Toml file '" + this.getFile().getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
+		return this;
 	}
 
 

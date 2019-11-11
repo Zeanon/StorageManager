@@ -7,61 +7,75 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-@SuppressWarnings("unused")
-public interface ConfigBase extends StorageBase {
+@SuppressWarnings({"unused", "UnusedReturnValue"})
+public interface ConfigBase<C extends ConfigBase> extends StorageBase<C> {
 
-	StorageBase commentSetting(CommentSettingBase commentSetting);
+	C setCommentSetting(final @NotNull CommentSettingBase commentSetting);
+
+	C setDataType(final @NotNull DataTypeBase dataType);
 
 	List<String> getHeader();
 
-	default void setHeader(final @Nullable String... header) {
+	default C setHeader(final @Nullable String... header) {
 		this.setHeader(header == null ? null : Arrays.asList(header));
+		//noinspection unchecked
+		return (C) this;
 	}
 
-	void setHeader(final @Nullable List<String> header);
+	C setHeader(final @Nullable List<String> header);
 
 	List<String> getFooter();
 
-	default void setFooter(final @Nullable String... footer) {
+	default C setFooter(final @Nullable String... footer) {
 		this.setFooter(footer == null ? null : Arrays.asList(footer));
+		//noinspection unchecked
+		return (C) this;
 	}
 
-	void setFooter(final @Nullable List<String> footer);
+	C setFooter(final @Nullable List<String> footer);
 
 	List<String> getComments();
 
 	default List<String> getHeader(final @NotNull CommentSettingBase commentSetting) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		return this.getHeader();
 	}
 
-	default void setHeader(final @NotNull CommentSettingBase commentSetting, final @Nullable String... header) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+	default C setHeader(final @NotNull CommentSettingBase commentSetting, final @Nullable String... header) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.setHeader(header);
+		//noinspection unchecked
+		return (C) this;
 	}
 
-	default void setHeader(final @NotNull CommentSettingBase commentSetting, final @Nullable List<String> header) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+	default C setHeader(final @NotNull CommentSettingBase commentSetting, final @Nullable List<String> header) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.setHeader(header);
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	default List<String> getFooter(final @NotNull CommentSettingBase commentSetting) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		return this.getFooter();
 	}
 
-	default void setFooter(final @NotNull CommentSettingBase commentSetting, final @Nullable String... footer) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+	default C setFooter(final @NotNull CommentSettingBase commentSetting, final @Nullable String... footer) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.setFooter(footer);
+		//noinspection unchecked
+		return (C) this;
 	}
 
-	default void setFooter(final @NotNull CommentSettingBase commentSetting, final @Nullable List<String> footer) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+	default C setFooter(final @NotNull CommentSettingBase commentSetting, final @Nullable List<String> footer) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.setFooter(footer);
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	default List<String> getComments(final @NotNull CommentSettingBase commentSetting) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		return this.getComments();
 	}
 }

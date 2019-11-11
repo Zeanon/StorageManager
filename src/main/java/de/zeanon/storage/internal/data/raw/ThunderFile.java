@@ -27,130 +27,139 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ThunderFile extends CommentEnabledFile {
+public class ThunderFile extends CommentEnabledFile<ThunderFile> {
 
 	protected ThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.THUNDER, reloadSetting, commentSetting, dataType);
 
 		if (this.create() && inputStream != null) {
-			SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(inputStream));
+			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
 		}
 
-		this.fileData = new LocalFileData(ThunderEditor.readData(this.file, this.dataType(), this.commentSetting()));
-		this.lastLoaded = System.currentTimeMillis();
+		this.setFileData(new LocalFileData(ThunderEditor.readData(this.getFile(), this.getDataType(), this.getCommentSetting())));
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
+
 	@Override
-	public void reload() {
+	public ThunderFile reload() {
 		try {
-			this.fileData.loadData(ThunderEditor.readData(this.file, this.dataType(), this.commentSetting()));
-			this.lastLoaded = System.currentTimeMillis();
+			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getDataType(), this.getCommentSetting()));
+			this.setLastLoaded(System.currentTimeMillis());
 		} catch (IllegalArgumentException | IllegalStateException e) {
 			System.err.println("Exception while reloading '" + this.getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
+	public synchronized ThunderFile set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
 			try {
-				ThunderEditor.writeData(this.file, this.fileData.toMap(), this.commentSetting());
+				ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
 				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
+	public synchronized ThunderFile setAll(final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(dataMap)) {
 			try {
-				ThunderEditor.writeData(this.file, this.fileData.toMap(), this.commentSetting());
+				ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
 				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+	public synchronized ThunderFile setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(key, dataMap)) {
 			try {
-				ThunderEditor.writeData(this.file, this.fileData.toMap(), this.commentSetting());
+				ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
 				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void remove(final @NotNull String key) {
+	public synchronized ThunderFile remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 
 		this.update();
 
-		this.fileData.remove(key);
+		this.getFileData().remove(key);
 
 		try {
-			ThunderEditor.writeData(this.file, this.fileData.toMap(), this.commentSetting());
+			ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
 		} catch (IllegalStateException e) {
 			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull List<String> keys) {
+	public synchronized ThunderFile removeAll(final @NotNull List<String> keys) {
 		Objects.checkNull(keys, "List must not be null");
 
 		this.update();
 
 		for (String key : keys) {
-			this.fileData.remove(key);
+			this.getFileData().remove(key);
 		}
 
 		try {
-			ThunderEditor.writeData(this.file, this.fileData.toMap(), this.commentSetting());
+			ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
 		} catch (IllegalStateException e) {
 			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
+		return this;
 	}
 
+	@SuppressWarnings("DuplicatedCode")
 	@Override
-	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
+	public synchronized ThunderFile removeAll(final @NotNull String key, final @NotNull List<String> keys) {
 		Objects.checkNull(key, "Key must not be null");
 		Objects.checkNull(keys, "List must not be null");
 
 		this.update();
 
 		for (String tempKey : keys) {
-			this.fileData.remove(key + "." + tempKey);
+			this.getFileData().remove(key + "." + tempKey);
 		}
 
 		try {
-			ThunderEditor.writeData(this.file, this.fileData.toMap(), this.commentSetting());
+			ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
 		} catch (IllegalStateException e) {
 			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
+		return this;
 	}
 
 	@Override
 	public Set<String> keySet() {
 		this.update();
-		return this.keySet(this.fileData.toMap());
+		return this.keySet(this.getFileData().toMap());
 	}
 
 	@Override
@@ -158,13 +167,13 @@ public class ThunderFile extends CommentEnabledFile {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
 		//noinspection unchecked
-		return this.fileData.get(key) instanceof Map ? this.keySet((Map<String, Object>) this.fileData.get(key)) : null;
+		return this.getFileData().get(key) instanceof Map ? this.keySet((Map<String, Object>) this.getFileData().get(key)) : null;
 	}
 
 	@Override
 	public Set<String> blockKeySet() {
 		this.update();
-		return this.blockKeySet(this.fileData.toMap());
+		return this.blockKeySet(this.getFileData().toMap());
 	}
 
 	@Override
@@ -172,7 +181,7 @@ public class ThunderFile extends CommentEnabledFile {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
 		//noinspection unchecked
-		return this.fileData.get(key) instanceof Map ? this.blockKeySet((Map<String, Object>) this.fileData.get(key)) : null;
+		return this.getFileData().get(key) instanceof Map ? this.blockKeySet((Map<String, Object>) this.getFileData().get(key)) : null;
 	}
 
 	/**
@@ -196,6 +205,7 @@ public class ThunderFile extends CommentEnabledFile {
 		return tempSet;
 	}
 
+	@SuppressWarnings("DuplicatedCode")
 	private Set<String> keySet(final Map<String, Object> map) {
 		Set<String> tempSet = new HashSet<>();
 		for (String key : map.keySet()) {

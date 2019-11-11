@@ -24,12 +24,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+@ToString
+@EqualsAndHashCode
 @RequiredArgsConstructor
 @Accessors(fluent = true)
-@EqualsAndHashCode
-@ToString
 @SuppressWarnings("unused")
-public abstract class StorageManager<S> {
+public abstract class StorageManager<C> {
 
 	private final File file;
 	protected BufferedInputStream inputStream;
@@ -185,58 +185,58 @@ public abstract class StorageManager<S> {
 	}
 
 
-	public final S fromInputStream(final @Nullable InputStream inputStream) {
+	public final C fromInputStream(final @Nullable InputStream inputStream) {
 		this.inputStream = SMFileUtils.createNewInputStream(inputStream);
 		//noinspection unchecked
-		return (S) this;
+		return (C) this;
 	}
 
-	public final S fromFile(final @Nullable File file) {
+	public final C fromFile(final @Nullable File file) {
 		this.inputStream = file == null ? null : SMFileUtils.createNewInputStream(file);
 		//noinspection unchecked
-		return (S) this;
+		return (C) this;
 	}
 
-	public final S fromFile(final @Nullable Path file) {
+	public final C fromFile(final @Nullable Path file) {
 		this.inputStream = file == null ? null : SMFileUtils.createNewInputStream(file.toFile());
 		//noinspection unchecked
-		return (S) this;
+		return (C) this;
 	}
 
-	public final S fromFile(final @Nullable String file) {
+	public final C fromFile(final @Nullable String file) {
 		this.inputStream = file == null ? null : SMFileUtils.createNewInputStream(new File(file));
 		//noinspection unchecked
-		return (S) this;
+		return (C) this;
 	}
 
-	public final S fromFile(final @Nullable String directory, final @Nullable String name) {
+	public final C fromFile(final @Nullable String directory, final @Nullable String name) {
 		if (name != null) {
 			this.inputStream = SMFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory, name));
 		}
 		//noinspection unchecked
-		return (S) this;
+		return (C) this;
 	}
 
-	public final S fromFile(final @Nullable File directory, final @Nullable String name) {
+	public final C fromFile(final @Nullable File directory, final @Nullable String name) {
 		if (name != null) {
 			this.inputStream = SMFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory, name));
 		}
 		//noinspection unchecked
-		return (S) this;
+		return (C) this;
 	}
 
-	public final S fromFile(final @Nullable Path directory, final @Nullable String name) {
+	public final C fromFile(final @Nullable Path directory, final @Nullable String name) {
 		if (name != null) {
 			this.inputStream = SMFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory.toFile(), name));
 		}
 		//noinspection unchecked
-		return (S) this;
+		return (C) this;
 	}
 
-	public final S fromResource(final @Nullable String resource) {
+	public final C fromResource(final @Nullable String resource) {
 		this.inputStream = resource == null ? null : SMFileUtils.createNewInputStream(resource);
 		//noinspection unchecked
-		return (S) this;
+		return (C) this;
 	}
 
 
@@ -350,7 +350,7 @@ public abstract class StorageManager<S> {
 
 
 		@Override
-		public final FlatFile create() {
+		public final TomlFile create() {
 			return new LocalTomlFile(super.file, this.inputStream, this.reloadSetting);
 		}
 

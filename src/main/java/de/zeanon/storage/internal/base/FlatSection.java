@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.base;
 
+import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.base.interfaces.StorageBase;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.util.List;
@@ -15,20 +16,32 @@ import org.jetbrains.annotations.Nullable;
 
 @ToString
 @EqualsAndHashCode
-@Accessors(fluent = true)
+@Accessors(chain = true)
 @SuppressWarnings("unused")
-public abstract class FlatSection implements StorageBase, Comparable<FlatSection> {
+public abstract class FlatSection<C extends FlatSection, F extends FlatFile> implements StorageBase<C>, Comparable<FlatSection> {
 
-	private final FlatFile flatFile;
+	private final FlatFile<F> flatFile;
 	@Getter
 	protected String sectionKey;
 
 
-	protected FlatSection(final @NotNull String sectionKey, final @NotNull FlatFile flatFile) {
+	protected FlatSection(final @NotNull String sectionKey, final @NotNull FlatFile<F> flatFile) {
 		this.sectionKey = Objects.notNull(sectionKey, "Key must not be null");
 		this.flatFile = flatFile;
 	}
 
+
+	public C setReloadSetting(final @NotNull ReloadSettingBase reloadSetting) {
+		this.flatFile.setReloadSetting(reloadSetting);
+		//noinspection unchecked
+		return (C) this;
+	}
+
+	public C setSectionKey(final @NotNull String sectionKey) {
+		this.sectionKey = sectionKey;
+		//noinspection unchecked
+		return (C) this;
+	}
 
 	@Override
 	public Object get(final @NotNull String key) {
@@ -46,41 +59,57 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 	}
 
 	@Override
-	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
+	public synchronized C set(final @NotNull String key, final @Nullable Object value) {
 		this.flatFile.set(this.sectionKey(key), value);
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
-		this.flatFile.setAll(this.sectionKey(), dataMap);
+	public synchronized C setAll(final @NotNull Map<String, Object> dataMap) {
+		this.flatFile.setAll(this.getSectionKey(), dataMap);
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+	public synchronized C setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
 		this.flatFile.setAll(this.sectionKey(key), dataMap);
+		//noinspection unchecked
+		return (C) this;
 	}
 
-	public synchronized void set(final @Nullable Object value) {
-		this.flatFile.set(this.sectionKey(), value);
+	public synchronized C set(final @Nullable Object value) {
+		this.flatFile.set(this.getSectionKey(), value);
+		//noinspection unchecked
+		return (C) this;
 	}
 
-	public synchronized void remove() {
-		this.flatFile.remove(this.sectionKey());
+	public synchronized C remove() {
+		this.flatFile.remove(this.getSectionKey());
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	@Override
-	public synchronized void remove(final @NotNull String key) {
+	public synchronized C remove(final @NotNull String key) {
 		this.flatFile.remove(this.sectionKey(key));
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull List<String> keys) {
-		this.flatFile.removeAll(this.sectionKey(), keys);
+	public synchronized C removeAll(final @NotNull List<String> keys) {
+		this.flatFile.removeAll(this.getSectionKey(), keys);
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
+	public synchronized C removeAll(final @NotNull String key, final @NotNull List<String> keys) {
 		this.flatFile.removeAll(this.sectionKey(key), keys);
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	@Override
@@ -90,12 +119,12 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 
 	@Override
 	public Set<String> keySet() {
-		return this.flatFile.keySet(this.sectionKey());
+		return this.flatFile.keySet(this.getSectionKey());
 	}
 
 	@Override
 	public Set<String> blockKeySet() {
-		return this.flatFile.blockKeySet(this.sectionKey());
+		return this.flatFile.blockKeySet(this.getSectionKey());
 	}
 
 	@Override
@@ -109,7 +138,7 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 	}
 
 	protected String sectionKey(final @NotNull String key) {
-		return (this.sectionKey() == null || this.sectionKey().isEmpty()) ? Objects.notNull(key, "Key must not be null") : this.sectionKey() + "." + Objects.notNull(key, "Key must not be null");
+		return (this.getSectionKey() == null || this.getSectionKey().isEmpty()) ? Objects.notNull(key, "Key must not be null") : this.getSectionKey() + "." + Objects.notNull(key, "Key must not be null");
 	}
 
 	@Override

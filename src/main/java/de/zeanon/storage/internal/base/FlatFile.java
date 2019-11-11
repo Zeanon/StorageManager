@@ -13,10 +13,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,21 +23,22 @@ import org.json.JSONObject;
 /**
  * Basic foundation for the Data Classes
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
 @Getter
 @ToString
 @EqualsAndHashCode
-@Accessors(fluent = true)
-public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
+@Accessors(chain = true)
+@SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
+public abstract class FlatFile<C extends FlatFile> implements StorageBase<C>, Comparable<FlatFile> {
 
-	protected final File file;
+	private final File file;
 	private final FileTypeBase fileType;
-	protected FileData fileData;
-	protected long lastLoaded;
+	@Setter(AccessLevel.PROTECTED)
+	private FileData fileData;
+	@Setter(AccessLevel.PROTECTED)
+	private long lastLoaded;
 	/**
 	 * Default: INTELLIGENT
 	 */
-	@Setter
 	private ReloadSettingBase reloadSetting = Reload.INTELLIGENT;
 
 
@@ -50,11 +48,17 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			this.file = file;
 
 			if (reloadSetting != null) {
-				this.reloadSetting(reloadSetting);
+				this.setReloadSetting(reloadSetting);
 			}
 		} else {
 			throw new IllegalStateException("File '" + file.getAbsolutePath() + "' is not of type '" + fileType + "'");
 		}
+	}
+
+	public C setReloadSetting(final @NotNull ReloadSettingBase reloadSetting) {
+		this.reloadSetting = reloadSetting;
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	public String getPath() {
@@ -78,51 +82,63 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	/**
 	 * Set the Contents of the FileData and File from a given InputStream
 	 */
-	public synchronized void setDataFromStream(final @Nullable InputStream inputStream) {
+	public synchronized C setDataFromStream(final @Nullable InputStream inputStream) {
 		SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(inputStream));
 		this.reload();
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	/**
 	 * Delete all Contents of the FileData and File
 	 */
-	public synchronized void clear() {
+	public synchronized C clear() {
 		SMFileUtils.writeToFile(this.file, null);
 		this.reload();
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	/**
 	 * Just delete the File
 	 */
-	public synchronized void deleteFile() {
+	public synchronized C deleteFile() {
 		if (!this.file.delete()) {
 			System.err.println("Could not delete '" + this.file.getAbsolutePath() + "'");
 			throw new IllegalStateException();
 		}
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	/**
 	 * Clears the contents of the internal FileData.
 	 * To get any data, you simply need to reload.
 	 */
-	public synchronized void clearData() {
+	public synchronized C clearData() {
 		this.fileData.clear();
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	/**
 	 * Set the Contents of the FileData and File from a given File
 	 */
-	public synchronized void setDataFromFile(final @Nullable File file) {
+	public synchronized C setDataFromFile(final @Nullable File file) {
 		SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(file));
 		this.reload();
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	/**
 	 * Set the Contents of the FileData and File from a given Resource
 	 */
-	public synchronized void setDataFromResource(final @Nullable String resource) {
+	public synchronized C setDataFromResource(final @Nullable String resource) {
 		SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(resource));
 		this.reload();
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	public String getAbsolutePath() {
@@ -141,7 +157,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	/**
 	 * Reread the content of our flat file
 	 */
-	public abstract void reload();
+	public abstract C reload();
 
 	@Override
 	public boolean hasKey(final @NotNull String key) {
@@ -182,7 +198,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * @param target      the CharSequence to be replaced.
 	 * @param replacement the Replacement Sequence.
 	 */
-	public synchronized void replaceInFile(final @NotNull CharSequence target, final @NotNull CharSequence replacement) throws IOException {
+	public synchronized C replaceInFile(final @NotNull CharSequence target, final @NotNull CharSequence replacement) throws IOException {
 		de.zeanon.storage.internal.utils.basic.Objects.checkNull(target, "Target must not be null");
 		de.zeanon.storage.internal.utils.basic.Objects.checkNull(replacement, "Replacement must not be null");
 
@@ -195,6 +211,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			writer.print(((String) line).replace(target, replacement));
 		});
 		this.reload();
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	@Override

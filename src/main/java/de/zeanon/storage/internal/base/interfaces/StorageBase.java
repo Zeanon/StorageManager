@@ -13,8 +13,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Basic Interface for the Data Classes
  */
-@SuppressWarnings({"unused", "unchecked"})
-public interface StorageBase {
+@SuppressWarnings({"unused", "unchecked", "UnusedReturnValue"})
+public interface StorageBase<C extends StorageBase> {
 
 	/**
 	 * Get a boolean from a File
@@ -280,14 +280,14 @@ public interface StorageBase {
 	 * @param key   The key your value should be associated with
 	 * @param value The value you want to set in your File
 	 */
-	void set(final @NotNull String key, final @Nullable Object value);
+	C set(final @NotNull String key, final @Nullable Object value);
 
 	/**
 	 * Set several key, value pairs
 	 *
 	 * @param dataMap the pairs to be set
 	 */
-	void setAll(final @NotNull Map<String, Object> dataMap);
+	C setAll(final @NotNull Map<String, Object> dataMap);
 
 	/**
 	 * Set several key, value pairs
@@ -295,7 +295,7 @@ public interface StorageBase {
 	 * @param key     the key of the SubBlock
 	 * @param dataMap the pairs to be set
 	 */
-	void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap);
+	C setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap);
 
 	/**
 	 * get the keySet of all layers of the map combined.
@@ -374,15 +374,17 @@ public interface StorageBase {
 	 *
 	 * @param key the key to remove
 	 */
-	void remove(final @NotNull String key);
+	C remove(final @NotNull String key);
 
 	/**
 	 * Remove given keys from a File
 	 *
 	 * @param keys the keys to remove
 	 */
-	default void removeAll(final @NotNull String... keys) {
+	default C removeAll(final @NotNull String... keys) {
 		removeAll(Arrays.asList(keys));
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	/**
@@ -390,15 +392,17 @@ public interface StorageBase {
 	 *
 	 * @param keys the keys to remove
 	 */
-	void removeAll(final @NotNull List<String> keys);
+	C removeAll(final @NotNull List<String> keys);
 
 	/**
 	 * Remove given keys from a File
 	 *
 	 * @param keys the keys to remove
 	 */
-	default void removeAll(final @NotNull String key, final @NotNull String... keys) {
+	default C removeAll(final @NotNull String key, final @NotNull String... keys) {
 		removeAll(key, Arrays.asList(keys));
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	/**
@@ -406,7 +410,7 @@ public interface StorageBase {
 	 *
 	 * @param keys the keys to remove
 	 */
-	void removeAll(final @NotNull String key, final @NotNull List<String> keys);
+	C removeAll(final @NotNull String key, final @NotNull List<String> keys);
 
 	/**
 	 * Sets a value to the File if the File doesn't already contain the value
@@ -415,10 +419,12 @@ public interface StorageBase {
 	 * @param key   key to set the value
 	 * @param value Value to set
 	 */
-	default void setDefault(final @NotNull String key, final @Nullable Object value) {
+	default C setDefault(final @NotNull String key, final @Nullable Object value) {
 		if (!this.hasKey(key)) {
 			set(key, value);
 		}
+		//noinspection unchecked
+		return (C) this;
 	}
 
 	FlatSection getSection(final @NotNull String sectionKey);

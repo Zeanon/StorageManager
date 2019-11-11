@@ -29,21 +29,22 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings({"unchecked", "unused"})
-public class YamlFile extends CommentEnabledFile {
+@SuppressWarnings("unused")
+public class YamlFile extends CommentEnabledFile<YamlFile> {
 
 	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.YAML, reloadSetting, commentSetting, dataType);
 
 		if (this.create() && inputStream != null) {
-			SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(inputStream));
+			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
 		}
 
 		try {
-			this.fileData = new LocalFileData((Map<String, Object>) new YamlReader(new FileReader(this.file)).read());
-			this.lastLoaded = System.currentTimeMillis();
+			//noinspection unchecked
+			this.setFileData(new LocalFileData((Map<String, Object>) new YamlReader(new FileReader(this.getFile())).read()));
+			this.setLastLoaded(System.currentTimeMillis());
 		} catch (YamlException | FileNotFoundException e) {
-			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
+			System.err.println("Exception while reloading '" + this.getFile().getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
@@ -51,93 +52,101 @@ public class YamlFile extends CommentEnabledFile {
 
 
 	@Override
-	public void reload() {
+	public YamlFile reload() {
 		try {
-			this.fileData.loadData((Map<String, Object>) new YamlReader(new FileReader(this.file)).read());
-			this.lastLoaded = System.currentTimeMillis();
+			//noinspection unchecked
+			this.getFileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.getFile())).read());
+			this.setLastLoaded(System.currentTimeMillis());
 		} catch (IOException e) {
-			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
+			System.err.println("Exception while reloading '" + this.getFile().getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void remove(final @NotNull String key) {
+	public synchronized YamlFile remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 
 		this.update();
 
-		if (this.fileData.containsKey(key)) {
-			this.fileData.remove(key);
+		if (this.getFileData().containsKey(key)) {
+			this.getFileData().remove(key);
 
 			try {
-				this.write(this.fileData.toMap());
+				this.write(this.getFileData().toMap());
 			} catch (IOException e) {
-				System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
+				System.err.println("Could not write to '" + this.getFile().getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull List<String> keys) {
+	public synchronized YamlFile removeAll(final @NotNull List<String> keys) {
 		Objects.checkNull(keys, "List must not be null");
 
 		this.update();
 
 		for (String key : keys) {
-			this.fileData.remove(key);
+			this.getFileData().remove(key);
 		}
 
 		try {
-			this.write(this.fileData.toMap());
+			this.write(this.getFileData().toMap());
 		} catch (IOException e) {
-			System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
+			System.err.println("Could not write to '" + this.getFile().getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
+	public synchronized YamlFile removeAll(final @NotNull String key, final @NotNull List<String> keys) {
 		Objects.checkNull(keys, "List must not be null");
 
 		this.update();
 
 		for (String tempKey : keys) {
-			this.fileData.remove(key + "." + tempKey);
+			this.getFileData().remove(key + "." + tempKey);
 		}
 
 		try {
-			this.write(this.fileData.toMap());
+			this.write(this.getFileData().toMap());
 		} catch (IOException e) {
-			System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
+			System.err.println("Could not write to '" + this.getFile().getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
+	public synchronized YamlFile set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
 			this.writeData();
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
+	public synchronized YamlFile setAll(final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(dataMap)) {
 			this.writeData();
 		}
+		return this;
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+	public synchronized YamlFile setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(key, dataMap)) {
 			this.writeData();
 		}
+		return this;
 	}
 
 	/**
@@ -152,25 +161,26 @@ public class YamlFile extends CommentEnabledFile {
 	}
 
 	private void write(final @NotNull Map fileData) throws IOException {
-		@Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.file));
+		@Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.getFile()));
 		writer.write(fileData);
 	}
 
+	@SuppressWarnings("DuplicatedCode")
 	private void writeData() {
 		try {
-			if (this.commentSetting() != Comment.PRESERVE) {
-				this.write(Objects.notNull(this.fileData, "FileData must not be null").toMap());
+			if (this.getCommentSetting() != Comment.PRESERVE) {
+				this.write(Objects.notNull(this.getFileData(), "FileData must not be null").toMap());
 			} else {
-				final List<String> unEdited = YamlEditor.read(this.file);
-				final List<String> header = YamlEditor.readHeader(this.file);
-				final List<String> footer = YamlEditor.readFooter(this.file);
-				this.write(this.fileData.toMap());
-				header.addAll(YamlEditor.read(this.file));
+				final List<String> unEdited = YamlEditor.read(this.getFile());
+				final List<String> header = YamlEditor.readHeader(this.getFile());
+				final List<String> footer = YamlEditor.readFooter(this.getFile());
+				this.write(this.getFileData().toMap());
+				header.addAll(YamlEditor.read(this.getFile()));
 				if (!header.containsAll(footer)) {
 					header.addAll(footer);
 				}
-				YamlEditor.write(this.file, YamlUtils.parseComments(this.file, unEdited, header));
-				this.write(Objects.notNull(this.fileData, "FileData must not be null").toMap());
+				YamlEditor.write(this.getFile(), YamlUtils.parseComments(this.getFile(), unEdited, header));
+				this.write(Objects.notNull(this.getFileData(), "FileData must not be null").toMap());
 			}
 		} catch (IOException e) {
 			System.err.println("Error while writing to '" + getAbsolutePath() + "'");
