@@ -18,8 +18,8 @@ Of course there are a few libraries with bukkitlike methods but no one has the f
 ThunderBolt-2 for example only supports Json files but does not support nested objects.
 Now I'am publishing this library because I think libraries of high quality should be publicly available for everyone
 Now it is here: **StorageManager**!
-
 <br>
+
 ### Table of contents:
 <br>
 -1. [A few information] <br>
