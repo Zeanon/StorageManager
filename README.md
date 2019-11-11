@@ -65,7 +65,7 @@ Yaml<br>
 <dependency>
 <groupId>de.zeanon</groupId>
     <artifactId>storagemanager</artifactId>
-    <version>1.1.9</version>
+    <version>1.1.8</version>
     <scope>compile</scope>
 </dependency>
 ```
