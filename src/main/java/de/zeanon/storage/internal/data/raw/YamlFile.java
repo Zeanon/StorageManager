@@ -36,7 +36,7 @@ public class YamlFile extends CommentEnabledFile {
 		super(file, FileType.YAML, reloadSetting, commentSetting, dataType);
 
 		if (this.create() && inputStream != null) {
-			SMFileUtils.writeToFile(this.file, inputStream);
+			SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(inputStream));
 		}
 
 		try {

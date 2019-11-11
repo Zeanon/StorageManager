@@ -3,12 +3,13 @@ package de.zeanon.storage.internal.utils;
 import de.zeanon.storage.StorageManager;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import lombok.AccessLevel;
+import lombok.Cleanup;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -18,16 +19,23 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class SMFileUtils {
 
-	public static void createFile(final @NotNull File file) {
+	/**
+	 * Creates a given File and, if not existent, it's parents.
+	 *
+	 * @param file the File to be created.
+	 */
+	public static synchronized void createFile(final @NotNull File file) {
 		Objects.checkNull(file);
 		try {
 			if (file.getParentFile() != null && !file.getParentFile().exists()) {
-				//noinspection ResultOfMethodCallIgnored
-				file.getParentFile().mkdirs();
+				if (SMFileUtils.failedToCreateParentFile(file.getParentFile())) {
+					throw new IOException("Could not create parents of '" + file.getAbsolutePath() + "'");
+				}
 			}
 			if (!file.exists()) {
-				//noinspection ResultOfMethodCallIgnored
-				file.createNewFile();
+				if (!file.createNewFile()) {
+					throw new IOException("Could not create '" + file.getAbsolutePath() + "'");
+				}
 			}
 		} catch (IOException e) {
 			System.err.println("Error while creating File '" + file.getAbsolutePath() + "'.");
@@ -42,13 +50,17 @@ public class SMFileUtils {
 	 * @param file the File to be read.
 	 * @return BufferedInputstream containing the contents of the given File.
 	 */
-	public static BufferedInputStream createNewInputStream(final @NotNull File file) {
-		try {
-			return new BufferedInputStream(new FileInputStream(Objects.notNull(file, "File must not be null")));
-		} catch (IOException e) {
-			System.err.println("Error while creating InputStream from '" + file.getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
+	public static BufferedInputStream createNewInputStream(final @Nullable File file) {
+		if (file == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedInputStream(new FileInputStream(file));
+			} catch (IOException e) {
+				System.err.println("Error while creating InputStream from '" + file.getAbsolutePath() + "'");
+				e.printStackTrace();
+				throw new IllegalStateException();
+			}
 		}
 	}
 
@@ -58,8 +70,34 @@ public class SMFileUtils {
 	 * @param resource the Path to the resource.
 	 * @return BufferedInputStream containing the contents of the resource file.
 	 */
-	public static BufferedInputStream createNewInputStream(final @NotNull String resource) {
-		return new BufferedInputStream(Objects.notNull(StorageManager.class.getClassLoader().getResourceAsStream(Objects.notNull(resource, "Resource must not be null"))));
+	public static BufferedInputStream createNewInputStream(final @Nullable String resource) {
+		if (resource == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedInputStream(Objects.notNull(StorageManager.class.getClassLoader().getResourceAsStream(resource), "Resource does not exist"));
+			} catch (IllegalStateException e) {
+				System.err.println("Error while creating InputStream from '" + resource + "'");
+				e.printStackTrace();
+				throw new IllegalStateException();
+			}
+		}
+	}
+
+	/**
+	 * Create a BufferedInputStream from a given InputStream.
+	 *
+	 * @param inputStream the InputStream to be converted.
+	 * @return null if {@code inputStream} is null or a BufferedInputStream from the given InputStream.
+	 */
+	public static BufferedInputStream createNewInputStream(final @Nullable InputStream inputStream) {
+		if (inputStream == null) {
+			return null;
+		} else if (inputStream instanceof BufferedInputStream) {
+			return (BufferedInputStream) inputStream;
+		} else {
+			return new BufferedInputStream(inputStream);
+		}
 	}
 
 	/**
@@ -67,10 +105,10 @@ public class SMFileUtils {
 	 *
 	 * @param file      the File to be checked.
 	 * @param timeStamp the TimeStamp to be checked against.
-	 * @return true if the File has changed.
+	 * @return true if the File has changed since the {@code timeStamp}.
 	 */
 	public static boolean hasChanged(final @NotNull File file, final long timeStamp) {
-		return Objects.notNull(timeStamp) < Objects.notNull(file).lastModified();
+		return Objects.notNull(timeStamp, "TimeStamp must not be null") < Objects.notNull(file, "File must not be null").lastModified();
 	}
 
 	/**
@@ -79,25 +117,36 @@ public class SMFileUtils {
 	 * @param file        the File to be written to.
 	 * @param inputStream the InputStream which shall be written.
 	 */
-	public static synchronized void writeToFile(final @NotNull File file, final @NotNull InputStream inputStream) {
-		Objects.checkNull(inputStream);
-		try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(Objects.notNull(file)))) {
-			if (!file.exists()) {
-				Files.copy(inputStream, file.toPath());
-			} else {
-				final byte[] data = new byte[8192];
-				int count;
-				while ((count = inputStream.read(data, 0, 8192)) != -1) {
-					outputStream.write(data, 0, count);
-				}
+	public static synchronized void writeToFile(final @NotNull File file, final @Nullable BufferedInputStream inputStream) {
+		if (!Objects.notNull(file, "File must not be null").exists()) {
+			SMFileUtils.createFile(file);
+		}
+		if (inputStream == null) {
+			try (@Cleanup BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(Objects.notNull(file)))) {
+				outputStream.write(new byte[0], 0, 0);
+			} catch (IOException e) {
+				System.err.println("Error while clearing '" + file.getAbsolutePath() + "'");
+				e.printStackTrace();
+				throw new IllegalStateException();
 			}
-		} catch (IOException e) {
-			System.err.println("Error while copying to + '" + file.getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
+		} else {
+			try (@Cleanup BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(Objects.notNull(file)))) {
+				if (!file.exists()) {
+					createFile(file);
+				} else {
+					final byte[] data = new byte[8192];
+					int count;
+					while ((count = inputStream.read(data, 0, 8192)) != -1) {
+						outputStream.write(data, 0, count);
+					}
+				}
+			} catch (IOException e) {
+				System.err.println("Error while copying to + '" + file.getAbsolutePath() + "'");
+				e.printStackTrace();
+				throw new IllegalStateException();
+			}
 		}
 	}
-
 
 	/**
 	 * Returns the extension of a given File.
@@ -186,6 +235,27 @@ public class SMFileUtils {
 			return "";
 		} else {
 			return filePath.substring(0, dotInd).toLowerCase();
+		}
+	}
+
+
+	private static boolean failedToCreateParentFile(final @NotNull File file) {
+		try {
+			if (file.getParentFile() != null && !file.getParentFile().exists()) {
+				if (SMFileUtils.failedToCreateParentFile(file.getParentFile())) {
+					throw new IOException("Could not create parents of '" + file.getAbsolutePath() + "'");
+				}
+			}
+			if (!file.exists()) {
+				if (!file.createNewFile()) {
+					throw new IOException("Could not create '" + file.getAbsolutePath() + "'");
+				}
+			}
+			return false;
+		} catch (IOException e) {
+			System.err.println("Error while creating File '" + file.getAbsolutePath() + "'.");
+			e.printStackTrace();
+			return true;
 		}
 	}
 }

@@ -33,7 +33,7 @@ public class ThunderFile extends CommentEnabledFile {
 		super(file, FileType.THUNDER, reloadSetting, commentSetting, dataType);
 
 		if (this.create() && inputStream != null) {
-			SMFileUtils.writeToFile(this.file, inputStream);
+			SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(inputStream));
 		}
 
 		this.fileData = new LocalFileData(ThunderEditor.readData(this.file, this.dataType(), this.commentSetting()));

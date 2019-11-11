@@ -7,10 +7,16 @@ import de.zeanon.storage.internal.data.FileData;
 import de.zeanon.storage.internal.settings.Reload;
 import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.*;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,11 +26,11 @@ import org.json.JSONObject;
 /**
  * Basic foundation for the Data Classes
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 @Getter
 @ToString
 @EqualsAndHashCode
 @Accessors(fluent = true)
-@SuppressWarnings({"UnusedReturnValue", "unused", "WeakerAccess"})
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	protected final File file;
@@ -70,30 +76,19 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	/**
-	 * Set the Contents of the File from a given InputStream
+	 * Set the Contents of the FileData and File from a given InputStream
 	 */
-	public synchronized void setFileContentFromStream(final @Nullable InputStream inputStream) {
-		if (inputStream == null) {
-			this.clearFile();
-		} else {
-			SMFileUtils.writeToFile(this.file, inputStream);
-			this.reload();
-		}
+	public synchronized void setDataFromStream(final @Nullable InputStream inputStream) {
+		SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(inputStream));
+		this.reload();
 	}
 
 	/**
-	 * Delete all Contents of the File
+	 * Delete all Contents of the FileData and File
 	 */
-	public synchronized void clearFile() {
-		try {
-			@Cleanup BufferedWriter writer = new BufferedWriter(new FileWriter(this.file));
-			writer.write("");
-			this.reload();
-		} catch (IOException e) {
-			System.err.println("Could not clear '" + this.file.getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
-		}
+	public synchronized void clear() {
+		SMFileUtils.writeToFile(this.file, null);
+		this.reload();
 	}
 
 	/**
@@ -115,27 +110,19 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	/**
-	 * Set the Contents of the File from a given File
+	 * Set the Contents of the FileData and File from a given File
 	 */
-	public synchronized void setFileContentFromFile(final @Nullable File file) {
-		if (file == null) {
-			this.clearFile();
-		} else {
-			SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(file));
-			this.reload();
-		}
+	public synchronized void setDataFromFile(final @Nullable File file) {
+		SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(file));
+		this.reload();
 	}
 
 	/**
-	 * Set the Contents of the File from a given Resource
+	 * Set the Contents of the FileData and File from a given Resource
 	 */
-	public synchronized void setFileContentFromResource(final @Nullable String resource) {
-		if (resource == null) {
-			this.clearFile();
-		} else {
-			SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(resource));
-			this.reload();
-		}
+	public synchronized void setDataFromResource(final @Nullable String resource) {
+		SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(resource));
+		this.reload();
 	}
 
 	public String getAbsolutePath() {

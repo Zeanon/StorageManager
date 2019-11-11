@@ -33,7 +33,7 @@ public class JsonFile extends FlatFile {
 		super(file, FileType.JSON, reloadSetting);
 
 		if (this.create() && inputStream != null) {
-			SMFileUtils.writeToFile(this.file, inputStream);
+			SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(inputStream));
 		}
 
 		final JSONTokener jsonTokener = new JSONTokener(Objects.notNull(SMFileUtils.createNewInputStream(this.file), "InputStream must not be null"));

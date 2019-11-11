@@ -17,6 +17,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * @author Zeanon
+ * An exteded FlatFile, to accomodate Config files.
+ * @see FlatFile
+ */
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -27,11 +32,11 @@ public abstract class CommentEnabledFile extends FlatFile {
 
 
 	/**
-	 * Default: SKIP
+	 * Default: {@link Comment#SKIP}
 	 */
 	private CommentSettingBase commentSetting = Comment.SKIP;
 	/**
-	 * Default: AUTOMATIC
+	 * Default: {@link DataType#AUTOMATIC}
 	 */
 	private DataTypeBase dataType = DataType.AUTOMATIC;
 
@@ -45,18 +50,35 @@ public abstract class CommentEnabledFile extends FlatFile {
 		}
 	}
 
-	public void reload(final @NotNull Comment commentSetting) {
+	/**
+	 * Reload with a specific {@link de.zeanon.storage.internal.base.interfaces.CommentSettingBase}.
+	 *
+	 * @see FlatFile#reload().
+	 */
+	public void reload(final @NotNull CommentSettingBase commentSetting) {
 		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.reload();
 	}
 
+	/**
+	 * Set with a specific {@link de.zeanon.storage.internal.base.interfaces.CommentSettingBase}.
+	 *
+	 * @see FlatFile#set(String, Object) .
+	 */
 	public synchronized void set(final @NotNull String key, final @Nullable Object value, final @NotNull CommentSettingBase commentSetting) {
 		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.set(Objects.notNull(key, "Key must not be null"), Objects.notNull(value, "Value must not be null"));
 	}
 
+	/**
+	 * Remove with a specific {@link de.zeanon.storage.internal.base.interfaces.CommentSettingBase}.
+	 *
+	 * @see FlatFile#remove(String).
+	 */
 	public synchronized void remove(final @NotNull String key, final @NotNull CommentSettingBase commentSetting) {
 		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.remove(Objects.notNull(key, "Key must not be null"));
 	}
+
+	//TODO all methoden
 }

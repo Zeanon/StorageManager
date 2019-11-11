@@ -33,28 +33,10 @@ Now it is here: **StorageManager**!
 StorageManager is extremely fast & good at **storing data reliably**! <br>
 It also supports **nested objects**!<br>
 Like bukkit it has a contains check - for both JSON and YAML.
-StorageManager is licensed under the MIT license, which means that
+StorageManager is licensed under the Apache2.0 license, which means that
 you can also **use it in private projects** that are not open source.
 
 If you have any ideas to add or issues just open a issue page. I will do my best to help.
-
-<br>
-At the moment StorageManager supports two file types:
-
-#### Json:
-A very fast and slim file format.
-It is much faster than YAML files and is therefore better suited for storing
- larger amounts of data, such as player data (rank, money, playtime, etc).
->https://stackoverflow.com/questions/2451732/how-is-it-that-json-serialization-is-so-much-faster-than-yaml-serialization-in-p/2452043#2452043
-
-
-#### Yaml:
-Yaml files are not as fast as JSON files, but they are easier 
-to read and are therefore more suitable as configuration files, 
-as you often find them in bukkit plugins in the form of "config.yml".
-
-More file formats will be supported soon
-
 
 
 
@@ -64,10 +46,24 @@ More file formats will be supported soon
 #### Maven
 
 1. Place this in your repository-section: 
->Example Pom: https://pastebin.com/eiyRZYyi 
-
+```xml
+<!-- TheWarKing Repo -->
+<repository>
+    <id>thewarking-public</id>
+    <url>http://thewarking.de:8081/repository/PluginUtils/</url>
+</repository>
+```
 
 2. Place this in your dependency-section:
+```xml
+<!-- StorageManager by Zeanon-->
+<dependency>
+<groupId>de.zeanon</groupId>
+    <artifactId>storagemanager</artifactId>
+    <version>1.1.9</version>
+    <scope>compile</scope>
+</dependency>
+```
 	
 
 3. Important! Use a shade plugin to make sure that the library is shaded into your final .jar file when your
