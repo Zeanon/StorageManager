@@ -48,10 +48,9 @@ public class YamlUtils {
 		final List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
 		final Map<String, List<String>> result = new HashMap<>();
 
-		// Loop over the remaining lines
-		Collections.reverse(lines);// Reverse -> Should start from the end
+		Collections.reverse(lines);
 		for (final String line : lines) {
-			if (line.trim().startsWith("#") || line.isEmpty()) { // Replacing the whitespaces
+			if (line.trim().startsWith("#") || line.isEmpty()) {
 				storage.add(line);
 				continue;
 			}
@@ -59,7 +58,6 @@ public class YamlUtils {
 			storage = new ArrayList<>();
 		}
 
-		// Removing keys without comments
 		final List<String> keysToRemove = new ArrayList<>();
 		for (final String line : result.keySet()) {
 			if (result.get(line).equals(new ArrayList<>())) {

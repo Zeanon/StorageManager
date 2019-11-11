@@ -80,7 +80,6 @@ public class YamlConfig extends CommentEnabledFile<YamlConfig> implements Config
 	public YamlConfig setHeader(final @Nullable List<String> header) {
 		if (header != null) {
 			List<String> tmp = new ArrayList<>();
-			//Updating the values to have a comments, if someone forgets to set them
 			for (final String line : header) {
 				if (!line.startsWith("#")) {
 					tmp.add("#" + line);
@@ -152,7 +151,6 @@ public class YamlConfig extends CommentEnabledFile<YamlConfig> implements Config
 	public YamlConfig setFooter(@Nullable List<String> footer) {
 		if (footer != null) {
 			List<String> tmp = new ArrayList<>();
-			//Updating the values to have a comments, if someone forgets to set them
 			for (final String line : footer) {
 				if (!line.startsWith("#")) {
 					tmp.add("#" + line);
