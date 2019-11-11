@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ThunderConfigSection extends ThunderFileSection implements ConfigBase {
+public class ThunderConfigSection extends ThunderFileSection<ThunderConfigSection> implements ConfigBase {
 
 	private final ThunderConfig thunderConfig;
 

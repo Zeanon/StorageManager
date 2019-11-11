@@ -13,6 +13,7 @@ import de.zeanon.storage.internal.utils.editor.ThunderEditor;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
@@ -69,6 +70,10 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		}
 	}
 
+	public void setHeader(final @NotNull String key, final @Nullable String... header) {
+		this.setHeader(key, header == null ? null : Arrays.asList(header));
+	}
+
 	public void setHeader(final @NotNull String key, final @Nullable List<String> header) {
 		Objects.checkNull(key, "Key must not be null");
 
@@ -116,6 +121,10 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		} else {
 			return new ArrayList<>();
 		}
+	}
+
+	public void setFooter(final @NotNull String key, final @Nullable String... footer) {
+		this.setFooter(key, footer == null ? null : Arrays.asList(footer));
 	}
 
 	public void setFooter(final @NotNull String key, final @Nullable List<String> footer) {

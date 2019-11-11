@@ -2,71 +2,45 @@ package de.zeanon.storage.internal.base;
 
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
-import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
-import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
-import de.zeanon.storage.internal.settings.Comment;
-import de.zeanon.storage.internal.settings.DataType;
 import de.zeanon.storage.internal.utils.basic.Objects;
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-/**
- * @author Zeanon
- * An exteded FlatFile, to accomodate Config files.
- * @see FlatFile
- */
-@Getter
-@Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@Accessors(fluent = true)
 @SuppressWarnings("unused")
-public abstract class CommentEnabledFile extends FlatFile {
+public abstract class CommentEnabledSection<S> extends FlatSection {
 
+	private final CommentEnabledFile commentEnabledFile;
 
-	/**
-	 * Default: {@link Comment#SKIP}
-	 */
-	private CommentSettingBase commentSetting = Comment.SKIP;
-	/**
-	 * Default: {@link DataType#AUTOMATIC}
-	 */
-	private DataTypeBase dataType = DataType.AUTOMATIC;
-
-	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
-		super(file, fileType, reloadSetting);
-		if (commentSetting != null) {
-			this.commentSetting(commentSetting);
-		}
-		if (dataType != null) {
-			this.dataType(dataType);
-		}
+	protected CommentEnabledSection(final @NotNull String sectionKey, final @NotNull CommentEnabledFile commentEnabledFile) {
+		super(sectionKey, commentEnabledFile);
+		this.commentEnabledFile = commentEnabledFile;
 	}
 
-	/**
-	 * Reload with a specific {@link de.zeanon.storage.internal.base.interfaces.CommentSettingBase}.
-	 *
-	 * @see FlatFile#reload().
-	 */
-	public void reload(final @NotNull CommentSettingBase commentSetting) {
-		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
-		this.reload();
+
+	public S commentSetting(final @NotNull CommentSettingBase commentSetting) {
+		this.commentEnabledFile.commentSetting(commentSetting);
+		//noinspection unchecked
+		return (S) this;
+	}
+
+	public S dataType(final @NotNull DataTypeBase dataType) {
+		this.commentEnabledFile.dataType(dataType);
+		//noinspection unchecked
+		return (S) this;
 	}
 
 
 	/**
 	 * Set with a specific {@link de.zeanon.storage.internal.base.interfaces.CommentSettingBase}.
 	 *
-	 * @see FlatFile#set(String, Object) .
+	 * @see FlatSection#set(String, Object) .
 	 */
 	public synchronized void set(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @Nullable Object value) {
 		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
@@ -87,7 +61,7 @@ public abstract class CommentEnabledFile extends FlatFile {
 	/**
 	 * Remove with a specific {@link de.zeanon.storage.internal.base.interfaces.CommentSettingBase}.
 	 *
-	 * @see FlatFile#remove(String).
+	 * @see FlatSection#remove(String).
 	 */
 	public synchronized void remove(final @NotNull CommentSettingBase commentSetting, final @NotNull String key) {
 		this.commentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));

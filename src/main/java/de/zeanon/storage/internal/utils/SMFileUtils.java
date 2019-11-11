@@ -6,7 +6,6 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import lombok.AccessLevel;
-import lombok.Cleanup;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -122,7 +121,7 @@ public class SMFileUtils {
 			SMFileUtils.createFile(file);
 		}
 		if (inputStream == null) {
-			try (@Cleanup BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(Objects.notNull(file)))) {
+			try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(Objects.notNull(file)))) {
 				outputStream.write(new byte[0], 0, 0);
 			} catch (IOException e) {
 				System.err.println("Error while clearing '" + file.getAbsolutePath() + "'");
@@ -130,7 +129,7 @@ public class SMFileUtils {
 				throw new IllegalStateException();
 			}
 		} else {
-			try (@Cleanup BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(Objects.notNull(file)))) {
+			try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(Objects.notNull(file)))) {
 				if (!file.exists()) {
 					createFile(file);
 				} else {

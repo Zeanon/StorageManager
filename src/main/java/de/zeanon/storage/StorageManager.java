@@ -185,8 +185,8 @@ public abstract class StorageManager<S> {
 	}
 
 
-	public final S fromInputStream(final @Nullable BufferedInputStream inputStream) {
-		this.inputStream = inputStream;
+	public final S fromInputStream(final @Nullable InputStream inputStream) {
+		this.inputStream = SMFileUtils.createNewInputStream(inputStream);
 		//noinspection unchecked
 		return (S) this;
 	}

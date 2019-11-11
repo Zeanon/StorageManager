@@ -29,6 +29,7 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 		this.flatFile = flatFile;
 	}
 
+
 	@Override
 	public Object get(final @NotNull String key) {
 		return this.flatFile.get(this.sectionKey(key));
