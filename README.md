@@ -4,7 +4,7 @@ storagemanager - A Library to store data in a better way.
 
 
 
-![LightingStorage](https://proxy.spigotmc.org/fe4eabc0f5de21c5ab0ca87a0003528e1b4ddf54?url=https%3A%2F%2Fi.ibb.co%2F3FyWVp2%2FLightning-Storage-Wallpaper.png)
+![StorageManager](https://proxy.spigotmc.org/fe4eabc0f5de21c5ab0ca87a0003528e1b4ddf54?url=https%3A%2F%2Fi.ibb.co%2F3FyWVp2%2FLightning-Storage-Wallpaper.png)
 
 Do you want to save your config files easily and **independently** from Bukkit or BungeeCord?<br>
 Want to do more than just use simple .yml files store data?<br>
@@ -22,7 +22,7 @@ Now it is here: **StorageManager**!
 
 ### Table of contents:
 <br>
--1. [A few information] <br>
+-1. [A few bits of information] <br>
 -2. [Supported file types] <br>
 -3. [How to setup] <br>
 -4. [Usage]coming soon <br>
@@ -40,6 +40,11 @@ If you have any ideas to add or issues just open a issue page. I will do my best
 
 
 
+### Supported file types
+Json<br>
+ThunderFile<br>
+Toml<br>
+Yaml<br>
 
 ### How to setup
 
