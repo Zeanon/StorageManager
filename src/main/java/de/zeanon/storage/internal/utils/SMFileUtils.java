@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
  * Basic utility methods for Files
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class SMFileUtils {
 
 	/**
@@ -23,23 +23,66 @@ public class SMFileUtils {
 	 *
 	 * @param file the File to be created.
 	 */
-	public static synchronized void createFile(final @NotNull File file) {
+	@SuppressWarnings("UnusedReturnValue")
+	public static synchronized boolean createFile(final @NotNull File file) {
 		Objects.checkNull(file);
 		try {
 			if (file.getParentFile() != null && !file.getParentFile().exists()) {
-				if (SMFileUtils.failedToCreateParentFile(file.getParentFile())) {
-					throw new IOException("Could not create parents of '" + file.getAbsolutePath() + "'");
+				try {
+					if (!createParents(file)) {
+						throw new IOException();
+					}
+				} catch (IOException e) {
+					throw new IOException("Could not create parents of '" + file.getAbsolutePath() + "'"
+										  + System.lineSeparator() + e);
 				}
 			}
 			if (!file.exists()) {
-				if (!file.createNewFile()) {
-					throw new IOException("Could not create '" + file.getAbsolutePath() + "'");
+				try {
+					if (file.createNewFile()) {
+						return true;
+					} else {
+						throw new IOException();
+					}
+				} catch (IOException e) {
+					throw new IOException("Could not create '" + file.getAbsolutePath() + "'"
+										  + System.lineSeparator() + e);
 				}
+			} else {
+				return false;
 			}
 		} catch (IOException e) {
 			System.err.println("Error while creating File '" + file.getAbsolutePath() + "'.");
 			e.printStackTrace();
 			throw new IllegalStateException();
+		}
+	}
+
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	public static boolean createParents(final @NotNull File file) throws IOException {
+		if (file.getParentFile().getParentFile() != null && !file.getParentFile().getParentFile().exists()) {
+			try {
+				if (!createParents(file.getParentFile())) {
+					throw new IOException();
+				}
+			} catch (IOException e) {
+				throw new IOException("Could not create parents of '" + file.getParentFile().getAbsolutePath() + "'"
+									  + System.lineSeparator() + e);
+			}
+		}
+		if (file.getParentFile() != null && !file.getParentFile().exists()) {
+			try {
+				if (file.getParentFile().createNewFile()) {
+					return true;
+				} else {
+					throw new IOException();
+				}
+			} catch (IOException e) {
+				throw new IOException("Could not create '" + file.getParentFile().getAbsolutePath() + "'"
+									  + System.lineSeparator() + e);
+			}
+		} else {
+			return false;
 		}
 	}
 
@@ -234,27 +277,6 @@ public class SMFileUtils {
 			return "";
 		} else {
 			return filePath.substring(0, dotInd).toLowerCase();
-		}
-	}
-
-
-	private static boolean failedToCreateParentFile(final @NotNull File file) {
-		try {
-			if (file.getParentFile() != null && !file.getParentFile().exists()) {
-				if (SMFileUtils.failedToCreateParentFile(file.getParentFile())) {
-					throw new IOException("Could not create parents of '" + file.getAbsolutePath() + "'");
-				}
-			}
-			if (!file.exists()) {
-				if (!file.createNewFile()) {
-					throw new IOException("Could not create '" + file.getAbsolutePath() + "'");
-				}
-			}
-			return false;
-		} catch (IOException e) {
-			System.err.println("Error while creating File '" + file.getAbsolutePath() + "'.");
-			e.printStackTrace();
-			return true;
 		}
 	}
 }
