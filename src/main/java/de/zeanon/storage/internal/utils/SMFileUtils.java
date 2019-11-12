@@ -6,6 +6,10 @@ import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +22,18 @@ import org.jetbrains.annotations.Nullable;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @SuppressWarnings("unused")
 public class SMFileUtils {
+
+	private static final char SYSTEM_SEPARATOR;
+	private static final char OTHER_SEPARATOR;
+
+	static {
+		SYSTEM_SEPARATOR = File.separatorChar;
+		if (isSystemWindows()) {
+			OTHER_SEPARATOR = '/';
+		} else {
+			OTHER_SEPARATOR = '\\';
+		}
+	}
 
 	/**
 	 * Creates a given File and, if not existent, it's parents.
@@ -47,6 +63,126 @@ public class SMFileUtils {
 										 + System.lineSeparator() + e.getMessage(), e.getCause());
 		}
 	}
+
+
+	/**
+	 * List all folders in a given directory
+	 *
+	 * @param directory the directory to look into
+	 * @param deep      also look through subdirectories
+	 * @return the files of the directory that are folders
+	 */
+	public static Collection<File> listFolders(final @NotNull File directory, final boolean deep) {
+		Collection<File> files = new LinkedList<>();
+		for (File file : Objects.notNull(directory.listFiles())) {
+			if (file.isDirectory()) {
+				files.add(file);
+				if (deep) {
+					files.addAll(listFolders(file, true));
+				}
+			}
+		}
+		return files;
+	}
+
+	/**
+	 * List all folders in a given directory
+	 *
+	 * @param directory the directory to look into
+	 * @return the files of the directory that are folders
+	 */
+	public static Collection<File> listFolders(final @NotNull File directory) {
+		return listFolders(directory, false);
+	}
+
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param extensions the file extensions to look for
+	 * @param deep       also look through subdirectories
+	 * @return the files of the given directory with the given extensions
+	 */
+	public static Collection<File> listFiles(final @NotNull File directory, final @NotNull List<String> extensions, final boolean deep) {
+		Collection<File> files = new LinkedList<>();
+		for (File file : Objects.notNull(directory.listFiles())) {
+			if (extensions.stream().anyMatch(SMFileUtils.getExtension(file)::equalsIgnoreCase)) {
+				files.add(file);
+			}
+			if (file.isDirectory()) {
+				if (deep) {
+					files.addAll(listFiles(file, extensions, true));
+				}
+			}
+		}
+		return files;
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param extensions the file extensions to look for
+	 * @param deep       also look through subdirectories
+	 * @return the files of the given directory with the given extensions
+	 */
+	public static Collection<File> listFiles(final @NotNull File directory, final @NotNull String[] extensions, final boolean deep) {
+		return listFiles(directory, Arrays.asList(extensions), deep);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param extensions the file extensions to look for
+	 * @return the files of the given directory with the given extensions
+	 */
+	public static Collection<File> listFiles(final @NotNull File directory, final @NotNull List<String> extensions) {
+		return listFiles(directory, extensions, false);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param extensions the file extensions to look for
+	 * @return the files of the given directory with the given extensions
+	 */
+	public static Collection<File> listFiles(final @NotNull File directory, final @NotNull String[] extensions) {
+		return listFiles(directory, Arrays.asList(extensions), false);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory the directory to look into
+	 * @param deep      also look through subdirectories
+	 * @return the files of the given directory
+	 */
+	public static Collection<File> listFiles(final @NotNull File directory, final boolean deep) {
+		Collection<File> files = new LinkedList<>();
+		for (File file : Objects.notNull(directory.listFiles())) {
+			files.add(file);
+			if (file.isDirectory()) {
+				if (deep) {
+					files.addAll(listFiles(file, true));
+				}
+			}
+		}
+		return files;
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory the directory to look into
+	 * @return the files of the given directory
+	 */
+	public static Collection<File> listFiles(final @NotNull File directory) {
+		return listFiles(directory, false);
+	}
+
 
 	/**
 	 * Create a BufferedInputStream from a File.
@@ -240,6 +376,26 @@ public class SMFileUtils {
 		} else {
 			return filePath.substring(0, dotInd).toLowerCase();
 		}
+	}
+
+	public static String separatorsToUnix(String path) {
+		return path != null && path.indexOf(92) != -1 ? path.replace('\\', '/') : path;
+	}
+
+	public static String separatorsToWindows(String path) {
+		return path != null && path.indexOf(47) != -1 ? path.replace('/', '\\') : path;
+	}
+
+	public static String separatorsToSystem(String path) {
+		if (path == null) {
+			return null;
+		} else {
+			return isSystemWindows() ? separatorsToWindows(path) : separatorsToUnix(path);
+		}
+	}
+
+	static boolean isSystemWindows() {
+		return SYSTEM_SEPARATOR == '\\';
 	}
 
 	private static boolean createFileInternally(@NotNull File file) throws IOException {
