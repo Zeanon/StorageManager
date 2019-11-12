@@ -13,11 +13,10 @@ without being depended on Bukkit/BungeeCord. But there was nothing out there so 
 Of course there are a few libraries with bukkitlike methods but no one has the features that I need.
 ThunderBolt-2 for example only supports Json files but does not support nested objects.
 Now I'am publishing this library because I think libraries of high quality should be publicly available for everyone
-Now it is here: **StorageManager**!
+Now it is here: **StorageManager**!<br>
 <br>
 
 ### Table of contents:
-<br>
 -1. [A few bits of information] <br>
 -2. [Supported file types] <br>
 -3. [How to setup] <br>
@@ -32,15 +31,15 @@ Like bukkit it has a contains check - for both JSON and YAML.
 StorageManager is licensed under the Apache2.0 license, which means that
 you can also **use it in private projects** that are not open source.
 
-If you have any ideas to add or issues just open a issue page. I will do my best to help.
-
-
+If you have any ideas to add or issues just open a issue page. I will do my best to help.<br>
+<br>
 
 ### Supported file types
 Json<br>
 ThunderFile<br>
 Toml<br>
 Yaml<br>
+<br>
 
 ### How to setup
 
