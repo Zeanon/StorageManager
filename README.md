@@ -94,7 +94,7 @@ The relocation is optional but heavily recommended.
 	</configuration>
 </plugin>
 ```	   
-
+<br>
 
 **Library's used**
 
