@@ -20,20 +20,8 @@ import org.jetbrains.annotations.Nullable;
  * Basic utility methods for Files
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class SMFileUtils {
-
-	private static final char SYSTEM_SEPARATOR;
-	private static final char OTHER_SEPARATOR;
-
-	static {
-		SYSTEM_SEPARATOR = File.separatorChar;
-		if (isSystemWindows()) {
-			OTHER_SEPARATOR = '/';
-		} else {
-			OTHER_SEPARATOR = '\\';
-		}
-	}
 
 	/**
 	 * Creates a given File and, if not existent, it's parents.
@@ -51,6 +39,11 @@ public class SMFileUtils {
 		}
 	}
 
+	/**
+	 * Creates the parents of a given File.
+	 *
+	 * @param file the File to be used.
+	 */
 	public static synchronized boolean createParents(final @NotNull File file) {
 		try {
 			if (file.getParentFile() != null) {
@@ -376,26 +369,6 @@ public class SMFileUtils {
 		} else {
 			return filePath.substring(0, dotInd).toLowerCase();
 		}
-	}
-
-	public static String separatorsToUnix(String path) {
-		return path != null && path.indexOf(92) != -1 ? path.replace('\\', '/') : path;
-	}
-
-	public static String separatorsToWindows(String path) {
-		return path != null && path.indexOf(47) != -1 ? path.replace('/', '\\') : path;
-	}
-
-	public static String separatorsToSystem(String path) {
-		if (path == null) {
-			return null;
-		} else {
-			return isSystemWindows() ? separatorsToWindows(path) : separatorsToUnix(path);
-		}
-	}
-
-	static boolean isSystemWindows() {
-		return SYSTEM_SEPARATOR == '\\';
 	}
 
 	private static boolean createFileInternally(@NotNull File file) throws IOException {
