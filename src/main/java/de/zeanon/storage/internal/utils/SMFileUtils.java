@@ -197,7 +197,7 @@ public class SMFileUtils {
 		try {
 			return new BufferedInputStream(new FileInputStream(file));
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while creating InputStream from '" + file.getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while creating InputStream from '" + file.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -212,7 +212,7 @@ public class SMFileUtils {
 		try {
 			return new BufferedInputStream(Objects.notNull(StorageManager.class.getClassLoader().getResourceAsStream(resource), "Resource does not exist"));
 		} catch (ObjectIsNull e) {
-			throw new RuntimeIOException("Error while creating InputStream from '" + resource + "'", e);
+			throw new RuntimeIOException("Error while creating InputStream from '" + resource + "'", e.getCause());
 		}
 	}
 
@@ -257,7 +257,7 @@ public class SMFileUtils {
 			try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(Objects.notNull(file)))) {
 				outputStream.write(new byte[0], 0, 0);
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while clearing '" + file.getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while clearing '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		} else {
 			try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(Objects.notNull(file)))) {
@@ -271,7 +271,7 @@ public class SMFileUtils {
 					}
 				}
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while copying to + '" + file.getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while copying to + '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -385,7 +385,7 @@ public class SMFileUtils {
 					throw new IOException();
 				}
 			} catch (IOException e) {
-				throw new IOException("Could not create '" + file.getAbsolutePath() + "'", e);
+				throw new IOException("Could not create '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		} else {
 			return false;

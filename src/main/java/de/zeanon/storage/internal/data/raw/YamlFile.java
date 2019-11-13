@@ -46,7 +46,7 @@ public class YamlFile extends CommentEnabledFile {
 			this.getFileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.getFile())).read());
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (YamlException | FileNotFoundException e) {
-			throw new FileParseException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e);
+			throw new FileParseException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -58,7 +58,7 @@ public class YamlFile extends CommentEnabledFile {
 			this.getFileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.getFile())).read());
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (IOException e) {
-			throw new FileParseException("Error while reloading '" + this.getFile().getAbsolutePath() + "'", e);
+			throw new FileParseException("Error while reloading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -74,7 +74,7 @@ public class YamlFile extends CommentEnabledFile {
 			try {
 				this.write(this.getFileData().toMap());
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -92,7 +92,7 @@ public class YamlFile extends CommentEnabledFile {
 		try {
 			this.write(this.getFileData().toMap());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -109,7 +109,7 @@ public class YamlFile extends CommentEnabledFile {
 		try {
 			this.write(this.getFileData().toMap());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -167,7 +167,7 @@ public class YamlFile extends CommentEnabledFile {
 				this.write(Objects.notNull(this.getFileData(), "FileData  must not be null").toMap());
 			}
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 

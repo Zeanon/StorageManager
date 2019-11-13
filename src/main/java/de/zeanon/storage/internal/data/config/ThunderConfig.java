@@ -43,7 +43,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getDataType(), this.getCommentSetting()));
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (ObjectIsNull | RuntimeIOException | FileParseException e) {
-			throw new FileParseException("Error while reloading '" + this.getAbsolutePath() + "'", e);
+			throw new FileParseException("Error while reloading '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 

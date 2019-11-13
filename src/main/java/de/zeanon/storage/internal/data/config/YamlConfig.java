@@ -49,7 +49,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 			this.getFileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.getFile())).read());
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (IOException e) {
-			throw new FileParseException("Error while reloading '" + this.getFile().getAbsolutePath() + "'", e);
+			throw new FileParseException("Error while reloading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -65,7 +65,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 				this.header = YamlEditor.readHeader(this.getFile());
 				return this.header;
 			} catch (IOException e) {
-				throw new FileParseException("Error while getting header of '" + this.getFile().getAbsolutePath() + "'.", e);
+				throw new FileParseException("Error while getting header of '" + this.getFile().getAbsolutePath() + "'.", e.getCause());
 			}
 		}
 	}
@@ -87,7 +87,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 				try {
 					YamlEditor.write(this.getFile(), this.header);
 				} catch (IOException e) {
-					throw new RuntimeIOException("Error while setting header of '" + this.getFile().getAbsolutePath() + "'", e);
+					throw new RuntimeIOException("Error while setting header of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 				}
 			} else {
 				try {
@@ -100,7 +100,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 
 					YamlEditor.write(this.getFile(), newLines);
 				} catch (IOException e) {
-					throw new RuntimeIOException("Error while setting header of '" + this.getFile().getAbsolutePath() + "'", e);
+					throw new RuntimeIOException("Error while setting header of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 				}
 			}
 		} else {
@@ -114,7 +114,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 
 				YamlEditor.write(this.getFile(), lines);
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while setting header of '" + this.getFile().getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while setting header of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -130,7 +130,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 				this.footer = YamlEditor.readFooter(this.getFile());
 				return this.footer;
 			} catch (IOException e) {
-				throw new FileParseException("Error while getting footer of '" + this.getFile().getAbsolutePath() + "'.", e);
+				throw new FileParseException("Error while getting footer of '" + this.getFile().getAbsolutePath() + "'.", e.getCause());
 			}
 		}
 	}
@@ -152,7 +152,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 				try {
 					YamlEditor.write(this.getFile(), this.footer);
 				} catch (IOException e) {
-					throw new RuntimeIOException("Error while setting footer of '" + this.getFile().getAbsolutePath() + "'", e);
+					throw new RuntimeIOException("Error while setting footer of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 				}
 			} else {
 				try {
@@ -164,7 +164,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 
 					YamlEditor.write(this.getFile(), lines);
 				} catch (IOException e) {
-					throw new RuntimeIOException("Error while setting footer of '" + this.getFile().getAbsolutePath() + "'", e);
+					throw new RuntimeIOException("Error while setting footer of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 				}
 			}
 		} else {
@@ -178,7 +178,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 
 				YamlEditor.write(this.getFile(), lines);
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while setting footer of '" + this.getFile().getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while setting footer of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -194,7 +194,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 				this.comments = YamlEditor.readComments(this.getFile());
 				return this.comments;
 			} catch (IOException e) {
-				throw new FileParseException("Error while getting comments from '" + this.getFile().getAbsolutePath() + "'.", e);
+				throw new FileParseException("Error while getting comments from '" + this.getFile().getAbsolutePath() + "'.", e.getCause());
 			}
 		}
 	}

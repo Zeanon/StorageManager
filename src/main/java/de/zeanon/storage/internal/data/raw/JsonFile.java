@@ -43,7 +43,7 @@ public class JsonFile extends FlatFile {
 			this.getFileData().loadData(new JSONObject(jsonTokener));
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
-			throw new FileParseException("Error while loading '" + this.getAbsolutePath() + "'", e);
+			throw new FileParseException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -55,7 +55,7 @@ public class JsonFile extends FlatFile {
 			this.getFileData().loadData(new JSONObject(jsonTokener));
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
-			throw new FileParseException("Error while reloading '" + this.getAbsolutePath() + "'", e);
+			throw new FileParseException("Error while reloading '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -81,7 +81,7 @@ public class JsonFile extends FlatFile {
 			try {
 				this.write(new JSONObject(this.getFileData().toMap()));
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -92,7 +92,7 @@ public class JsonFile extends FlatFile {
 			try {
 				this.write(new JSONObject(this.getFileData().toMap()));
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -103,7 +103,7 @@ public class JsonFile extends FlatFile {
 			try {
 				this.write(new JSONObject(this.getFileData().toMap()));
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -119,7 +119,7 @@ public class JsonFile extends FlatFile {
 		try {
 			this.write(this.getFileData().toJsonObject());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -136,7 +136,7 @@ public class JsonFile extends FlatFile {
 		try {
 			this.write(this.getFileData().toJsonObject());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -153,7 +153,7 @@ public class JsonFile extends FlatFile {
 		try {
 			this.write(this.getFileData().toJsonObject());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 

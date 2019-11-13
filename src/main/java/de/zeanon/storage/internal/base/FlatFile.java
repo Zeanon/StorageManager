@@ -62,7 +62,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		try {
 			return this.file.getCanonicalPath();
 		} catch (IOException | SecurityException e) {
-			throw new RuntimeIOException("Could not get Canonical Path of '" + this.file.getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Could not get Canonical Path of '" + this.file.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -93,7 +93,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		try {
 			Files.delete(this.file.toPath());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Could not delete '" + this.file.getAbsolutePath() + "'");
+			throw new RuntimeIOException("Could not delete '" + this.file.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 

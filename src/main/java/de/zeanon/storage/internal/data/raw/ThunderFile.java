@@ -43,7 +43,7 @@ public class ThunderFile extends CommentEnabledFile {
 			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getDataType(), this.getCommentSetting()));
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException | FileParseException e) {
-			throw new FileParseException("Error while loading '" + this.getAbsolutePath() + "'", e);
+			throw new FileParseException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -54,7 +54,7 @@ public class ThunderFile extends CommentEnabledFile {
 			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getDataType(), this.getCommentSetting()));
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (ObjectIsNull | RuntimeIOException | FileParseException e) {
-			throw new FileParseException("Error while reloading '" + this.getAbsolutePath() + "'", e);
+			throw new FileParseException("Error while reloading '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -64,7 +64,7 @@ public class ThunderFile extends CommentEnabledFile {
 			try {
 				ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
 			} catch (ObjectIsNull | RuntimeIOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -75,7 +75,7 @@ public class ThunderFile extends CommentEnabledFile {
 			try {
 				ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
 			} catch (ObjectIsNull | RuntimeIOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -86,7 +86,7 @@ public class ThunderFile extends CommentEnabledFile {
 			try {
 				ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
 			} catch (ObjectIsNull | RuntimeIOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -102,7 +102,7 @@ public class ThunderFile extends CommentEnabledFile {
 		try {
 			ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
 		} catch (ObjectIsNull | RuntimeIOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -119,7 +119,7 @@ public class ThunderFile extends CommentEnabledFile {
 		try {
 			ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
 		} catch (ObjectIsNull | RuntimeIOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -137,7 +137,7 @@ public class ThunderFile extends CommentEnabledFile {
 		try {
 			ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
 		} catch (ObjectIsNull | RuntimeIOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 

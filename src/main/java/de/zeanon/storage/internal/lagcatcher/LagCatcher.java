@@ -1,6 +1,7 @@
 package de.zeanon.storage.internal.lagcatcher;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -14,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class LagCatcher {
 
-	private static final HashMap<String, Long> startTimes = new HashMap<>();
-	private static final HashMap<String, Long> stopTimes = new HashMap<>();
+	private static final Map<String, Long> startTimes = new HashMap<>();
+	private static final Map<String, Long> stopTimes = new HashMap<>();
 
 
 	public static void runMultipleTimes(final int cycles, final @NotNull Runnable runnable) {

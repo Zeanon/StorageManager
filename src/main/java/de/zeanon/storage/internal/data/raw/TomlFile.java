@@ -38,7 +38,7 @@ public class TomlFile extends FlatFile {
 			this.getFileData().loadData(com.electronwill.toml.Toml.read(this.getFile()));
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (IOException e) {
-			throw new FileParseException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e);
+			throw new FileParseException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -49,7 +49,7 @@ public class TomlFile extends FlatFile {
 			this.getFileData().loadData(com.electronwill.toml.Toml.read(this.getFile()));
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (IOException e) {
-			throw new FileParseException("Error while reloading '" + this.getFile().getAbsolutePath() + "'", e);
+			throw new FileParseException("Error while reloading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -65,7 +65,7 @@ public class TomlFile extends FlatFile {
 			try {
 				com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -76,7 +76,7 @@ public class TomlFile extends FlatFile {
 			try {
 				com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -87,7 +87,7 @@ public class TomlFile extends FlatFile {
 			try {
 				com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -103,7 +103,7 @@ public class TomlFile extends FlatFile {
 		try {
 			com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -120,7 +120,7 @@ public class TomlFile extends FlatFile {
 		try {
 			com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -137,7 +137,7 @@ public class TomlFile extends FlatFile {
 		try {
 			com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
