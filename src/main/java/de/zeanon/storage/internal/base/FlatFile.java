@@ -183,7 +183,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		de.zeanon.storage.internal.utils.basic.Objects.checkNull(replacement, "Replacement  must not be null");
 
 		final Iterator lines = Files.readAllLines(this.file.toPath()).iterator();
-		PrintWriter writer = new PrintWriter(this.file);
+		@Cleanup PrintWriter writer = new PrintWriter(this.file);
 		writer.print(((String) lines.next()).replace(target, replacement));
 		//noinspection unchecked
 		lines.forEachRemaining(line -> {

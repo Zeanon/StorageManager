@@ -97,7 +97,7 @@ public class ThunderEditor {
 		}
 	}
 
-	private static Map<String, Object> internalReadWithComments(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataTypeBase dataType, final CommentSettingBase commentSetting) throws ArrayIndexOutOfBoundsException {
+	private static Map<String, Object> internalReadWithComments(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataTypeBase dataType, final CommentSettingBase commentSetting) {
 		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 

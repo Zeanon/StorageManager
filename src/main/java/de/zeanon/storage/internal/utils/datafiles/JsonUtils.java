@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -13,7 +12,7 @@ import org.json.JSONObject;
 @SuppressWarnings({"unchecked", "WeakerAccess"})
 public class JsonUtils {
 
-	public static JSONObject getJsonFromMap(final @NotNull Map<String, Object> map) throws JSONException {
+	public static JSONObject getJsonFromMap(final @NotNull Map<String, Object> map) {
 		JSONObject jsonData = new JSONObject();
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			Object value = entry.getValue();
@@ -25,7 +24,7 @@ public class JsonUtils {
 		return jsonData;
 	}
 
-	public static Map<String, Object> jsonToMap(final @NotNull JSONObject json) throws JSONException {
+	public static Map<String, Object> jsonToMap(final @NotNull JSONObject json) {
 		Map<String, Object> retMap = new HashMap<>();
 
 		if (json != JSONObject.NULL) {
@@ -34,7 +33,7 @@ public class JsonUtils {
 		return retMap;
 	}
 
-	public static List<Object> toList(final @NotNull JSONArray array) throws JSONException {
+	public static List<Object> toList(final @NotNull JSONArray array) {
 		List<Object> list = new ArrayList<>();
 		for (int i = 0; i < array.length(); i++) {
 			list.add(getValue(array.get(i)));
@@ -42,7 +41,7 @@ public class JsonUtils {
 		return list;
 	}
 
-	public static Map<String, Object> toMap(final @NotNull JSONObject object) throws JSONException {
+	public static Map<String, Object> toMap(final @NotNull JSONObject object) {
 		Map<String, Object> map = new HashMap<>();
 
 		Iterator<String> keysItr = object.keys();
