@@ -1,6 +1,8 @@
 package de.zeanon.storage.internal.data.raw;
 
 import de.zeanon.storage.internal.base.FlatFile;
+import de.zeanon.storage.internal.base.exceptions.FileParseException;
+import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.data.section.JsonFileSection;
@@ -27,7 +29,7 @@ import org.json.JSONTokener;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class JsonFile extends FlatFile<JsonFile> {
+public class JsonFile extends FlatFile {
 
 	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting) {
 		super(file, FileType.JSON, reloadSetting);
@@ -36,18 +38,25 @@ public class JsonFile extends FlatFile<JsonFile> {
 			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
 		}
 
-		final JSONTokener jsonTokener = new JSONTokener(Objects.notNull(SMFileUtils.createNewInputStream(this.getFile()), "InputStream must not be null"));
-		this.setFileData(new LocalFileData(new JSONObject(jsonTokener)));
-		this.setLastLoaded(System.currentTimeMillis());
+		try {
+			final JSONTokener jsonTokener = new JSONTokener(SMFileUtils.createNewInputStream(this.getFile()));
+			this.getFileData().loadData(new JSONObject(jsonTokener));
+			this.setLastLoaded(System.currentTimeMillis());
+		} catch (RuntimeIOException e) {
+			throw new FileParseException("Error while loading '" + this.getAbsolutePath() + "'", e);
+		}
 	}
 
 
 	@Override
-	public JsonFile reload() {
-		final JSONTokener jsonTokener = new JSONTokener(Objects.notNull(SMFileUtils.createNewInputStream(this.getFile()), "InputStream must not be null"));
-		this.getFileData().loadData(new JSONObject(jsonTokener));
-		this.setLastLoaded(System.currentTimeMillis());
-		return this;
+	public void reload() {
+		try {
+			final JSONTokener jsonTokener = new JSONTokener(SMFileUtils.createNewInputStream(this.getFile()));
+			this.getFileData().loadData(new JSONObject(jsonTokener));
+			this.setLastLoaded(System.currentTimeMillis());
+		} catch (RuntimeIOException e) {
+			throw new FileParseException("Error while reloading '" + this.getAbsolutePath() + "'", e);
+		}
 	}
 
 	/**
@@ -67,50 +76,41 @@ public class JsonFile extends FlatFile<JsonFile> {
 	}
 
 	@Override
-	public synchronized JsonFile set(final @NotNull String key, final @Nullable Object value) {
+	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
 			try {
 				this.write(new JSONObject(this.getFileData().toMap()));
 			} catch (IOException e) {
-				System.err.println("Error while writing to '" + this.getFile().getAbsolutePath() + "'");
-				e.printStackTrace();
-				throw new IllegalStateException();
+				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
 			}
 		}
-		return this;
 	}
 
 	@Override
-	public synchronized JsonFile setAll(final @NotNull Map<String, Object> dataMap) {
+	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(dataMap)) {
 			try {
 				this.write(new JSONObject(this.getFileData().toMap()));
 			} catch (IOException e) {
-				System.err.println("Error while writing to '" + this.getFile().getAbsolutePath() + "'");
-				e.printStackTrace();
-				throw new IllegalStateException();
+				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
 			}
 		}
-		return this;
 	}
 
 	@Override
-	public synchronized JsonFile setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(key, dataMap)) {
 			try {
 				this.write(new JSONObject(this.getFileData().toMap()));
 			} catch (IOException e) {
-				System.err.println("Error while writing to '" + this.getFile().getAbsolutePath() + "'");
-				e.printStackTrace();
-				throw new IllegalStateException();
+				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
 			}
 		}
-		return this;
 	}
 
 	@Override
-	public synchronized JsonFile remove(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
+	public synchronized void remove(final @NotNull String key) {
+		Objects.checkNull(key, "Key  must not be null");
 
 		this.update();
 
@@ -119,16 +119,13 @@ public class JsonFile extends FlatFile<JsonFile> {
 		try {
 			this.write(this.getFileData().toJsonObject());
 		} catch (IOException e) {
-			System.err.println("Could not write to '" + this.getFile().getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
 		}
-		return this;
 	}
 
 	@Override
-	public synchronized JsonFile removeAll(final @NotNull List<String> keys) {
-		Objects.checkNull(keys, "List must not be null");
+	public synchronized void removeAll(final @NotNull List<String> keys) {
+		Objects.checkNull(keys, "List  must not be null");
 
 		this.update();
 
@@ -139,16 +136,13 @@ public class JsonFile extends FlatFile<JsonFile> {
 		try {
 			this.write(this.getFileData().toJsonObject());
 		} catch (IOException e) {
-			System.err.println("Could not write to '" + this.getFile().getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
 		}
-		return this;
 	}
 
 	@Override
-	public synchronized JsonFile removeAll(final @NotNull String key, final @NotNull List<String> keys) {
-		Objects.checkNull(keys, "List must not be null");
+	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
+		Objects.checkNull(keys, "List  must not be null");
 
 		this.update();
 
@@ -159,11 +153,8 @@ public class JsonFile extends FlatFile<JsonFile> {
 		try {
 			this.write(this.getFileData().toJsonObject());
 		} catch (IOException e) {
-			System.err.println("Could not write to '" + this.getFile().getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
 		}
-		return this;
 	}
 
 	/**
@@ -178,7 +169,7 @@ public class JsonFile extends FlatFile<JsonFile> {
 	}
 
 	private Map getMapWithoutPath(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
 		if (!this.hasKey(key)) {
@@ -195,8 +186,9 @@ public class JsonFile extends FlatFile<JsonFile> {
 			return (Map<?, ?>) this.getFileData().get(key);
 		} else if (map instanceof JSONObject) {
 			return JsonUtils.jsonToMap((JSONObject) map);
+		} else {
+			throw new FileParseException("Json does not contain: '" + key + "'.");
 		}
-		throw new IllegalArgumentException("Json does not contain: '" + key + "'.");
 	}
 
 	private void write(final JSONObject object) throws IOException {

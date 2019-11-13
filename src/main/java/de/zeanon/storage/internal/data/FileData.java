@@ -1,9 +1,10 @@
 package de.zeanon.storage.internal.data;
 
-import de.zeanon.storage.internal.utils.basic.Objects;
 import de.zeanon.storage.internal.utils.datafiles.JsonUtils;
 import java.util.*;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -13,18 +14,11 @@ import org.json.JSONObject;
  * Class to handle the Nested HashMaps used to cache the Data read from the Files
  */
 @EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuppressWarnings("unused")
 public class FileData implements Comparable<FileData> {
 
-	private final Map<String, Object> localMap;
-
-	protected FileData(final @Nullable Map<String, Object> map) {
-		this.localMap = map != null ? (map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map)) : new HashMap<>();
-	}
-
-	protected FileData(final @NotNull JSONObject jsonObject) {
-		this.localMap = new HashMap<>(Objects.notNull(jsonObject, "JsonObject must not be null").toMap());
-	}
+	private Map<String, Object> localMap;
 
 
 	/**
@@ -33,16 +27,26 @@ public class FileData implements Comparable<FileData> {
 	 * @param map the Contents to be inserted.
 	 */
 	public synchronized void loadData(final @Nullable Map<String, Object> map) {
-		this.localMap.clear();
 		if (map != null) {
-			this.localMap.putAll(map);
+			if (map instanceof LinkedHashMap) {
+				this.localMap = new LinkedHashMap<>(map);
+			} else {
+				this.localMap = new HashMap<>(map);
+			}
+		} else {
+			this.localMap = new HashMap<>();
 		}
 	}
 
 	public synchronized void loadData(final @Nullable JSONObject jsonObject) {
-		this.localMap.clear();
 		if (jsonObject != null) {
-			this.localMap.putAll(jsonObject.toMap());
+			if (jsonObject.toMap() instanceof LinkedHashMap) {
+				this.localMap = new LinkedHashMap<>(jsonObject.toMap());
+			} else {
+				this.localMap = new HashMap<>(jsonObject.toMap());
+			}
+		} else {
+			this.localMap = new HashMap<>();
 		}
 	}
 
@@ -202,7 +206,7 @@ public class FileData implements Comparable<FileData> {
 	 * Clear the contents of this FileData.
 	 */
 	public void clear() {
-		this.localMap.clear();
+		this.localMap = new HashMap<>();
 	}
 
 
@@ -262,7 +266,7 @@ public class FileData implements Comparable<FileData> {
 					map.containsKey(key[id])
 					&& map.get(key[id]) instanceof Map
 					? (Map<String, Object>) map.get(key[id])
-					: (map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map));
+					: this.getMap(map);
 			tempMap.put(key[id], this.insert(childMap, key, value, id + 1));
 			return tempMap;
 		} else {
@@ -272,14 +276,14 @@ public class FileData implements Comparable<FileData> {
 
 	private Set<String> keySet(final Map<String, Object> map) {
 		Set<String> tempSet = new HashSet<>();
-		for (String key : map.keySet()) {
-			if (map.get(key) instanceof Map) {
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
-				for (String tempKey : this.keySet((Map<String, Object>) map.get(key))) {
-					tempSet.add(key + "." + tempKey);
+				for (String tempKey : this.keySet((Map<String, Object>) entry.getValue())) {
+					tempSet.add(entry.getKey() + "." + tempKey);
 				}
 			} else {
-				tempSet.add(key);
+				tempSet.add(entry.getKey());
 			}
 		}
 		return tempSet;
@@ -287,13 +291,17 @@ public class FileData implements Comparable<FileData> {
 
 	private int size(final Map<String, Object> map) {
 		int size = map.size();
-		for (String key : map.keySet()) {
-			if (map.get(key) instanceof Map) {
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
-				size += this.size((Map<String, Object>) map.get(key));
+				size += this.size((Map<String, Object>) entry.getValue());
 			}
 		}
 		return size;
+	}
+
+	private Map<String, Object> getMap(final @NotNull Map<String, Object> map) {
+		return map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
 	}
 
 	@Override

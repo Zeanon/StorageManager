@@ -28,7 +28,7 @@ public enum Reload implements ReloadSettingBase {
 	INTELLIGENT {
 		@Override
 		public boolean shouldReload(final @NotNull FlatFile flatFile) {
-			return Objects.notNull(flatFile).hasChanged();
+			return Objects.notNull(flatFile, "FlatFile must not be null").hasChanged();
 		}
 	},
 	/**

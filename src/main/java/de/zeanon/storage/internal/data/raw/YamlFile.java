@@ -4,6 +4,8 @@ import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.zeanon.storage.internal.base.CommentEnabledFile;
+import de.zeanon.storage.internal.base.exceptions.FileParseException;
+import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
@@ -30,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class YamlFile extends CommentEnabledFile<YamlFile> {
+public class YamlFile extends CommentEnabledFile {
 
 	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.YAML, reloadSetting, commentSetting, dataType);
@@ -41,33 +43,28 @@ public class YamlFile extends CommentEnabledFile<YamlFile> {
 
 		try {
 			//noinspection unchecked
-			this.setFileData(new LocalFileData((Map<String, Object>) new YamlReader(new FileReader(this.getFile())).read()));
+			this.getFileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.getFile())).read());
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (YamlException | FileNotFoundException e) {
-			System.err.println("Exception while reloading '" + this.getFile().getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
+			throw new FileParseException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e);
 		}
 	}
 
 
 	@Override
-	public YamlFile reload() {
+	public void reload() {
 		try {
 			//noinspection unchecked
 			this.getFileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.getFile())).read());
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (IOException e) {
-			System.err.println("Exception while reloading '" + this.getFile().getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
+			throw new FileParseException("Error while reloading '" + this.getFile().getAbsolutePath() + "'", e);
 		}
-		return this;
 	}
 
 	@Override
-	public synchronized YamlFile remove(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
+	public synchronized void remove(final @NotNull String key) {
+		Objects.checkNull(key, "Key  must not be null");
 
 		this.update();
 
@@ -77,17 +74,14 @@ public class YamlFile extends CommentEnabledFile<YamlFile> {
 			try {
 				this.write(this.getFileData().toMap());
 			} catch (IOException e) {
-				System.err.println("Could not write to '" + this.getFile().getAbsolutePath() + "'");
-				e.printStackTrace();
-				throw new IllegalStateException();
+				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
 			}
 		}
-		return this;
 	}
 
 	@Override
-	public synchronized YamlFile removeAll(final @NotNull List<String> keys) {
-		Objects.checkNull(keys, "List must not be null");
+	public synchronized void removeAll(final @NotNull List<String> keys) {
+		Objects.checkNull(keys, "List  must not be null");
 
 		this.update();
 
@@ -98,16 +92,13 @@ public class YamlFile extends CommentEnabledFile<YamlFile> {
 		try {
 			this.write(this.getFileData().toMap());
 		} catch (IOException e) {
-			System.err.println("Could not write to '" + this.getFile().getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
 		}
-		return this;
 	}
 
 	@Override
-	public synchronized YamlFile removeAll(final @NotNull String key, final @NotNull List<String> keys) {
-		Objects.checkNull(keys, "List must not be null");
+	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
+		Objects.checkNull(keys, "List  must not be null");
 
 		this.update();
 
@@ -118,35 +109,29 @@ public class YamlFile extends CommentEnabledFile<YamlFile> {
 		try {
 			this.write(this.getFileData().toMap());
 		} catch (IOException e) {
-			System.err.println("Could not write to '" + this.getFile().getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
 		}
-		return this;
 	}
 
 	@Override
-	public synchronized YamlFile set(final @NotNull String key, final @Nullable Object value) {
+	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
 			this.writeData();
 		}
-		return this;
 	}
 
 	@Override
-	public synchronized YamlFile setAll(final @NotNull Map<String, Object> dataMap) {
+	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(dataMap)) {
 			this.writeData();
 		}
-		return this;
 	}
 
 	@Override
-	public synchronized YamlFile setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(key, dataMap)) {
 			this.writeData();
 		}
-		return this;
 	}
 
 	/**
@@ -165,11 +150,10 @@ public class YamlFile extends CommentEnabledFile<YamlFile> {
 		writer.write(fileData);
 	}
 
-	@SuppressWarnings("DuplicatedCode")
 	private void writeData() {
 		try {
 			if (this.getCommentSetting() != Comment.PRESERVE) {
-				this.write(Objects.notNull(this.getFileData(), "FileData must not be null").toMap());
+				this.write(Objects.notNull(this.getFileData(), "FileData  must not be null").toMap());
 			} else {
 				final List<String> unEdited = YamlEditor.read(this.getFile());
 				final List<String> header = YamlEditor.readHeader(this.getFile());
@@ -179,13 +163,11 @@ public class YamlFile extends CommentEnabledFile<YamlFile> {
 				if (!header.containsAll(footer)) {
 					header.addAll(footer);
 				}
-				YamlEditor.write(this.getFile(), YamlUtils.parseComments(this.getFile(), unEdited, header));
-				this.write(Objects.notNull(this.getFileData(), "FileData must not be null").toMap());
+				YamlEditor.write(this.getFile(), YamlUtils.parseComments(unEdited, header));
+				this.write(Objects.notNull(this.getFileData(), "FileData  must not be null").toMap());
 			}
 		} catch (IOException e) {
-			System.err.println("Error while writing to '" + getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e);
 		}
 	}
 

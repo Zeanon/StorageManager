@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.utils.basic;
 
+import de.zeanon.storage.internal.base.exceptions.ObjectIsNull;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -16,35 +17,32 @@ public class Objects {
 	/**
 	 * Checks if given Object is null
 	 */
-	public static <T> void checkNull(final @Nullable T object) {
-		if (object != null) {
-			return;
-		}
-		throw new IllegalStateException("Validated Object must not be null");
+	public static <O> void checkNull(final @Nullable O object) {
+		checkNull(object, "Validated Object  must not be null");
 	}
 
-	public static <T> void checkNull(final @Nullable T object, final @NotNull String message) {
+	public static <O> void checkNull(final @Nullable O object, final @NotNull String message) {
 		if (object != null) {
 			return;
 		}
-		throw new IllegalArgumentException(message);
+		throw new ObjectIsNull(message);
 	}
 
 
 	/**
-	 * Returns the given Object if not null
+	 * Checks if given Object is null
+	 *
+	 * @return the given object if not null
 	 */
-	public static <T> T notNull(final @Nullable T object) {
-		if (object != null) {
-			return object;
-		}
-		throw new IllegalStateException("Validated Object must not be null");
+	public static <O> O notNull(final @Nullable O object) {
+		return notNull(object, "Validated Object  must not be null");
 	}
 
-	public static <T> T notNull(final @Nullable T object, final @NotNull String message) {
+
+	public static <O> O notNull(final @Nullable O object, final @NotNull String message) {
 		if (object != null) {
 			return object;
 		}
-		throw new IllegalArgumentException(message);
+		throw new ObjectIsNull(message);
 	}
 }

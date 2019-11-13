@@ -1,5 +1,7 @@
 package de.zeanon.storage.internal.base;
 
+import de.zeanon.storage.internal.base.exceptions.FileTypeException;
+import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.base.interfaces.StorageBase;
@@ -14,10 +16,8 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.*;
 import lombok.*;
-import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
 
 
 /**
@@ -26,19 +26,18 @@ import org.json.JSONObject;
 @Getter
 @ToString
 @EqualsAndHashCode
-@Accessors(chain = true)
 @SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
-public abstract class FlatFile<C extends FlatFile> implements StorageBase<C>, Comparable<FlatFile> {
+public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	private final File file;
 	private final FileTypeBase fileType;
-	@Setter(AccessLevel.PROTECTED)
-	private FileData fileData;
+	private final FileData fileData;
 	@Setter(AccessLevel.PROTECTED)
 	private long lastLoaded;
 	/**
 	 * Default: INTELLIGENT
 	 */
+	@Setter
 	private ReloadSettingBase reloadSetting = Reload.INTELLIGENT;
 
 
@@ -46,19 +45,13 @@ public abstract class FlatFile<C extends FlatFile> implements StorageBase<C>, Co
 		if (fileType.isTypeOf(file)) {
 			this.fileType = fileType;
 			this.file = file;
-
+			this.fileData = new LocalFileData();
 			if (reloadSetting != null) {
 				this.setReloadSetting(reloadSetting);
 			}
 		} else {
-			throw new IllegalStateException("File '" + file.getAbsolutePath() + "' is not of type '" + fileType + "'");
+			throw new FileTypeException("File '" + file.getAbsolutePath() + "' is not of type '" + fileType + "'");
 		}
-	}
-
-	public C setReloadSetting(final @NotNull ReloadSettingBase reloadSetting) {
-		this.reloadSetting = reloadSetting;
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	public String getPath() {
@@ -68,10 +61,8 @@ public abstract class FlatFile<C extends FlatFile> implements StorageBase<C>, Co
 	public String getCanonicalPath() {
 		try {
 			return this.file.getCanonicalPath();
-		} catch (IOException e) {
-			System.err.println("Could not get Canonical Path of '" + this.file.getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
+		} catch (IOException | SecurityException e) {
+			throw new RuntimeIOException("Could not get Canonical Path of '" + this.file.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -82,63 +73,52 @@ public abstract class FlatFile<C extends FlatFile> implements StorageBase<C>, Co
 	/**
 	 * Set the Contents of the FileData and File from a given InputStream
 	 */
-	public synchronized C setDataFromStream(final @Nullable InputStream inputStream) {
+	public synchronized void setDataFromStream(final @Nullable InputStream inputStream) {
 		SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(inputStream));
 		this.reload();
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	/**
 	 * Delete all Contents of the FileData and File
 	 */
-	public synchronized C clear() {
+	public synchronized void clear() {
 		SMFileUtils.writeToFile(this.file, null);
 		this.reload();
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	/**
 	 * Just delete the File
 	 */
-	public synchronized C deleteFile() {
-		if (!this.file.delete()) {
-			System.err.println("Could not delete '" + this.file.getAbsolutePath() + "'");
-			throw new IllegalStateException();
+	public synchronized void deleteFile() {
+		try {
+			Files.delete(this.file.toPath());
+		} catch (IOException e) {
+			throw new RuntimeIOException("Could not delete '" + this.file.getAbsolutePath() + "'");
 		}
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	/**
 	 * Clears the contents of the internal FileData.
 	 * To get any data, you simply need to reload.
 	 */
-	public synchronized C clearData() {
+	public synchronized void clearData() {
 		this.fileData.clear();
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	/**
 	 * Set the Contents of the FileData and File from a given File
 	 */
-	public synchronized C setDataFromFile(final @Nullable File file) {
-		SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(file));
+	public synchronized void setDataFromFile(final @Nullable File file) {
+		SMFileUtils.writeToFile(this.file, file == null ? null : SMFileUtils.createNewInputStream(file));
 		this.reload();
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	/**
 	 * Set the Contents of the FileData and File from a given Resource
 	 */
-	public synchronized C setDataFromResource(final @Nullable String resource) {
-		SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(resource));
+	public synchronized void setDataFromResource(final @Nullable String resource) {
+		SMFileUtils.writeToFile(this.file, resource == null ? null : SMFileUtils.createNewInputStream(resource));
 		this.reload();
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	public String getAbsolutePath() {
@@ -157,11 +137,11 @@ public abstract class FlatFile<C extends FlatFile> implements StorageBase<C>, Co
 	/**
 	 * Reread the content of our flat file
 	 */
-	public abstract C reload();
+	public abstract void reload();
 
 	@Override
 	public boolean hasKey(final @NotNull String key) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key must not be null");
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
 		this.update();
 		return fileData.containsKey(key);
 	}
@@ -174,7 +154,7 @@ public abstract class FlatFile<C extends FlatFile> implements StorageBase<C>, Co
 
 	@Override
 	public Set<String> keySet(final @NotNull String key) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key must not be null");
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
 		this.update();
 		return this.fileData.keySet(key);
 	}
@@ -187,7 +167,7 @@ public abstract class FlatFile<C extends FlatFile> implements StorageBase<C>, Co
 
 	@Override
 	public Set<String> blockKeySet(final @NotNull String key) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key must not be null");
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
 		this.update();
 		return this.fileData.blockKeySet(key);
 	}
@@ -198,9 +178,9 @@ public abstract class FlatFile<C extends FlatFile> implements StorageBase<C>, Co
 	 * @param target      the CharSequence to be replaced.
 	 * @param replacement the Replacement Sequence.
 	 */
-	public synchronized C replaceInFile(final @NotNull CharSequence target, final @NotNull CharSequence replacement) throws IOException {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(target, "Target must not be null");
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(replacement, "Replacement must not be null");
+	public synchronized void replaceInFile(final @NotNull CharSequence target, final @NotNull CharSequence replacement) throws IOException {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(target, "Target  must not be null");
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(replacement, "Replacement  must not be null");
 
 		final Iterator lines = Files.readAllLines(this.file.toPath()).iterator();
 		PrintWriter writer = new PrintWriter(this.file);
@@ -210,21 +190,18 @@ public abstract class FlatFile<C extends FlatFile> implements StorageBase<C>, Co
 			writer.println();
 			writer.print(((String) line).replace(target, replacement));
 		});
-		this.reload();
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	@Override
 	public Object get(final @NotNull String key) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key must not be null");
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
 		update();
 		return fileData.get(key);
 	}
 
 	@Override
 	public Map<String, Object> getAll(final @NotNull List<String> keys) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList must not be null");
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		Map<String, Object> tempMap = new HashMap<>();
@@ -236,8 +213,8 @@ public abstract class FlatFile<C extends FlatFile> implements StorageBase<C>, Co
 
 	@Override
 	public Map<String, Object> getAll(final @NotNull String key, final @NotNull List<String> keys) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key must not be null");
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList must not be null");
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		Map<String, Object> tempMap = new HashMap<>();
@@ -273,7 +250,7 @@ public abstract class FlatFile<C extends FlatFile> implements StorageBase<C>, Co
 	 * @return true if the Data contained by FileData contained after adding the key-value-pair.
 	 */
 	protected boolean insert(final @NotNull String key, final @Nullable Object value) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key must not be null");
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
 		String tempData = this.fileData.toString();
@@ -282,24 +259,24 @@ public abstract class FlatFile<C extends FlatFile> implements StorageBase<C>, Co
 	}
 
 	protected boolean insertAll(final @NotNull Map<String, Object> map) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(map, "Map must not be null");
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
 		String tempData = this.fileData.toString();
-		for (String key : map.keySet()) {
-			this.fileData.insert(key, map.get(key));
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			this.fileData.insert(entry.getKey(), entry.getValue());
 		}
 		return !this.fileData.toString().equals(tempData);
 	}
 
 	protected boolean insertAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key must not be null");
-		Objects.checkNull(map, "Map must not be null");
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
 		String tempData = this.fileData.toString();
-		for (String tempKey : map.keySet()) {
-			this.fileData.insert(key + "." + tempKey, map.get(tempKey));
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			this.fileData.insert(key + "." + entry.getKey(), entry.getValue());
 		}
 		return !this.fileData.toString().equals(tempData);
 	}
@@ -326,12 +303,8 @@ public abstract class FlatFile<C extends FlatFile> implements StorageBase<C>, Co
 
 	protected static class LocalFileData extends FileData {
 
-		public LocalFileData(final @Nullable Map<String, Object> map) {
-			super(map);
-		}
-
-		public LocalFileData(final @NotNull JSONObject jsonObject) {
-			super(jsonObject);
+		public LocalFileData() {
+			super();
 		}
 	}
 }

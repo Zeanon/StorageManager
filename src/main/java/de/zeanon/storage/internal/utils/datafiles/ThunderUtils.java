@@ -53,9 +53,9 @@ public class ThunderUtils {
 	@SuppressWarnings("DuplicatedCode")
 	public static Map<String, Object> setHeader(final @NotNull FileData fileData, final @Nullable List<String> header, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
 		Map<String, Object> tempMap = fileData.toMap();
-		for (String tempKey : tempMap.keySet()) {
-			if (tempMap.get(tempKey) == ThunderEditor.LineType.COMMENT) {
-				tempMap.remove(tempKey);
+		for (Map.Entry<String, Object> entry : tempMap.entrySet()) {
+			if (entry.getValue() == ThunderEditor.LineType.COMMENT) {
+				tempMap.remove(entry.getKey());
 			} else {
 				break;
 			}
@@ -87,9 +87,9 @@ public class ThunderUtils {
 		if (fileData.get(key) instanceof Map) {
 			//noinspection unchecked
 			Map<String, Object> tempMap = (Map<String, Object>) fileData.get(key);
-			for (String tempKey : tempMap.keySet()) {
-				if (tempMap.get(tempKey) == ThunderEditor.LineType.COMMENT) {
-					tempMap.remove(tempKey);
+			for (Map.Entry<String, Object> entry : tempMap.entrySet()) {
+				if (entry.getValue() == ThunderEditor.LineType.COMMENT) {
+					tempMap.remove(entry.getKey());
 				} else {
 					break;
 				}

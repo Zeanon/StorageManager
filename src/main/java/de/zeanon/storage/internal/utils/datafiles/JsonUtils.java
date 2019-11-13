@@ -15,12 +15,12 @@ public class JsonUtils {
 
 	public static JSONObject getJsonFromMap(final @NotNull Map<String, Object> map) throws JSONException {
 		JSONObject jsonData = new JSONObject();
-		for (String key : map.keySet()) {
-			Object value = map.get(key);
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			Object value = entry.getValue();
 			if (value instanceof Map<?, ?>) {
 				value = getJsonFromMap((Map<String, Object>) value);
 			}
-			jsonData.put(key, value);
+			jsonData.put(entry.getKey(), value);
 		}
 		return jsonData;
 	}

@@ -1,7 +1,8 @@
 package de.zeanon.storage.internal.utils;
 
 import de.zeanon.storage.StorageManager;
-import de.zeanon.storage.internal.base.RuntimeIOException;
+import de.zeanon.storage.internal.base.exceptions.ObjectIsNull;
+import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.*;
 import java.nio.file.Path;
@@ -30,9 +31,8 @@ public class SMFileUtils {
 	 */
 	@SuppressWarnings("UnusedReturnValue")
 	public static synchronized boolean createFile(final @NotNull File file) {
-		Objects.checkNull(file);
 		try {
-			return createFileInternally(file);
+			return createFileInternally(Objects.notNull(file, "File must not be null"));
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while creating '" + file.getAbsolutePath() + "'"
 										 + System.lineSeparator() + e.getMessage(), e.getCause());
@@ -46,7 +46,7 @@ public class SMFileUtils {
 	 */
 	public static synchronized boolean createParents(final @NotNull File file) {
 		try {
-			if (file.getParentFile() != null) {
+			if (Objects.notNull(file, "File must not be null").getParentFile() != null) {
 				return createFileInternally(file.getParentFile());
 			} else {
 				return false;
@@ -66,12 +66,16 @@ public class SMFileUtils {
 	 * @return the files of the directory that are folders
 	 */
 	public static Collection<File> listFolders(final @NotNull File directory, final boolean deep) {
+		Objects.checkNull(directory, "Directory must not be null");
 		Collection<File> files = new LinkedList<>();
-		for (File file : Objects.notNull(directory.listFiles())) {
-			if (file.isDirectory()) {
-				files.add(file);
-				if (deep) {
-					files.addAll(listFolders(file, true));
+		if (directory.isDirectory()) {
+			File[] fileList = directory.listFiles();
+			for (File file : fileList != null ? fileList : new File[0]) {
+				if (file.isDirectory()) {
+					files.add(file);
+					if (deep) {
+						files.addAll(listFolders(file, true));
+					}
 				}
 			}
 		}
@@ -98,12 +102,15 @@ public class SMFileUtils {
 	 * @return the files of the given directory with the given extensions
 	 */
 	public static Collection<File> listFiles(final @NotNull File directory, final @NotNull List<String> extensions, final boolean deep) {
+		Objects.checkNull(directory, "Directory must not be null");
+		Objects.checkNull(extensions, "Extensions must not be null");
 		Collection<File> files = new LinkedList<>();
-		for (File file : Objects.notNull(directory.listFiles())) {
-			if (extensions.stream().anyMatch(SMFileUtils.getExtension(file)::equalsIgnoreCase)) {
-				files.add(file);
-			}
-			if (file.isDirectory()) {
+		if (directory.isDirectory()) {
+			File[] fileList = directory.listFiles();
+			for (File file : fileList != null ? fileList : new File[0]) {
+				if (extensions.stream().anyMatch(SMFileUtils.getExtension(file)::equalsIgnoreCase)) {
+					files.add(file);
+				}
 				if (deep) {
 					files.addAll(listFiles(file, extensions, true));
 				}
@@ -154,10 +161,12 @@ public class SMFileUtils {
 	 * @return the files of the given directory
 	 */
 	public static Collection<File> listFiles(final @NotNull File directory, final boolean deep) {
+		Objects.checkNull(directory, "Directory must not be null");
 		Collection<File> files = new LinkedList<>();
-		for (File file : Objects.notNull(directory.listFiles())) {
-			files.add(file);
-			if (file.isDirectory()) {
+		if (directory.isDirectory()) {
+			File[] fileList = directory.listFiles();
+			for (File file : fileList != null ? fileList : new File[0]) {
+				files.add(file);
 				if (deep) {
 					files.addAll(listFiles(file, true));
 				}
@@ -183,17 +192,12 @@ public class SMFileUtils {
 	 * @param file the File to be read.
 	 * @return BufferedInputstream containing the contents of the given File.
 	 */
-	public static BufferedInputStream createNewInputStream(final @Nullable File file) {
-		if (file == null) {
-			return null;
-		} else {
-			try {
-				return new BufferedInputStream(new FileInputStream(file));
-			} catch (IOException e) {
-				System.err.println("Error while creating InputStream from '" + file.getAbsolutePath() + "'");
-				e.printStackTrace();
-				throw new IllegalStateException();
-			}
+	public static BufferedInputStream createNewInputStream(final @NotNull File file) {
+		Objects.checkNull(file, "File must not be null");
+		try {
+			return new BufferedInputStream(new FileInputStream(file));
+		} catch (IOException e) {
+			throw new RuntimeIOException("Error while creating InputStream from '" + file.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -203,17 +207,12 @@ public class SMFileUtils {
 	 * @param resource the Path to the resource.
 	 * @return BufferedInputStream containing the contents of the resource file.
 	 */
-	public static BufferedInputStream createNewInputStream(final @Nullable String resource) {
-		if (resource == null) {
-			return null;
-		} else {
-			try {
-				return new BufferedInputStream(Objects.notNull(StorageManager.class.getClassLoader().getResourceAsStream(resource), "Resource does not exist"));
-			} catch (IllegalStateException e) {
-				System.err.println("Error while creating InputStream from '" + resource + "'");
-				e.printStackTrace();
-				throw new IllegalStateException();
-			}
+	public static BufferedInputStream createNewInputStream(final @NotNull String resource) {
+		Objects.checkNull(resource, "Resource must not be null");
+		try {
+			return new BufferedInputStream(Objects.notNull(StorageManager.class.getClassLoader().getResourceAsStream(resource), "Resource does not exist"));
+		} catch (ObjectIsNull e) {
+			throw new RuntimeIOException("Error while creating InputStream from '" + resource + "'", e);
 		}
 	}
 
@@ -258,9 +257,7 @@ public class SMFileUtils {
 			try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(Objects.notNull(file)))) {
 				outputStream.write(new byte[0], 0, 0);
 			} catch (IOException e) {
-				System.err.println("Error while clearing '" + file.getAbsolutePath() + "'");
-				e.printStackTrace();
-				throw new IllegalStateException();
+				throw new RuntimeIOException("Error while clearing '" + file.getAbsolutePath() + "'", e);
 			}
 		} else {
 			try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(Objects.notNull(file)))) {
@@ -274,9 +271,7 @@ public class SMFileUtils {
 					}
 				}
 			} catch (IOException e) {
-				System.err.println("Error while copying to + '" + file.getAbsolutePath() + "'");
-				e.printStackTrace();
-				throw new IllegalStateException();
+				throw new RuntimeIOException("Error while copying to + '" + file.getAbsolutePath() + "'", e);
 			}
 		}
 	}
@@ -288,7 +283,7 @@ public class SMFileUtils {
 	 * @return the extension of the given File.
 	 */
 	public static String getExtension(final @NotNull File file) {
-		return getExtension(file.getName());
+		return getExtension(Objects.notNull(file, "File must not be null").getName());
 	}
 
 	/**
@@ -333,7 +328,7 @@ public class SMFileUtils {
 	 * @return the File without it's extension.
 	 */
 	public static File removeExtension(final @NotNull File file) {
-		return new File(removeExtension(file.getAbsolutePath()));
+		return new File(removeExtension(Objects.notNull(file, "File must not be null").getAbsolutePath()));
 	}
 
 	/**

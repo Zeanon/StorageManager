@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -18,34 +19,27 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 @Accessors(chain = true)
 @SuppressWarnings("unused")
-public abstract class FlatSection<C extends FlatSection, F extends FlatFile> implements StorageBase<C>, Comparable<FlatSection> {
+public abstract class FlatSection implements StorageBase, Comparable<FlatSection> {
 
-	private final FlatFile<F> flatFile;
+	private final FlatFile flatFile;
 	@Getter
+	@Setter
 	protected String sectionKey;
 
 
-	protected FlatSection(final @NotNull String sectionKey, final @NotNull FlatFile<F> flatFile) {
-		this.sectionKey = Objects.notNull(sectionKey, "Key must not be null");
+	protected FlatSection(final @NotNull String sectionKey, final @NotNull FlatFile flatFile) {
+		this.sectionKey = Objects.notNull(sectionKey, "Key  must not be null");
 		this.flatFile = flatFile;
 	}
 
 
-	public C setReloadSetting(final @NotNull ReloadSettingBase reloadSetting) {
+	public void setReloadSetting(final @NotNull ReloadSettingBase reloadSetting) {
 		this.flatFile.setReloadSetting(reloadSetting);
-		//noinspection unchecked
-		return (C) this;
-	}
-
-	public C setSectionKey(final @NotNull String sectionKey) {
-		this.sectionKey = sectionKey;
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	@Override
 	public Object get(final @NotNull String key) {
-		return this.flatFile.get(this.sectionKey(key));
+		return this.flatFile.get(this.getFinalKey(key));
 	}
 
 	@Override
@@ -55,66 +49,50 @@ public abstract class FlatSection<C extends FlatSection, F extends FlatFile> imp
 
 	@Override
 	public Map<String, Object> getAll(final @NotNull String key, final @NotNull List<String> keys) {
-		return this.flatFile.getAll(this.sectionKey(key), keys);
+		return this.flatFile.getAll(this.getFinalKey(key), keys);
 	}
 
 	@Override
-	public synchronized C set(final @NotNull String key, final @Nullable Object value) {
-		this.flatFile.set(this.sectionKey(key), value);
-		//noinspection unchecked
-		return (C) this;
+	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
+		this.flatFile.set(this.getFinalKey(key), value);
 	}
 
 	@Override
-	public synchronized C setAll(final @NotNull Map<String, Object> dataMap) {
+	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
 		this.flatFile.setAll(this.getSectionKey(), dataMap);
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	@Override
-	public synchronized C setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
-		this.flatFile.setAll(this.sectionKey(key), dataMap);
-		//noinspection unchecked
-		return (C) this;
+	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+		this.flatFile.setAll(this.getFinalKey(key), dataMap);
 	}
 
-	public synchronized C set(final @Nullable Object value) {
+	public synchronized void set(final @Nullable Object value) {
 		this.flatFile.set(this.getSectionKey(), value);
-		//noinspection unchecked
-		return (C) this;
 	}
 
-	public synchronized C remove() {
+	public synchronized void remove() {
 		this.flatFile.remove(this.getSectionKey());
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	@Override
-	public synchronized C remove(final @NotNull String key) {
-		this.flatFile.remove(this.sectionKey(key));
-		//noinspection unchecked
-		return (C) this;
+	public synchronized void remove(final @NotNull String key) {
+		this.flatFile.remove(this.getFinalKey(key));
 	}
 
 	@Override
-	public synchronized C removeAll(final @NotNull List<String> keys) {
+	public synchronized void removeAll(final @NotNull List<String> keys) {
 		this.flatFile.removeAll(this.getSectionKey(), keys);
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	@Override
-	public synchronized C removeAll(final @NotNull String key, final @NotNull List<String> keys) {
-		this.flatFile.removeAll(this.sectionKey(key), keys);
-		//noinspection unchecked
-		return (C) this;
+	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
+		this.flatFile.removeAll(this.getFinalKey(key), keys);
 	}
 
 	@Override
 	public boolean hasKey(final @NotNull String key) {
-		return this.flatFile.hasKey(this.sectionKey(key));
+		return this.flatFile.hasKey(this.getFinalKey(key));
 	}
 
 	@Override
@@ -129,16 +107,16 @@ public abstract class FlatSection<C extends FlatSection, F extends FlatFile> imp
 
 	@Override
 	public Set<String> keySet(final @NotNull String key) {
-		return this.flatFile.keySet(this.sectionKey(key));
+		return this.flatFile.keySet(this.getFinalKey(key));
 	}
 
 	@Override
 	public Set<String> blockKeySet(final @NotNull String key) {
-		return this.flatFile.blockKeySet(this.sectionKey(key));
+		return this.flatFile.blockKeySet(this.getFinalKey(key));
 	}
 
-	protected String sectionKey(final @NotNull String key) {
-		return (this.getSectionKey() == null || this.getSectionKey().isEmpty()) ? Objects.notNull(key, "Key must not be null") : this.getSectionKey() + "." + Objects.notNull(key, "Key must not be null");
+	protected String getFinalKey(final @NotNull String key) {
+		return (this.getSectionKey() == null || this.getSectionKey().isEmpty()) ? Objects.notNull(key, "Key  must not be null") : this.getSectionKey() + "." + Objects.notNull(key, "Key  must not be null");
 	}
 
 	@Override

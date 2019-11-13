@@ -1,4 +1,4 @@
-package de.zeanon.storage.internal.base;
+package de.zeanon.storage.internal.base.exceptions;
 
 @SuppressWarnings("unused")
 public class RuntimeIOException extends RuntimeException {

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ThunderFileSection extends CommentEnabledSection<ThunderFileSection, ThunderFile> {
+public class ThunderFileSection extends CommentEnabledSection {
 
 	private final ThunderFile thunderFile;
 
@@ -22,6 +22,6 @@ public class ThunderFileSection extends CommentEnabledSection<ThunderFileSection
 
 	@Override
 	public ThunderFileSection getSection(final @NotNull String sectionKey) {
-		return new ThunderFileSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key must not be null"), this.thunderFile);
+		return new ThunderFileSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key  must not be null"), this.thunderFile);
 	}
 }

@@ -33,6 +33,7 @@ public class Primitive {
 	}
 
 
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class BOOLEAN {
 
 		public static boolean getBoolean(final @NotNull Object obj) {
@@ -48,6 +49,7 @@ public class Primitive {
 	}
 
 
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class LONG {
 
 		public static long getLong(final @NotNull Object obj) {
@@ -65,6 +67,7 @@ public class Primitive {
 	}
 
 
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class DOUBLE {
 
 		public static double getDouble(final @NotNull Object obj) {
@@ -82,6 +85,7 @@ public class Primitive {
 	}
 
 
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class FLOAT {
 
 		public static float getFloat(final @NotNull Object obj) {
@@ -99,6 +103,7 @@ public class Primitive {
 	}
 
 
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class INTEGER {
 
 		public static int getInt(final @NotNull Object obj) {
@@ -116,6 +121,7 @@ public class Primitive {
 	}
 
 
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class SHORT {
 
 		public static short getShort(final @NotNull Object obj) {
@@ -133,6 +139,7 @@ public class Primitive {
 	}
 
 
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class BYTE {
 
 		public static byte getByte(final @NotNull Object obj) {

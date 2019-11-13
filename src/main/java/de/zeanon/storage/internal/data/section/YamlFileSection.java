@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class YamlFileSection extends CommentEnabledSection<YamlFileSection, YamlFile> {
+public class YamlFileSection extends CommentEnabledSection {
 
 	private final YamlFile yamlFile;
 
@@ -22,6 +22,6 @@ public class YamlFileSection extends CommentEnabledSection<YamlFileSection, Yaml
 
 	@Override
 	public YamlFileSection getSection(final @NotNull String sectionKey) {
-		return new YamlFileSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key must not be null"), this.yamlFile);
+		return new YamlFileSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key  must not be null"), this.yamlFile);
 	}
 }

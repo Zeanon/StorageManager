@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  * Basic Interface for the Data Classes
  */
 @SuppressWarnings({"unused", "unchecked", "UnusedReturnValue"})
-public interface StorageBase<C extends StorageBase> {
+public interface StorageBase {
 
 	/**
 	 * Get a boolean from a File
@@ -25,7 +25,7 @@ public interface StorageBase<C extends StorageBase> {
 	default boolean getBoolean(final @NotNull String key) {
 		Object tempObject = this.get(key);
 		if (tempObject == null) {
-			throw new IllegalStateException("key '" + key + "' does not exist");
+			throw new NullPointerException("key '" + key + "' does not exist");
 		} else {
 			return Primitive.BOOLEAN.getBoolean(get(key));
 		}
@@ -84,7 +84,7 @@ public interface StorageBase<C extends StorageBase> {
 	default byte getByte(final @NotNull String key) {
 		Object tempObject = this.get(key);
 		if (tempObject == null) {
-			throw new IllegalStateException("key '" + key + "' does not exist");
+			throw new NullPointerException("key '" + key + "' does not exist");
 		} else {
 			return Primitive.BYTE.getByte(get(key));
 		}
@@ -99,7 +99,7 @@ public interface StorageBase<C extends StorageBase> {
 	default List<Byte> getByteList(final @NotNull String key) {
 		Object tempObject = this.get(key);
 		if (tempObject == null) {
-			throw new IllegalStateException("key '" + key + "' does not exist");
+			throw new NullPointerException("key '" + key + "' does not exist");
 		} else {
 			return (List<Byte>) tempObject;
 		}
@@ -114,7 +114,7 @@ public interface StorageBase<C extends StorageBase> {
 	default double getDouble(final @NotNull String key) {
 		Object tempObject = this.get(key);
 		if (tempObject == null) {
-			throw new IllegalStateException("key '" + key + "' does not exist");
+			throw new NullPointerException("key '" + key + "' does not exist");
 		} else {
 			return Primitive.DOUBLE.getDouble(get(key));
 		}
@@ -129,7 +129,7 @@ public interface StorageBase<C extends StorageBase> {
 	default float getFloat(final @NotNull String key) {
 		Object tempObject = this.get(key);
 		if (tempObject == null) {
-			throw new IllegalStateException("key '" + key + "' does not exist");
+			throw new NullPointerException("key '" + key + "' does not exist");
 		} else {
 			return Primitive.FLOAT.getFloat(get(key));
 		}
@@ -144,7 +144,7 @@ public interface StorageBase<C extends StorageBase> {
 	default int getInt(final @NotNull String key) {
 		Object tempObject = this.get(key);
 		if (tempObject == null) {
-			throw new IllegalStateException("key '" + key + "' does not exist");
+			throw new NullPointerException("key '" + key + "' does not exist");
 		} else {
 			return Primitive.INTEGER.getInt(get(key));
 		}
@@ -159,7 +159,7 @@ public interface StorageBase<C extends StorageBase> {
 	default short getShort(final @NotNull String key) {
 		Object tempObject = this.get(key);
 		if (tempObject == null) {
-			throw new IllegalStateException("key '" + key + "' does not exist");
+			throw new NullPointerException("key '" + key + "' does not exist");
 		} else {
 			return Primitive.SHORT.getShort(get(key));
 		}
@@ -174,7 +174,7 @@ public interface StorageBase<C extends StorageBase> {
 	default List<Integer> getIntegerList(final @NotNull String key) {
 		Object tempObject = this.get(key);
 		if (tempObject == null) {
-			throw new IllegalStateException("key '" + key + "' does not exist");
+			throw new NullPointerException("key '" + key + "' does not exist");
 		} else {
 			return (List<Integer>) tempObject;
 		}
@@ -189,7 +189,7 @@ public interface StorageBase<C extends StorageBase> {
 	default List getList(final @NotNull String key) {
 		Object tempObject = this.get(key);
 		if (tempObject == null) {
-			throw new IllegalStateException("key '" + key + "' does not exist");
+			throw new NullPointerException("key '" + key + "' does not exist");
 		} else {
 			return (List) tempObject;
 		}
@@ -204,7 +204,7 @@ public interface StorageBase<C extends StorageBase> {
 	default long getLong(final @NotNull String key) {
 		Object tempObject = this.get(key);
 		if (tempObject == null) {
-			throw new IllegalStateException("key '" + key + "' does not exist");
+			throw new NullPointerException("key '" + key + "' does not exist");
 		} else {
 			return Primitive.LONG.getLong(get(key));
 		}
@@ -230,7 +230,7 @@ public interface StorageBase<C extends StorageBase> {
 	default Map getMap(final @NotNull String key) {
 		Object tempObject = this.get(key);
 		if (tempObject == null) {
-			throw new IllegalStateException("key '" + key + "' does not exist");
+			throw new NullPointerException("key '" + key + "' does not exist");
 		} else {
 			return (Map) tempObject;
 		}
@@ -280,14 +280,14 @@ public interface StorageBase<C extends StorageBase> {
 	 * @param key   The key your value should be associated with
 	 * @param value The value you want to set in your File
 	 */
-	C set(final @NotNull String key, final @Nullable Object value);
+	void set(final @NotNull String key, final @Nullable Object value);
 
 	/**
 	 * Set several key, value pairs
 	 *
 	 * @param dataMap the pairs to be set
 	 */
-	C setAll(final @NotNull Map<String, Object> dataMap);
+	void setAll(final @NotNull Map<String, Object> dataMap);
 
 	/**
 	 * Set several key, value pairs
@@ -295,7 +295,7 @@ public interface StorageBase<C extends StorageBase> {
 	 * @param key     the key of the SubBlock
 	 * @param dataMap the pairs to be set
 	 */
-	C setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap);
+	void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap);
 
 	/**
 	 * get the keySet of all layers of the map combined.
@@ -348,7 +348,7 @@ public interface StorageBase<C extends StorageBase> {
 	default String getString(final @NotNull String key) {
 		Object tempObject = this.get(key);
 		if (tempObject == null) {
-			throw new IllegalStateException("key '" + key + "' does not exist");
+			throw new NullPointerException("key '" + key + "' does not exist");
 		} else {
 			return tempObject instanceof String ? (String) tempObject : tempObject.toString();
 		}
@@ -363,7 +363,7 @@ public interface StorageBase<C extends StorageBase> {
 	default List<String> getStringList(final @NotNull String key) {
 		Object tempObject = this.get(key);
 		if (tempObject == null) {
-			throw new IllegalStateException("key '" + key + "' does not exist");
+			throw new NullPointerException("key '" + key + "' does not exist");
 		} else {
 			return (List<String>) tempObject;
 		}
@@ -374,17 +374,15 @@ public interface StorageBase<C extends StorageBase> {
 	 *
 	 * @param key the key to remove
 	 */
-	C remove(final @NotNull String key);
+	void remove(final @NotNull String key);
 
 	/**
 	 * Remove given keys from a File
 	 *
 	 * @param keys the keys to remove
 	 */
-	default C removeAll(final @NotNull String... keys) {
+	default void removeAll(final @NotNull String... keys) {
 		removeAll(Arrays.asList(keys));
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	/**
@@ -392,17 +390,15 @@ public interface StorageBase<C extends StorageBase> {
 	 *
 	 * @param keys the keys to remove
 	 */
-	C removeAll(final @NotNull List<String> keys);
+	void removeAll(final @NotNull List<String> keys);
 
 	/**
 	 * Remove given keys from a File
 	 *
 	 * @param keys the keys to remove
 	 */
-	default C removeAll(final @NotNull String key, final @NotNull String... keys) {
+	default void removeAll(final @NotNull String key, final @NotNull String... keys) {
 		removeAll(key, Arrays.asList(keys));
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	/**
@@ -410,7 +406,7 @@ public interface StorageBase<C extends StorageBase> {
 	 *
 	 * @param keys the keys to remove
 	 */
-	C removeAll(final @NotNull String key, final @NotNull List<String> keys);
+	void removeAll(final @NotNull String key, final @NotNull List<String> keys);
 
 	/**
 	 * Sets a value to the File if the File doesn't already contain the value
@@ -419,12 +415,10 @@ public interface StorageBase<C extends StorageBase> {
 	 * @param key   key to set the value
 	 * @param value Value to set
 	 */
-	default C setDefault(final @NotNull String key, final @Nullable Object value) {
+	default void setDefault(final @NotNull String key, final @Nullable Object value) {
 		if (!this.hasKey(key)) {
 			set(key, value);
 		}
-		//noinspection unchecked
-		return (C) this;
 	}
 
 	FlatSection getSection(final @NotNull String sectionKey);

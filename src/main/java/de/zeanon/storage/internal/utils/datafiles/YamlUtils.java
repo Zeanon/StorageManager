@@ -1,8 +1,6 @@
 package de.zeanon.storage.internal.utils.datafiles;
 
 import de.zeanon.storage.internal.utils.editor.YamlEditor;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -17,26 +15,17 @@ import org.jetbrains.annotations.NotNull;
 public class YamlUtils {
 
 
-	public static List<String> parseComments(final @NotNull File file, final @NotNull List<String> comments, final @NotNull List<String> updated) {
-		final List<String> keys;
+	public static List<String> parseComments(final @NotNull List<String> comments, final @NotNull List<String> updated) {
 		final Map<String, List<String>> parsed;
-		try {
-			//noinspection UnusedAssignment
-			keys = YamlEditor.readKeys(file);
-			parsed = assignCommentsToKey(comments);
-		} catch (IOException e) {
-			System.err.println("Error while reading keys from '" + file.getAbsolutePath() + "'");
-			e.printStackTrace();
-			return new ArrayList<>();
-		}
+		parsed = assignCommentsToKey(comments);
 
-		for (final String key : parsed.keySet()) {
+		for (Map.Entry<String, List<String>> entry : parsed.entrySet()) {
 			int i = 0;
-			for (final String line : parsed.get(key)) {
-				if (updated.contains(key + " ")) {
-					updated.add(updated.indexOf(key + " ") + i, line);
-				} else if (updated.contains(" " + key)) {
-					updated.add(updated.indexOf(" " + key) + i, line);
+			for (final String line : entry.getValue()) {
+				if (updated.contains(entry.getKey() + " ")) {
+					updated.add(updated.indexOf(entry.getKey() + " ") + i, line);
+				} else if (updated.contains(" " + entry.getKey())) {
+					updated.add(updated.indexOf(" " + entry.getKey()) + i, line);
 				}
 			}
 		}
@@ -59,9 +48,9 @@ public class YamlUtils {
 		}
 
 		final List<String> keysToRemove = new ArrayList<>();
-		for (final String line : result.keySet()) {
-			if (result.get(line).equals(new ArrayList<>())) {
-				keysToRemove.add(line);
+		for (Map.Entry<String, List<String>> entry : result.entrySet()) {
+			if (entry.getValue().equals(new ArrayList<>())) {
+				keysToRemove.add(entry.getKey());
 			}
 		}
 
@@ -69,15 +58,5 @@ public class YamlUtils {
 			result.remove(key);
 		}
 		return result;
-	}
-
-	/**
-	 * Method to assign a comment to a key
-	 *
-	 * @return Nested Map with Comments assigned to the corresponding keys
-	 * @throws IOException if File could not be read
-	 */
-	private static Map<String, List<String>> assignCommentsToKey(final @NotNull File file) throws IOException {
-		return assignCommentsToKey(YamlEditor.read(file));
 	}
 }

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class JsonFileSection extends FlatSection<JsonFileSection, JsonFile> {
+public class JsonFileSection extends FlatSection {
 
 	private final JsonFile jsonFile;
 
@@ -22,6 +22,6 @@ public class JsonFileSection extends FlatSection<JsonFileSection, JsonFile> {
 
 	@Override
 	public JsonFileSection getSection(final @NotNull String sectionKey) {
-		return new JsonFileSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key must not be null"), this.jsonFile);
+		return new JsonFileSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key  must not be null"), this.jsonFile);
 	}
 }

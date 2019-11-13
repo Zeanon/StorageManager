@@ -43,12 +43,12 @@ public enum DataType implements DataTypeBase {
 		}
 	},
 	/**
-	 * The Storage type depends on the CommentSetting(HashMap for SKIP_COMMENTS, LinkedHashMap for PRESERVE_COMMENTS).
+	 * The Storage type depends on the CommentSetting(HashMap for SKIP, LinkedHashMap for PRESERVE).
 	 */
 	AUTOMATIC {
 		@Override
 		public Map<String, Object> getNewDataMap(final @NotNull CommentSettingBase commentSetting, final @Nullable Map<String, Object> map) {
-			if (de.zeanon.storage.internal.utils.basic.Objects.notNull(commentSetting) == Comment.PRESERVE) {
+			if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
 				return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
 			} else {
 				return map == null ? new HashMap<>() : new HashMap<>(map);
@@ -57,7 +57,7 @@ public enum DataType implements DataTypeBase {
 
 		@Override
 		public List<String> getNewDataList(final @NotNull CommentSettingBase commentSetting, final @Nullable List<String> list) {
-			if (Objects.notNull(commentSetting) == Comment.PRESERVE) {
+			if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
 				return list == null ? new LinkedList<>() : new LinkedList<>(list);
 			} else {
 				return list == null ? new ArrayList<>() : new ArrayList<>(list);

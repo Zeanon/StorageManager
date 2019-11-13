@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class TomlFileSection extends FlatSection<TomlFileSection, TomlFile> {
+public class TomlFileSection extends FlatSection {
 
 	private final TomlFile tomlFile;
 
@@ -22,6 +22,6 @@ public class TomlFileSection extends FlatSection<TomlFileSection, TomlFile> {
 
 	@Override
 	public TomlFileSection getSection(final @NotNull String sectionKey) {
-		return new TomlFileSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key must not be null"), this.tomlFile);
+		return new TomlFileSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key  must not be null"), this.tomlFile);
 	}
 }

@@ -1,6 +1,5 @@
 package de.zeanon.storage.internal.data.section;
 
-import de.zeanon.storage.internal.base.CommentEnabledSection;
 import de.zeanon.storage.internal.base.interfaces.ConfigBase;
 import de.zeanon.storage.internal.data.config.ThunderConfig;
 import de.zeanon.storage.internal.utils.basic.Objects;
@@ -14,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ThunderConfigSection extends CommentEnabledSection<ThunderConfigSection, ThunderConfig> implements ConfigBase<ThunderConfigSection> {
+public class ThunderConfigSection extends ThunderFileSection implements ConfigBase {
 
 	private final ThunderConfig thunderConfig;
 
@@ -29,17 +28,16 @@ public class ThunderConfigSection extends CommentEnabledSection<ThunderConfigSec
 	}
 
 	@Override
-	public ThunderConfigSection setHeader(final @Nullable List<String> header) {
+	public void setHeader(final @Nullable List<String> header) {
 		this.thunderConfig.setHeader(this.getSectionKey(), header);
-		return this;
 	}
 
 	public List<String> getHeader(final @NotNull String key) {
-		return this.thunderConfig.getHeader(this.sectionKey(key));
+		return this.thunderConfig.getHeader(this.getFinalKey(key));
 	}
 
 	public ThunderConfigSection setHeader(final @NotNull String key, final @Nullable List<String> header) {
-		this.thunderConfig.setHeader(this.sectionKey(key), header);
+		this.thunderConfig.setHeader(this.getFinalKey(key), header);
 		return this;
 	}
 
@@ -50,17 +48,16 @@ public class ThunderConfigSection extends CommentEnabledSection<ThunderConfigSec
 	}
 
 	@Override
-	public ThunderConfigSection setFooter(final @Nullable List<String> footer) {
+	public void setFooter(final @Nullable List<String> footer) {
 		this.thunderConfig.setFooter(this.getSectionKey(), footer);
-		return this;
 	}
 
 	public List<String> getFooter(final @NotNull String key) {
-		return this.thunderConfig.getFooter(this.sectionKey(key));
+		return this.thunderConfig.getFooter(this.getFinalKey(key));
 	}
 
 	public ThunderConfigSection setFooter(final @NotNull String key, final @Nullable List<String> footer) {
-		this.thunderConfig.setFooter(this.sectionKey(key), footer);
+		this.thunderConfig.setFooter(this.getFinalKey(key), footer);
 		return this;
 	}
 
@@ -71,7 +68,7 @@ public class ThunderConfigSection extends CommentEnabledSection<ThunderConfigSec
 	}
 
 	public List<String> getComments(final @NotNull String key) {
-		return this.thunderConfig.getComments(this.sectionKey(key));
+		return this.thunderConfig.getComments(this.getFinalKey(key));
 	}
 
 	public List<String> getBlockComments() {
@@ -79,11 +76,11 @@ public class ThunderConfigSection extends CommentEnabledSection<ThunderConfigSec
 	}
 
 	public List<String> getBlockComments(final @NotNull String key) {
-		return this.thunderConfig.getBlockComments(this.sectionKey(key));
+		return this.thunderConfig.getBlockComments(this.getFinalKey(key));
 	}
 
 	@Override
 	public ThunderConfigSection getSection(final @NotNull String sectionKey) {
-		return new ThunderConfigSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key must not be null"), this.thunderConfig);
+		return new ThunderConfigSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key  must not be null"), this.thunderConfig);
 	}
 }

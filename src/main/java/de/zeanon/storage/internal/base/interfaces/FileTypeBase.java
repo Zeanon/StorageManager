@@ -13,27 +13,27 @@ public interface FileTypeBase {
 
 
 	default String addExtensionTo(final @NotNull String filePath) {
-		return (Objects.notNull(filePath, "Path must not be null") + "." + this.toString());
+		return (Objects.notNull(filePath, "Path  must not be null") + "." + this.toString());
 	}
 
 	default Path addExtensionTo(final @NotNull Path filePath) {
-		return Paths.get(Objects.notNull(filePath, "Path must not be null") + "." + this.toString());
+		return Paths.get(Objects.notNull(filePath, "Path  must not be null") + "." + this.toString());
 	}
 
 	default File addExtensionTo(final @NotNull File file) {
-		return new File(Objects.notNull(file, "Path must not be null").getAbsolutePath() + "." + this.toString());
+		return new File(Objects.notNull(file, "Path  must not be null").getAbsolutePath() + "." + this.toString());
 	}
 
 	default boolean isTypeOf(final @NotNull String filePath) {
-		return SMFileUtils.getExtension(Objects.notNull(filePath, "FilePath must not be null")).equals(this.toLowerCase());
+		return SMFileUtils.getExtension(Objects.notNull(filePath, "FilePath  must not be null")).equalsIgnoreCase(this.toString());
 	}
 
 	default boolean isTypeOf(final @NotNull Path filePath) {
-		return SMFileUtils.getExtension(Objects.notNull(filePath, "FilePath must not be null")).equals(this.toLowerCase());
+		return SMFileUtils.getExtension(Objects.notNull(filePath, "FilePath  must not be null")).equalsIgnoreCase(this.toString());
 	}
 
 	default boolean isTypeOf(final @NotNull File file) {
-		return SMFileUtils.getExtension(Objects.notNull(file, "File must not be null")).equals(this.toLowerCase());
+		return SMFileUtils.getExtension(Objects.notNull(file, "File  must not be null")).equalsIgnoreCase(this.toString());
 	}
 
 	String toLowerCase();
