@@ -3,7 +3,6 @@ package de.zeanon.storage.internal.base;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.base.interfaces.StorageBase;
 import de.zeanon.storage.internal.utils.basic.Objects;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
@@ -43,13 +42,13 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 	}
 
 	@Override
-	public Map<String, Object> getAll(final @NotNull List<String> keys) {
+	public Map<String, Object> getAll(final @NotNull String... keys) {
 		return this.flatFile.getAll(keys);
 	}
 
 	@Override
-	public Map<String, Object> getAll(final @NotNull String key, final @NotNull List<String> keys) {
-		return this.flatFile.getAll(this.getFinalKey(key), keys);
+	public Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull String... keys) {
+		return this.flatFile.getAll(this.getFinalKey(blockKey), keys);
 	}
 
 	@Override
@@ -63,8 +62,8 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
-		this.flatFile.setAll(this.getFinalKey(key), dataMap);
+	public synchronized void setAll(final @NotNull String blockKey, final @NotNull Map<String, Object> dataMap) {
+		this.flatFile.setAll(this.getFinalKey(blockKey), dataMap);
 	}
 
 	public synchronized void set(final @Nullable Object value) {
@@ -81,13 +80,13 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull List<String> keys) {
+	public synchronized void removeAll(final @NotNull String... keys) {
 		this.flatFile.removeAll(this.getSectionKey(), keys);
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
-		this.flatFile.removeAll(this.getFinalKey(key), keys);
+	public synchronized void removeAll(final @NotNull String blockKey, final @NotNull String... keys) {
+		this.flatFile.removeAll(this.getFinalKey(blockKey), keys);
 	}
 
 	@Override

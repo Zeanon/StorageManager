@@ -1,6 +1,5 @@
 package de.zeanon.storage.internal.utils.basic;
 
-import de.zeanon.storage.internal.base.exceptions.ObjectIsNull;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -18,14 +17,13 @@ public class Objects {
 	 * Checks if given Object is null
 	 */
 	public static <O> void checkNull(final @Nullable O object) {
-		checkNull(object, "Validated Object  must not be null");
+		checkNull(object, "Checked Object  must not be null");
 	}
 
 	public static <O> void checkNull(final @Nullable O object, final @NotNull String message) {
-		if (object != null) {
-			return;
+		if (object == null) {
+			throw new NullPointerException(message);
 		}
-		throw new ObjectIsNull(message);
 	}
 
 
@@ -35,14 +33,15 @@ public class Objects {
 	 * @return the given object if not null
 	 */
 	public static <O> O notNull(final @Nullable O object) {
-		return notNull(object, "Validated Object  must not be null");
+		return notNull(object, "Checked Object  must not be null");
 	}
 
 
 	public static <O> O notNull(final @Nullable O object, final @NotNull String message) {
-		if (object != null) {
+		if (object == null) {
+			throw new NullPointerException(message);
+		} else {
 			return object;
 		}
-		throw new ObjectIsNull(message);
 	}
 }

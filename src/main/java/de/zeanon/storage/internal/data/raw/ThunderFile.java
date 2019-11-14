@@ -2,7 +2,6 @@ package de.zeanon.storage.internal.data.raw;
 
 import de.zeanon.storage.internal.base.CommentEnabledFile;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
-import de.zeanon.storage.internal.base.exceptions.ObjectIsNull;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
@@ -15,7 +14,6 @@ import de.zeanon.storage.internal.utils.editor.ThunderEditor;
 import java.io.File;
 import java.io.InputStream;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
@@ -53,90 +51,16 @@ public class ThunderFile extends CommentEnabledFile {
 		try {
 			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getDataType(), this.getCommentSetting()));
 			this.setLastLoaded(System.currentTimeMillis());
-		} catch (ObjectIsNull | RuntimeIOException | FileParseException e) {
+		} catch (NullPointerException | RuntimeIOException | FileParseException e) {
 			throw new FileParseException("Error while reloading '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
 	@Override
-	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
-		if (this.insert(key, value)) {
-			try {
-				ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
-			} catch (ObjectIsNull | RuntimeIOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
-			}
-		}
-	}
-
-	@Override
-	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
-		if (this.insertAll(dataMap)) {
-			try {
-				ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
-			} catch (ObjectIsNull | RuntimeIOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
-			}
-		}
-	}
-
-	@Override
-	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
-		if (this.insertAll(key, dataMap)) {
-			try {
-				ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
-			} catch (ObjectIsNull | RuntimeIOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
-			}
-		}
-	}
-
-	@Override
-	public synchronized void remove(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
-
-		this.update();
-
-		this.getFileData().remove(key);
-
+	public synchronized void save() {
 		try {
 			ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
-		} catch (ObjectIsNull | RuntimeIOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
-		}
-	}
-
-	@Override
-	public synchronized void removeAll(final @NotNull List<String> keys) {
-		Objects.checkNull(keys, "List must not be null");
-
-		this.update();
-
-		for (String key : keys) {
-			this.getFileData().remove(key);
-		}
-
-		try {
-			ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
-		} catch (ObjectIsNull | RuntimeIOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
-		}
-	}
-
-	@Override
-	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
-		Objects.checkNull(key, "Key must not be null");
-		Objects.checkNull(keys, "List must not be null");
-
-		this.update();
-
-		for (String tempKey : keys) {
-			this.getFileData().remove(key + "." + tempKey);
-		}
-
-		try {
-			ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
-		} catch (ObjectIsNull | RuntimeIOException e) {
+		} catch (NullPointerException | RuntimeIOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}

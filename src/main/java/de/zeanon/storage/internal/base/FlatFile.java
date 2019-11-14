@@ -139,11 +139,20 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 */
 	public abstract void reload();
 
+	public abstract void save();
+
 	@Override
 	public boolean hasKey(final @NotNull String key) {
 		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
 		this.update();
 		return fileData.containsKey(key);
+	}
+
+	@Override
+	public boolean arrayKey_HasKey(final @NotNull String... key) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		this.update();
+		return fileData.arrayKey_ContainsKey(key);
 	}
 
 	@Override
@@ -153,10 +162,23 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
+	public Set<String[]> arrayKey_KeySet() {
+		this.update();
+		return this.fileData.arrayKey_KeySet();
+	}
+
+	@Override
 	public Set<String> keySet(final @NotNull String key) {
 		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
 		this.update();
 		return this.fileData.keySet(key);
+	}
+
+	@Override
+	public Set<String[]> arrayKey_KeySet(final @NotNull String... key) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		this.update();
+		return this.fileData.arrayKey_KeySet(key);
 	}
 
 	@Override
@@ -170,6 +192,13 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
 		this.update();
 		return this.fileData.blockKeySet(key);
+	}
+
+	@Override
+	public Set<String> arrayKey_BlockKeySet(final @NotNull String... key) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		this.update();
+		return this.fileData.arrayKey_BlockKeySet(key);
 	}
 
 	/**
@@ -194,13 +223,20 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	@Override
 	public Object get(final @NotNull String key) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		Objects.checkNull(key, "Key  must not be null");
 		update();
 		return fileData.get(key);
 	}
 
 	@Override
-	public Map<String, Object> getAll(final @NotNull List<String> keys) {
+	public Object arrayKey_Get(final @NotNull String... key) {
+		Objects.checkNull(key, "Key  must not be null");
+		update();
+		return fileData.arrayKey_Get(key);
+	}
+
+	@Override
+	public Map<String, Object> getAll(final @NotNull String... keys) {
 		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
@@ -212,16 +248,273 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public Map<String, Object> getAll(final @NotNull String key, final @NotNull List<String> keys) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+	public Map<String[], Object> arrayKey_GetAll(final @NotNull String[]... keys) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
+		this.update();
+
+		Map<String[], Object> tempMap = new HashMap<>();
+		for (String[] key : keys) {
+			tempMap.put(key, this.fileData.arrayKey_Get(key));
+		}
+		return tempMap;
+	}
+
+	@Override
+	public Map<String, Object> getAll(final @NotNull Collection<String> keys) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
+		this.update();
+
+		Map<String, Object> tempMap = new HashMap<>();
+		for (String key : keys) {
+			tempMap.put(key, this.fileData.get(key));
+		}
+		return tempMap;
+	}
+
+	@Override
+	public Map<String[], Object> arrayKey_GetAll(final @NotNull Collection<String[]> keys) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
+		this.update();
+
+		Map<String[], Object> tempMap = new HashMap<>();
+		for (String[] key : keys) {
+			tempMap.put(key, this.fileData.arrayKey_Get(key));
+		}
+		return tempMap;
+	}
+
+	@Override
+	public Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull String... keys) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(blockKey, "Key  must not be null");
 		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		Map<String, Object> tempMap = new HashMap<>();
 		for (String tempKey : keys) {
-			tempMap.put(key, this.fileData.get(key + "." + tempKey));
+			tempMap.put(blockKey, this.fileData.get(blockKey + "." + tempKey));
 		}
 		return tempMap;
+	}
+
+	@SuppressWarnings("DuplicatedCode")
+	@Override
+	public Map<String[], Object> arrayKey_GetAll(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(blockKey, "Key  must not be null");
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
+		this.update();
+
+		Map<String[], Object> tempMap = new HashMap<>();
+		for (String[] tempKey : keys) {
+			String[] key = new String[blockKey.length + tempKey.length];
+			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
+			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
+			tempMap.put(blockKey, this.fileData.arrayKey_Get(key));
+		}
+		return tempMap;
+	}
+
+	@Override
+	public Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(blockKey, "Key  must not be null");
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
+		this.update();
+
+		Map<String, Object> tempMap = new HashMap<>();
+		for (String tempKey : keys) {
+			tempMap.put(blockKey, this.fileData.get(blockKey + "." + tempKey));
+		}
+		return tempMap;
+	}
+
+	@SuppressWarnings("DuplicatedCode")
+	@Override
+	public Map<String[], Object> arrayKey_GetAll(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(blockKey, "Key  must not be null");
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
+		this.update();
+
+		Map<String[], Object> tempMap = new HashMap<>();
+		for (String[] tempKey : keys) {
+			String[] key = new String[blockKey.length + tempKey.length];
+			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
+			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
+			tempMap.put(blockKey, this.fileData.arrayKey_Get(key));
+		}
+		return tempMap;
+	}
+
+	@Override
+	public void set(final @NotNull String key, final @Nullable Object value) {
+		if (this.insert(key, value)) {
+			this.save();
+		}
+	}
+
+	@Override
+	public void arrayKey_Set(final @NotNull String[] key, final @Nullable Object value) {
+		if (this.arrayKey_Insert(key, value)) {
+			this.save();
+		}
+	}
+
+	@Override
+	public void setAll(final @NotNull Map<String, Object> dataMap) {
+		if (this.insertAll(dataMap)) {
+			this.save();
+		}
+	}
+
+	@Override
+	public void arrayKey_SetAll(final @NotNull Map<String[], Object> dataMap) {
+		if (this.arrayKey_InsertAll(dataMap)) {
+			this.save();
+		}
+	}
+
+	@Override
+	public void setAll(final @NotNull String blockKey, final @NotNull Map<String, Object> dataMap) {
+		if (this.insertAll(blockKey, dataMap)) {
+			this.save();
+		}
+	}
+
+	@Override
+	public void arrayKey_SetAll(final @NotNull String[] blockKey, final @NotNull Map<String[], Object> dataMap) {
+		if (this.arrayKey_InsertAll(blockKey, dataMap)) {
+			this.save();
+		}
+	}
+
+	@Override
+	public void remove(final @NotNull String key) {
+		Objects.checkNull(key, "Key  must not be null");
+
+		this.update();
+
+		this.getFileData().remove(key);
+
+		this.save();
+	}
+
+	@Override
+	public void arrayKey_Remove(final @NotNull String... key) {
+		Objects.checkNull(key, "Key  must not be null");
+
+		this.update();
+
+		this.getFileData().arrayKey_Remove(key);
+
+		this.save();
+	}
+
+	@Override
+	public void removeAll(final @NotNull String... keys) {
+		Objects.checkNull(keys, "List  must not be null");
+
+		this.update();
+
+		for (String key : keys) {
+			this.getFileData().remove(key);
+		}
+
+		this.save();
+	}
+
+	@Override
+	public void removeAll(final @NotNull Collection<String> keys) {
+		Objects.checkNull(keys, "List  must not be null");
+
+		this.update();
+
+		for (String key : keys) {
+			this.getFileData().remove(key);
+		}
+
+		this.save();
+	}
+
+	@Override
+	public void arrayKey_RemoveAll(final @NotNull String[]... keys) {
+		Objects.checkNull(keys, "List  must not be null");
+
+		this.update();
+
+		for (String[] key : keys) {
+			this.getFileData().arrayKey_Remove(key);
+		}
+
+		this.save();
+	}
+
+	@Override
+	public void arrayKey_RemoveAll(final @NotNull Collection<String[]> keys) {
+		Objects.checkNull(keys, "List  must not be null");
+
+		this.update();
+
+		for (String[] key : keys) {
+			this.getFileData().arrayKey_Remove(key);
+		}
+
+		this.save();
+	}
+
+	@Override
+	public void removeAll(final @NotNull String blockKey, final @NotNull String... keys) {
+		Objects.checkNull(keys, "List  must not be null");
+
+		this.update();
+
+		for (String tempKey : keys) {
+			this.getFileData().remove(blockKey + "." + tempKey);
+		}
+
+		this.save();
+	}
+
+	@Override
+	public void arrayKey_RemoveAll(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
+		Objects.checkNull(keys, "List  must not be null");
+
+		this.update();
+
+		for (String[] tempKey : keys) {
+			String[] key = new String[blockKey.length + tempKey.length];
+			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
+			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
+			this.getFileData().arrayKey_Remove(key);
+		}
+
+		this.save();
+	}
+
+	@Override
+	public void removeAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
+		Objects.checkNull(keys, "List  must not be null");
+
+		this.update();
+
+		for (String tempKey : keys) {
+			this.getFileData().remove(blockKey + "." + tempKey);
+		}
+
+		this.save();
+	}
+
+	@Override
+	public void arrayKey_RemoveAll(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
+		Objects.checkNull(keys, "List  must not be null");
+
+		this.update();
+
+		for (String[] tempKey : keys) {
+			String[] key = new String[blockKey.length + tempKey.length];
+			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
+			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
+			this.getFileData().arrayKey_Remove(key);
+		}
+
+		this.save();
 	}
 
 	/**
@@ -243,45 +536,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	/**
-	 * Insert a key-value-pair to the FileData.
-	 *
-	 * @param key   the key to be used.
-	 * @param value the value to be assigned to @param key.
-	 * @return true if the Data contained by FileData contained after adding the key-value-pair.
-	 */
-	protected boolean insert(final @NotNull String key, final @Nullable Object value) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
-		this.update();
-
-		String tempData = this.fileData.toString();
-		this.fileData.insert(key, value);
-		return !this.fileData.toString().equals(tempData);
-	}
-
-	protected boolean insertAll(final @NotNull Map<String, Object> map) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(map, "Map  must not be null");
-		this.update();
-
-		String tempData = this.fileData.toString();
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
-			this.fileData.insert(entry.getKey(), entry.getValue());
-		}
-		return !this.fileData.toString().equals(tempData);
-	}
-
-	protected boolean insertAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
-		Objects.checkNull(map, "Map  must not be null");
-		this.update();
-
-		String tempData = this.fileData.toString();
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
-			this.fileData.insert(key + "." + entry.getKey(), entry.getValue());
-		}
-		return !this.fileData.toString().equals(tempData);
-	}
-
-	/**
 	 * Creates an empty file.
 	 *
 	 * @return true if File was created.
@@ -293,6 +547,79 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			SMFileUtils.createFile(this.file);
 			return true;
 		}
+	}
+
+	/**
+	 * Insert a key-value-pair to the FileData.
+	 *
+	 * @param key   the key to be used.
+	 * @param value the value to be assigned to @param key.
+	 * @return true if the Data contained by FileData contained after adding the key-value-pair.
+	 */
+	private boolean insert(final @NotNull String key, final @Nullable Object value) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		this.update();
+
+		String tempData = this.fileData.toString();
+		this.fileData.insert(key, value);
+		return !this.fileData.toString().equals(tempData);
+	}
+
+	private boolean arrayKey_Insert(final @NotNull String[] key, final @Nullable Object value) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		this.update();
+
+		String tempData = this.fileData.toString();
+		this.fileData.arrayKey_Insert(key, value);
+		return !this.fileData.toString().equals(tempData);
+	}
+
+	private boolean insertAll(final @NotNull Map<String, Object> map) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(map, "Map  must not be null");
+		this.update();
+
+		String tempData = this.fileData.toString();
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			this.fileData.insert(entry.getKey(), entry.getValue());
+		}
+		return !this.fileData.toString().equals(tempData);
+	}
+
+	private boolean arrayKey_InsertAll(final @NotNull Map<String[], Object> map) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(map, "Map  must not be null");
+		this.update();
+
+		String tempData = this.fileData.toString();
+		for (Map.Entry<String[], Object> entry : map.entrySet()) {
+			this.fileData.arrayKey_Insert(entry.getKey(), entry.getValue());
+		}
+		return !this.fileData.toString().equals(tempData);
+	}
+
+	private boolean insertAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		Objects.checkNull(map, "Map  must not be null");
+		this.update();
+
+		String tempData = this.fileData.toString();
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			this.fileData.insert(key + "." + entry.getKey(), entry.getValue());
+		}
+		return !this.fileData.toString().equals(tempData);
+	}
+
+	private boolean arrayKey_InsertAll(final @NotNull String[] key, final @NotNull Map<String[], Object> map) {
+		de.zeanon.storage.internal.utils.basic.Objects.checkNull(map, "Map  must not be null");
+		this.update();
+
+		String tempData = this.fileData.toString();
+		for (Map.Entry<String[], Object> entry : map.entrySet()) {
+			String[] tempKey = new String[key.length + entry.getKey().length];
+			System.arraycopy(key, 0, tempKey, 0, key.length);
+			System.arraycopy(entry.getKey(), 0, tempKey, key.length, entry.getKey().length);
+			this.fileData.arrayKey_Insert(tempKey, entry.getValue());
+		}
+		return !this.fileData.toString().equals(tempData);
 	}
 
 	@Override

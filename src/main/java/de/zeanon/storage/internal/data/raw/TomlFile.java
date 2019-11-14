@@ -7,12 +7,9 @@ import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.data.section.TomlFileSection;
 import de.zeanon.storage.internal.utils.SMFileUtils;
-import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
@@ -53,94 +50,14 @@ public class TomlFile extends FlatFile {
 		}
 	}
 
-	/**
-	 * Set an object to your file
-	 *
-	 * @param key   The key your value should be associated with
-	 * @param value The value you want to set in your file
-	 */
 	@Override
-	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
-		if (this.insert(key, value)) {
-			try {
-				com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
-			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
-			}
-		}
-	}
-
-	@Override
-	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
-		if (this.insertAll(dataMap)) {
-			try {
-				com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
-			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
-			}
-		}
-	}
-
-	@Override
-	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
-		if (this.insertAll(key, dataMap)) {
-			try {
-				com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
-			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
-			}
-		}
-	}
-
-	@Override
-	public synchronized void remove(final @NotNull String key) {
-		Objects.checkNull(key, "Key  must not be null");
-
-		this.update();
-
-		this.getFileData().remove(key);
-
+	public synchronized void save() {
 		try {
 			com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
-
-	@Override
-	public synchronized void removeAll(final @NotNull List<String> keys) {
-		Objects.checkNull(keys, "List  must not be null");
-
-		this.update();
-
-		for (String key : keys) {
-			this.getFileData().remove(key);
-		}
-
-		try {
-			com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
-		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
-		}
-	}
-
-	@Override
-	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
-		Objects.checkNull(keys, "List  must not be null");
-
-		this.update();
-
-		for (String tempKey : keys) {
-			this.getFileData().remove(key + "." + tempKey);
-		}
-
-		try {
-			com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
-		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
-		}
-	}
-
 
 	/**
 	 * Get a Section with a defined SectionKey

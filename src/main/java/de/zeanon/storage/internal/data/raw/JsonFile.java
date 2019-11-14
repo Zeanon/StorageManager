@@ -10,8 +10,8 @@ import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import de.zeanon.storage.internal.utils.datafiles.JsonUtils;
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import lombok.Cleanup;
 import lombok.EqualsAndHashCode;
@@ -59,6 +59,15 @@ public class JsonFile extends FlatFile {
 		}
 	}
 
+	@Override
+	public synchronized void save() {
+		try {
+			this.write(new JSONObject(this.getFileData().toMap()));
+		} catch (IOException e) {
+			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
+		}
+	}
+
 	/**
 	 * Gets a Map by key, also used to get nested objects {@link JsonFile}
 	 *
@@ -76,84 +85,11 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
-		if (this.insert(key, value)) {
-			try {
-				this.write(new JSONObject(this.getFileData().toMap()));
-			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
-			}
-		}
-	}
-
-	@Override
-	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
-		if (this.insertAll(dataMap)) {
-			try {
-				this.write(new JSONObject(this.getFileData().toMap()));
-			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
-			}
-		}
-	}
-
-	@Override
-	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
-		if (this.insertAll(key, dataMap)) {
-			try {
-				this.write(new JSONObject(this.getFileData().toMap()));
-			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
-			}
-		}
-	}
-
-	@Override
-	public synchronized void remove(final @NotNull String key) {
-		Objects.checkNull(key, "Key  must not be null");
-
-		this.update();
-
-		this.getFileData().remove(key);
-
-		try {
-			this.write(this.getFileData().toJsonObject());
-		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
-		}
-	}
-
-	@Override
-	public synchronized void removeAll(final @NotNull List<String> keys) {
-		Objects.checkNull(keys, "List  must not be null");
-
-		this.update();
-
-		for (String key : keys) {
-			this.getFileData().remove(key);
-		}
-
-		try {
-			this.write(this.getFileData().toJsonObject());
-		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
-		}
-	}
-
-	@Override
-	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
-		Objects.checkNull(keys, "List  must not be null");
-
-		this.update();
-
-		for (String tempKey : keys) {
-			this.getFileData().remove(key + "." + tempKey);
-		}
-
-		try {
-			this.write(this.getFileData().toJsonObject());
-		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
+	public Map arrayKey_GetMap(final @NotNull String... key) {
+		if (!this.arrayKey_HasKey(key)) {
+			return new HashMap();
+		} else {
+			return this.getMapWithoutPath(key);
 		}
 	}
 
@@ -188,6 +124,29 @@ public class JsonFile extends FlatFile {
 			return JsonUtils.jsonToMap((JSONObject) map);
 		} else {
 			throw new FileParseException("Json does not contain: '" + key + "'.");
+		}
+	}
+
+	private Map getMapWithoutPath(final @NotNull String... key) {
+		Objects.checkNull(key, "Key  must not be null");
+		this.update();
+
+		if (!this.arrayKey_HasKey(key)) {
+			return new HashMap<>();
+		}
+
+		Object map;
+		try {
+			map = this.arrayKey_Get(key);
+		} catch (JSONException e) {
+			return new HashMap<>();
+		}
+		if (map instanceof Map) {
+			return (Map<?, ?>) this.getFileData().arrayKey_Get(key);
+		} else if (map instanceof JSONObject) {
+			return JsonUtils.jsonToMap((JSONObject) map);
+		} else {
+			throw new FileParseException("Json does not contain: '" + Arrays.toString(key) + "'.");
 		}
 	}
 

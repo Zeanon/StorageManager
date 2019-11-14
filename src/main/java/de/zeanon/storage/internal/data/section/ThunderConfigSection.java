@@ -32,12 +32,12 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 		this.thunderConfig.setHeader(this.getSectionKey(), header);
 	}
 
-	public List<String> getHeader(final @NotNull String key) {
-		return this.thunderConfig.getHeader(this.getFinalKey(key));
+	public List<String> getHeader(final @NotNull String blockKey) {
+		return this.thunderConfig.getHeader(this.getFinalKey(blockKey));
 	}
 
-	public ThunderConfigSection setHeader(final @NotNull String key, final @Nullable List<String> header) {
-		this.thunderConfig.setHeader(this.getFinalKey(key), header);
+	public ThunderConfigSection setHeader(final @NotNull String blockKey, final @Nullable List<String> header) {
+		this.thunderConfig.setHeader(this.getFinalKey(blockKey), header);
 		return this;
 	}
 
@@ -52,12 +52,12 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 		this.thunderConfig.setFooter(this.getSectionKey(), footer);
 	}
 
-	public List<String> getFooter(final @NotNull String key) {
-		return this.thunderConfig.getFooter(this.getFinalKey(key));
+	public List<String> getFooter(final @NotNull String blockKey) {
+		return this.thunderConfig.getFooter(this.getFinalKey(blockKey));
 	}
 
-	public ThunderConfigSection setFooter(final @NotNull String key, final @Nullable List<String> footer) {
-		this.thunderConfig.setFooter(this.getFinalKey(key), footer);
+	public ThunderConfigSection setFooter(final @NotNull String blockKey, final @Nullable List<String> footer) {
+		this.thunderConfig.setFooter(this.getFinalKey(blockKey), footer);
 		return this;
 	}
 
@@ -67,16 +67,16 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 		return this.thunderConfig.getComments(this.getSectionKey());
 	}
 
-	public List<String> getComments(final @NotNull String key) {
-		return this.thunderConfig.getComments(this.getFinalKey(key));
+	public List<String> getComments(final @NotNull String blockKey) {
+		return this.thunderConfig.getComments(this.getFinalKey(blockKey));
 	}
 
 	public List<String> getBlockComments() {
 		return this.thunderConfig.getBlockComments(this.getSectionKey());
 	}
 
-	public List<String> getBlockComments(final @NotNull String key) {
-		return this.thunderConfig.getBlockComments(this.getFinalKey(key));
+	public List<String> getBlockComments(final @NotNull String blockKey) {
+		return this.thunderConfig.getBlockComments(this.getFinalKey(blockKey));
 	}
 
 	@Override

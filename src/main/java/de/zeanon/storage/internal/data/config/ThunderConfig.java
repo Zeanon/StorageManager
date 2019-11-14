@@ -1,7 +1,6 @@
 package de.zeanon.storage.internal.data.config;
 
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
-import de.zeanon.storage.internal.base.exceptions.ObjectIsNull;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.ConfigBase;
@@ -42,7 +41,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		try {
 			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getDataType(), this.getCommentSetting()));
 			this.setLastLoaded(System.currentTimeMillis());
-		} catch (ObjectIsNull | RuntimeIOException | FileParseException e) {
+		} catch (NullPointerException | RuntimeIOException | FileParseException e) {
 			throw new FileParseException("Error while reloading '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}

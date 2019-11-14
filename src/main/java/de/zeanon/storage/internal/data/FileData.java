@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.data;
 
+import de.zeanon.storage.internal.utils.basic.Objects;
 import de.zeanon.storage.internal.utils.datafiles.JsonUtils;
 import java.util.*;
 import lombok.AccessLevel;
@@ -57,17 +58,22 @@ public class FileData implements Comparable<FileData> {
 	 * @param key   the key to be used.
 	 * @param value the value to be assigned to the key.
 	 */
-	public synchronized void insert(final @NotNull String key, final @Nullable Object value) {
+	public void insert(final @NotNull String key, final @Nullable Object value) {
+		final String[] parts = key.split("\\.");
+		this.arrayKey_Insert(parts, value);
+	}
+
+	public synchronized void arrayKey_Insert(final @NotNull String[] key, final @Nullable Object value) {
+		Objects.checkNull(key, "Key must not be null");
 		if (value == null) {
-			this.remove(key);
+			this.arrayKey_Remove(key);
 		} else {
-			final String[] parts = key.split("\\.");
 			//noinspection unchecked
-			this.localMap.put(parts[0],
-							  this.localMap.containsKey(parts[0])
-							  && this.localMap.get(parts[0]) instanceof Map
-							  ? this.insert((Map<String, Object>) this.localMap.get(parts[0]), parts, value, 1)
-							  : this.insert(new HashMap<>(), parts, value, 1));
+			this.localMap.put(key[0],
+							  this.localMap.containsKey(key[0])
+							  && this.localMap.get(key[0]) instanceof Map
+							  ? this.insert((Map<String, Object>) this.localMap.get(key[0]), key, value, 1)
+							  : this.insert(new HashMap<>(), key, value, 1));
 		}
 	}
 
@@ -77,9 +83,17 @@ public class FileData implements Comparable<FileData> {
 	 * @param key the key to be removed from the map.
 	 */
 	public synchronized void remove(final @NotNull String key) {
+		Objects.checkNull(key, "Key must not be null");
 		if (this.containsKey(key)) {
 			final String[] parts = key.split("\\.");
 			this.removeKey(this.localMap, parts, 0);
+		}
+	}
+
+	public synchronized void arrayKey_Remove(final @NotNull String... key) {
+		Objects.checkNull(key, "Key must not be null");
+		if (this.arrayKey_ContainsKey(key)) {
+			this.removeKey(this.localMap, key, 0);
 		}
 	}
 
@@ -90,8 +104,14 @@ public class FileData implements Comparable<FileData> {
 	 * @return true if the key exists, otherwise false.
 	 */
 	public boolean containsKey(final @NotNull String key) {
+		Objects.checkNull(key, "Key must not be null");
 		String[] parts = key.split("\\.");
 		return this.containsKey(this.localMap, parts, 0);
+	}
+
+	public boolean arrayKey_ContainsKey(final @NotNull String... key) {
+		Objects.checkNull(key, "Key must not be null");
+		return this.containsKey(this.localMap, key, 0);
 	}
 
 	/**
@@ -100,7 +120,11 @@ public class FileData implements Comparable<FileData> {
 	 * @return the keySet of all layers of localMap combined (Format: key.subkey).
 	 */
 	public Set<String> keySet() {
-		return this.keySet(localMap);
+		return this.keySet(this.localMap);
+	}
+
+	public Set<String[]> arrayKey_KeySet() {
+		return this.arrayKey_KeySet(this.localMap);
 	}
 
 	/**
@@ -110,8 +134,15 @@ public class FileData implements Comparable<FileData> {
 	 * @return the keySet of all sublayers of the given key or null if the key does not exist (Format: key.subkey).
 	 */
 	public Set<String> keySet(final @NotNull String key) {
+		Objects.checkNull(key, "Key must not be null");
 		//noinspection unchecked
 		return this.get(key) instanceof Map ? this.keySet((Map<String, Object>) this.get(key)) : null;
+	}
+
+	public Set<String[]> arrayKey_KeySet(final @NotNull String... key) {
+		Objects.checkNull(key, "Key must not be null");
+		//noinspection unchecked
+		return this.arrayKey_Get(key) instanceof Map ? this.arrayKey_KeySet((Map<String, Object>) this.arrayKey_Get(key)) : null;
 	}
 
 	/**
@@ -121,8 +152,14 @@ public class FileData implements Comparable<FileData> {
 	 * @return the value assigned to the given key or null if the key does not exist.
 	 */
 	public Object get(final @NotNull String key) {
+		Objects.checkNull(key, "Key must not be null");
 		final String[] parts = key.split("\\.");
 		return this.get(this.localMap, parts, 0);
+	}
+
+	public Object arrayKey_Get(final @NotNull String... key) {
+		Objects.checkNull(key, "Key must not be null");
+		return this.get(this.localMap, key, 0);
 	}
 
 	/**
@@ -141,8 +178,15 @@ public class FileData implements Comparable<FileData> {
 	 * @return the keySet of the given layer or null if the key does not exist.
 	 */
 	public Set<String> blockKeySet(final @NotNull String key) {
+		Objects.checkNull(key, "Key must not be null");
 		//noinspection unchecked
 		return this.get(key) instanceof Map ? ((Map<String, Object>) this.get(key)).keySet() : null;
+	}
+
+	public Set<String> arrayKey_BlockKeySet(final @NotNull String... key) {
+		Objects.checkNull(key, "Key must not be null");
+		//noinspection unchecked
+		return this.arrayKey_Get(key) instanceof Map ? ((Map<String, Object>) this.arrayKey_Get(key)).keySet() : null;
 	}
 
 	/**
@@ -161,7 +205,13 @@ public class FileData implements Comparable<FileData> {
 	 * @return the size of the given layer or 0 if the key does not exist.
 	 */
 	public int blockSize(final @NotNull String key) {
-		return this.get(key) instanceof Map ? ((Map) this.get(key)).size() : -1;
+		Objects.checkNull(key, "Key must not be null");
+		return this.get(key) instanceof Map ? ((Map) this.get(key)).size() : 0;
+	}
+
+	public int arrayKey_BlockSize(final @NotNull String... key) {
+		Objects.checkNull(key, "Key must not be null");
+		return this.arrayKey_Get(key) instanceof Map ? ((Map) this.arrayKey_Get(key)).size() : 0;
 	}
 
 	/**
@@ -198,8 +248,15 @@ public class FileData implements Comparable<FileData> {
 	 * @return the size of all sublayers of the given key or 0 if the key does not exist.
 	 */
 	public int size(final @NotNull String key) {
+		Objects.checkNull(key, "Key must not be null");
 		//noinspection unchecked
-		return this.containsKey(key) ? this.size((Map<String, Object>) this.get(key)) : -1;
+		return this.containsKey(key) ? this.size((Map<String, Object>) this.get(key)) : 0;
+	}
+
+	public int arrayKey_Size(final @NotNull String... key) {
+		Objects.checkNull(key, "Key must not be null");
+		//noinspection unchecked
+		return this.arrayKey_ContainsKey(key) ? this.size((Map<String, Object>) this.arrayKey_Get(key)) : 0;
 	}
 
 	/**
@@ -284,6 +341,26 @@ public class FileData implements Comparable<FileData> {
 				}
 			} else {
 				tempSet.add(entry.getKey());
+			}
+		}
+		return tempSet;
+	}
+
+	private Set<String[]> arrayKey_KeySet(final Map<String, Object> map) {
+		Set<String[]> tempSet = new HashSet<>();
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			if (entry.getValue() instanceof Map) {
+				//noinspection unchecked
+				for (String[] tempKey : this.arrayKey_KeySet((Map<String, Object>) entry.getValue())) {
+					String[] key = new String[1 + tempKey.length];
+					key[0] = entry.getKey();
+					System.arraycopy(tempKey, 0, key, 1, tempKey.length);
+					tempSet.add(key);
+				}
+			} else {
+				tempSet.add(new String[]{
+						entry.getKey()
+				});
 			}
 		}
 		return tempSet;

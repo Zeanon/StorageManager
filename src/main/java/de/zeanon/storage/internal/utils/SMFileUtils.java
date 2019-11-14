@@ -1,7 +1,6 @@
 package de.zeanon.storage.internal.utils;
 
 import de.zeanon.storage.StorageManager;
-import de.zeanon.storage.internal.base.exceptions.ObjectIsNull;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.*;
@@ -211,7 +210,7 @@ public class SMFileUtils {
 		Objects.checkNull(resource, "Resource must not be null");
 		try {
 			return new BufferedInputStream(Objects.notNull(StorageManager.class.getClassLoader().getResourceAsStream(resource), "Resource does not exist"));
-		} catch (ObjectIsNull e) {
+		} catch (NullPointerException e) {
 			throw new RuntimeIOException("Error while creating InputStream from '" + resource + "'", e.getCause());
 		}
 	}
@@ -240,7 +239,7 @@ public class SMFileUtils {
 	 * @return true if the File has changed since the {@code timeStamp}.
 	 */
 	public static boolean hasChanged(final @NotNull File file, final long timeStamp) {
-		return Objects.notNull(timeStamp, "TimeStamp must not be null") < Objects.notNull(file, "File must not be null").lastModified();
+		return timeStamp < Objects.notNull(file, "File must not be null").lastModified();
 	}
 
 	/**

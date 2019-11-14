@@ -63,94 +63,7 @@ public class YamlFile extends CommentEnabledFile {
 	}
 
 	@Override
-	public synchronized void remove(final @NotNull String key) {
-		Objects.checkNull(key, "Key  must not be null");
-
-		this.update();
-
-		if (this.getFileData().containsKey(key)) {
-			this.getFileData().remove(key);
-
-			try {
-				this.write(this.getFileData().toMap());
-			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
-			}
-		}
-	}
-
-	@Override
-	public synchronized void removeAll(final @NotNull List<String> keys) {
-		Objects.checkNull(keys, "List  must not be null");
-
-		this.update();
-
-		for (String key : keys) {
-			this.getFileData().remove(key);
-		}
-
-		try {
-			this.write(this.getFileData().toMap());
-		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
-		}
-	}
-
-	@Override
-	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
-		Objects.checkNull(keys, "List  must not be null");
-
-		this.update();
-
-		for (String tempKey : keys) {
-			this.getFileData().remove(key + "." + tempKey);
-		}
-
-		try {
-			this.write(this.getFileData().toMap());
-		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
-		}
-	}
-
-	@Override
-	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
-		if (this.insert(key, value)) {
-			this.writeData();
-		}
-	}
-
-	@Override
-	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
-		if (this.insertAll(dataMap)) {
-			this.writeData();
-		}
-	}
-
-	@Override
-	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
-		if (this.insertAll(key, dataMap)) {
-			this.writeData();
-		}
-	}
-
-	/**
-	 * Get a Section with a defined SectionKey
-	 *
-	 * @param sectionKey the sectionKey to be used as a prefix by the Section
-	 * @return the Section using the given sectionKey
-	 */
-	@Override
-	public YamlFileSection getSection(final @NotNull String sectionKey) {
-		return new LocalSection(sectionKey, this);
-	}
-
-	private void write(final @NotNull Map fileData) throws IOException {
-		@Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.getFile()));
-		writer.write(fileData);
-	}
-
-	private void writeData() {
+	public synchronized void save() {
 		try {
 			if (this.getCommentSetting() != Comment.PRESERVE) {
 				this.write(Objects.notNull(this.getFileData(), "FileData  must not be null").toMap());
@@ -169,6 +82,22 @@ public class YamlFile extends CommentEnabledFile {
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
+	}
+
+	/**
+	 * Get a Section with a defined SectionKey
+	 *
+	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 * @return the Section using the given sectionKey
+	 */
+	@Override
+	public YamlFileSection getSection(final @NotNull String sectionKey) {
+		return new LocalSection(sectionKey, this);
+	}
+
+	private void write(final @NotNull Map fileData) throws IOException {
+		@Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.getFile()));
+		writer.write(fileData);
 	}
 
 
