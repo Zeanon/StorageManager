@@ -52,7 +52,7 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 	}
 
 	@Override
-	public Object get(final @NotNull String key) {
+	public synchronized Object get(final @NotNull String key) {
 		return this.flatFile.get(this.getFinalKey(key));
 	}
 
@@ -130,37 +130,37 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 	}
 
 	@Override
-	public Object getFromArray(final @NotNull String... key) {
+	public synchronized Object getFromArray(final @NotNull String... key) {
 		return this.flatFile.getFromArray(this.getFinalArrayKey(key));
 	}
 
 	@Override
-	public Map<String[], Object> getAllFromArray(final @NotNull String[]... keys) {
+	public synchronized Map<String[], Object> getAllFromArray(final @NotNull String[]... keys) {
 		return this.flatFile.getAllFromArray(this.arraySectionKey, keys);
 	}
 
 	@Override
-	public Map<String, Object> getAll(final @NotNull Collection<String> keys) {
+	public synchronized Map<String, Object> getAll(final @NotNull Collection<String> keys) {
 		return this.flatFile.getAll(keys);
 	}
 
 	@Override
-	public Map<String[], Object> getAllFromArray(final @NotNull Collection<String[]> keys) {
+	public synchronized Map<String[], Object> getAllFromArray(final @NotNull Collection<String[]> keys) {
 		return this.flatFile.getAllFromArray(this.arraySectionKey, keys);
 	}
 
 	@Override
-	public Map<String[], Object> getAllFromArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
+	public synchronized Map<String[], Object> getAllFromArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
 		return this.flatFile.getAllFromArray(this.getFinalArrayKey(blockKey), keys);
 	}
 
 	@Override
-	public Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
+	public synchronized Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
 		return this.flatFile.getAll(this.getFinalKey(blockKey), keys);
 	}
 
 	@Override
-	public Map<String[], Object> getAllFromArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
+	public synchronized Map<String[], Object> getAllFromArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
 		return this.flatFile.getAllFromArray(this.getFinalArrayKey(blockKey), keys);
 	}
 

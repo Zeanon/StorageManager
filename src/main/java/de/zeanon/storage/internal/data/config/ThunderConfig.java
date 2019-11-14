@@ -48,7 +48,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 
 
 	@Override
-	public synchronized List<String> getHeader() {
+	public List<String> getHeader() {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -101,7 +101,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 
 
 	@Override
-	public synchronized List<String> getFooter() {
+	public List<String> getFooter() {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {

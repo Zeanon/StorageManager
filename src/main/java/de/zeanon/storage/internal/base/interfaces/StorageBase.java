@@ -509,21 +509,21 @@ public interface StorageBase {
 	 * @param key key to String List in File
 	 * @return List
 	 */
-	default Collection<String> getStringList(final @NotNull String key) {
+	default List<String> getStringList(final @NotNull String key) {
 		Object tempObject = this.get(key);
 		if (tempObject == null) {
 			throw new NullPointerException("key '" + key + "' does not exist");
 		} else {
-			return (Collection<String>) tempObject;
+			return (List<String>) tempObject;
 		}
 	}
 
-	default Collection<String> getStringListFromArray(final @NotNull String... key) {
+	default List<String> getStringListFromArray(final @NotNull String... key) {
 		Object tempObject = this.getFromArray(key);
 		if (tempObject == null) {
 			throw new NullPointerException("key '" + Arrays.toString(key) + "' does not exist");
 		} else {
-			return (Collection<String>) tempObject;
+			return (List<String>) tempObject;
 		}
 	}
 
