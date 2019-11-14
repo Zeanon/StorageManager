@@ -23,6 +23,10 @@ public abstract class CommentEnabledSection extends FlatSection {
 		this.commentEnabledFile = commentEnabledFile;
 	}
 
+	protected CommentEnabledSection(final @NotNull String[] sectionKey, final @NotNull CommentEnabledFile commentEnabledFile) {
+		super(sectionKey, commentEnabledFile);
+		this.commentEnabledFile = commentEnabledFile;
+	}
 
 	public void setCommentSetting(final @NotNull CommentSettingBase commentSetting) {
 		this.commentEnabledFile.setCommentSetting(commentSetting);

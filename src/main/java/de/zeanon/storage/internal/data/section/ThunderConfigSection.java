@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.data.section;
 
+import de.zeanon.storage.internal.base.FlatSection;
 import de.zeanon.storage.internal.base.interfaces.ConfigBase;
 import de.zeanon.storage.internal.data.config.ThunderConfig;
 import de.zeanon.storage.internal.utils.basic.Objects;
@@ -18,6 +19,11 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 	private final ThunderConfig thunderConfig;
 
 	protected ThunderConfigSection(final @NotNull String sectionKey, final @NotNull ThunderConfig thunderConfig) {
+		super(sectionKey, thunderConfig);
+		this.thunderConfig = thunderConfig;
+	}
+
+	protected ThunderConfigSection(final @NotNull String[] sectionKey, final @NotNull ThunderConfig thunderConfig) {
 		super(sectionKey, thunderConfig);
 		this.thunderConfig = thunderConfig;
 	}
@@ -81,6 +87,11 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 
 	@Override
 	public ThunderConfigSection getSection(final @NotNull String sectionKey) {
-		return new ThunderConfigSection(this.getSectionKey() + "." + Objects.notNull(sectionKey, "Key  must not be null"), this.thunderConfig);
+		return new ThunderConfigSection(this.getFinalKey(Objects.notNull(sectionKey, "Key  must not be null")), this.thunderConfig);
+	}
+
+	@Override
+	public FlatSection getSectionFromArray(final @NotNull String[] sectionKey) {
+		return new ThunderConfigSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "Key  must not be null")), this.thunderConfig);
 	}
 }

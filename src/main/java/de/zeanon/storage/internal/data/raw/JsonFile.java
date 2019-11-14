@@ -85,8 +85,8 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public Map arrayKey_GetMap(final @NotNull String... key) {
-		if (!this.arrayKey_HasKey(key)) {
+	public Map getMapFromArray(final @NotNull String... key) {
+		if (!this.arrayHasKey(key)) {
 			return new HashMap();
 		} else {
 			return this.getMapWithoutPath(key);
@@ -101,6 +101,11 @@ public class JsonFile extends FlatFile {
 	 */
 	@Override
 	public JsonFileSection getSection(final @NotNull String sectionKey) {
+		return new LocalSection(sectionKey, this);
+	}
+
+	@Override
+	public JsonFileSection getSectionFromArray(@NotNull String[] sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -131,18 +136,18 @@ public class JsonFile extends FlatFile {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
-		if (!this.arrayKey_HasKey(key)) {
+		if (!this.arrayHasKey(key)) {
 			return new HashMap<>();
 		}
 
 		Object map;
 		try {
-			map = this.arrayKey_Get(key);
+			map = this.getFromArray(key);
 		} catch (JSONException e) {
 			return new HashMap<>();
 		}
 		if (map instanceof Map) {
-			return (Map<?, ?>) this.getFileData().arrayKey_Get(key);
+			return (Map<?, ?>) this.getFileData().getFromArray(key);
 		} else if (map instanceof JSONObject) {
 			return JsonUtils.jsonToMap((JSONObject) map);
 		} else {
@@ -182,6 +187,10 @@ public class JsonFile extends FlatFile {
 	private static class LocalSection extends JsonFileSection {
 
 		private LocalSection(final @NotNull String sectionKey, final @NotNull JsonFile jsonFile) {
+			super(sectionKey, jsonFile);
+		}
+
+		private LocalSection(final @NotNull String[] sectionKey, final @NotNull JsonFile jsonFile) {
 			super(sectionKey, jsonFile);
 		}
 	}

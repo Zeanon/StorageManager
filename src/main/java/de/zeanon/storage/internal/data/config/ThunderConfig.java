@@ -209,10 +209,19 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		return new LocalSection(sectionKey, this);
 	}
 
+	@Override
+	public ThunderConfigSection getSectionFromArray(final @NotNull String[] sectionKey) {
+		return new LocalSection(sectionKey, this);
+	}
+
 
 	private static class LocalSection extends ThunderConfigSection {
 
 		private LocalSection(final @NotNull String sectionKey, final @NotNull ThunderConfig thunderConfig) {
+			super(sectionKey, thunderConfig);
+		}
+
+		private LocalSection(final @NotNull String[] sectionKey, final @NotNull ThunderConfig thunderConfig) {
 			super(sectionKey, thunderConfig);
 		}
 	}

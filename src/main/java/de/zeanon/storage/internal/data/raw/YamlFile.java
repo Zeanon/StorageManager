@@ -95,6 +95,11 @@ public class YamlFile extends CommentEnabledFile {
 		return new LocalSection(sectionKey, this);
 	}
 
+	@Override
+	public YamlFileSection getSectionFromArray(final @NotNull String[] sectionKey) {
+		return new LocalSection(sectionKey, this);
+	}
+
 	private void write(final @NotNull Map fileData) throws IOException {
 		@Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.getFile()));
 		writer.write(fileData);
@@ -127,6 +132,10 @@ public class YamlFile extends CommentEnabledFile {
 	private static class LocalSection extends YamlFileSection {
 
 		private LocalSection(final @NotNull String sectionKey, final @NotNull YamlFile yamlFile) {
+			super(sectionKey, yamlFile);
+		}
+
+		private LocalSection(final @NotNull String[] sectionKey, final @NotNull YamlFile yamlFile) {
 			super(sectionKey, yamlFile);
 		}
 	}

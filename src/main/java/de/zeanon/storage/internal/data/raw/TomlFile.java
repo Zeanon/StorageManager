@@ -70,6 +70,11 @@ public class TomlFile extends FlatFile {
 		return new LocalSection(sectionKey, this);
 	}
 
+	@Override
+	public TomlFileSection getSectionFromArray(final @NotNull String[] sectionKey) {
+		return new LocalSection(sectionKey, this);
+	}
+
 
 	public enum FileType implements FileTypeBase {
 
@@ -97,6 +102,10 @@ public class TomlFile extends FlatFile {
 	private static class LocalSection extends TomlFileSection {
 
 		private LocalSection(final @NotNull String sectionKey, final @NotNull TomlFile tomlFile) {
+			super(sectionKey, tomlFile);
+		}
+
+		private LocalSection(final @NotNull String[] sectionKey, final @NotNull TomlFile tomlFile) {
 			super(sectionKey, tomlFile);
 		}
 	}

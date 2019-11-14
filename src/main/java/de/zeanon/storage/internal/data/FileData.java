@@ -60,13 +60,13 @@ public class FileData implements Comparable<FileData> {
 	 */
 	public void insert(final @NotNull String key, final @Nullable Object value) {
 		final String[] parts = key.split("\\.");
-		this.arrayKey_Insert(parts, value);
+		this.arrayInsert(parts, value);
 	}
 
-	public synchronized void arrayKey_Insert(final @NotNull String[] key, final @Nullable Object value) {
+	public synchronized void arrayInsert(final @NotNull String[] key, final @Nullable Object value) {
 		Objects.checkNull(key, "Key must not be null");
 		if (value == null) {
-			this.arrayKey_Remove(key);
+			this.removeFromArray(key);
 		} else {
 			//noinspection unchecked
 			this.localMap.put(key[0],
@@ -90,9 +90,9 @@ public class FileData implements Comparable<FileData> {
 		}
 	}
 
-	public synchronized void arrayKey_Remove(final @NotNull String... key) {
+	public synchronized void removeFromArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		if (this.arrayKey_ContainsKey(key)) {
+		if (this.arrayContainsKey(key)) {
 			this.removeKey(this.localMap, key, 0);
 		}
 	}
@@ -109,7 +109,7 @@ public class FileData implements Comparable<FileData> {
 		return this.containsKey(this.localMap, parts, 0);
 	}
 
-	public boolean arrayKey_ContainsKey(final @NotNull String... key) {
+	public boolean arrayContainsKey(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		return this.containsKey(this.localMap, key, 0);
 	}
@@ -123,8 +123,8 @@ public class FileData implements Comparable<FileData> {
 		return this.keySet(this.localMap);
 	}
 
-	public Set<String[]> arrayKey_KeySet() {
-		return this.arrayKey_KeySet(this.localMap);
+	public Set<String[]> keySetFromArray() {
+		return this.keySetFromArray(this.localMap);
 	}
 
 	/**
@@ -139,10 +139,10 @@ public class FileData implements Comparable<FileData> {
 		return this.get(key) instanceof Map ? this.keySet((Map<String, Object>) this.get(key)) : null;
 	}
 
-	public Set<String[]> arrayKey_KeySet(final @NotNull String... key) {
+	public Set<String[]> keySetFromArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		//noinspection unchecked
-		return this.arrayKey_Get(key) instanceof Map ? this.arrayKey_KeySet((Map<String, Object>) this.arrayKey_Get(key)) : null;
+		return this.getFromArray(key) instanceof Map ? this.keySetFromArray((Map<String, Object>) this.getFromArray(key)) : null;
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class FileData implements Comparable<FileData> {
 		return this.get(this.localMap, parts, 0);
 	}
 
-	public Object arrayKey_Get(final @NotNull String... key) {
+	public Object getFromArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		return this.get(this.localMap, key, 0);
 	}
@@ -183,10 +183,10 @@ public class FileData implements Comparable<FileData> {
 		return this.get(key) instanceof Map ? ((Map<String, Object>) this.get(key)).keySet() : null;
 	}
 
-	public Set<String> arrayKey_BlockKeySet(final @NotNull String... key) {
+	public Set<String> blockKeySetFromArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		//noinspection unchecked
-		return this.arrayKey_Get(key) instanceof Map ? ((Map<String, Object>) this.arrayKey_Get(key)).keySet() : null;
+		return this.getFromArray(key) instanceof Map ? ((Map<String, Object>) this.getFromArray(key)).keySet() : null;
 	}
 
 	/**
@@ -209,9 +209,9 @@ public class FileData implements Comparable<FileData> {
 		return this.get(key) instanceof Map ? ((Map) this.get(key)).size() : 0;
 	}
 
-	public int arrayKey_BlockSize(final @NotNull String... key) {
+	public int arrayBlockSize(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		return this.arrayKey_Get(key) instanceof Map ? ((Map) this.arrayKey_Get(key)).size() : 0;
+		return this.getFromArray(key) instanceof Map ? ((Map) this.getFromArray(key)).size() : 0;
 	}
 
 	/**
@@ -253,10 +253,10 @@ public class FileData implements Comparable<FileData> {
 		return this.containsKey(key) ? this.size((Map<String, Object>) this.get(key)) : 0;
 	}
 
-	public int arrayKey_Size(final @NotNull String... key) {
+	public int arraySize(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		//noinspection unchecked
-		return this.arrayKey_ContainsKey(key) ? this.size((Map<String, Object>) this.arrayKey_Get(key)) : 0;
+		return this.arrayContainsKey(key) ? this.size((Map<String, Object>) this.getFromArray(key)) : 0;
 	}
 
 	/**
@@ -346,12 +346,12 @@ public class FileData implements Comparable<FileData> {
 		return tempSet;
 	}
 
-	private Set<String[]> arrayKey_KeySet(final Map<String, Object> map) {
+	private Set<String[]> keySetFromArray(final Map<String, Object> map) {
 		Set<String[]> tempSet = new HashSet<>();
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
-				for (String[] tempKey : this.arrayKey_KeySet((Map<String, Object>) entry.getValue())) {
+				for (String[] tempKey : this.keySetFromArray((Map<String, Object>) entry.getValue())) {
 					String[] key = new String[1 + tempKey.length];
 					key[0] = entry.getKey();
 					System.arraycopy(tempKey, 0, key, 1, tempKey.length);

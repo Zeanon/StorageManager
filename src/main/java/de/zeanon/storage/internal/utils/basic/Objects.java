@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
  * Class to check validities
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class Objects {
 
 	/**

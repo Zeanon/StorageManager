@@ -8,7 +8,6 @@ import de.zeanon.storage.internal.base.interfaces.ConfigBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.data.raw.YamlFile;
-import de.zeanon.storage.internal.data.section.YamlFileSection;
 import de.zeanon.storage.internal.settings.Comment;
 import de.zeanon.storage.internal.utils.editor.YamlEditor;
 import java.io.File;
@@ -196,25 +195,6 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 			} catch (IOException e) {
 				throw new FileParseException("Error while getting comments from '" + this.getFile().getAbsolutePath() + "'.", e.getCause());
 			}
-		}
-	}
-
-	/**
-	 * Get a Section with a defined SectionKey
-	 *
-	 * @param sectionKey the sectionKey to be used as a prefix by the Section
-	 * @return the Section using the given sectionKey
-	 */
-	@Override
-	public YamlFileSection getSection(final @NotNull String sectionKey) {
-		return new LocalSection(sectionKey, this);
-	}
-
-
-	private static class LocalSection extends YamlFileSection {
-
-		private LocalSection(final @NotNull String sectionKey, final @NotNull YamlConfig yamlConfig) {
-			super(sectionKey, yamlConfig);
 		}
 	}
 }

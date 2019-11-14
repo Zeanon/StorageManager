@@ -104,6 +104,11 @@ public class ThunderFile extends CommentEnabledFile {
 		return new LocalSection(sectionKey, this);
 	}
 
+	@Override
+	public ThunderFileSection getSectionFromArray(final @NotNull String[] sectionKey) {
+		return new LocalSection(sectionKey, this);
+	}
+
 	private Set<String> blockKeySet(final Map<String, Object> map) {
 		Set<String> tempSet = new HashSet<>();
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
@@ -156,6 +161,10 @@ public class ThunderFile extends CommentEnabledFile {
 	private static class LocalSection extends ThunderFileSection {
 
 		private LocalSection(final @NotNull String sectionKey, final @NotNull ThunderFile thunderFile) {
+			super(sectionKey, thunderFile);
+		}
+
+		private LocalSection(final @NotNull String[] sectionKey, final @NotNull ThunderFile thunderFile) {
 			super(sectionKey, thunderFile);
 		}
 	}
