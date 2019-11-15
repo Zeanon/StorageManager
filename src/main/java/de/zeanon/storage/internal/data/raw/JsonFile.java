@@ -34,7 +34,7 @@ public class JsonFile extends FlatFile {
 	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting) {
 		super(file, FileType.JSON, reloadSetting);
 
-		if (this.create() && inputStream != null) {
+		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
 			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
 		}
 
@@ -75,7 +75,7 @@ public class JsonFile extends FlatFile {
 	 * @return Map
 	 */
 
-	@Nullable
+	@NotNull
 	@Override
 	public Map getMap(final @NotNull String key) {
 		if (!this.hasKey(key)) {
@@ -85,7 +85,7 @@ public class JsonFile extends FlatFile {
 		}
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Map getMapUseArray(final @NotNull String... key) {
 		if (!this.hasKeyUseArray(key)) {
@@ -113,7 +113,7 @@ public class JsonFile extends FlatFile {
 		return new LocalSection(sectionKey, this);
 	}
 
-	@Nullable
+	@NotNull
 	private Map getMapWithoutPath(final @NotNull String key) {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
@@ -129,15 +129,15 @@ public class JsonFile extends FlatFile {
 			return new HashMap<>();
 		}
 		if (map instanceof Map) {
-			return (Map<?, ?>) this.getFileData().get(key);
+			return (Map<?, ?>) Objects.notNull(this.getFileData().get(key), "File does not contain '" + key + "'");
 		} else if (map instanceof JSONObject) {
 			return JsonUtils.jsonToMap((JSONObject) map);
 		} else {
-			throw new FileParseException("Json does not contain: '" + key + "'.");
+			throw new FileParseException("Json does not contain: '" + key + "'");
 		}
 	}
 
-	@Nullable
+	@NotNull
 	private Map getMapWithoutPath(final @NotNull String... key) {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
@@ -153,11 +153,11 @@ public class JsonFile extends FlatFile {
 			return new HashMap<>();
 		}
 		if (map instanceof Map) {
-			return (Map<?, ?>) this.getFileData().getUseArray(key);
+			return (Map<?, ?>) Objects.notNull(this.getFileData().getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'");
 		} else if (map instanceof JSONObject) {
 			return JsonUtils.jsonToMap((JSONObject) map);
 		} else {
-			throw new FileParseException("Json does not contain: '" + Arrays.toString(key) + "'.");
+			throw new FileParseException("Json does not contain: '" + Arrays.toString(key) + "'");
 		}
 	}
 

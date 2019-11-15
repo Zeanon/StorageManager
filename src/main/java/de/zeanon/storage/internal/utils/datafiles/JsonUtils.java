@@ -48,8 +48,8 @@ public class JsonUtils {
 	public static Map<String, Object> toMap(final @NotNull JSONObject object) {
 		Map<String, Object> map = new HashMap<>();
 
-		Iterator<String> keysItr = object.keys();
-		keysItr.forEachRemaining(key -> map.put(key, getValue(object.get(key))));
+		Iterator<String> keysIterator = object.keys();
+		keysIterator.forEachRemaining(key -> map.put(key, getValue(object.get(key))));
 		return map;
 	}
 

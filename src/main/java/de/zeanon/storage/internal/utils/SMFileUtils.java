@@ -260,25 +260,20 @@ public class SMFileUtils {
 	 * @param inputStream the InputStream which shall be written.
 	 */
 	public static synchronized void writeToFile(final @NotNull File file, final @Nullable BufferedInputStream inputStream) {
-		if (!Objects.notNull(file, "File must not be null").exists()) {
-			SMFileUtils.createFile(file);
-		}
+		SMFileUtils.createFile(Objects.notNull(file, "File must not be null"));
 		if (inputStream == null) {
-			try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(Objects.notNull(file)))) {
+			try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
 				outputStream.write(new byte[0], 0, 0);
 			} catch (IOException e) {
 				throw new RuntimeIOException("Error while clearing '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		} else {
-			try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(Objects.notNull(file)))) {
-				if (!file.exists()) {
-					createFile(file);
-				} else {
-					final byte[] data = new byte[8192];
-					int count;
-					while ((count = inputStream.read(data, 0, 8192)) != -1) {
-						outputStream.write(data, 0, count);
-					}
+			try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+				createFile(file);
+				final byte[] data = new byte[8192];
+				int count;
+				while ((count = inputStream.read(data, 0, 8192)) != -1) {
+					outputStream.write(data, 0, count);
 				}
 			} catch (IOException e) {
 				throw new RuntimeIOException("Error while copying to + '" + file.getAbsolutePath() + "'", e.getCause());

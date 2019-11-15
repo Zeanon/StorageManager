@@ -7,7 +7,6 @@ import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.data.section.TomlFileSection;
 import de.zeanon.storage.internal.utils.SMFileUtils;
-import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +27,7 @@ public class TomlFile extends FlatFile {
 	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting) {
 		super(file, FileType.TOML, reloadSetting);
 
-		if (this.create() && inputStream != null) {
+		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
 			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
 		}
 
@@ -54,7 +53,7 @@ public class TomlFile extends FlatFile {
 	@Override
 	public synchronized void save() {
 		try {
-			com.electronwill.toml.Toml.write(Objects.notNull(this.getFileData().toMap()), this.getFile());
+			com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}

@@ -30,15 +30,15 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 		this.thunderConfig = thunderConfig;
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public List<String> getHeader() {
-		return this.thunderConfig.getHeader(Objects.notNull(this.getSectionKey()));
+		return this.thunderConfig.getHeader(this.getSectionKey());
 	}
 
 	@Override
 	public void setHeader(final @Nullable List<String> header) {
-		this.thunderConfig.setHeader(Objects.notNull(this.getSectionKey()), header);
+		this.thunderConfig.setHeader(this.getSectionKey(), header);
 	}
 
 	@Nullable
@@ -53,15 +53,15 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 	}
 
 
-	@Nullable
+	@NotNull
 	@Override
 	public List<String> getFooter() {
-		return this.thunderConfig.getFooter(Objects.notNull(this.getSectionKey()));
+		return this.thunderConfig.getFooter(this.getSectionKey());
 	}
 
 	@Override
 	public void setFooter(final @Nullable List<String> footer) {
-		this.thunderConfig.setFooter(Objects.notNull(this.getSectionKey()), footer);
+		this.thunderConfig.setFooter(this.getSectionKey(), footer);
 	}
 
 	@Nullable
@@ -76,10 +76,10 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 	}
 
 
-	@Nullable
+	@NotNull
 	@Override
 	public List<String> getComments() {
-		return this.thunderConfig.getComments(Objects.notNull(this.getSectionKey()));
+		return this.thunderConfig.getComments(this.getSectionKey());
 	}
 
 	@Nullable
@@ -89,7 +89,7 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 
 	@Nullable
 	public List<String> getBlockComments() {
-		return this.thunderConfig.getBlockComments(Objects.notNull(this.getSectionKey()));
+		return this.thunderConfig.getBlockComments(this.getSectionKey());
 	}
 
 	@Nullable
@@ -100,12 +100,12 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 	@NotNull
 	@Override
 	public ThunderConfigSection getSection(final @NotNull String sectionKey) {
-		return new ThunderConfigSection(this.getFinalKey(Objects.notNull(sectionKey, "Key  must not be null")), this.thunderConfig);
+		return new ThunderConfigSection(this.getFinalKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.thunderConfig);
 	}
 
 	@NotNull
 	@Override
 	public FlatSection getSectionUseArray(final @NotNull String[] sectionKey) {
-		return new ThunderConfigSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "Key  must not be null")), this.thunderConfig);
+		return new ThunderConfigSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.thunderConfig);
 	}
 }

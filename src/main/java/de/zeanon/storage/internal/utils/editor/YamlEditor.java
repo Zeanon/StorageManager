@@ -55,11 +55,10 @@ public class YamlEditor {
 	}
 
 	public static void write(final @NotNull File file, final @NotNull List<String> lines) throws IOException {
-		@Cleanup PrintWriter writer = new PrintWriter(new FileWriter(file));
-		Iterator tempIterator = lines.iterator();
-		writer.print(tempIterator.next());
-		//noinspection unchecked
-		tempIterator.forEachRemaining(line -> {
+		@Cleanup final PrintWriter writer = new PrintWriter(new FileWriter(file));
+		final Iterator<String> linesIterator = lines.iterator();
+		writer.print(linesIterator.next());
+		linesIterator.forEachRemaining(line -> {
 			writer.println();
 			writer.print(line);
 		});

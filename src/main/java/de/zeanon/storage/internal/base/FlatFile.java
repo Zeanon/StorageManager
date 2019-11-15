@@ -174,23 +174,23 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	@Override
 	public Set<String[]> keySetUseArray() {
 		this.update();
-		return this.fileData.keySetUseArray();
+		return Objects.notNull(this.fileData.keySetUseArray(), "DataMap is empty");
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Set<String> keySet(final @NotNull String key) {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
-		return this.fileData.keySet(key);
+		return Objects.notNull(this.fileData.keySet(key), "File does not contain '" + key + "'");
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Set<String[]> keySetUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
-		return this.fileData.keySetUseArray(key);
+		return Objects.notNull(this.fileData.keySetUseArray(key), "File does not contain '" + Arrays.toString(key) + "'");
 	}
 
 	@NotNull
@@ -200,20 +200,20 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return this.fileData.blockKeySet();
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Set<String> blockKeySet(final @NotNull String key) {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
-		return this.fileData.blockKeySet(key);
+		return Objects.notNull(this.fileData.blockKeySet(key), "File does not contain '" + key + "'");
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Set<String> blockKeySetUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
-		return this.fileData.blockKeySetUseArray(key);
+		return Objects.notNull(this.fileData.blockKeySetUseArray(key), "File does not contain '" + Arrays.toString(key) + "'");
 	}
 
 	/**
@@ -226,30 +226,29 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		Objects.checkNull(target, "Target  must not be null");
 		Objects.checkNull(replacement, "Replacement  must not be null");
 
-		final Iterator lines = Files.readAllLines(this.file.toPath()).iterator();
+		final Iterator<String> lines = Files.readAllLines(this.file.toPath()).iterator();
 		@Cleanup PrintWriter writer = new PrintWriter(this.file);
-		writer.print(((String) lines.next()).replace(target, replacement));
-		//noinspection unchecked
+		writer.print((lines.next()).replace(target, replacement));
 		lines.forEachRemaining(line -> {
 			writer.println();
-			writer.print(((String) line).replace(target, replacement));
+			writer.print((line).replace(target, replacement));
 		});
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Object get(final @NotNull String key) {
 		Objects.checkNull(key, "Key  must not be null");
 		update();
-		return fileData.get(key);
+		return Objects.notNull(this.fileData.get(key), "File does not contain '" + key + "'");
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Object getUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key  must not be null");
 		update();
-		return fileData.getUseArray(key);
+		return Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'");
 	}
 
 	@NotNull
@@ -260,7 +259,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 		Map<String, Object> tempMap = new HashMap<>();
 		for (String key : keys) {
-			tempMap.put(key, this.fileData.get(key));
+			tempMap.put(key, Objects.notNull(this.fileData.get(key), "File does not contain '" + key + "'"));
 		}
 		return tempMap;
 	}
@@ -273,7 +272,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 		Map<String[], Object> tempMap = new HashMap<>();
 		for (String[] key : keys) {
-			tempMap.put(key, this.fileData.getUseArray(key));
+			tempMap.put(key, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
 		}
 		return tempMap;
 	}
@@ -286,7 +285,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 		Map<String, Object> tempMap = new HashMap<>();
 		for (String key : keys) {
-			tempMap.put(key, this.fileData.get(key));
+			tempMap.put(key, Objects.notNull(this.fileData.get(key), "File does not contain '" + key + "'"));
 		}
 		return tempMap;
 	}
@@ -299,7 +298,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 		Map<String[], Object> tempMap = new HashMap<>();
 		for (String[] key : keys) {
-			tempMap.put(key, this.fileData.getUseArray(key));
+			tempMap.put(key, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
 		}
 		return tempMap;
 	}
@@ -313,7 +312,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 		Map<String, Object> tempMap = new HashMap<>();
 		for (String tempKey : keys) {
-			tempMap.put(blockKey, this.fileData.get(blockKey + "." + tempKey));
+			tempMap.put(blockKey, Objects.notNull(this.fileData.get(blockKey + "." + tempKey), "File does not contain '" + blockKey + "." + tempKey + "'"));
 		}
 		return tempMap;
 	}
@@ -331,7 +330,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
-			tempMap.put(blockKey, this.fileData.getUseArray(key));
+			tempMap.put(blockKey, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
 		}
 		return tempMap;
 	}
@@ -345,7 +344,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 		Map<String, Object> tempMap = new HashMap<>();
 		for (String tempKey : keys) {
-			tempMap.put(blockKey, this.fileData.get(blockKey + "." + tempKey));
+			tempMap.put(blockKey, Objects.notNull(this.fileData.get(blockKey + "." + tempKey), "File does not contain '" + blockKey + "." + tempKey + "'"));
 		}
 		return tempMap;
 	}
@@ -363,7 +362,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
-			tempMap.put(blockKey, this.fileData.getUseArray(key));
+			tempMap.put(blockKey, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
 		}
 		return tempMap;
 	}
@@ -373,13 +372,15 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		if (this.insert(key, value)) {
 			this.save();
 		}
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
 	public void setUseArray(final @NotNull String[] key, final @Nullable Object value) {
-		if (this.arrayInsert(key, value)) {
+		if (this.insertUseArray(key, value)) {
 			this.save();
 		}
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -387,6 +388,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		if (this.insertAll(dataMap)) {
 			this.save();
 		}
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -394,6 +396,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		if (this.insertAllUseArray(dataMap)) {
 			this.save();
 		}
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -401,6 +404,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		if (this.insertAll(blockKey, dataMap)) {
 			this.save();
 		}
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -408,6 +412,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		if (this.insertAllUseArray(blockKey, dataMap)) {
 			this.save();
 		}
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -419,6 +424,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		this.getFileData().remove(key);
 
 		this.save();
+
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -430,6 +437,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		this.getFileData().removeUseArray(key);
 
 		this.save();
+
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -443,6 +452,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 
 		this.save();
+
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -456,6 +467,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 
 		this.save();
+
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -469,6 +482,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 
 		this.save();
+
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -482,6 +497,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 
 		this.save();
+
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -496,6 +513,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 
 		this.save();
+
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -510,6 +529,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 
 		this.save();
+
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 
@@ -528,6 +549,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 
 		this.save();
+
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -544,6 +567,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 
 		this.save();
+
+		this.setLastLoaded(System.currentTimeMillis());
 	}
 
 	/**
@@ -555,26 +580,17 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return this.reloadSetting.shouldReload(this);
 	}
 
+	@NotNull
+	public Map<String, Object> getDataMap() {
+		return this.getFileData().toMap();
+	}
+
 	/**
 	 * Checks if the File needs to be reloaded and does so if true.
 	 */
 	protected void update() {
 		if (this.shouldReload()) {
 			this.reload();
-		}
-	}
-
-	/**
-	 * Creates an empty file.
-	 *
-	 * @return true if File was created.
-	 */
-	protected boolean create() {
-		if (this.file.exists()) {
-			return false;
-		} else {
-			SMFileUtils.createFile(this.file);
-			return true;
 		}
 	}
 
@@ -594,7 +610,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	private boolean arrayInsert(final @NotNull String[] key, final @Nullable Object value) {
+	private boolean insertUseArray(final @NotNull String[] key, final @Nullable Object value) {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 

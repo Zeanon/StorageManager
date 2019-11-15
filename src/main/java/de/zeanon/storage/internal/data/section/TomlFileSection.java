@@ -30,12 +30,12 @@ public class TomlFileSection extends FlatSection {
 	@NotNull
 	@Override
 	public TomlFileSection getSection(final @NotNull String sectionKey) {
-		return new TomlFileSection(this.getFinalKey(Objects.notNull(sectionKey, "Key  must not be null")), this.tomlFile);
+		return new TomlFileSection(this.getFinalKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.tomlFile);
 	}
 
 	@NotNull
 	@Override
 	public FlatSection getSectionUseArray(final @NotNull String[] sectionKey) {
-		return new TomlFileSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "Key  must not be null")), this.tomlFile);
+		return new TomlFileSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.tomlFile);
 	}
 }

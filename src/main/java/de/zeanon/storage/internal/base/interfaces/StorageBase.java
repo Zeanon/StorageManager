@@ -1,9 +1,11 @@
 package de.zeanon.storage.internal.base.interfaces;
 
 import de.zeanon.storage.internal.base.FlatSection;
-import de.zeanon.storage.internal.utils.basic.Objects;
 import de.zeanon.storage.internal.utils.basic.Primitive;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,21 +23,11 @@ public interface StorageBase {
 	 * @return Boolean from File
 	 */
 	default boolean getBoolean(final @NotNull String key) {
-		Object tempObject = this.get(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + key + "' does not exist");
-		} else {
-			return Primitive.BOOLEAN.getBoolean(Objects.notNull(get(key)));
-		}
+		return Primitive.BOOLEAN.getBoolean(this.get(key));
 	}
 
 	default boolean getBooleanUseArray(final @NotNull String... key) {
-		Object tempObject = this.getUseArray(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + Arrays.toString(key) + "' does not exist");
-		} else {
-			return Primitive.BOOLEAN.getBoolean(Objects.notNull(this.getUseArray(key)));
-		}
+		return Primitive.BOOLEAN.getBoolean(this.getUseArray(key));
 	}
 
 	/**
@@ -44,9 +36,9 @@ public interface StorageBase {
 	 * @param key key to Object in File
 	 * @return Object from File
 	 */
-	@Nullable Object get(final @NotNull String key);
+	@NotNull Object get(final @NotNull String key);
 
-	@Nullable Object getUseArray(final @NotNull String... key);
+	@NotNull Object getUseArray(final @NotNull String... key);
 
 	/**
 	 * Returns all values of the given keys
@@ -85,20 +77,12 @@ public interface StorageBase {
 	 */
 	default byte getByte(final @NotNull String key) {
 		Object tempObject = this.get(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + key + "' does not exist");
-		} else {
-			return Primitive.BYTE.getByte(Objects.notNull(get(key)));
-		}
+		return Primitive.BYTE.getByte(tempObject);
 	}
 
 	default byte getByteUseArray(final @NotNull String... key) {
 		Object tempObject = this.getUseArray(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + Arrays.toString(key) + "' does not exist");
-		} else {
-			return Primitive.BYTE.getByte(Objects.notNull(this.getUseArray(key)));
-		}
+		return Primitive.BYTE.getByte(tempObject);
 	}
 
 	/**
@@ -110,21 +94,13 @@ public interface StorageBase {
 	@NotNull
 	default List<Byte> getByteList(final @NotNull String key) {
 		Object tempObject = this.get(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + key + "' does not exist");
-		} else {
-			return (List<Byte>) tempObject;
-		}
+		return (List<Byte>) tempObject;
 	}
 
 	@NotNull
 	default List<Byte> getByteListUseArray(final @NotNull String... key) {
 		Object tempObject = this.getUseArray(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + Arrays.toString(key) + "' does not exist");
-		} else {
-			return (List<Byte>) tempObject;
-		}
+		return (List<Byte>) tempObject;
 	}
 
 	/**
@@ -135,20 +111,12 @@ public interface StorageBase {
 	 */
 	default double getDouble(final @NotNull String key) {
 		Object tempObject = this.get(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + key + "' does not exist");
-		} else {
-			return Primitive.DOUBLE.getDouble(Objects.notNull(get(key)));
-		}
+		return Primitive.DOUBLE.getDouble(tempObject);
 	}
 
 	default double getDoubleUseArray(final @NotNull String... key) {
 		Object tempObject = this.getUseArray(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + Arrays.toString(key) + "' does not exist");
-		} else {
-			return Primitive.DOUBLE.getDouble(Objects.notNull(this.getUseArray(key)));
-		}
+		return Primitive.DOUBLE.getDouble(tempObject);
 	}
 
 	/**
@@ -159,20 +127,12 @@ public interface StorageBase {
 	 */
 	default float getFloat(final @NotNull String key) {
 		Object tempObject = this.get(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + key + "' does not exist");
-		} else {
-			return Primitive.FLOAT.getFloat(Objects.notNull(get(key)));
-		}
+		return Primitive.FLOAT.getFloat(tempObject);
 	}
 
 	default float getFloatUseArray(final @NotNull String... key) {
 		Object tempObject = this.getUseArray(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + Arrays.toString(key) + "' does not exist");
-		} else {
-			return Primitive.FLOAT.getFloat(Objects.notNull(this.getUseArray(key)));
-		}
+		return Primitive.FLOAT.getFloat(tempObject);
 	}
 
 	/**
@@ -183,20 +143,12 @@ public interface StorageBase {
 	 */
 	default int getInt(final @NotNull String key) {
 		Object tempObject = this.get(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + key + "' does not exist");
-		} else {
-			return Primitive.INTEGER.getInt(Objects.notNull(get(key)));
-		}
+		return Primitive.INTEGER.getInt(tempObject);
 	}
 
 	default int getIntUseArray(final @NotNull String... key) {
 		Object tempObject = this.getUseArray(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + Arrays.toString(key) + "' does not exist");
-		} else {
-			return Primitive.INTEGER.getInt(Objects.notNull(this.getUseArray(key)));
-		}
+		return Primitive.INTEGER.getInt(tempObject);
 	}
 
 	/**
@@ -207,20 +159,12 @@ public interface StorageBase {
 	 */
 	default short getShort(final @NotNull String key) {
 		Object tempObject = this.get(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + key + "' does not exist");
-		} else {
-			return Primitive.SHORT.getShort(Objects.notNull(get(key)));
-		}
+		return Primitive.SHORT.getShort(tempObject);
 	}
 
 	default short getShortUseArray(final @NotNull String... key) {
 		Object tempObject = this.getUseArray(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + Arrays.toString(key) + "' does not exist");
-		} else {
-			return Primitive.SHORT.getShort(Objects.notNull(this.getUseArray(key)));
-		}
+		return Primitive.SHORT.getShort(tempObject);
 	}
 
 	/**
@@ -232,21 +176,13 @@ public interface StorageBase {
 	@NotNull
 	default List<Integer> getIntegerList(final @NotNull String key) {
 		Object tempObject = this.get(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + key + "' does not exist");
-		} else {
-			return (List<Integer>) tempObject;
-		}
+		return (List<Integer>) tempObject;
 	}
 
 	@NotNull
 	default List<Integer> getIntegerListUseArray(final @NotNull String... key) {
 		Object tempObject = this.getUseArray(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + Arrays.toString(key) + "' does not exist");
-		} else {
-			return (List<Integer>) tempObject;
-		}
+		return (List<Integer>) tempObject;
 	}
 
 	/**
@@ -258,21 +194,13 @@ public interface StorageBase {
 	@NotNull
 	default List getList(final @NotNull String key) {
 		Object tempObject = this.get(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + key + "' does not exist");
-		} else {
-			return (List) tempObject;
-		}
+		return (List) tempObject;
 	}
 
 	@NotNull
 	default List getListUseArray(final @NotNull String... key) {
 		Object tempObject = this.getUseArray(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + Arrays.toString(key) + "' does not exist");
-		} else {
-			return (List) tempObject;
-		}
+		return (List) tempObject;
 	}
 
 	/**
@@ -283,20 +211,12 @@ public interface StorageBase {
 	 */
 	default long getLong(final @NotNull String key) {
 		Object tempObject = this.get(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + key + "' does not exist");
-		} else {
-			return Primitive.LONG.getLong(Objects.notNull(get(key)));
-		}
+		return Primitive.LONG.getLong(tempObject);
 	}
 
 	default long getLongUseArray(final @NotNull String... key) {
 		Object tempObject = this.getUseArray(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + Arrays.toString(key) + "' does not exist");
-		} else {
-			return Primitive.LONG.getLong(Objects.notNull(this.getUseArray(key)));
-		}
+		return Primitive.LONG.getLong(tempObject);
 	}
 
 	/**
@@ -305,16 +225,14 @@ public interface StorageBase {
 	 * @param key key to Long-List in File
 	 * @return Long-List
 	 */
-	@Nullable
+	@NotNull
 	default List<Long> getLongList(final @NotNull String key) {
-		Object tempObject = this.get(key);
-		return tempObject != null ? (List<Long>) get(key) : null;
+		return (List<Long>) this.get(key);
 	}
 
-	@Nullable
+	@NotNull
 	default List<Long> getLongListUseArray(final @NotNull String... key) {
-		Object tempObject = this.getUseArray(key);
-		return tempObject != null ? (List<Long>) tempObject : null;
+		return (List<Long>) this.getUseArray(key);
 	}
 
 	/**
@@ -323,24 +241,16 @@ public interface StorageBase {
 	 * @param key key to Map-List in File
 	 * @return Map
 	 */
-	@Nullable
+	@NotNull
 	default Map getMap(final @NotNull String key) {
 		Object tempObject = this.get(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + key + "' does not exist");
-		} else {
-			return (Map) tempObject;
-		}
+		return (Map) tempObject;
 	}
 
-	@Nullable
+	@NotNull
 	default Map getMapUseArray(final @NotNull String... key) {
 		Object tempObject = this.getUseArray(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + Arrays.toString(key) + "' does not exist");
-		} else {
-			return (Map) tempObject;
-		}
+		return (Map) tempObject;
 	}
 
 	/**
@@ -357,7 +267,7 @@ public interface StorageBase {
 			this.set(key, value);
 			return value;
 		} else {
-			Object tempObj = get(key);
+			Object tempObj = this.get(key);
 			if (tempObj instanceof String && value instanceof Integer) {
 				tempObj = Integer.parseInt((String) tempObj);
 			} else if (tempObj instanceof String && value instanceof Long) {
@@ -371,7 +281,7 @@ public interface StorageBase {
 			} else if (tempObj instanceof String && value instanceof Primitive.BOOLEAN) {
 				tempObj = ((String) tempObj).equalsIgnoreCase("true");
 			}
-			return (T) Objects.notNull(tempObj);
+			return (T) tempObj;
 		}
 	}
 
@@ -396,7 +306,7 @@ public interface StorageBase {
 			} else if (tempObj instanceof String && value instanceof Primitive.BOOLEAN) {
 				tempObj = ((String) tempObj).equalsIgnoreCase("true");
 			}
-			return (T) Objects.notNull(tempObj);
+			return (T) tempObj;
 		}
 	}
 
@@ -444,9 +354,9 @@ public interface StorageBase {
 	 *
 	 * @return the keySet of all layers of localMap combined (Format: key.subkey).
 	 */
-	@Nullable Set<String> keySet();
+	@NotNull Set<String> keySet();
 
-	@Nullable Set<String[]> keySetUseArray();
+	@NotNull Set<String[]> keySetUseArray();
 
 	/**
 	 * get the keySet of all sublayers of the given key combined.
@@ -454,9 +364,9 @@ public interface StorageBase {
 	 * @param key the key of the layer
 	 * @return the keySet of all sublayers of the given key or an empty set if the key does not exist (Format: key.subkey).
 	 */
-	@Nullable Set<String> keySet(final @NotNull String key);
+	@NotNull Set<String> keySet(final @NotNull String key);
 
-	@Nullable Set<String[]> keySetUseArray(final @NotNull String... key);
+	@NotNull Set<String[]> keySetUseArray(final @NotNull String... key);
 
 
 	/**
@@ -464,7 +374,7 @@ public interface StorageBase {
 	 *
 	 * @return the keySet of the top layer of localMap.
 	 */
-	@Nullable Set<String> blockKeySet();
+	@NotNull Set<String> blockKeySet();
 
 	/**
 	 * get the keySet of a single layer of the map.
@@ -472,9 +382,9 @@ public interface StorageBase {
 	 * @param key the key of the layer.
 	 * @return the keySet of the given layer or an empty set if the key does not exist.
 	 */
-	@Nullable Set<String> blockKeySet(final @NotNull String key);
+	@NotNull Set<String> blockKeySet(final @NotNull String key);
 
-	@Nullable Set<String> blockKeySetUseArray(final @NotNull String... key);
+	@NotNull Set<String> blockKeySetUseArray(final @NotNull String... key);
 
 	/**
 	 * Get an Object from the File casted to a certain type
@@ -486,12 +396,12 @@ public interface StorageBase {
 	 */
 	@NotNull
 	default <T> T get(final @NotNull String key, final @NotNull Class<T> def) {
-		return Primitive.getFromDef(Objects.notNull(get(key)), def);
+		return Primitive.getFromDef(this.get(key), def);
 	}
 
 	@NotNull
 	default <T> T getUseArray(final @NotNull String[] key, final @NotNull Class<T> def) {
-		return Primitive.getFromDef(Objects.notNull(this.getUseArray(key)), def);
+		return Primitive.getFromDef(this.getUseArray(key), def);
 	}
 
 	/**
@@ -503,21 +413,13 @@ public interface StorageBase {
 	@NotNull
 	default String getString(final @NotNull String key) {
 		Object tempObject = this.get(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + key + "' does not exist");
-		} else {
-			return tempObject instanceof String ? (String) tempObject : tempObject.toString();
-		}
+		return tempObject instanceof String ? (String) tempObject : tempObject.toString();
 	}
 
 	@NotNull
 	default String getStringUseArray(final @NotNull String... key) {
 		Object tempObject = this.getUseArray(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + Arrays.toString(key) + "' does not exist");
-		} else {
-			return tempObject instanceof String ? (String) tempObject : tempObject.toString();
-		}
+		return tempObject instanceof String ? (String) tempObject : tempObject.toString();
 	}
 
 	/**
@@ -529,21 +431,13 @@ public interface StorageBase {
 	@NotNull
 	default List<String> getStringList(final @NotNull String key) {
 		Object tempObject = this.get(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + key + "' does not exist");
-		} else {
-			return (List<String>) tempObject;
-		}
+		return (List<String>) tempObject;
 	}
 
 	@NotNull
 	default List<String> getStringListUseArray(final @NotNull String... key) {
 		Object tempObject = this.getUseArray(key);
-		if (tempObject == null) {
-			throw new NullPointerException("key '" + Arrays.toString(key) + "' does not exist");
-		} else {
-			return (List<String>) tempObject;
-		}
+		return (List<String>) tempObject;
 	}
 
 	/**

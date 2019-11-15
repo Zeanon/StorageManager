@@ -31,12 +31,12 @@ public class ThunderFileSection extends CommentEnabledSection {
 	@NotNull
 	@Override
 	public ThunderFileSection getSection(final @NotNull String sectionKey) {
-		return new ThunderFileSection(this.getFinalKey(Objects.notNull(sectionKey, "Key  must not be null")), this.thunderFile);
+		return new ThunderFileSection(this.getFinalKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.thunderFile);
 	}
 
 	@NotNull
 	@Override
 	public FlatSection getSectionUseArray(final @NotNull String[] sectionKey) {
-		return new ThunderFileSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "Key  must not be null")), this.thunderFile);
+		return new ThunderFileSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.thunderFile);
 	}
 }

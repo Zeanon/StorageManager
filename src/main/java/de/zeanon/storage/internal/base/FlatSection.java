@@ -10,32 +10,29 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+@Getter
 @EqualsAndHashCode
-@Accessors(chain = true)
 @ToString(callSuper = true)
 @SuppressWarnings("unused")
 public abstract class FlatSection implements StorageBase, Comparable<FlatSection> {
 
 	@NotNull
 	private final FlatFile flatFile;
-	@Nullable
-	@Getter
+	@NotNull
 	@Setter
-	protected String sectionKey;
-	@Nullable
-	@Getter
+	protected String sectionKey = "";
+	@NotNull
 	@Setter
-	protected String[] arraySectionKey;
+	protected String[] arraySectionKey = new String[0];
 
 
 	protected FlatSection(final @NotNull String sectionKey, final @NotNull FlatFile flatFile) {
-		this.sectionKey = Objects.notNull(sectionKey, "Key  must not be null");
-		this.arraySectionKey = Objects.notNull(sectionKey, "Key  must not be null").split("\\.");
+		this.setSectionKey(Objects.notNull(sectionKey, "SectionKey  must not be null"));
+		this.setArraySectionKey(Objects.notNull(sectionKey, "SectionKey  must not be null").split("\\."));
 		this.flatFile = flatFile;
 	}
 
@@ -44,8 +41,8 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 		for (int i = 1; i < sectionKey.length; i++) {
 			tempKey.append(".").append(sectionKey[i]);
 		}
-		this.sectionKey = tempKey.toString();
-		this.arraySectionKey = Objects.notNull(sectionKey, "Key  must not be null");
+		this.setSectionKey(tempKey.toString());
+		this.setArraySectionKey(Objects.notNull(sectionKey, "SectionKey  must not be null"));
 		this.flatFile = flatFile;
 	}
 
@@ -54,7 +51,7 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 		this.flatFile.setReloadSetting(reloadSetting);
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Object get(final @NotNull String key) {
 		return this.flatFile.get(this.getFinalKey(key));
@@ -79,7 +76,7 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 
 	@Override
 	public void setAll(final @NotNull Map<String, Object> dataMap) {
-		this.flatFile.setAll(Objects.notNull(this.getSectionKey()), dataMap);
+		this.flatFile.setAll(this.getSectionKey(), dataMap);
 	}
 
 	@Override
@@ -88,11 +85,11 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 	}
 
 	public void set(final @Nullable Object value) {
-		this.flatFile.set(Objects.notNull(this.getSectionKey()), value);
+		this.flatFile.set(this.getSectionKey(), value);
 	}
 
 	public void remove() {
-		this.flatFile.remove(Objects.notNull(this.getSectionKey()));
+		this.flatFile.remove(this.getSectionKey());
 	}
 
 	@Override
@@ -102,7 +99,7 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 
 	@Override
 	public void removeAll(final @NotNull String... keys) {
-		this.flatFile.removeAll(Objects.notNull(this.getSectionKey()), keys);
+		this.flatFile.removeAll(this.getSectionKey(), keys);
 	}
 
 	@Override
@@ -115,31 +112,31 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 		return this.flatFile.hasKey(this.getFinalKey(key));
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Set<String> keySet() {
-		return this.flatFile.keySet(Objects.notNull(this.getSectionKey()));
+		return this.flatFile.keySet(this.getSectionKey());
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Set<String> blockKeySet() {
-		return this.flatFile.blockKeySet(Objects.notNull(this.getSectionKey()));
+		return this.flatFile.blockKeySet(this.getSectionKey());
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Set<String> keySet(final @NotNull String key) {
 		return this.flatFile.keySet(this.getFinalKey(key));
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Set<String> blockKeySet(final @NotNull String key) {
 		return this.flatFile.blockKeySet(this.getFinalKey(key));
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Object getUseArray(final @NotNull String... key) {
 		return this.flatFile.getUseArray(this.getFinalArrayKey(key));
@@ -148,8 +145,7 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 	@NotNull
 	@Override
 	public Map<String[], Object> getAllUseArray(final @NotNull String[]... keys) {
-		//noinspection NullableProblems
-		return this.flatFile.getAllUseArray(Objects.notNull(this.arraySectionKey), keys);
+		return this.flatFile.getAllUseArray(this.getArraySectionKey(), keys);
 	}
 
 	@NotNull
@@ -161,8 +157,7 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 	@NotNull
 	@Override
 	public Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys) {
-		//noinspection NullableProblems
-		return this.flatFile.getAllUseArray(Objects.notNull(this.arraySectionKey), keys);
+		return this.flatFile.getAllUseArray(this.getArraySectionKey(), keys);
 	}
 
 	@NotNull
@@ -195,8 +190,7 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 
 	@Override
 	public void setAllUseArray(final @NotNull Map<String[], Object> dataMap) {
-		//noinspection NullableProblems
-		this.flatFile.setAllUseArray(Objects.notNull(this.getArraySectionKey()), dataMap);
+		this.flatFile.setAllUseArray(this.getArraySectionKey(), dataMap);
 	}
 
 	@Override
@@ -204,20 +198,19 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 		this.flatFile.setAllUseArray(this.getFinalArrayKey(blockKey), dataMap);
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Set<String[]> keySetUseArray() {
-		//noinspection NullableProblems
-		return this.flatFile.keySetUseArray(Objects.notNull(this.arraySectionKey));
+		return this.flatFile.keySetUseArray(this.getArraySectionKey());
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Set<String[]> keySetUseArray(final @NotNull String... key) {
 		return this.flatFile.keySetUseArray(this.getFinalArrayKey(key));
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Set<String> blockKeySetUseArray(final @NotNull String... key) {
 		return this.flatFile.blockKeySetUseArray(this.getFinalArrayKey(key));
@@ -230,19 +223,17 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 
 	@Override
 	public void removeAllUseArray(final @NotNull String[]... keys) {
-		//noinspection NullableProblems
-		this.flatFile.removeAllUseArray(Objects.notNull(this.arraySectionKey), keys);
+		this.flatFile.removeAllUseArray(this.getArraySectionKey(), keys);
 	}
 
 	@Override
 	public void removeAll(final @NotNull Collection<String> keys) {
-		this.flatFile.removeAll(Objects.notNull(this.sectionKey), keys);
+		this.flatFile.removeAll(this.getSectionKey(), keys);
 	}
 
 	@Override
 	public void removeAllUseArray(final @NotNull Collection<String[]> keys) {
-		//noinspection NullableProblems
-		this.flatFile.removeAllUseArray(Objects.notNull(this.arraySectionKey), keys);
+		this.flatFile.removeAllUseArray(this.getArraySectionKey(), keys);
 	}
 
 	@Override
@@ -262,17 +253,15 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 
 	@NotNull
 	protected String getFinalKey(final @NotNull String key) {
-		return (this.getSectionKey() == null || this.getSectionKey().isEmpty()) ? Objects.notNull(key, "Key  must not be null") : this.getSectionKey() + "." + Objects.notNull(key, "Key  must not be null");
+		return this.getSectionKey() + "." + Objects.notNull(key, "Key  must not be null");
 	}
 
 	@NotNull
 	protected String[] getFinalArrayKey(final @NotNull String... key) {
-		String[] tempKey = new String[Objects.notNull(this.arraySectionKey).length + key.length];
-		System.arraycopy(this.arraySectionKey, 0, tempKey, 0, this.arraySectionKey.length);
-		System.arraycopy(key, 0, tempKey, this.arraySectionKey.length, key.length);
-		return (this.getSectionKey() == null || this.getSectionKey().isEmpty())
-			   ? Objects.notNull(tempKey, "Key  must not be null")
-			   : tempKey;
+		String[] tempKey = new String[this.getArraySectionKey().length + key.length];
+		System.arraycopy(this.getArraySectionKey(), 0, tempKey, 0, this.getArraySectionKey().length);
+		System.arraycopy(key, 0, tempKey, this.getArraySectionKey().length, key.length);
+		return tempKey;
 	}
 
 	@Override

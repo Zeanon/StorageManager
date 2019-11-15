@@ -13,7 +13,6 @@ import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.data.section.YamlFileSection;
 import de.zeanon.storage.internal.settings.Comment;
 import de.zeanon.storage.internal.utils.SMFileUtils;
-import de.zeanon.storage.internal.utils.basic.Objects;
 import de.zeanon.storage.internal.utils.datafiles.YamlUtils;
 import de.zeanon.storage.internal.utils.editor.YamlEditor;
 import java.io.*;
@@ -37,7 +36,7 @@ public class YamlFile extends CommentEnabledFile {
 	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.YAML, reloadSetting, commentSetting, dataType);
 
-		if (this.create() && inputStream != null) {
+		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
 			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
 		}
 
@@ -66,18 +65,18 @@ public class YamlFile extends CommentEnabledFile {
 	public synchronized void save() {
 		try {
 			if (this.getCommentSetting() != Comment.PRESERVE) {
-				this.write(Objects.notNull(Objects.notNull(this.getFileData(), "FileData  must not be null").toMap()));
+				this.write(this.getFileData().toMap());
 			} else {
 				final List<String> unEdited = YamlEditor.read(this.getFile());
 				final List<String> header = YamlEditor.readHeader(this.getFile());
 				final List<String> footer = YamlEditor.readFooter(this.getFile());
-				this.write(Objects.notNull(this.getFileData().toMap()));
+				this.write(this.getFileData().toMap());
 				header.addAll(YamlEditor.read(this.getFile()));
 				if (!header.containsAll(footer)) {
 					header.addAll(footer);
 				}
 				YamlEditor.write(this.getFile(), YamlUtils.parseComments(unEdited, header));
-				this.write(Objects.notNull(Objects.notNull(this.getFileData(), "FileData  must not be null").toMap()));
+				this.write(this.getFileData().toMap());
 			}
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());

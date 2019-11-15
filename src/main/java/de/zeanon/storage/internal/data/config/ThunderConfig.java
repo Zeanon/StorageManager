@@ -47,7 +47,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 	}
 
 
-	@Nullable
+	@NotNull
 	@Override
 	public List<String> getHeader() {
 		this.update();
@@ -65,13 +65,13 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			Map<String, Object> tempMap = ThunderUtils.setHeader(this.getFileData(), header, this.getDataType(), this.getCommentSetting());
-			if (!this.getFileData().toString().equals(Objects.notNull(tempMap).toString())) {
+			if (!this.getFileData().toString().equals(tempMap.toString())) {
 				ThunderEditor.writeData(this.getFile(), tempMap, this.getCommentSetting());
 			}
 		}
 	}
 
-	@Nullable
+	@NotNull
 	public List<String> getHeader(final @NotNull String key) {
 		Objects.checkNull(key, "Key  must not be null");
 
@@ -95,14 +95,14 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			Map<String, Object> tempMap = ThunderUtils.setHeader(this.getFileData(), key, header, this.getDataType(), this.getCommentSetting());
-			if (!this.getFileData().toString().equals(Objects.notNull(tempMap).toString())) {
+			if (!this.getFileData().toString().equals(tempMap.toString())) {
 				ThunderEditor.writeData(this.getFile(), tempMap, this.getCommentSetting());
 			}
 		}
 	}
 
 
-	@Nullable
+	@NotNull
 	@Override
 	public List<String> getFooter() {
 		this.update();
@@ -120,13 +120,13 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			Map<String, Object> tempMap = ThunderUtils.setFooter(this.getFileData(), footer, this.getDataType(), this.getCommentSetting());
-			if (!this.getFileData().toString().equals(Objects.notNull(tempMap).toString())) {
+			if (!this.getFileData().toString().equals(tempMap.toString())) {
 				ThunderEditor.writeData(this.getFile(), tempMap, this.getCommentSetting());
 			}
 		}
 	}
 
-	@Nullable
+	@NotNull
 	public List<String> getFooter(final @NotNull String key) {
 		Objects.checkNull(key, "Key  must not be null");
 
@@ -150,14 +150,14 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			Map<String, Object> tempMap = ThunderUtils.setFooter(this.getFileData(), key, footer, this.getDataType(), this.getCommentSetting());
-			if (!this.getFileData().toString().equals(Objects.notNull(tempMap).toString())) {
+			if (!this.getFileData().toString().equals(tempMap.toString())) {
 				ThunderEditor.writeData(this.getFile(), tempMap, this.getCommentSetting());
 			}
 		}
 	}
 
 
-	@Nullable
+	@NotNull
 	@Override
 	public List<String> getComments() {
 		this.update();
@@ -169,7 +169,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		}
 	}
 
-	@Nullable
+	@NotNull
 	public List<String> getComments(final @NotNull String key) {
 		Objects.checkNull(key, "Key  must not be null");
 
@@ -182,7 +182,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		}
 	}
 
-	@Nullable
+	@NotNull
 	public List<String> getBlockComments() {
 		this.update();
 
@@ -193,7 +193,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		}
 	}
 
-	@Nullable
+	@NotNull
 	public List<String> getBlockComments(final @NotNull String key) {
 		Objects.checkNull(key, "Key  must not be null");
 

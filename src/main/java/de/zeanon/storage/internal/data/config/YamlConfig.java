@@ -53,6 +53,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 	}
 
 
+	@NotNull
 	@Override
 	public List<String> getHeader() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
@@ -118,6 +119,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 		}
 	}
 
+	@NotNull
 	@Override
 	public List<String> getFooter() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
@@ -182,6 +184,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 		}
 	}
 
+	@NotNull
 	@Override
 	public List<String> getComments() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
