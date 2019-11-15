@@ -7,6 +7,7 @@ import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.data.section.TomlFileSection;
 import de.zeanon.storage.internal.utils.SMFileUtils;
+import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +54,7 @@ public class TomlFile extends FlatFile {
 	@Override
 	public synchronized void save() {
 		try {
-			com.electronwill.toml.Toml.write(this.getFileData().toMap(), this.getFile());
+			com.electronwill.toml.Toml.write(Objects.notNull(this.getFileData().toMap()), this.getFile());
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
@@ -65,13 +66,15 @@ public class TomlFile extends FlatFile {
 	 * @param sectionKey the sectionKey to be used as a prefix by the Section
 	 * @return the Section using the given sectionKey
 	 */
+	@NotNull
 	@Override
 	public TomlFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
+	@NotNull
 	@Override
-	public TomlFileSection getSectionFromArray(final @NotNull String[] sectionKey) {
+	public TomlFileSection getSectionUseArray(final @NotNull String[] sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -81,17 +84,20 @@ public class TomlFile extends FlatFile {
 		TOML("toml");
 
 
+		@NotNull
 		private final String extension;
 
 		FileType(final @NotNull String extension) {
 			this.extension = extension;
 		}
 
+		@NotNull
 		@Override
 		public String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
+		@NotNull
 		@Override
 		public String toString() {
 			return this.extension;

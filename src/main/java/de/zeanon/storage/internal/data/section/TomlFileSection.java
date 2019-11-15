@@ -13,7 +13,9 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class TomlFileSection extends FlatSection {
 
+	@NotNull
 	private final TomlFile tomlFile;
+
 
 	protected TomlFileSection(final @NotNull String sectionKey, final @NotNull TomlFile tomlFile) {
 		super(sectionKey, tomlFile);
@@ -25,13 +27,15 @@ public class TomlFileSection extends FlatSection {
 		this.tomlFile = tomlFile;
 	}
 
+	@NotNull
 	@Override
 	public TomlFileSection getSection(final @NotNull String sectionKey) {
 		return new TomlFileSection(this.getFinalKey(Objects.notNull(sectionKey, "Key  must not be null")), this.tomlFile);
 	}
 
+	@NotNull
 	@Override
-	public FlatSection getSectionFromArray(final @NotNull String[] sectionKey) {
+	public FlatSection getSectionUseArray(final @NotNull String[] sectionKey) {
 		return new TomlFileSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "Key  must not be null")), this.tomlFile);
 	}
 }

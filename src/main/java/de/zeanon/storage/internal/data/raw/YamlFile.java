@@ -45,7 +45,7 @@ public class YamlFile extends CommentEnabledFile {
 			//noinspection unchecked
 			this.getFileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.getFile())).read());
 			this.setLastLoaded(System.currentTimeMillis());
-		} catch (YamlException | FileNotFoundException e) {
+		} catch (@NotNull YamlException | FileNotFoundException e) {
 			throw new FileParseException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
@@ -66,18 +66,18 @@ public class YamlFile extends CommentEnabledFile {
 	public synchronized void save() {
 		try {
 			if (this.getCommentSetting() != Comment.PRESERVE) {
-				this.write(Objects.notNull(this.getFileData(), "FileData  must not be null").toMap());
+				this.write(Objects.notNull(Objects.notNull(this.getFileData(), "FileData  must not be null").toMap()));
 			} else {
 				final List<String> unEdited = YamlEditor.read(this.getFile());
 				final List<String> header = YamlEditor.readHeader(this.getFile());
 				final List<String> footer = YamlEditor.readFooter(this.getFile());
-				this.write(this.getFileData().toMap());
+				this.write(Objects.notNull(this.getFileData().toMap()));
 				header.addAll(YamlEditor.read(this.getFile()));
 				if (!header.containsAll(footer)) {
 					header.addAll(footer);
 				}
 				YamlEditor.write(this.getFile(), YamlUtils.parseComments(unEdited, header));
-				this.write(Objects.notNull(this.getFileData(), "FileData  must not be null").toMap());
+				this.write(Objects.notNull(Objects.notNull(this.getFileData(), "FileData  must not be null").toMap()));
 			}
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
@@ -90,13 +90,15 @@ public class YamlFile extends CommentEnabledFile {
 	 * @param sectionKey the sectionKey to be used as a prefix by the Section
 	 * @return the Section using the given sectionKey
 	 */
+	@NotNull
 	@Override
 	public YamlFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
+	@NotNull
 	@Override
-	public YamlFileSection getSectionFromArray(final @NotNull String[] sectionKey) {
+	public YamlFileSection getSectionUseArray(final @NotNull String[] sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -111,17 +113,20 @@ public class YamlFile extends CommentEnabledFile {
 		YAML("yml");
 
 
+		@NotNull
 		private final String extension;
 
 		FileType(final @NotNull String extension) {
 			this.extension = extension;
 		}
 
+		@NotNull
 		@Override
 		public String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
+		@NotNull
 		@Override
 		public String toString() {
 			return this.extension;

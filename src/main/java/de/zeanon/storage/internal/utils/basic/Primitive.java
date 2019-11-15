@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class Primitive {
 
+	@NotNull
 	public static <T> T getFromDef(final @NotNull Object obj, final @NotNull Class<T> def) {
 		Objects.checkNull(def);
 		Object tempObj = Objects.notNull(obj);

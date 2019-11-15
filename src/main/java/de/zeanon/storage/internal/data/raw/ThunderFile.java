@@ -40,7 +40,7 @@ public class ThunderFile extends CommentEnabledFile {
 		try {
 			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getDataType(), this.getCommentSetting()));
 			this.setLastLoaded(System.currentTimeMillis());
-		} catch (RuntimeIOException | FileParseException e) {
+		} catch (@NotNull RuntimeIOException | FileParseException e) {
 			throw new FileParseException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
@@ -51,7 +51,7 @@ public class ThunderFile extends CommentEnabledFile {
 		try {
 			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getDataType(), this.getCommentSetting()));
 			this.setLastLoaded(System.currentTimeMillis());
-		} catch (NullPointerException | RuntimeIOException | FileParseException e) {
+		} catch (@NotNull NullPointerException | RuntimeIOException | FileParseException e) {
 			throw new FileParseException("Error while reloading '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
@@ -59,38 +59,42 @@ public class ThunderFile extends CommentEnabledFile {
 	@Override
 	public synchronized void save() {
 		try {
-			ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
-		} catch (NullPointerException | RuntimeIOException e) {
+			ThunderEditor.writeData(this.getFile(), Objects.notNull(this.getFileData().toMap()), this.getCommentSetting());
+		} catch (@NotNull NullPointerException | RuntimeIOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
+	@NotNull
 	@Override
 	public Set<String> keySet() {
 		this.update();
-		return this.keySet(this.getFileData().toMap());
+		return this.keySet(Objects.notNull(this.getFileData().toMap()));
 	}
 
+	@Nullable
 	@Override
 	public Set<String> keySet(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
 		//noinspection unchecked
-		return this.getFileData().get(key) instanceof Map ? this.keySet((Map<String, Object>) this.getFileData().get(key)) : null;
+		return this.getFileData().get(key) instanceof Map ? this.keySet((Map<String, Object>) Objects.notNull(this.getFileData().get(key))) : null;
 	}
 
+	@NotNull
 	@Override
 	public Set<String> blockKeySet() {
 		this.update();
-		return this.blockKeySet(this.getFileData().toMap());
+		return this.blockKeySet(Objects.notNull(this.getFileData().toMap()));
 	}
 
+	@Nullable
 	@Override
 	public Set<String> blockKeySet(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
 		//noinspection unchecked
-		return this.getFileData().get(key) instanceof Map ? this.blockKeySet((Map<String, Object>) this.getFileData().get(key)) : null;
+		return this.getFileData().get(key) instanceof Map ? this.blockKeySet((Map<String, Object>) Objects.notNull(this.getFileData().get(key))) : null;
 	}
 
 	/**
@@ -99,17 +103,20 @@ public class ThunderFile extends CommentEnabledFile {
 	 * @param sectionKey the sectionKey to be used as a prefix by the Section
 	 * @return the Section using the given sectionKey
 	 */
+	@NotNull
 	@Override
 	public ThunderFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
+	@NotNull
 	@Override
-	public ThunderFileSection getSectionFromArray(final @NotNull String[] sectionKey) {
+	public ThunderFileSection getSectionUseArray(final @NotNull String[] sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
-	private Set<String> blockKeySet(final Map<String, Object> map) {
+	@NotNull
+	private Set<String> blockKeySet(@NotNull final Map<String, Object> map) {
 		Set<String> tempSet = new HashSet<>();
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			if (entry.getValue() != ThunderEditor.LineType.COMMENT && entry.getValue() != ThunderEditor.LineType.BLANK_LINE) {
@@ -119,7 +126,8 @@ public class ThunderFile extends CommentEnabledFile {
 		return tempSet;
 	}
 
-	private Set<String> keySet(final Map<String, Object> map) {
+	@NotNull
+	private Set<String> keySet(@NotNull final Map<String, Object> map) {
 		Set<String> tempSet = new HashSet<>();
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map) {
@@ -140,17 +148,20 @@ public class ThunderFile extends CommentEnabledFile {
 		THUNDER("tf");
 
 
+		@NotNull
 		private final String extension;
 
 		FileType(final @NotNull String extension) {
 			this.extension = extension;
 		}
 
+		@NotNull
 		@Override
 		public String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
+		@NotNull
 		@Override
 		public String toString() {
 			return this.extension;

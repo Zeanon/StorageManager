@@ -14,7 +14,9 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class ThunderFileSection extends CommentEnabledSection {
 
+	@NotNull
 	private final ThunderFile thunderFile;
+
 
 	protected ThunderFileSection(final @NotNull String sectionKey, final @NotNull ThunderFile thunderFile) {
 		super(sectionKey, thunderFile);
@@ -26,13 +28,15 @@ public class ThunderFileSection extends CommentEnabledSection {
 		this.thunderFile = thunderFile;
 	}
 
+	@NotNull
 	@Override
 	public ThunderFileSection getSection(final @NotNull String sectionKey) {
 		return new ThunderFileSection(this.getFinalKey(Objects.notNull(sectionKey, "Key  must not be null")), this.thunderFile);
 	}
 
+	@NotNull
 	@Override
-	public FlatSection getSectionFromArray(final @NotNull String[] sectionKey) {
+	public FlatSection getSectionUseArray(final @NotNull String[] sectionKey) {
 		return new ThunderFileSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "Key  must not be null")), this.thunderFile);
 	}
 }

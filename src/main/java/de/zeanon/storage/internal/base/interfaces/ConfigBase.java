@@ -14,7 +14,7 @@ public interface ConfigBase extends StorageBase {
 
 	void setDataType(final DataTypeBase dataType);
 
-	List<String> getHeader();
+	@Nullable List<String> getHeader();
 
 	default void setHeader(final @Nullable String... header) {
 		this.setHeader(header == null ? null : Arrays.asList(header));
@@ -22,7 +22,7 @@ public interface ConfigBase extends StorageBase {
 
 	void setHeader(final @Nullable List<String> header);
 
-	List<String> getFooter();
+	@Nullable List<String> getFooter();
 
 	default void setFooter(final @Nullable String... footer) {
 		this.setFooter(footer == null ? null : Arrays.asList(footer));
@@ -30,8 +30,9 @@ public interface ConfigBase extends StorageBase {
 
 	void setFooter(final @Nullable List<String> footer);
 
-	List<String> getComments();
+	@Nullable List<String> getComments();
 
+	@Nullable
 	default List<String> getHeader(final @NotNull CommentSettingBase commentSetting) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		return this.getHeader();
@@ -47,6 +48,7 @@ public interface ConfigBase extends StorageBase {
 		this.setHeader(header);
 	}
 
+	@Nullable
 	default List<String> getFooter(final @NotNull CommentSettingBase commentSetting) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		return this.getFooter();
@@ -62,6 +64,7 @@ public interface ConfigBase extends StorageBase {
 		this.setFooter(footer);
 	}
 
+	@Nullable
 	default List<String> getComments(final @NotNull CommentSettingBase commentSetting) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		return this.getComments();

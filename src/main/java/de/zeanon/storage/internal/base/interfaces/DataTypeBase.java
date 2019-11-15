@@ -16,7 +16,7 @@ public interface DataTypeBase {
 	 * @param map            the Map to be imported from(an empty Map will be returned if @param map is null)
 	 * @return a Map containing the Data of @param map.
 	 */
-	Map<String, Object> getNewDataMap(final @NotNull CommentSettingBase commentSetting, final @Nullable Map<String, Object> map);
+	@Nullable Map<String, Object> getNewDataMap(final @NotNull CommentSettingBase commentSetting, final @Nullable Map<String, Object> map);
 
 	/**
 	 * Get a List of the proper Type defined by your DataType and CommentSetting.
@@ -25,5 +25,5 @@ public interface DataTypeBase {
 	 * @param list           the Map to be imported from(an empty List will be returned if @param list is null)
 	 * @return a List containing the Data of @param list.
 	 */
-	List<String> getNewDataList(final @NotNull CommentSettingBase commentSetting, final @Nullable List<String> list);
+	@Nullable List<String> getNewDataList(final @NotNull CommentSettingBase commentSetting, final @Nullable List<String> list);
 }

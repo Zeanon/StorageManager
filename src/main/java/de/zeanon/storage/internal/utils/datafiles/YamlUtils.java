@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class YamlUtils {
 
 
+	@NotNull
 	public static List<String> parseComments(final @NotNull List<String> comments, final @NotNull List<String> updated) {
 		final Map<String, List<String>> parsed;
 		parsed = assignCommentsToKey(comments);
@@ -32,6 +33,7 @@ public class YamlUtils {
 		return updated;
 	}
 
+	@NotNull
 	private static Map<String, List<String>> assignCommentsToKey(final @NotNull List<String> fileLines) {
 		List<String> storage = new ArrayList<>();
 		final List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);

@@ -32,11 +32,13 @@ public class Objects {
 	 *
 	 * @return the given object if not null
 	 */
+	@NotNull
 	public static <O> O notNull(final @Nullable O object) {
 		return notNull(object, "Checked Object  must not be null");
 	}
 
 
+	@NotNull
 	public static <O> O notNull(final @Nullable O object, final @NotNull String message) {
 		if (object == null) {
 			throw new NullPointerException(message);

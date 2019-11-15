@@ -14,7 +14,9 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class YamlFileSection extends CommentEnabledSection {
 
+	@NotNull
 	private final YamlFile yamlFile;
+
 
 	protected YamlFileSection(final @NotNull String sectionKey, final @NotNull YamlFile yamlFile) {
 		super(sectionKey, yamlFile);
@@ -26,13 +28,15 @@ public class YamlFileSection extends CommentEnabledSection {
 		this.yamlFile = yamlFile;
 	}
 
+	@NotNull
 	@Override
 	public YamlFileSection getSection(final @NotNull String sectionKey) {
 		return new YamlFileSection(this.getFinalKey(Objects.notNull(sectionKey, "Key  must not be null")), this.yamlFile);
 	}
 
+	@NotNull
 	@Override
-	public FlatSection getSectionFromArray(final @NotNull String[] sectionKey) {
+	public FlatSection getSectionUseArray(final @NotNull String[] sectionKey) {
 		return new YamlFileSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "Key  must not be null")), this.yamlFile);
 	}
 }

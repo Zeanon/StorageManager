@@ -24,19 +24,23 @@ import org.jetbrains.annotations.Nullable;
  * Basic foundation for the Data Classes
  */
 @Getter
-@ToString
 @EqualsAndHashCode
+@ToString(callSuper = true)
 @SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
+	@NotNull
 	private final File file;
+	@NotNull
 	private final FileTypeBase fileType;
+	@NotNull
 	private final FileData fileData;
 	@Setter(AccessLevel.PROTECTED)
 	private long lastLoaded;
 	/**
 	 * Default: INTELLIGENT
 	 */
+	@NotNull
 	@Setter
 	private ReloadSettingBase reloadSetting = Reload.INTELLIGENT;
 
@@ -54,18 +58,21 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
+	@NotNull
 	public String getPath() {
 		return this.file.getPath();
 	}
 
+	@NotNull
 	public String getCanonicalPath() {
 		try {
 			return this.file.getCanonicalPath();
-		} catch (IOException | SecurityException e) {
+		} catch (@NotNull IOException | SecurityException e) {
 			throw new RuntimeIOException("Could not get Canonical Path of '" + this.file.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
+	@NotNull
 	public String getName() {
 		return this.file.getName();
 	}
@@ -73,7 +80,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	/**
 	 * Set the Contents of the FileData and File from a given InputStream
 	 */
-	public synchronized void setDataFromStream(final @Nullable InputStream inputStream) {
+	public void setDataFromStream(final @Nullable InputStream inputStream) {
 		SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(inputStream));
 		this.reload();
 	}
@@ -81,7 +88,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	/**
 	 * Delete all Contents of the FileData and File
 	 */
-	public synchronized void clear() {
+	public void clear() {
 		SMFileUtils.writeToFile(this.file, null);
 		this.reload();
 	}
@@ -101,14 +108,14 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * Clears the contents of the internal FileData.
 	 * To get any data, you simply need to reload.
 	 */
-	public synchronized void clearData() {
+	public void clearData() {
 		this.fileData.clear();
 	}
 
 	/**
 	 * Set the Contents of the FileData and File from a given File
 	 */
-	public synchronized void setDataFromFile(final @Nullable File file) {
+	public void setDataFromFile(final @Nullable File file) {
 		SMFileUtils.writeToFile(this.file, file == null ? null : SMFileUtils.createNewInputStream(file));
 		this.reload();
 	}
@@ -116,11 +123,12 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	/**
 	 * Set the Contents of the FileData and File from a given Resource
 	 */
-	public synchronized void setDataFromResource(final @Nullable String resource) {
+	public void setDataFromResource(final @Nullable String resource) {
 		SMFileUtils.writeToFile(this.file, resource == null ? null : SMFileUtils.createNewInputStream(resource));
 		this.reload();
 	}
 
+	@NotNull
 	public String getAbsolutePath() {
 		return this.file.getAbsolutePath();
 	}
@@ -143,62 +151,69 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	@Override
 	public boolean hasKey(final @NotNull String key) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 		return fileData.containsKey(key);
 	}
 
 	@Override
-	public boolean arrayHasKey(final @NotNull String... key) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+	public boolean hasKeyUseArray(final @NotNull String... key) {
+		Objects.checkNull(key, "Key  must not be null");
 		this.update();
-		return fileData.arrayContainsKey(key);
+		return fileData.containsKeyUseArray(key);
 	}
 
+	@NotNull
 	@Override
 	public Set<String> keySet() {
 		this.update();
 		return this.fileData.keySet();
 	}
 
+	@NotNull
 	@Override
-	public Set<String[]> keySetFromArray() {
+	public Set<String[]> keySetUseArray() {
 		this.update();
-		return this.fileData.keySetFromArray();
+		return this.fileData.keySetUseArray();
 	}
 
+	@Nullable
 	@Override
 	public Set<String> keySet(final @NotNull String key) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 		return this.fileData.keySet(key);
 	}
 
+	@Nullable
 	@Override
-	public Set<String[]> keySetFromArray(final @NotNull String... key) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+	public Set<String[]> keySetUseArray(final @NotNull String... key) {
+		Objects.checkNull(key, "Key  must not be null");
 		this.update();
-		return this.fileData.keySetFromArray(key);
+		return this.fileData.keySetUseArray(key);
 	}
 
+	@NotNull
 	@Override
 	public Set<String> blockKeySet() {
 		this.update();
 		return this.fileData.blockKeySet();
 	}
 
+	@Nullable
 	@Override
 	public Set<String> blockKeySet(final @NotNull String key) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 		return this.fileData.blockKeySet(key);
 	}
 
+	@Nullable
 	@Override
-	public Set<String> blockKeySetFromArray(final @NotNull String... key) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+	public Set<String> blockKeySetUseArray(final @NotNull String... key) {
+		Objects.checkNull(key, "Key  must not be null");
 		this.update();
-		return this.fileData.blockKeySetFromArray(key);
+		return this.fileData.blockKeySetUseArray(key);
 	}
 
 	/**
@@ -208,8 +223,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * @param replacement the Replacement Sequence.
 	 */
 	public synchronized void replaceInFile(final @NotNull CharSequence target, final @NotNull CharSequence replacement) throws IOException {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(target, "Target  must not be null");
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(replacement, "Replacement  must not be null");
+		Objects.checkNull(target, "Target  must not be null");
+		Objects.checkNull(replacement, "Replacement  must not be null");
 
 		final Iterator lines = Files.readAllLines(this.file.toPath()).iterator();
 		@Cleanup PrintWriter writer = new PrintWriter(this.file);
@@ -221,6 +236,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		});
 	}
 
+	@Nullable
 	@Override
 	public Object get(final @NotNull String key) {
 		Objects.checkNull(key, "Key  must not be null");
@@ -228,16 +244,18 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return fileData.get(key);
 	}
 
+	@Nullable
 	@Override
-	public Object getFromArray(final @NotNull String... key) {
+	public Object getUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key  must not be null");
 		update();
-		return fileData.getFromArray(key);
+		return fileData.getUseArray(key);
 	}
 
+	@NotNull
 	@Override
 	public Map<String, Object> getAll(final @NotNull String... keys) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
+		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		Map<String, Object> tempMap = new HashMap<>();
@@ -247,21 +265,23 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return tempMap;
 	}
 
+	@NotNull
 	@Override
-	public Map<String[], Object> getAllFromArray(final @NotNull String[]... keys) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
+	public Map<String[], Object> getAllUseArray(final @NotNull String[]... keys) {
+		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		Map<String[], Object> tempMap = new HashMap<>();
 		for (String[] key : keys) {
-			tempMap.put(key, this.fileData.getFromArray(key));
+			tempMap.put(key, this.fileData.getUseArray(key));
 		}
 		return tempMap;
 	}
 
+	@NotNull
 	@Override
 	public Map<String, Object> getAll(final @NotNull Collection<String> keys) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
+		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		Map<String, Object> tempMap = new HashMap<>();
@@ -271,22 +291,24 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return tempMap;
 	}
 
+	@NotNull
 	@Override
-	public Map<String[], Object> getAllFromArray(final @NotNull Collection<String[]> keys) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
+	public Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys) {
+		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		Map<String[], Object> tempMap = new HashMap<>();
 		for (String[] key : keys) {
-			tempMap.put(key, this.fileData.getFromArray(key));
+			tempMap.put(key, this.fileData.getUseArray(key));
 		}
 		return tempMap;
 	}
 
+	@NotNull
 	@Override
 	public Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull String... keys) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(blockKey, "Key  must not be null");
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
+		Objects.checkNull(blockKey, "Key  must not be null");
+		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		Map<String, Object> tempMap = new HashMap<>();
@@ -296,11 +318,12 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return tempMap;
 	}
 
+	@NotNull
 	@SuppressWarnings("DuplicatedCode")
 	@Override
-	public Map<String[], Object> getAllFromArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(blockKey, "Key  must not be null");
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
+	public Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
+		Objects.checkNull(blockKey, "Key  must not be null");
+		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		Map<String[], Object> tempMap = new HashMap<>();
@@ -308,15 +331,16 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
-			tempMap.put(blockKey, this.fileData.getFromArray(key));
+			tempMap.put(blockKey, this.fileData.getUseArray(key));
 		}
 		return tempMap;
 	}
 
+	@NotNull
 	@Override
 	public Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(blockKey, "Key  must not be null");
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
+		Objects.checkNull(blockKey, "Key  must not be null");
+		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		Map<String, Object> tempMap = new HashMap<>();
@@ -326,11 +350,12 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return tempMap;
 	}
 
+	@NotNull
 	@SuppressWarnings("DuplicatedCode")
 	@Override
-	public Map<String[], Object> getAllFromArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(blockKey, "Key  must not be null");
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(keys, "KeyList  must not be null");
+	public Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
+		Objects.checkNull(blockKey, "Key  must not be null");
+		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		Map<String[], Object> tempMap = new HashMap<>();
@@ -338,7 +363,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
-			tempMap.put(blockKey, this.fileData.getFromArray(key));
+			tempMap.put(blockKey, this.fileData.getUseArray(key));
 		}
 		return tempMap;
 	}
@@ -351,7 +376,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public void setFromArray(final @NotNull String[] key, final @Nullable Object value) {
+	public void setUseArray(final @NotNull String[] key, final @Nullable Object value) {
 		if (this.arrayInsert(key, value)) {
 			this.save();
 		}
@@ -365,8 +390,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public void setAllFromArray(final @NotNull Map<String[], Object> dataMap) {
-		if (this.arrayInsertAll(dataMap)) {
+	public void setAllUseArray(final @NotNull Map<String[], Object> dataMap) {
+		if (this.insertAllUseArray(dataMap)) {
 			this.save();
 		}
 	}
@@ -379,8 +404,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public void setAllFromArray(final @NotNull String[] blockKey, final @NotNull Map<String[], Object> dataMap) {
-		if (this.arrayInsertAll(blockKey, dataMap)) {
+	public void setAllUseArray(final @NotNull String[] blockKey, final @NotNull Map<String[], Object> dataMap) {
+		if (this.insertAllUseArray(blockKey, dataMap)) {
 			this.save();
 		}
 	}
@@ -397,19 +422,19 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public void removeFromArray(final @NotNull String... key) {
+	public void removeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key  must not be null");
 
 		this.update();
 
-		this.getFileData().removeFromArray(key);
+		this.getFileData().removeUseArray(key);
 
 		this.save();
 	}
 
 	@Override
 	public void removeAll(final @NotNull String... keys) {
-		Objects.checkNull(keys, "List  must not be null");
+		Objects.checkNull(keys, "Keys must not be null");
 
 		this.update();
 
@@ -422,7 +447,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	@Override
 	public void removeAll(final @NotNull Collection<String> keys) {
-		Objects.checkNull(keys, "List  must not be null");
+		Objects.checkNull(keys, "Keys must not be null");
 
 		this.update();
 
@@ -434,26 +459,26 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public void removeAllFromArray(final @NotNull String[]... keys) {
-		Objects.checkNull(keys, "List  must not be null");
+	public void removeAllUseArray(final @NotNull String[]... keys) {
+		Objects.checkNull(keys, "Keys must not be null");
 
 		this.update();
 
 		for (String[] key : keys) {
-			this.getFileData().removeFromArray(key);
+			this.getFileData().removeUseArray(key);
 		}
 
 		this.save();
 	}
 
 	@Override
-	public void removeAllFromArray(final @NotNull Collection<String[]> keys) {
-		Objects.checkNull(keys, "List  must not be null");
+	public void removeAllUseArray(final @NotNull Collection<String[]> keys) {
+		Objects.checkNull(keys, "Keys must not be null");
 
 		this.update();
 
 		for (String[] key : keys) {
-			this.getFileData().removeFromArray(key);
+			this.getFileData().removeUseArray(key);
 		}
 
 		this.save();
@@ -461,28 +486,13 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	@Override
 	public void removeAll(final @NotNull String blockKey, final @NotNull String... keys) {
-		Objects.checkNull(keys, "List  must not be null");
+		Objects.checkNull(blockKey, "BlockKey  must not be null");
+		Objects.checkNull(keys, "Keys must not be null");
 
 		this.update();
 
 		for (String tempKey : keys) {
 			this.getFileData().remove(blockKey + "." + tempKey);
-		}
-
-		this.save();
-	}
-
-	@Override
-	public void removeAllFromArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
-		Objects.checkNull(keys, "List  must not be null");
-
-		this.update();
-
-		for (String[] tempKey : keys) {
-			String[] key = new String[blockKey.length + tempKey.length];
-			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
-			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
-			this.getFileData().removeFromArray(key);
 		}
 
 		this.save();
@@ -490,7 +500,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	@Override
 	public void removeAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
-		Objects.checkNull(keys, "List  must not be null");
+		Objects.checkNull(blockKey, "BlockKey  must not be null");
+		Objects.checkNull(keys, "Keys must not be null");
 
 		this.update();
 
@@ -501,8 +512,26 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		this.save();
 	}
 
+
 	@Override
-	public void removeAllFromArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
+	public void removeAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
+		Objects.checkNull(blockKey, "BlockKey  must not be null");
+		Objects.checkNull(keys, "Keys must not be null");
+
+		this.update();
+
+		for (String[] tempKey : keys) {
+			String[] key = new String[blockKey.length + tempKey.length];
+			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
+			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
+			this.getFileData().removeUseArray(key);
+		}
+
+		this.save();
+	}
+
+	@Override
+	public void removeAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
 		Objects.checkNull(keys, "List  must not be null");
 
 		this.update();
@@ -511,7 +540,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
-			this.getFileData().removeFromArray(key);
+			this.getFileData().removeUseArray(key);
 		}
 
 		this.save();
@@ -540,7 +569,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 *
 	 * @return true if File was created.
 	 */
-	protected synchronized boolean create() {
+	protected boolean create() {
 		if (this.file.exists()) {
 			return false;
 		} else {
@@ -557,7 +586,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * @return true if the Data contained by FileData contained after adding the key-value-pair.
 	 */
 	private boolean insert(final @NotNull String key, final @Nullable Object value) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
 		String tempData = this.fileData.toString();
@@ -566,16 +595,16 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	private boolean arrayInsert(final @NotNull String[] key, final @Nullable Object value) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
 		String tempData = this.fileData.toString();
-		this.fileData.arrayInsert(key, value);
+		this.fileData.insertUseArray(key, value);
 		return !this.fileData.toString().equals(tempData);
 	}
 
 	private boolean insertAll(final @NotNull Map<String, Object> map) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(map, "Map  must not be null");
+		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
 		String tempData = this.fileData.toString();
@@ -585,19 +614,19 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	private boolean arrayInsertAll(final @NotNull Map<String[], Object> map) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(map, "Map  must not be null");
+	private boolean insertAllUseArray(final @NotNull Map<String[], Object> map) {
+		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
 		String tempData = this.fileData.toString();
 		for (Map.Entry<String[], Object> entry : map.entrySet()) {
-			this.fileData.arrayInsert(entry.getKey(), entry.getValue());
+			this.fileData.insertUseArray(entry.getKey(), entry.getValue());
 		}
 		return !this.fileData.toString().equals(tempData);
 	}
 
 	private boolean insertAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(key, "Key  must not be null");
+		Objects.checkNull(key, "Key  must not be null");
 		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
@@ -608,8 +637,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	private boolean arrayInsertAll(final @NotNull String[] key, final @NotNull Map<String[], Object> map) {
-		de.zeanon.storage.internal.utils.basic.Objects.checkNull(map, "Map  must not be null");
+	private boolean insertAllUseArray(final @NotNull String[] key, final @NotNull Map<String[], Object> map) {
+		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
 		String tempData = this.fileData.toString();
@@ -617,7 +646,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			String[] tempKey = new String[key.length + entry.getKey().length];
 			System.arraycopy(key, 0, tempKey, 0, key.length);
 			System.arraycopy(entry.getKey(), 0, tempKey, key.length, entry.getKey().length);
-			this.fileData.arrayInsert(tempKey, entry.getValue());
+			this.fileData.insertUseArray(tempKey, entry.getValue());
 		}
 		return !this.fileData.toString().equals(tempData);
 	}

@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class YamlEditor {
 
+	@NotNull
 	public static List<String> readComments(final @NotNull File file) throws IOException {
 		return getCommentsFromLines(read(file));
 	}
@@ -28,22 +29,27 @@ public class YamlEditor {
 		return Files.readAllLines(file.toPath());
 	}
 
+	@NotNull
 	public static List<String> readFooter(final @NotNull File file) throws IOException {
 		return getFooterFromLines(read(file));
 	}
 
+	@NotNull
 	public static List<String> readHeader(final @NotNull File file) throws IOException {
 		return getHeaderFromLines(read(file));
 	}
 
+	@NotNull
 	public static List<String> readKeys(final @NotNull File file) throws IOException {
 		return getKeys(read(file));
 	}
 
+	@NotNull
 	public static List<String> readPureComments(final @NotNull File file) throws IOException {
 		return getPureCommentsFromLines(read(file));
 	}
 
+	@NotNull
 	public static List<String> readWithoutHeaderAndFooter(final @NotNull File file) throws IOException {
 		return getLinesWithoutFooterAndHeaderFromLines(read(file));
 	}
@@ -59,6 +65,7 @@ public class YamlEditor {
 		});
 	}
 
+	@NotNull
 	public static List<String> getLinesWithoutFooterAndHeaderFromLines(final @NotNull List<String> lines) {
 		final List<String> header = getHeaderFromLines(lines);
 		final List<String> footer = getFooterFromLines(lines);
@@ -69,6 +76,7 @@ public class YamlEditor {
 		return lines;
 	}
 
+	@NotNull
 	private static List<String> getCommentsFromLines(final @NotNull List<String> lines) {
 		final List<String> result = new ArrayList<>();
 		for (final String line : Objects.notNull(lines, "Lines must not be null")) {
@@ -79,6 +87,7 @@ public class YamlEditor {
 		return result;
 	}
 
+	@NotNull
 	private static List<String> getFooterFromLines(final @NotNull List<String> lines) {
 		Objects.checkNull(lines, "Lines must not be null");
 
@@ -96,6 +105,7 @@ public class YamlEditor {
 		return result;
 	}
 
+	@NotNull
 	private static List<String> getHeaderFromLines(final @NotNull List<String> lines) {
 		final List<String> result = new ArrayList<>();
 		for (final String line : Objects.notNull(lines, "Lines must not be null")) {
@@ -108,6 +118,7 @@ public class YamlEditor {
 		return result;
 	}
 
+	@NotNull
 	private static List<String> getKeys(final @NotNull List<String> lines) {
 		final List<String> result = new ArrayList<>();
 		for (final String line : Objects.notNull(lines, "Lines must not be null")) {
@@ -122,6 +133,7 @@ public class YamlEditor {
 	/**
 	 * @return List of comments that don't belong to header or footer
 	 */
+	@NotNull
 	private static List<String> getPureCommentsFromLines(final @NotNull List<String> lines) {
 		final List<String> comments = getCommentsFromLines(lines);
 		final List<String> header = getHeaderFromLines(lines);

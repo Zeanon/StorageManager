@@ -12,6 +12,7 @@ import org.json.JSONObject;
 @SuppressWarnings({"unchecked", "WeakerAccess"})
 public class JsonUtils {
 
+	@NotNull
 	public static JSONObject getJsonFromMap(final @NotNull Map<String, Object> map) {
 		JSONObject jsonData = new JSONObject();
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
@@ -24,6 +25,7 @@ public class JsonUtils {
 		return jsonData;
 	}
 
+	@NotNull
 	public static Map<String, Object> jsonToMap(final @NotNull JSONObject json) {
 		Map<String, Object> retMap = new HashMap<>();
 
@@ -33,6 +35,7 @@ public class JsonUtils {
 		return retMap;
 	}
 
+	@NotNull
 	public static List<Object> toList(final @NotNull JSONArray array) {
 		List<Object> list = new ArrayList<>();
 		for (int i = 0; i < array.length(); i++) {
@@ -41,6 +44,7 @@ public class JsonUtils {
 		return list;
 	}
 
+	@NotNull
 	public static Map<String, Object> toMap(final @NotNull JSONObject object) {
 		Map<String, Object> map = new HashMap<>();
 
@@ -49,6 +53,7 @@ public class JsonUtils {
 		return map;
 	}
 
+	@NotNull
 	private static Object getValue(final @NotNull Object obj) {
 		if (obj instanceof JSONArray) {
 			return toList((JSONArray) obj);

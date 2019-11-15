@@ -13,7 +13,9 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class JsonFileSection extends FlatSection {
 
+	@NotNull
 	private final JsonFile jsonFile;
+
 
 	protected JsonFileSection(final @NotNull String sectionKey, final @NotNull JsonFile jsonFile) {
 		super(sectionKey, jsonFile);
@@ -25,13 +27,15 @@ public class JsonFileSection extends FlatSection {
 		this.jsonFile = jsonFile;
 	}
 
+	@NotNull
 	@Override
 	public JsonFileSection getSection(final @NotNull String sectionKey) {
 		return new JsonFileSection(this.getFinalKey(Objects.notNull(sectionKey, "Key  must not be null")), this.jsonFile);
 	}
 
+	@NotNull
 	@Override
-	public FlatSection getSectionFromArray(final @NotNull String[] sectionKey) {
+	public FlatSection getSectionUseArray(final @NotNull String[] sectionKey) {
 		return new JsonFileSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "Key  must not be null")), this.jsonFile);
 	}
 }

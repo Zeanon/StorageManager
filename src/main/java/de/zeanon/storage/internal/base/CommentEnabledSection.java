@@ -16,7 +16,9 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public abstract class CommentEnabledSection extends FlatSection {
 
+	@NotNull
 	private final CommentEnabledFile commentEnabledFile;
+
 
 	protected CommentEnabledSection(final @NotNull String sectionKey, final @NotNull CommentEnabledFile commentEnabledFile) {
 		super(sectionKey, commentEnabledFile);
@@ -42,17 +44,17 @@ public abstract class CommentEnabledSection extends FlatSection {
 	 *
 	 * @see FlatSection#set(String, Object) .
 	 */
-	public synchronized void set(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @Nullable Object value) {
+	public void set(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @Nullable Object value) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.set(key, value);
 	}
 
-	public synchronized void setAll(final @NotNull CommentSettingBase commentSetting, final @NotNull Map<String, Object> dataMap) {
+	public void setAll(final @NotNull CommentSettingBase commentSetting, final @NotNull Map<String, Object> dataMap) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.setAll(dataMap);
 	}
 
-	public synchronized void setAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+	public void setAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.setAll(key, dataMap);
 	}
@@ -63,27 +65,27 @@ public abstract class CommentEnabledSection extends FlatSection {
 	 *
 	 * @see FlatSection#remove(String).
 	 */
-	public synchronized void remove(final @NotNull CommentSettingBase commentSetting, final @NotNull String key) {
+	public void remove(final @NotNull CommentSettingBase commentSetting, final @NotNull String key) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.remove(key);
 	}
 
-	public synchronized void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String... keys) {
+	public void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String... keys) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.removeAll(keys);
 	}
 
-	public synchronized void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull List<String> keys) {
+	public void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull List<String> keys) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.removeAll(keys);
 	}
 
-	public synchronized void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull String... keys) {
+	public void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull String... keys) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.removeAll(key, keys);
 	}
 
-	public synchronized void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull List<String> keys) {
+	public void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull List<String> keys) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.removeAll(key, keys);
 	}

@@ -75,6 +75,7 @@ public class JsonFile extends FlatFile {
 	 * @return Map
 	 */
 
+	@Nullable
 	@Override
 	public Map getMap(final @NotNull String key) {
 		if (!this.hasKey(key)) {
@@ -84,9 +85,10 @@ public class JsonFile extends FlatFile {
 		}
 	}
 
+	@Nullable
 	@Override
-	public Map getMapFromArray(final @NotNull String... key) {
-		if (!this.arrayHasKey(key)) {
+	public Map getMapUseArray(final @NotNull String... key) {
+		if (!this.hasKeyUseArray(key)) {
 			return new HashMap();
 		} else {
 			return this.getMapWithoutPath(key);
@@ -99,16 +101,19 @@ public class JsonFile extends FlatFile {
 	 * @param sectionKey the sectionKey to be used as a prefix by the Section
 	 * @return the Section using the given sectionKey
 	 */
+	@NotNull
 	@Override
 	public JsonFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
+	@NotNull
 	@Override
-	public JsonFileSection getSectionFromArray(@NotNull String[] sectionKey) {
+	public JsonFileSection getSectionUseArray(@NotNull String[] sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
+	@Nullable
 	private Map getMapWithoutPath(final @NotNull String key) {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
@@ -132,22 +137,23 @@ public class JsonFile extends FlatFile {
 		}
 	}
 
+	@Nullable
 	private Map getMapWithoutPath(final @NotNull String... key) {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
-		if (!this.arrayHasKey(key)) {
+		if (!this.hasKeyUseArray(key)) {
 			return new HashMap<>();
 		}
 
 		Object map;
 		try {
-			map = this.getFromArray(key);
+			map = this.getUseArray(key);
 		} catch (JSONException e) {
 			return new HashMap<>();
 		}
 		if (map instanceof Map) {
-			return (Map<?, ?>) this.getFileData().getFromArray(key);
+			return (Map<?, ?>) this.getFileData().getUseArray(key);
 		} else if (map instanceof JSONObject) {
 			return JsonUtils.jsonToMap((JSONObject) map);
 		} else {
@@ -155,7 +161,7 @@ public class JsonFile extends FlatFile {
 		}
 	}
 
-	private void write(final JSONObject object) throws IOException {
+	private void write(@NotNull final JSONObject object) throws IOException {
 		@Cleanup Writer writer = new PrintWriter(new FileWriter(this.getFile().getAbsolutePath()));
 		writer.write(object.toString(3));
 	}
@@ -166,17 +172,20 @@ public class JsonFile extends FlatFile {
 		JSON("json");
 
 
+		@NotNull
 		private final String extension;
 
 		FileType(final @NotNull String extension) {
 			this.extension = extension;
 		}
 
+		@NotNull
 		@Override
 		public String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
+		@NotNull
 		@Override
 		public String toString() {
 			return this.extension;

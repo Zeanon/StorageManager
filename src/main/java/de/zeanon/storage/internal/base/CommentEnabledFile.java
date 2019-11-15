@@ -8,7 +8,7 @@ import de.zeanon.storage.internal.settings.Comment;
 import de.zeanon.storage.internal.settings.DataType;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.File;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,13 +33,16 @@ public abstract class CommentEnabledFile extends FlatFile {
 	/**
 	 * Default: {@link Comment#SKIP}
 	 */
+	@NotNull
 	@Setter
 	private CommentSettingBase commentSetting = Comment.SKIP;
 	/**
 	 * Default: {@link DataType#AUTOMATIC}
 	 */
+	@NotNull
 	@Setter
 	private DataTypeBase dataType = DataType.AUTOMATIC;
+
 
 	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, fileType, reloadSetting);
@@ -67,19 +70,34 @@ public abstract class CommentEnabledFile extends FlatFile {
 	 *
 	 * @see FlatFile#set(String, Object) .
 	 */
-	public synchronized void set(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @Nullable Object value) {
+	public void set(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @Nullable Object value) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.set(key, value);
 	}
 
-	public synchronized void setAll(final @NotNull CommentSettingBase commentSetting, final @NotNull Map<String, Object> dataMap) {
+	public void setUseArray(final @NotNull CommentSettingBase commentSetting, final @NotNull String[] key, final @Nullable Object value) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setUseArray(key, value);
+	}
+
+	public void setAll(final @NotNull CommentSettingBase commentSetting, final @NotNull Map<String, Object> dataMap) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.setAll(dataMap);
 	}
 
-	public synchronized void setAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+	public void setAllUseArray(final @NotNull CommentSettingBase commentSetting, final @NotNull Map<String[], Object> dataMap) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setAllUseArray(dataMap);
+	}
+
+	public void setAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.setAll(key, dataMap);
+	}
+
+	public void setAllUseArray(final @NotNull CommentSettingBase commentSetting, final @NotNull String[] blockKey, final @NotNull Map<String[], Object> dataMap) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setAllUseArray(blockKey, dataMap);
 	}
 
 
@@ -88,28 +106,53 @@ public abstract class CommentEnabledFile extends FlatFile {
 	 *
 	 * @see FlatFile#remove(String).
 	 */
-	public synchronized void remove(final @NotNull CommentSettingBase commentSetting, final @NotNull String key) {
+	public void remove(final @NotNull CommentSettingBase commentSetting, final @NotNull String key) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.remove(key);
 	}
 
-	public synchronized void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String... keys) {
+	public void removeUseArray(final @NotNull CommentSettingBase commentSetting, final @NotNull String[] key) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.removeUseArray(key);
+	}
+
+	public void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String... keys) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.removeAll(keys);
 	}
 
-	public synchronized void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull List<String> keys) {
+	public void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull Collection<String> keys) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.removeAll(keys);
 	}
 
-	public synchronized void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull String... keys) {
+	public void removeAllUseArray(final @NotNull CommentSettingBase commentSetting, final @NotNull String[]... keys) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.removeAllUseArray(keys);
+	}
+
+	public void removeAllUseArray(final @NotNull CommentSettingBase commentSetting, final @NotNull Collection<String[]> keys) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.removeAllUseArray(keys);
+	}
+
+	public void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull String... keys) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.removeAll(key, keys);
 	}
 
-	public synchronized void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull List<String> keys) {
+	public void removeAll(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @NotNull Collection<String> keys) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.removeAll(key, keys);
+	}
+
+	public void removeAllUseArray(final @NotNull CommentSettingBase commentSetting, final @NotNull String[] blockKey, final @NotNull String[]... keys) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.removeAllUseArray(blockKey, keys);
+	}
+
+	public void removeAllUseArray(final @NotNull CommentSettingBase commentSetting, final @NotNull String[] key, final @NotNull Collection<String[]> keys) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.removeAllUseArray(key, keys);
 	}
 }

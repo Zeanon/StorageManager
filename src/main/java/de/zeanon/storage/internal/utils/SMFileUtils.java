@@ -64,6 +64,7 @@ public class SMFileUtils {
 	 * @param deep      also look through subdirectories
 	 * @return the files of the directory that are folders
 	 */
+	@NotNull
 	public static Collection<File> listFolders(final @NotNull File directory, final boolean deep) {
 		Objects.checkNull(directory, "Directory must not be null");
 		Collection<File> files = new LinkedList<>();
@@ -87,6 +88,7 @@ public class SMFileUtils {
 	 * @param directory the directory to look into
 	 * @return the files of the directory that are folders
 	 */
+	@NotNull
 	public static Collection<File> listFolders(final @NotNull File directory) {
 		return listFolders(directory, false);
 	}
@@ -100,6 +102,7 @@ public class SMFileUtils {
 	 * @param deep       also look through subdirectories
 	 * @return the files of the given directory with the given extensions
 	 */
+	@NotNull
 	public static Collection<File> listFiles(final @NotNull File directory, final @NotNull List<String> extensions, final boolean deep) {
 		Objects.checkNull(directory, "Directory must not be null");
 		Objects.checkNull(extensions, "Extensions must not be null");
@@ -126,6 +129,7 @@ public class SMFileUtils {
 	 * @param deep       also look through subdirectories
 	 * @return the files of the given directory with the given extensions
 	 */
+	@NotNull
 	public static Collection<File> listFiles(final @NotNull File directory, final @NotNull String[] extensions, final boolean deep) {
 		return listFiles(directory, Arrays.asList(extensions), deep);
 	}
@@ -137,6 +141,7 @@ public class SMFileUtils {
 	 * @param extensions the file extensions to look for
 	 * @return the files of the given directory with the given extensions
 	 */
+	@NotNull
 	public static Collection<File> listFiles(final @NotNull File directory, final @NotNull List<String> extensions) {
 		return listFiles(directory, extensions, false);
 	}
@@ -148,6 +153,7 @@ public class SMFileUtils {
 	 * @param extensions the file extensions to look for
 	 * @return the files of the given directory with the given extensions
 	 */
+	@NotNull
 	public static Collection<File> listFiles(final @NotNull File directory, final @NotNull String[] extensions) {
 		return listFiles(directory, Arrays.asList(extensions), false);
 	}
@@ -159,6 +165,7 @@ public class SMFileUtils {
 	 * @param deep      also look through subdirectories
 	 * @return the files of the given directory
 	 */
+	@NotNull
 	public static Collection<File> listFiles(final @NotNull File directory, final boolean deep) {
 		Objects.checkNull(directory, "Directory must not be null");
 		Collection<File> files = new LinkedList<>();
@@ -180,6 +187,7 @@ public class SMFileUtils {
 	 * @param directory the directory to look into
 	 * @return the files of the given directory
 	 */
+	@NotNull
 	public static Collection<File> listFiles(final @NotNull File directory) {
 		return listFiles(directory, false);
 	}
@@ -191,6 +199,7 @@ public class SMFileUtils {
 	 * @param file the File to be read.
 	 * @return BufferedInputstream containing the contents of the given File.
 	 */
+	@NotNull
 	public static BufferedInputStream createNewInputStream(final @NotNull File file) {
 		Objects.checkNull(file, "File must not be null");
 		try {
@@ -206,6 +215,7 @@ public class SMFileUtils {
 	 * @param resource the Path to the resource.
 	 * @return BufferedInputStream containing the contents of the resource file.
 	 */
+	@NotNull
 	public static BufferedInputStream createNewInputStream(final @NotNull String resource) {
 		Objects.checkNull(resource, "Resource must not be null");
 		try {
@@ -221,6 +231,7 @@ public class SMFileUtils {
 	 * @param inputStream the InputStream to be converted.
 	 * @return null if {@code inputStream} is null or a BufferedInputStream from the given InputStream.
 	 */
+	@Nullable
 	public static BufferedInputStream createNewInputStream(final @Nullable InputStream inputStream) {
 		if (inputStream == null) {
 			return null;
@@ -281,6 +292,7 @@ public class SMFileUtils {
 	 * @param file the File to be checked.
 	 * @return the extension of the given File.
 	 */
+	@NotNull
 	public static String getExtension(final @NotNull File file) {
 		return getExtension(Objects.notNull(file, "File must not be null").getName());
 	}
@@ -291,6 +303,7 @@ public class SMFileUtils {
 	 * @param filePath the Path of the File to be checked.
 	 * @return the extension of the given File.
 	 */
+	@NotNull
 	public static String getExtension(final @NotNull Path filePath) {
 		return getExtension(filePath.toString());
 	}
@@ -301,6 +314,7 @@ public class SMFileUtils {
 	 * @param filePath the Path of the File to be checked.
 	 * @return the extension of the given File.
 	 */
+	@NotNull
 	public static String getExtension(final @NotNull String filePath) {
 		Objects.checkNull(filePath, "FilePath must not be null");
 		char ch;
@@ -326,6 +340,7 @@ public class SMFileUtils {
 	 * @param file the File to be checked.
 	 * @return the File without it's extension.
 	 */
+	@NotNull
 	public static File removeExtension(final @NotNull File file) {
 		return new File(removeExtension(Objects.notNull(file, "File must not be null").getAbsolutePath()));
 	}
@@ -336,6 +351,7 @@ public class SMFileUtils {
 	 * @param filePath the Path of the File to be checked.
 	 * @return the Path without the extension.
 	 */
+	@NotNull
 	public static Path removeExtension(final @NotNull Path filePath) {
 		return Paths.get(removeExtension(filePath.toString()));
 	}
@@ -346,6 +362,7 @@ public class SMFileUtils {
 	 * @param filePath the Path of the File to be checked.
 	 * @return the Path without the extension.
 	 */
+	@NotNull
 	public static String removeExtension(final @NotNull String filePath) {
 		Objects.checkNull(filePath, "FilePath must not be null");
 		char ch;
