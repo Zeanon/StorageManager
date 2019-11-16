@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.settings;
 
+import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.utils.basic.Objects;
@@ -50,6 +51,9 @@ public enum DataType implements DataTypeBase {
 	 * The Storage type depends on the CommentSetting(HashMap for SKIP, LinkedHashMap for PRESERVE).
 	 */
 	AUTOMATIC {
+		/**
+		 * @throws ObjectNullException if the passed CommentSetting is null.
+		 */
 		@NotNull
 		@Override
 		public Map<String, Object> getNewDataMap(final @NotNull CommentSettingBase commentSetting, final @Nullable Map<String, Object> map) {
@@ -60,6 +64,9 @@ public enum DataType implements DataTypeBase {
 			}
 		}
 
+		/**
+		 * @throws ObjectNullException if the passed CommentSetting is null.
+		 */
 		@NotNull
 		@Override
 		public List<String> getNewDataList(final @NotNull CommentSettingBase commentSetting, final @Nullable List<String> list) {

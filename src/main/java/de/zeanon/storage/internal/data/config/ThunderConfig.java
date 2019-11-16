@@ -1,5 +1,7 @@
 package de.zeanon.storage.internal.data.config;
 
+import de.zeanon.storage.internal.base.exceptions.FileParseException;
+import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.ConfigBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
@@ -30,6 +32,16 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class ThunderConfig extends ThunderFile implements ConfigBase {
 
+
+	/**
+	 * @param file           the File to be used as a backend.
+	 * @param inputStream    the FileContent to be set on the creation of the File.
+	 * @param reloadSetting  the ReloadSetting to be used with this instance.
+	 * @param commentSetting the CommentSetting to be used with this instance.
+	 * @param dataType       the DataType to be used with this instance.
+	 * @throws RuntimeIOException if the File can not be accessed properly.
+	 * @throws FileParseException if the Content of the File can not be parsed properly.
+	 */
 	protected ThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, inputStream, reloadSetting, commentSetting == null ? Comment.PRESERVE : commentSetting, dataType);
 	}

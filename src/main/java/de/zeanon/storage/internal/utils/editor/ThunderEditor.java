@@ -1,7 +1,8 @@
 package de.zeanon.storage.internal.utils.editor;
 
-import de.zeanon.storage.internal.base.exceptions.FileParseException;
+import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
+import de.zeanon.storage.internal.base.exceptions.ThunderException;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.settings.Comment;
@@ -31,6 +32,8 @@ public class ThunderEditor {
 	 * @param file           the File to be written to.
 	 * @param map            a HashMap containing the Data to be written.
 	 * @param commentSetting the CommentSetting to be used.
+	 * @throws RuntimeIOException  if the File can not be accessed properly.
+	 * @throws ObjectNullException if a passed value is null.
 	 */
 	public static void writeData(final @NotNull File file, final @NotNull Map<String, Object> map, final @NotNull CommentSettingBase commentSetting) {
 		if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
@@ -47,9 +50,12 @@ public class ThunderEditor {
 	 * @param dataType       the FileDataType to be used.
 	 * @param commentSetting the CommentSetting to be used.
 	 * @return a Map containing the Data of the File.
+	 * @throws RuntimeIOException  if the File can not be accessed properly.
+	 * @throws ThunderException    if the Content of the File can not be parsed properly.
+	 * @throws ObjectNullException if a passed value is null.
 	 */
 	@NotNull
-	public static Map<String, Object> readData(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
+	public static Map<String, Object> readData(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {
 		if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
 			return initialReadWithComments(Objects.notNull(file, "File must not be null"), Objects.notNull(dataType, "DataType must not be null"), Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		} else {
@@ -60,7 +66,7 @@ public class ThunderEditor {
 	// <Read Data>
 	// <Read Data with Comments>
 	@NotNull
-	private static Map<String, Object> initialReadWithComments(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
+	private static Map<String, Object> initialReadWithComments(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
 			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
@@ -73,7 +79,7 @@ public class ThunderEditor {
 				lines.remove(0);
 
 				if (tempLine.contains("}")) {
-					throw new FileParseException("Error at '" + file.getAbsolutePath() + "' -> Block closed without being opened");
+					throw new ThunderException("Error at '" + file.getAbsolutePath() + "' -> Block closed without being opened");
 				} else if (tempLine.isEmpty()) {
 					tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
 					blankLine++;
@@ -84,7 +90,7 @@ public class ThunderEditor {
 					if (!tempLine.equals("{")) {
 						tempKey = tempLine.replace("{", "").trim();
 					} else if (tempKey == null) {
-						throw new FileParseException("Error at '" + file.getAbsolutePath() + "' -> '" + tempLine + "' -> Key must not be null");
+						throw new ThunderException("Error at '" + file.getAbsolutePath() + "' -> '" + tempLine + "' -> Key must not be null");
 					}
 					tempMap.put(tempKey, internalReadWithComments(file.getAbsolutePath(), lines, blankLine, commentLine, dataType, commentSetting));
 				} else {
@@ -93,14 +99,14 @@ public class ThunderEditor {
 			}
 			return tempMap;
 		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new FileParseException("Error while parsing content of '" + file.getAbsolutePath() + "'", e.getCause());
+			throw new ThunderException("Error while parsing content of '" + file.getAbsolutePath() + "'", e.getCause());
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
 	@NotNull
-	private static Map<String, Object> internalReadWithComments(final String filePath, @NotNull final List<String> lines, int blankLine, int commentLine, @NotNull final DataTypeBase dataType, @NotNull final CommentSettingBase commentSetting) {
+	private static Map<String, Object> internalReadWithComments(final String filePath, @NotNull final List<String> lines, int blankLine, int commentLine, @NotNull final DataTypeBase dataType, @NotNull final CommentSettingBase commentSetting) throws ThunderException {
 		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 
@@ -111,7 +117,7 @@ public class ThunderEditor {
 			if (tempLine.equals("}")) {
 				return tempMap;
 			} else if (tempLine.contains("}")) {
-				throw new FileParseException("Error at '" + filePath + "' -> Block closed without being opened");
+				throw new ThunderException("Error at '" + filePath + "' -> Block closed without being opened");
 			} else if (tempLine.isEmpty()) {
 				tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
 				blankLine++;
@@ -122,20 +128,20 @@ public class ThunderEditor {
 				if (!tempLine.equals("{")) {
 					tempKey = tempLine.replace("{", "").trim();
 				} else if (tempKey == null) {
-					throw new FileParseException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
+					throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 				}
 				tempMap.put(tempKey, internalReadWithComments(filePath, lines, blankLine, commentLine, dataType, commentSetting));
 			} else {
 				tempKey = readKey(filePath, lines, dataType, tempMap, tempKey, tempLine, commentSetting);
 			}
 		}
-		throw new FileParseException("Error at '" + filePath + "' -> Block does not close");
+		throw new ThunderException("Error at '" + filePath + "' -> Block does not close");
 	}
 	// </Read Data with Comments>
 
 	// <Read Data without Comments>
 	@NotNull
-	private static Map<String, Object> initialReadWithOutComments(@NotNull final File file, @NotNull final DataTypeBase dataType, @NotNull final CommentSettingBase commentSetting) {
+	private static Map<String, Object> initialReadWithOutComments(@NotNull final File file, @NotNull final DataTypeBase dataType, @NotNull final CommentSettingBase commentSetting) throws ThunderException {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
 			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
@@ -147,12 +153,12 @@ public class ThunderEditor {
 
 				if (!tempLine.isEmpty() && !tempLine.startsWith("#")) {
 					if (tempLine.contains("}")) {
-						throw new FileParseException("Error at '" + file.getAbsolutePath() + "' -> Block closed without being opened");
+						throw new ThunderException("Error at '" + file.getAbsolutePath() + "' -> Block closed without being opened");
 					} else if (tempLine.endsWith("{")) {
 						if (!tempLine.equals("{")) {
 							tempKey = tempLine.replace("{", "").trim();
 						} else if (tempKey == null) {
-							throw new FileParseException("Error at '" + file.getAbsolutePath() + "' - > '" + tempLine + "' -> Key must not be null");
+							throw new ThunderException("Error at '" + file.getAbsolutePath() + "' - > '" + tempLine + "' -> Key must not be null");
 						}
 						tempMap.put(tempKey, internalReadWithOutComments(file.getAbsolutePath(), lines, dataType, commentSetting));
 					} else {
@@ -162,14 +168,14 @@ public class ThunderEditor {
 			}
 			return tempMap;
 		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new FileParseException("Error while parsing content of '" + file.getAbsolutePath() + "'", e.getCause());
+			throw new ThunderException("Error while parsing content of '" + file.getAbsolutePath() + "'", e.getCause());
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
 	@NotNull
-	private static Map<String, Object> internalReadWithOutComments(final String filePath, @NotNull final List<String> lines, @NotNull final DataTypeBase dataType, @NotNull final CommentSettingBase commentSetting) {
+	private static Map<String, Object> internalReadWithOutComments(final String filePath, @NotNull final List<String> lines, @NotNull final DataTypeBase dataType, @NotNull final CommentSettingBase commentSetting) throws ThunderException {
 		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 
@@ -181,12 +187,12 @@ public class ThunderEditor {
 				if (tempLine.equals("}")) {
 					return tempMap;
 				} else if (tempLine.contains("}")) {
-					throw new FileParseException("Error at '" + filePath + "' -> Block closed without being opened");
+					throw new ThunderException("Error at '" + filePath + "' -> Block closed without being opened");
 				} else if (tempLine.endsWith("{")) {
 					if (!tempLine.equals("{")) {
 						tempKey = tempLine.replace("{", "").trim();
 					} else if (tempKey == null) {
-						throw new FileParseException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
+						throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 					}
 					tempMap.put(tempKey, internalReadWithOutComments(filePath, lines, dataType, commentSetting));
 				} else {
@@ -194,11 +200,11 @@ public class ThunderEditor {
 				}
 			}
 		}
-		throw new FileParseException("Error at '" + filePath + "' -> Block does not close");
+		throw new ThunderException("Error at '" + filePath + "' -> Block does not close");
 	}
 	// </Read without Comments>
 
-	private static String readKey(final String filePath, @NotNull final List<String> lines, @NotNull final DataTypeBase dataType, @NotNull final Map<String, Object> tempMap, String tempKey, @NotNull final String tempLine, @NotNull final CommentSettingBase commentSetting) {
+	private static String readKey(final String filePath, @NotNull final List<String> lines, @NotNull final DataTypeBase dataType, @NotNull final Map<String, Object> tempMap, String tempKey, @NotNull final String tempLine, @NotNull final CommentSettingBase commentSetting) throws ThunderException {
 		if (tempLine.contains("=")) {
 			String[] line = tempLine.split("=");
 			line[0] = line[0].trim();
@@ -225,14 +231,14 @@ public class ThunderEditor {
 			if (lines.get(1).contains("{")) {
 				tempKey = tempLine;
 			} else {
-				throw new FileParseException("Error at '" + filePath + "' -> '" + tempLine + "' -> does not contain value or subblock");
+				throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> does not contain value or subblock");
 			}
 		}
 		return tempKey;
 	}
 
 	@NotNull
-	private static List<String> readList(final String filePath, @NotNull final List<String> lines, @NotNull final DataTypeBase dataType, @NotNull final CommentSettingBase commentSetting) {
+	private static List<String> readList(final String filePath, @NotNull final List<String> lines, @NotNull final DataTypeBase dataType, @NotNull final CommentSettingBase commentSetting) throws ThunderException {
 		List<String> tempList = dataType.getNewDataList(commentSetting, null);
 		while (!lines.isEmpty()) {
 			String tempLine = lines.get(0).trim();
@@ -242,10 +248,10 @@ public class ThunderEditor {
 			} else if (tempLine.endsWith("]")) {
 				return tempList;
 			} else {
-				throw new FileParseException("Error at '" + filePath + "' -> List not closed properly");
+				throw new ThunderException("Error at '" + filePath + "' -> List not closed properly");
 			}
 		}
-		throw new FileParseException("Error at '" + filePath + "' -> List not closed properly");
+		throw new ThunderException("Error at '" + filePath + "' -> List not closed properly");
 	}
 	// </Read Data>
 

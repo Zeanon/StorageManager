@@ -12,7 +12,7 @@ import org.json.JSONObject;
 
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@SuppressWarnings({"unchecked", "WeakerAccess"})
+@SuppressWarnings({"unchecked", "WeakerAccess", "unused"})
 public class JsonUtils {
 
 	@NotNull

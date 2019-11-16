@@ -25,6 +25,14 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class TomlFile extends FlatFile {
 
+
+	/**
+	 * @param file          the File to be used as a backend.
+	 * @param inputStream   the FileContent to be set on the creation of the File.
+	 * @param reloadSetting the ReloadSetting to be used with this instance.
+	 * @throws RuntimeIOException if the File can not be accessed properly.
+	 * @throws FileParseException if the Content of the File can not be parsed properly.
+	 */
 	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting) {
 		super(file, FileType.TOML, reloadSetting);
 

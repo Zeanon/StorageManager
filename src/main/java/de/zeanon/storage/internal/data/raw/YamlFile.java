@@ -33,6 +33,16 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class YamlFile extends CommentEnabledFile {
 
+
+	/**
+	 * @param file           the File to be used as a backend.
+	 * @param inputStream    the FileContent to be set on the creation of the File.
+	 * @param reloadSetting  the ReloadSetting to be used with this instance.
+	 * @param commentSetting the CommentSetting to be used with this instance.
+	 * @param dataType       the DataType to be used with this instance.
+	 * @throws RuntimeIOException if the File can not be accessed properly.
+	 * @throws FileParseException if the Content of the File can not be parsed properly.
+	 */
 	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.YAML, reloadSetting, commentSetting, dataType);
 
@@ -44,10 +54,10 @@ public class YamlFile extends CommentEnabledFile {
 			//noinspection unchecked
 			this.getFileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.getFile())).read());
 			this.setLastLoaded(System.currentTimeMillis());
-		} catch (YamlException e) {
-			throw new FileParseException("Error while parsing '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 		} catch (FileNotFoundException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+		} catch (YamlException e) {
+			throw new FileParseException("Error while parsing '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 

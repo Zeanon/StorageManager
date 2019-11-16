@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.utils.basic;
 
+import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,15 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class Primitive {
 
+	/**
+	 * Get an Object of the given definitionType from a passed Object.
+	 *
+	 * @param object the Object to be casted.
+	 * @param def    the Definition.
+	 * @param <T>    the Type of the def.
+	 * @return zhe passed Object casted to the given Type.
+	 * @throws ObjectNullException if a passed value is null.
+	 */
 	@NotNull
 	public static <T> T getFromDef(final @NotNull Object object, final @NotNull Class<T> def) {
 		Objects.checkNull(def, "Definition must not be null");
@@ -37,6 +47,9 @@ public class Primitive {
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class BOOLEAN {
 
+		/**
+		 * @throws ObjectNullException if the passed value is null.
+		 */
 		public static boolean getBoolean(final @NotNull Object object) {
 			Objects.checkNull(object, "Object must not be null");
 			if (object instanceof Boolean) {
@@ -53,6 +66,9 @@ public class Primitive {
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class LONG {
 
+		/**
+		 * @throws ObjectNullException if the passed value is null.
+		 */
 		public static long getLong(final @NotNull Object object) {
 			Objects.checkNull(object, "Object must not be null");
 			if (object instanceof Long) {
@@ -71,6 +87,9 @@ public class Primitive {
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class DOUBLE {
 
+		/**
+		 * @throws ObjectNullException if the passed value is null.
+		 */
 		public static double getDouble(final @NotNull Object object) {
 			Objects.checkNull(object, "Object must not be null");
 			if (object instanceof Double) {
@@ -89,6 +108,9 @@ public class Primitive {
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class FLOAT {
 
+		/**
+		 * @throws ObjectNullException if the passed value is null.
+		 */
 		public static float getFloat(final @NotNull Object object) {
 			Objects.checkNull(object, "Object must not be null");
 			if (object instanceof Float) {
@@ -107,6 +129,9 @@ public class Primitive {
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class INTEGER {
 
+		/**
+		 * @throws ObjectNullException if the passed value is null.
+		 */
 		public static int getInt(final @NotNull Object object) {
 			Objects.checkNull(object, "Object must not be null");
 			if (object instanceof Integer) {
@@ -125,6 +150,9 @@ public class Primitive {
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class SHORT {
 
+		/**
+		 * @throws ObjectNullException if the passed value is null.
+		 */
 		public static short getShort(final @NotNull Object object) {
 			Objects.checkNull(object, "Object must not be null");
 			if (object instanceof Short) {
@@ -143,6 +171,9 @@ public class Primitive {
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class BYTE {
 
+		/**
+		 * @throws ObjectNullException if the passed value is null.
+		 */
 		public static byte getByte(final @NotNull Object object) {
 			Objects.checkNull(object, "Object must not be null");
 			if (object instanceof Byte) {

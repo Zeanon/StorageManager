@@ -1,7 +1,7 @@
 package de.zeanon.storage.internal.base.exceptions;
 
 @SuppressWarnings("unused")
-public class FileTypeException extends RuntimeException {
+public class FileTypeException extends StorageManagerException {
 
 	public FileTypeException() {
 		super();

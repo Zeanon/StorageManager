@@ -3,6 +3,7 @@ package de.zeanon.storage.internal.data.raw;
 import de.zeanon.storage.internal.base.CommentEnabledFile;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
+import de.zeanon.storage.internal.base.exceptions.ThunderException;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
@@ -31,6 +32,16 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class ThunderFile extends CommentEnabledFile {
 
+
+	/**
+	 * @param file           the File to be used as a backend.
+	 * @param inputStream    the FileContent to be set on the creation of the File.
+	 * @param reloadSetting  the ReloadSetting to be used with this instance.
+	 * @param commentSetting the CommentSetting to be used with this instance.
+	 * @param dataType       the DataType to be used with this instance.
+	 * @throws RuntimeIOException if the File can not be accessed properly.
+	 * @throws FileParseException if the Content of the File can not be parsed properly.
+	 */
 	protected ThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.THUNDER, reloadSetting, commentSetting, dataType);
 
@@ -43,7 +54,7 @@ public class ThunderFile extends CommentEnabledFile {
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
-		} catch (FileParseException e) {
+		} catch (ThunderException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
@@ -56,7 +67,7 @@ public class ThunderFile extends CommentEnabledFile {
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
-		} catch (FileParseException e) {
+		} catch (ThunderException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}

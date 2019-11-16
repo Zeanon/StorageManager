@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.utils.datafiles;
 
+import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.data.FileData;
@@ -84,6 +85,7 @@ public class ThunderUtils {
 	 * @param dataType       the FileDataType to be used with the given FileData.
 	 * @param commentSetting the CommentSetting to be used.
 	 * @return a Map with the given Header.
+	 * @throws ObjectNullException if the given FileData does not contain the given key.
 	 */
 	@NotNull
 	@SuppressWarnings("DuplicatedCode")
@@ -179,6 +181,7 @@ public class ThunderUtils {
 	 * @param dataType       the FileDataType to be used with the given FileData.
 	 * @param commentSetting the CommentSetting to be used.
 	 * @return a Map with the given Footer.
+	 * @throws ObjectNullException if the given FileData does not contain the given key.
 	 */
 	@NotNull
 	@SuppressWarnings("DuplicatedCode")
@@ -217,6 +220,7 @@ public class ThunderUtils {
 	 * @param dataType       the FileDataType to be used with the given FileData.
 	 * @param commentSetting the CommentSetting to be used.
 	 * @return a List containing the Header of the SubBlock.
+	 * @throws ObjectNullException if the given FileData does not contain the given key.
 	 */
 	@NotNull
 	public static List<String> getHeader(final @NotNull FileData fileData, final @NotNull String key, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
@@ -239,6 +243,7 @@ public class ThunderUtils {
 	 * @param dataType       the FileDataType to be used with the given FileData.
 	 * @param commentSetting the CommentSetting to be used.
 	 * @return a List containing the Footer of the SubBlock.
+	 * @throws ObjectNullException if the given FileData does not contain the given key.
 	 */
 	@NotNull
 	public static List<String> getFooter(final @NotNull FileData fileData, final @NotNull String key, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
@@ -287,6 +292,7 @@ public class ThunderUtils {
 	 * @param commentSetting the CommentSetting to be used.
 	 * @param deep           defining, if it should get all comments or only the ones in the given SubBlock.
 	 * @return a List containing the Comments of the SubBlock.
+	 * @throws ObjectNullException if the given FileData does not contain the given key.
 	 */
 	@NotNull
 	public static List<String> getComments(final @NotNull FileData fileData, final @NotNull String key, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting, final boolean deep) {
