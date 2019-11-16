@@ -125,7 +125,6 @@ public class YamlEditor {
 				result.add(line);
 			}
 		}
-
 		return result;
 	}
 

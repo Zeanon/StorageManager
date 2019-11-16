@@ -262,13 +262,13 @@ public class SMFileUtils {
 	public static synchronized void writeToFile(final @NotNull File file, final @Nullable BufferedInputStream inputStream) {
 		SMFileUtils.createFile(Objects.notNull(file, "File must not be null"));
 		if (inputStream == null) {
-			try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+			try (final BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
 				outputStream.write(new byte[0], 0, 0);
 			} catch (IOException e) {
 				throw new RuntimeIOException("Error while clearing '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		} else {
-			try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+			try (final BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
 				createFile(file);
 				final byte[] data = new byte[8192];
 				int count;
@@ -320,8 +320,8 @@ public class SMFileUtils {
 			|| ch == '.') {
 			return "";
 		}
-		int dotInd = filePath.lastIndexOf('.');
-		int sepInd = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
+		final int dotInd = filePath.lastIndexOf('.');
+		final int sepInd = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
 		if (dotInd <= sepInd) {
 			return "";
 		} else {
@@ -368,8 +368,8 @@ public class SMFileUtils {
 			|| ch == '.') {
 			return "";
 		}
-		int dotInd = filePath.lastIndexOf('.');
-		int sepInd = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
+		final int dotInd = filePath.lastIndexOf('.');
+		final int sepInd = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
 		if (dotInd <= sepInd) {
 			return "";
 		} else {

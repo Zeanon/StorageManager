@@ -253,7 +253,7 @@ public class ThunderEditor {
 	// <Write Data>
 	// <Write Data with Comments>
 	private static void initialWriteWithComments(@NotNull final File file, @NotNull final Map<String, Object> map) {
-		try (PrintWriter writer = new PrintWriter(file)) {
+		try (final PrintWriter writer = new PrintWriter(file)) {
 			if (!map.isEmpty()) {
 				final Iterator<Map.Entry<String, Object>> mapIterator = map.entrySet().iterator();
 				topLayerWriteWithComments(writer, mapIterator.next());
@@ -285,7 +285,7 @@ public class ThunderEditor {
 	}
 
 	private static void internalWriteWithComments(@NotNull final Map<String, Object> map, final String indentationString, @NotNull final PrintWriter writer) {
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
+		for (final Map.Entry<String, Object> entry : map.entrySet()) {
 			writer.println();
 			if (entry.getKey().startsWith("#") && entry.getValue() == LineType.COMMENT) {
 				writer.print(indentationString + "  " + entry.getKey().substring(0, entry.getKey().lastIndexOf("{=}")));
@@ -308,7 +308,7 @@ public class ThunderEditor {
 
 	// <Write Data without Comments>
 	private static void initialWriteWithOutComments(@NotNull final File file, @NotNull final Map<String, Object> map) {
-		try (PrintWriter writer = new PrintWriter(file)) {
+		try (final PrintWriter writer = new PrintWriter(file)) {
 			if (!map.isEmpty()) {
 				Iterator<Map.Entry<String, Object>> mapIterator = map.entrySet().iterator();
 				Map.Entry<String, Object> initialEntry = mapIterator.next();
@@ -344,7 +344,7 @@ public class ThunderEditor {
 	}
 
 	private static void internalWriteWithoutComments(@NotNull final Map<String, Object> map, final String indentationString, @NotNull final PrintWriter writer) {
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
+		for (final Map.Entry<String, Object> entry : map.entrySet()) {
 			if (!entry.getKey().startsWith("#") && entry.getValue() != LineType.COMMENT && !entry.getKey().startsWith("{=}emptyline") && entry.getValue() != LineType.BLANK_LINE) {
 				writer.println();
 				if (entry.getValue() instanceof Map) {
@@ -366,7 +366,7 @@ public class ThunderEditor {
 	// </Write Data without Comments>
 
 	private static void writeList(@NotNull final List<String> list, final String indentationString, @NotNull final PrintWriter writer) {
-		for (String line : list) {
+		for (final String line : list) {
 			writer.println(indentationString + "  - " + line);
 		}
 		writer.print(indentationString + "]");

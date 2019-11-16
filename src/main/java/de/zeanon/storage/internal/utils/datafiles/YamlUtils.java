@@ -17,10 +17,9 @@ public class YamlUtils {
 
 	@NotNull
 	public static List<String> parseComments(final @NotNull List<String> comments, final @NotNull List<String> updated) {
-		final Map<String, List<String>> parsed;
-		parsed = assignCommentsToKey(comments);
+		final Map<String, List<String>> parsed = assignCommentsToKey(comments);
 
-		for (Map.Entry<String, List<String>> entry : parsed.entrySet()) {
+		for (final Map.Entry<String, List<String>> entry : parsed.entrySet()) {
 			int i = 0;
 			for (final String line : entry.getValue()) {
 				if (updated.contains(entry.getKey() + " ")) {
@@ -35,7 +34,7 @@ public class YamlUtils {
 
 	@NotNull
 	private static Map<String, List<String>> assignCommentsToKey(final @NotNull List<String> fileLines) {
-		List<String> storage = new ArrayList<>();
+		final List<String> storage = new ArrayList<>();
 		final List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
 		final Map<String, List<String>> result = new HashMap<>();
 
@@ -46,11 +45,11 @@ public class YamlUtils {
 				continue;
 			}
 			result.put(line, storage);
-			storage = new ArrayList<>();
+			storage.clear();
 		}
 
 		final List<String> keysToRemove = new ArrayList<>();
-		for (Map.Entry<String, List<String>> entry : result.entrySet()) {
+		for (final Map.Entry<String, List<String>> entry : result.entrySet()) {
 			if (entry.getValue().equals(new ArrayList<>())) {
 				keysToRemove.add(entry.getKey());
 			}
