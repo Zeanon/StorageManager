@@ -1,6 +1,5 @@
 package de.zeanon.storage.internal.data.section;
 
-import de.zeanon.storage.internal.base.FlatSection;
 import de.zeanon.storage.internal.base.interfaces.ConfigBase;
 import de.zeanon.storage.internal.data.config.ThunderConfig;
 import de.zeanon.storage.internal.utils.basic.Objects;
@@ -41,15 +40,13 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 		this.thunderConfig.setHeader(this.getSectionKey(), header);
 	}
 
-	@Nullable
+	@NotNull
 	public List<String> getHeader(final @NotNull String blockKey) {
 		return this.thunderConfig.getHeader(this.getFinalKey(blockKey));
 	}
 
-	@NotNull
-	public ThunderConfigSection setHeader(final @NotNull String blockKey, final @Nullable List<String> header) {
+	public void setHeader(final @NotNull String blockKey, final @Nullable List<String> header) {
 		this.thunderConfig.setHeader(this.getFinalKey(blockKey), header);
-		return this;
 	}
 
 
@@ -64,15 +61,13 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 		this.thunderConfig.setFooter(this.getSectionKey(), footer);
 	}
 
-	@Nullable
+	@NotNull
 	public List<String> getFooter(final @NotNull String blockKey) {
 		return this.thunderConfig.getFooter(this.getFinalKey(blockKey));
 	}
 
-	@NotNull
-	public ThunderConfigSection setFooter(final @NotNull String blockKey, final @Nullable List<String> footer) {
+	public void setFooter(final @NotNull String blockKey, final @Nullable List<String> footer) {
 		this.thunderConfig.setFooter(this.getFinalKey(blockKey), footer);
-		return this;
 	}
 
 
@@ -82,17 +77,17 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 		return this.thunderConfig.getComments(this.getSectionKey());
 	}
 
-	@Nullable
+	@NotNull
 	public List<String> getComments(final @NotNull String blockKey) {
 		return this.thunderConfig.getComments(this.getFinalKey(blockKey));
 	}
 
-	@Nullable
+	@NotNull
 	public List<String> getBlockComments() {
 		return this.thunderConfig.getBlockComments(this.getSectionKey());
 	}
 
-	@Nullable
+	@NotNull
 	public List<String> getBlockComments(final @NotNull String blockKey) {
 		return this.thunderConfig.getBlockComments(this.getFinalKey(blockKey));
 	}
@@ -105,7 +100,7 @@ public class ThunderConfigSection extends ThunderFileSection implements ConfigBa
 
 	@NotNull
 	@Override
-	public FlatSection getSectionUseArray(final @NotNull String[] sectionKey) {
+	public ThunderConfigSection getSectionUseArray(final @NotNull String[] sectionKey) {
 		return new ThunderConfigSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.thunderConfig);
 	}
 }

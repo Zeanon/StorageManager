@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.utils.basic;
 
+import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  * Class to check validities
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings("unused")
 public class Objects {
 
 	/**
@@ -22,7 +23,7 @@ public class Objects {
 
 	public static <O> void checkNull(final @Nullable O object, final @NotNull String message) {
 		if (object == null) {
-			throw new NullPointerException(message);
+			throw new ObjectNullException(message);
 		}
 	}
 
@@ -41,7 +42,7 @@ public class Objects {
 	@NotNull
 	public static <O> O notNull(final @Nullable O object, final @NotNull String message) {
 		if (object == null) {
-			throw new NullPointerException(message);
+			throw new ObjectNullException(message);
 		} else {
 			return object;
 		}

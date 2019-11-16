@@ -41,8 +41,10 @@ public class ThunderFile extends CommentEnabledFile {
 		try {
 			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getDataType(), this.getCommentSetting()));
 			this.setLastLoaded(System.currentTimeMillis());
-		} catch (@NotNull RuntimeIOException | FileParseException e) {
-			throw new FileParseException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
+		} catch (RuntimeIOException e) {
+			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
+		} catch (FileParseException e) {
+			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -52,8 +54,10 @@ public class ThunderFile extends CommentEnabledFile {
 		try {
 			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getDataType(), this.getCommentSetting()));
 			this.setLastLoaded(System.currentTimeMillis());
-		} catch (@NotNull NullPointerException | RuntimeIOException | FileParseException e) {
-			throw new FileParseException("Error while reloading '" + this.getAbsolutePath() + "'", e.getCause());
+		} catch (RuntimeIOException e) {
+			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
+		} catch (FileParseException e) {
+			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -61,7 +65,7 @@ public class ThunderFile extends CommentEnabledFile {
 	public synchronized void save() {
 		try {
 			ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
-		} catch (@NotNull NullPointerException | RuntimeIOException e) {
+		} catch (RuntimeIOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}

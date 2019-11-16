@@ -1,7 +1,6 @@
 package de.zeanon.storage.internal.data.section;
 
 import de.zeanon.storage.internal.base.CommentEnabledSection;
-import de.zeanon.storage.internal.base.FlatSection;
 import de.zeanon.storage.internal.data.raw.ThunderFile;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import lombok.EqualsAndHashCode;
@@ -36,7 +35,7 @@ public class ThunderFileSection extends CommentEnabledSection {
 
 	@NotNull
 	@Override
-	public FlatSection getSectionUseArray(final @NotNull String[] sectionKey) {
+	public ThunderFileSection getSectionUseArray(final @NotNull String[] sectionKey) {
 		return new ThunderFileSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.thunderFile);
 	}
 }

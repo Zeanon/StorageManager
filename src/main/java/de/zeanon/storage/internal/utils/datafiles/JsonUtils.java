@@ -28,7 +28,6 @@ public class JsonUtils {
 	@NotNull
 	public static Map<String, Object> jsonToMap(final @NotNull JSONObject json) {
 		final Map<String, Object> retMap = new HashMap<>();
-
 		if (json != JSONObject.NULL) {
 			retMap.putAll(toMap(json));
 		}

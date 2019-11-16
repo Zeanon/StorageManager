@@ -42,8 +42,10 @@ public class JsonFile extends FlatFile {
 			final JSONTokener jsonTokener = new JSONTokener(SMFileUtils.createNewInputStream(this.getFile()));
 			this.getFileData().loadData(new JSONObject(jsonTokener));
 			this.setLastLoaded(System.currentTimeMillis());
+		} catch (JSONException e) {
+			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
 		} catch (RuntimeIOException e) {
-			throw new FileParseException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 

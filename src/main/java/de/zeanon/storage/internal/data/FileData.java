@@ -20,7 +20,7 @@ import org.json.JSONObject;
 public class FileData implements Comparable<FileData> {
 
 	@NotNull
-	private Map<@NotNull String, Object> localMap = new HashMap<>();
+	private Map<@NotNull String, @NotNull Object> localMap = new HashMap<>();
 
 
 	/**
@@ -28,7 +28,7 @@ public class FileData implements Comparable<FileData> {
 	 *
 	 * @param map the Contents to be inserted.
 	 */
-	public void loadData(final @Nullable Map<@NotNull String, Object> map) {
+	public void loadData(final @Nullable Map<@NotNull String, @NotNull Object> map) {
 		if (map != null) {
 			if (map instanceof LinkedHashMap) {
 				this.localMap = new LinkedHashMap<>(map);
@@ -141,7 +141,7 @@ public class FileData implements Comparable<FileData> {
 		Objects.checkNull(key, "Key must not be null");
 		Object tempObject = this.get(key);
 		//noinspection unchecked
-		return tempObject instanceof Map ? this.keySet((Map<@NotNull String, Object>) tempObject) : new HashSet<>();
+		return tempObject instanceof Map ? this.keySet((Map<@NotNull String, @NotNull Object>) tempObject) : new HashSet<>();
 	}
 
 	@NotNull
@@ -149,7 +149,7 @@ public class FileData implements Comparable<FileData> {
 		Objects.checkNull(key, "Key must not be null");
 		Object tempObject = this.getUseArray(key);
 		//noinspection unchecked
-		return tempObject instanceof Map ? this.keySetUseArray((Map<@NotNull String, Object>) tempObject) : new HashSet<>();
+		return tempObject instanceof Map ? this.keySetUseArray((Map<@NotNull String, @NotNull Object>) tempObject) : new HashSet<>();
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class FileData implements Comparable<FileData> {
 		Objects.checkNull(key, "Key must not be null");
 		Object tempObject = this.get(key);
 		//noinspection unchecked
-		return tempObject instanceof Map ? ((Map<@NotNull String, Object>) tempObject).keySet() : new HashSet<>();
+		return tempObject instanceof Map ? ((Map<@NotNull String, @NotNull Object>) tempObject).keySet() : new HashSet<>();
 	}
 
 	@NotNull
@@ -200,7 +200,7 @@ public class FileData implements Comparable<FileData> {
 		Objects.checkNull(key, "Key must not be null");
 		Object tempObject = this.getUseArray(key);
 		//noinspection unchecked
-		return tempObject instanceof Map ? ((Map<@NotNull String, Object>) tempObject).keySet() : new HashSet<>();
+		return tempObject instanceof Map ? ((Map<@NotNull String, @NotNull Object>) tempObject).keySet() : new HashSet<>();
 	}
 
 	/**
@@ -255,7 +255,7 @@ public class FileData implements Comparable<FileData> {
 	 * @return localMap.
 	 */
 	@NotNull
-	public Map<@NotNull String, Object> toMap() {
+	public Map<@NotNull String, @NotNull Object> toMap() {
 		return this.localMap;
 	}
 
@@ -285,32 +285,30 @@ public class FileData implements Comparable<FileData> {
 	}
 
 
-	@Nullable
-	private Map<@NotNull String, Object> removeKey(Map<@NotNull String, Object> map, @NotNull String[] key, int id) {
-		Map<@NotNull String, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
+	@NotNull
+	private Map<@NotNull String, @NotNull Object> removeKey(Map<@NotNull String, @NotNull Object> map, @NotNull String[] key, int id) {
+		Map<@NotNull String, @NotNull Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
 		if (id < key.length) {
 			if (id == key.length - 1) {
 				tempMap.remove(key[id]);
-				return tempMap;
 			} else {
 				//noinspection unchecked
-				map.put(key[id], this.removeKey((Map<@NotNull String, Object>) map.get(key[id]), key, id + 1));
+				map.put(key[id], this.removeKey((Map<@NotNull String, @NotNull Object>) map.get(key[id]), key, id + 1));
 				//noinspection unchecked
-				if (((Map<@NotNull String, Object>) map.get(key[id])).isEmpty()) {
+				if (((Map<@NotNull String, @NotNull Object>) map.get(key[id])).isEmpty()) {
 					map.remove(key[id]);
 				}
 				return map;
 			}
-		} else {
-			return null;
 		}
+		return tempMap;
 	}
 
-	private boolean containsKey(@NotNull final Map<@NotNull String, Object> map, @NotNull final String[] key, final int id) {
+	private boolean containsKey(@NotNull final Map<@NotNull String, @NotNull Object> map, @NotNull final String[] key, final int id) {
 		if (id < key.length - 1) {
 			if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
 				//noinspection unchecked
-				Map<@NotNull String, Object> tempMap = (Map<@NotNull String, Object>) map.get(key[id]);
+				Map<@NotNull String, @NotNull Object> tempMap = (Map<@NotNull String, @NotNull Object>) map.get(key[id]);
 				return this.containsKey(tempMap, key, id + 1);
 			} else {
 				return false;
@@ -321,11 +319,11 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	@Nullable
-	private Object get(@NotNull final Map<@NotNull String, Object> map, @NotNull final String[] key, final int id) {
+	private Object get(@NotNull final Map<@NotNull String, @NotNull Object> map, @NotNull final String[] key, final int id) {
 		if (id < key.length - 1) {
 			if (map.get(key[id]) instanceof Map) {
 				//noinspection unchecked
-				Map<@NotNull String, Object> tempMap = (Map<@NotNull String, Object>) map.get(key[id]);
+				Map<@NotNull String, @NotNull Object> tempMap = (Map<@NotNull String, @NotNull Object>) map.get(key[id]);
 				return this.get(tempMap, key, id + 1);
 			} else {
 				return null;
@@ -335,14 +333,14 @@ public class FileData implements Comparable<FileData> {
 		}
 	}
 
-	private Object insert(final Map<@NotNull String, Object> map, @NotNull final String[] key, final Object value, final int id) {
+	private Object insert(final Map<@NotNull String, @NotNull Object> map, @NotNull final String[] key, final Object value, final int id) {
 		if (id < key.length) {
-			Map<@NotNull String, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
+			Map<@NotNull String, @NotNull Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
 			//noinspection unchecked
-			Map<@NotNull String, Object> childMap =
+			Map<@NotNull String, @NotNull Object> childMap =
 					map.containsKey(key[id])
 					&& map.get(key[id]) instanceof Map
-					? (Map<@NotNull String, Object>) map.get(key[id])
+					? (Map<@NotNull String, @NotNull Object>) map.get(key[id])
 					: this.getMap(map);
 			tempMap.put(key[id], this.insert(childMap, key, value, id + 1));
 			return tempMap;
@@ -352,12 +350,12 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	@NotNull
-	private Set<String> keySet(@NotNull final Map<@NotNull String, Object> map) {
+	private Set<String> keySet(@NotNull final Map<@NotNull String, @NotNull Object> map) {
 		Set<String> tempSet = new HashSet<>();
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
-				for (String tempKey : this.keySet((Map<@NotNull String, Object>) entry.getValue())) {
+				for (String tempKey : this.keySet((Map<@NotNull String, @NotNull Object>) entry.getValue())) {
 					tempSet.add(entry.getKey() + "." + tempKey);
 				}
 			} else {
@@ -368,12 +366,12 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	@NotNull
-	private Set<String[]> keySetUseArray(@NotNull final Map<@NotNull String, Object> map) {
+	private Set<String[]> keySetUseArray(@NotNull final Map<@NotNull String, @NotNull Object> map) {
 		Set<String[]> tempSet = new HashSet<>();
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
-				for (String[] tempKey : this.keySetUseArray((Map<@NotNull String, Object>) entry.getValue())) {
+				for (String[] tempKey : this.keySetUseArray((Map<@NotNull String, @NotNull Object>) entry.getValue())) {
 					String[] key = new String[1 + tempKey.length];
 					key[0] = entry.getKey();
 					System.arraycopy(tempKey, 0, key, 1, tempKey.length);
@@ -399,7 +397,7 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	@NotNull
-	private Map<@NotNull String, Object> getMap(final @NotNull Map<@NotNull String, Object> map) {
+	private Map<@NotNull String, @NotNull Object> getMap(final @NotNull Map<@NotNull String, @NotNull Object> map) {
 		return map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
 	}
 

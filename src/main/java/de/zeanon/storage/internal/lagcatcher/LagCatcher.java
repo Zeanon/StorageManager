@@ -15,7 +15,9 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class LagCatcher {
 
+	@NotNull
 	private static final Map<String, Long> startTimes = new HashMap<>();
+	@NotNull
 	private static final Map<String, Long> stopTimes = new HashMap<>();
 
 

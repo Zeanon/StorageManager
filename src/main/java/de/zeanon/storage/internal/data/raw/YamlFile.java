@@ -44,8 +44,10 @@ public class YamlFile extends CommentEnabledFile {
 			//noinspection unchecked
 			this.getFileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.getFile())).read());
 			this.setLastLoaded(System.currentTimeMillis());
-		} catch (@NotNull YamlException | FileNotFoundException e) {
-			throw new FileParseException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+		} catch (YamlException e) {
+			throw new FileParseException("Error while parsing '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+		} catch (FileNotFoundException e) {
+			throw new RuntimeIOException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -56,8 +58,10 @@ public class YamlFile extends CommentEnabledFile {
 			//noinspection unchecked
 			this.getFileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.getFile())).read());
 			this.setLastLoaded(System.currentTimeMillis());
-		} catch (IOException e) {
-			throw new FileParseException("Error while reloading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+		} catch (YamlException e) {
+			throw new FileParseException("Error while parsing '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+		} catch (FileNotFoundException e) {
+			throw new RuntimeIOException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 

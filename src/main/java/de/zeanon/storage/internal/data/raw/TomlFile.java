@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.data.raw;
 
+import com.electronwill.toml.TomlException;
 import de.zeanon.storage.internal.base.FlatFile;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
@@ -35,7 +36,9 @@ public class TomlFile extends FlatFile {
 			this.getFileData().loadData(com.electronwill.toml.Toml.read(this.getFile()));
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (IOException e) {
-			throw new FileParseException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+		} catch (TomlException e) {
+			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -46,7 +49,9 @@ public class TomlFile extends FlatFile {
 			this.getFileData().loadData(com.electronwill.toml.Toml.read(this.getFile()));
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (IOException e) {
-			throw new FileParseException("Error while reloading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+		} catch (TomlException e) {
+			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
