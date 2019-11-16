@@ -1,6 +1,9 @@
 package de.zeanon.storage.internal.utils.datafiles;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +32,7 @@ public class JsonUtils {
 	public static Map<String, Object> jsonToMap(final @NotNull JSONObject json) {
 		final Map<String, Object> retMap = new HashMap<>();
 		if (json != JSONObject.NULL) {
-			retMap.putAll(toMap(json));
+			retMap.putAll(json.toMap());
 		}
 		return retMap;
 	}
@@ -44,20 +47,11 @@ public class JsonUtils {
 	}
 
 	@NotNull
-	public static Map<String, Object> toMap(final @NotNull JSONObject object) {
-		final Map<String, Object> map = new HashMap<>();
-
-		final Iterator<String> keysIterator = object.keys();
-		keysIterator.forEachRemaining(key -> map.put(key, getValue(object.get(key))));
-		return map;
-	}
-
-	@NotNull
 	private static Object getValue(final @NotNull Object obj) {
 		if (obj instanceof JSONArray) {
 			return toList((JSONArray) obj);
 		} else if (obj instanceof JSONObject) {
-			return toMap((JSONObject) obj);
+			return ((JSONObject) obj).toMap();
 		} else {
 			return obj;
 		}
