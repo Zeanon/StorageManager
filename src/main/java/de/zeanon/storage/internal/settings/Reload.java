@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public enum Reload implements ReloadSettingBase {
 
 	/**
-	 * reloads every time you try to get something from the config.
+	 * reloads every time you try to get something from the config
 	 */
 	AUTOMATICALLY {
 		@Override
@@ -24,11 +24,11 @@ public enum Reload implements ReloadSettingBase {
 		}
 	},
 	/**
-	 * reloads only if the File has changed.
+	 * reloads only if the File has changed
 	 */
 	INTELLIGENT {
 		/**
-		 * @throws ObjectNullException if the passed FlatFile is null.
+		 * @throws ObjectNullException if the passed FlatFile is null
 		 */
 		@Override
 		public boolean shouldReload(final @NotNull FlatFile flatFile) {
@@ -36,7 +36,7 @@ public enum Reload implements ReloadSettingBase {
 		}
 	},
 	/**
-	 * only reloads if you manually call the reload.
+	 * only reloads if you manually call the reload
 	 */
 	MANUALLY {
 		@Override
@@ -46,7 +46,7 @@ public enum Reload implements ReloadSettingBase {
 	};
 
 	/**
-	 * @return if the a reload is necessary.
+	 * @return if the a reload is necessary
 	 */
 	@Override
 	public abstract boolean shouldReload(final @NotNull FlatFile flatFile);

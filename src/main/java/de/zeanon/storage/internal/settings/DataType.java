@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public enum DataType implements DataTypeBase {
 
 	/**
-	 * The Data is stored in a LinkedHashMap.
+	 * The Data is stored in a LinkedHashMap
 	 */
 	SORTED {
 		@NotNull
@@ -32,7 +32,7 @@ public enum DataType implements DataTypeBase {
 		}
 	},
 	/**
-	 * The Data is stored in a HashMap.
+	 * The Data is stored in a HashMap
 	 */
 	STANDARD {
 		@NotNull
@@ -48,11 +48,11 @@ public enum DataType implements DataTypeBase {
 		}
 	},
 	/**
-	 * The Storage type depends on the CommentSetting(HashMap for SKIP, LinkedHashMap for PRESERVE).
+	 * The Storage type depends on the CommentSetting(HashMap for SKIP, LinkedHashMap for PRESERVE)
 	 */
 	AUTOMATIC {
 		/**
-		 * @throws ObjectNullException if the passed CommentSetting is null.
+		 * @throws ObjectNullException if the passed CommentSetting is null
 		 */
 		@NotNull
 		@Override
@@ -65,7 +65,7 @@ public enum DataType implements DataTypeBase {
 		}
 
 		/**
-		 * @throws ObjectNullException if the passed CommentSetting is null.
+		 * @throws ObjectNullException if the passed CommentSetting is null
 		 */
 		@NotNull
 		@Override

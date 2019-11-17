@@ -14,13 +14,13 @@ import org.jetbrains.annotations.NotNull;
 public class Primitive {
 
 	/**
-	 * Get an Object of the given definitionType from a passed Object.
+	 * Get an Object of the given Class Type
 	 *
-	 * @param object the Object to be casted.
-	 * @param def    the Definition.
-	 * @param <T>    the Type of the def.
-	 * @return zhe passed Object casted to the given Type.
-	 * @throws ObjectNullException if a passed value is null.
+	 * @param object the Object to be casted
+	 * @param def    the Class to be casted to
+	 * @param <T>    the Type of def
+	 * @return the passed Object casted to the given Type
+	 * @throws ObjectNullException if a passed value is null
 	 */
 	@NotNull
 	public static <T> T getFromDef(final @NotNull Object object, final @NotNull Class<T> def) {
@@ -48,7 +48,9 @@ public class Primitive {
 	public static class BOOLEAN {
 
 		/**
-		 * @throws ObjectNullException if the passed value is null.
+		 * Castes a given Object to a boolean
+		 *
+		 * @throws ObjectNullException if the passed value is null
 		 */
 		public static boolean getBoolean(final @NotNull Object object) {
 			Objects.checkNull(object, "Object must not be null");
@@ -67,7 +69,9 @@ public class Primitive {
 	public static class LONG {
 
 		/**
-		 * @throws ObjectNullException if the passed value is null.
+		 * Castes a given Object to a long
+		 *
+		 * @throws ObjectNullException if the passed value is null
 		 */
 		public static long getLong(final @NotNull Object object) {
 			Objects.checkNull(object, "Object must not be null");
@@ -88,7 +92,9 @@ public class Primitive {
 	public static class DOUBLE {
 
 		/**
-		 * @throws ObjectNullException if the passed value is null.
+		 * Castes a given Object to a double
+		 *
+		 * @throws ObjectNullException if the passed value is null
 		 */
 		public static double getDouble(final @NotNull Object object) {
 			Objects.checkNull(object, "Object must not be null");
@@ -109,7 +115,9 @@ public class Primitive {
 	public static class FLOAT {
 
 		/**
-		 * @throws ObjectNullException if the passed value is null.
+		 * Castes a given Object to a float
+		 *
+		 * @throws ObjectNullException if the passed value is null
 		 */
 		public static float getFloat(final @NotNull Object object) {
 			Objects.checkNull(object, "Object must not be null");
@@ -130,7 +138,9 @@ public class Primitive {
 	public static class INTEGER {
 
 		/**
-		 * @throws ObjectNullException if the passed value is null.
+		 * Castes a given Object to an int
+		 *
+		 * @throws ObjectNullException if the passed value is null
 		 */
 		public static int getInt(final @NotNull Object object) {
 			Objects.checkNull(object, "Object must not be null");
@@ -151,7 +161,9 @@ public class Primitive {
 	public static class SHORT {
 
 		/**
-		 * @throws ObjectNullException if the passed value is null.
+		 * Castes a given Object to a short
+		 *
+		 * @throws ObjectNullException if the passed value is null
 		 */
 		public static short getShort(final @NotNull Object object) {
 			Objects.checkNull(object, "Object must not be null");
@@ -172,7 +184,9 @@ public class Primitive {
 	public static class BYTE {
 
 		/**
-		 * @throws ObjectNullException if the passed value is null.
+		 * Castes a given Object to a byte
+		 *
+		 * @throws ObjectNullException if the passed value is null
 		 */
 		public static byte getByte(final @NotNull Object object) {
 			Objects.checkNull(object, "Object must not be null");

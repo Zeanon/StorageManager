@@ -27,13 +27,13 @@ import org.jetbrains.annotations.NotNull;
 public class ThunderEditor {
 
 	/**
-	 * Write the given Data to a File.
+	 * Write the given Data to a File
 	 *
-	 * @param file           the File to be written to.
-	 * @param map            a HashMap containing the Data to be written.
-	 * @param commentSetting the CommentSetting to be used.
-	 * @throws RuntimeIOException  if the File can not be accessed properly.
-	 * @throws ObjectNullException if a passed value is null.
+	 * @param file           the File to be written to
+	 * @param map            a HashMap containing the Data to be written
+	 * @param commentSetting the CommentSetting to be used
+	 * @throws RuntimeIOException  if the File can not be accessed properly
+	 * @throws ObjectNullException if a passed value is null
 	 */
 	public static void writeData(final @NotNull File file, final @NotNull Map<String, Object> map, final @NotNull CommentSettingBase commentSetting) {
 		if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
@@ -44,15 +44,15 @@ public class ThunderEditor {
 	}
 
 	/**
-	 * Read the Data of a File.
+	 * Read the Data of a File
 	 *
-	 * @param file           the File to be read from.
-	 * @param dataType       the FileDataType to be used.
-	 * @param commentSetting the CommentSetting to be used.
-	 * @return a Map containing the Data of the File.
-	 * @throws RuntimeIOException  if the File can not be accessed properly.
-	 * @throws ThunderException    if the Content of the File can not be parsed properly.
-	 * @throws ObjectNullException if a passed value is null.
+	 * @param file           the File to be read from
+	 * @param dataType       the FileDataType to be used
+	 * @param commentSetting the CommentSetting to be used
+	 * @return a Map containing the Data of the File
+	 * @throws RuntimeIOException  if the File can not be accessed properly
+	 * @throws ThunderException    if the Content of the File can not be parsed properly
+	 * @throws ObjectNullException if a passed value is null
 	 */
 	@NotNull
 	public static Map<String, Object> readData(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {

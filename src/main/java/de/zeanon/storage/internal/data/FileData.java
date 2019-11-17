@@ -24,9 +24,9 @@ public class FileData implements Comparable<FileData> {
 
 
 	/**
-	 * Reload the contents of FileData.
+	 * Reload the contents of FileData
 	 *
-	 * @param map the Contents to be inserted.
+	 * @param map the Contents to be inserted
 	 */
 	public void loadData(final @Nullable Map<@NotNull String, @NotNull Object> map) {
 		if (map != null) {
@@ -54,10 +54,10 @@ public class FileData implements Comparable<FileData> {
 
 
 	/**
-	 * Method to assign a value to a key.
+	 * Method to assign a value to a key
 	 *
-	 * @param key   the key to be used.
-	 * @param value the value to be assigned to the key.
+	 * @param key   the key to be used
+	 * @param value the value to be assigned to the key
 	 */
 	public void insert(final @NotNull String key, final @Nullable Object value) {
 		final String[] parts = key.split("\\.");
@@ -79,9 +79,9 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	/**
-	 * Remove a key with its assigned value from the map if given key exists.
+	 * Remove a key with its assigned value from the map if given key exists
 	 *
-	 * @param key the key to be removed from the map.
+	 * @param key the key to be removed from the map
 	 */
 	public void remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -99,10 +99,10 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	/**
-	 * Check whether the map contains a certain key.
+	 * Check whether the map contains a certain key
 	 *
-	 * @param key the key to be looked for.
-	 * @return true if the key exists, otherwise false.
+	 * @param key the key to be looked for
+	 * @return true if the key exists, otherwise false
 	 */
 	public boolean containsKey(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -116,9 +116,9 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	/**
-	 * get the keySet of all layers of the map combined.
+	 * get the keySet of all layers of the map combined
 	 *
-	 * @return the keySet of all layers of localMap combined (Format: key.subkey).
+	 * @return the keySet of all layers of localMap combined (Format: key.subkey)
 	 */
 	@NotNull
 	public Set<String> keySet() {
@@ -131,10 +131,10 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	/**
-	 * get the keySet of all sublayers of the given key combined.
+	 * get the keySet of all sublayers of the given key combined
 	 *
-	 * @param key the key of the Block.
-	 * @return the keySet of all sublayers of the given key or null if the key does not exist (Format: key.subkey).
+	 * @param key the key of the Block
+	 * @return the keySet of all sublayers of the given key or null if the key does not exist (Format: key.subkey)
 	 */
 	@NotNull
 	public Set<String> keySet(final @NotNull String key) {
@@ -153,10 +153,10 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	/**
-	 * Method to get the object assign to a key from a FileData Object.
+	 * Method to get the object assign to a key from a FileData Object
 	 *
-	 * @param key the key to look for.
-	 * @return the value assigned to the given key or null if the key does not exist.
+	 * @param key the key to look for
+	 * @return the value assigned to the given key or null if the key does not exist
 	 */
 	@Nullable
 	public Object get(final @NotNull String key) {
@@ -172,9 +172,9 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	/**
-	 * get the keySet of a single layer of the map.
+	 * get the keySet of a single layer of the map
 	 *
-	 * @return the keySet of the top layer of localMap.
+	 * @return the keySet of the top layer of localMap
 	 */
 	@NotNull
 	public Set<String> blockKeySet() {
@@ -182,10 +182,10 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	/**
-	 * get the keySet of a single layer of the map.
+	 * get the keySet of a single layer of the map
 	 *
-	 * @param key the key of the layer.
-	 * @return the keySet of the given layer or null if the key does not exist.
+	 * @param key the key of the layer
+	 * @return the keySet of the given layer
 	 */
 	@NotNull
 	public Set<String> blockKeySet(final @NotNull String key) {
@@ -204,19 +204,19 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	/**
-	 * Get the size of a single layer of the map.
+	 * Get the size of a single layer of the map
 	 *
-	 * @return the size of the top layer of localMap.
+	 * @return the size of the top layer of map
 	 */
 	public int blockSize() {
 		return this.localMap.size();
 	}
 
 	/**
-	 * get the size of a single layer of the map.
+	 * get the size of a single layer of the map
 	 *
-	 * @param key the key of the layer.
-	 * @return the size of the given layer or 0 if the key does not exist.
+	 * @param key the key of the layer
+	 * @return the size of the given layer or 0 if the key does not exist
 	 */
 	public int blockSize(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -231,18 +231,18 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	/**
-	 * Get the size of the local map.
+	 * Get the size of the local map
 	 *
-	 * @return the size of all layers of localMap combined.
+	 * @return the size of all layers of localMap combined
 	 */
 	public int size() {
 		return this.size(this.localMap);
 	}
 
 	/**
-	 * Convert FileData to a JsonObject.
+	 * Convert FileData to a JsonObject
 	 *
-	 * @return JsonObject from localMap.
+	 * @return JsonObject from localMap
 	 */
 	@NotNull
 	public JSONObject toJsonObject() {
@@ -250,9 +250,7 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	/**
-	 * Convert FileData to a nested HashMap.
-	 *
-	 * @return localMap.
+	 * Convert FileData to a nested HashMap
 	 */
 	@NotNull
 	public Map<@NotNull String, @NotNull Object> toMap() {
@@ -260,10 +258,10 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	/**
-	 * get the size of all sublayers of the given key combined.
+	 * get the size of all sublayers of the given key combined
 	 *
 	 * @param key the key of the layer
-	 * @return the size of all sublayers of the given key or 0 if the key does not exist.
+	 * @return the size of all sublayers of the given key or 0 if the key does not exist
 	 */
 	public int size(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -278,7 +276,7 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	/**
-	 * Clear the contents of this FileData.
+	 * Clear the contents of this FileData
 	 */
 	public void clear() {
 		this.localMap = new HashMap<>();

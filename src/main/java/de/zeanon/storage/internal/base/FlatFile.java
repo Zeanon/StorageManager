@@ -38,7 +38,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	@Setter(AccessLevel.PROTECTED)
 	private long lastLoaded;
 	/**
-	 * Default: INTELLIGENT
+	 * Default: {@link Reload#INTELLIGENT}
 	 */
 	@NotNull
 	@Setter

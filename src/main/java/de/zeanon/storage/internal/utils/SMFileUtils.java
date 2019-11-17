@@ -24,9 +24,9 @@ import org.jetbrains.annotations.Nullable;
 public class SMFileUtils {
 
 	/**
-	 * Creates a given File and, if not existent, it's parents.
+	 * Creates a given File and, if not existent, it's parents
 	 *
-	 * @param file the File to be created.
+	 * @param file the File to be created
 	 */
 	@SuppressWarnings("UnusedReturnValue")
 	public static synchronized boolean createFile(final @NotNull File file) {
@@ -39,9 +39,9 @@ public class SMFileUtils {
 	}
 
 	/**
-	 * Creates the parents of a given File.
+	 * Creates the parents of a given File
 	 *
-	 * @param file the File to be used.
+	 * @param file the File to be used
 	 */
 	public static synchronized boolean createParents(final @NotNull File file) {
 		try {
@@ -194,10 +194,10 @@ public class SMFileUtils {
 
 
 	/**
-	 * Create a BufferedInputStream from a File.
+	 * Create a BufferedInputStream from a File
 	 *
-	 * @param file the File to be read.
-	 * @return BufferedInputstream containing the contents of the given File.
+	 * @param file the File to be read
+	 * @return BufferedInputstream containing the contents of the given File
 	 */
 	@NotNull
 	public static BufferedInputStream createNewInputStream(final @NotNull File file) {
@@ -210,10 +210,10 @@ public class SMFileUtils {
 	}
 
 	/**
-	 * Create a BufferedInputStream from a given internal resource.
+	 * Create a BufferedInputStream from a given internal resource
 	 *
-	 * @param resource the Path to the resource.
-	 * @return BufferedInputStream containing the contents of the resource file.
+	 * @param resource the Path to the resource
+	 * @return BufferedInputStream containing the contents of the resource file
 	 */
 	@NotNull
 	public static BufferedInputStream createNewInputStream(final @NotNull String resource) {
@@ -226,10 +226,10 @@ public class SMFileUtils {
 	}
 
 	/**
-	 * Create a BufferedInputStream from a given InputStream.
+	 * Create a BufferedInputStream from a given InputStream
 	 *
-	 * @param inputStream the InputStream to be converted.
-	 * @return null if {@code inputStream} is null or a BufferedInputStream from the given InputStream.
+	 * @param inputStream the InputStream to be converted
+	 * @return null if {@code inputStream} is null or a BufferedInputStream from the given InputStream
 	 */
 	@Nullable
 	public static BufferedInputStream createNewInputStream(final @Nullable InputStream inputStream) {
@@ -243,21 +243,21 @@ public class SMFileUtils {
 	}
 
 	/**
-	 * Check if a given File has changed since the given TimeStamp.
+	 * Check if a given File has changed since the given TimeStamp
 	 *
-	 * @param file      the File to be checked.
-	 * @param timeStamp the TimeStamp to be checked against.
-	 * @return true if the File has changed since the {@code timeStamp}.
+	 * @param file      the File to be checked
+	 * @param timeStamp the TimeStamp to be checked against
+	 * @return true if the File has changed since the {@code timeStamp}
 	 */
 	public static boolean hasChanged(final @NotNull File file, final long timeStamp) {
 		return timeStamp < Objects.notNull(file, "File must not be null").lastModified();
 	}
 
 	/**
-	 * Write the contents of a given InputStream to a File.
+	 * Write the contents of a given InputStream to a File
 	 *
-	 * @param file        the File to be written to.
-	 * @param inputStream the InputStream which shall be written.
+	 * @param file        the File to be written to
+	 * @param inputStream the InputStream which shall be written
 	 */
 	public static synchronized void writeToFile(final @NotNull File file, final @Nullable BufferedInputStream inputStream) {
 		SMFileUtils.createFile(Objects.notNull(file, "File must not be null"));
@@ -282,10 +282,10 @@ public class SMFileUtils {
 	}
 
 	/**
-	 * Returns the extension of a given File.
+	 * Returns the extension of a given File
 	 *
-	 * @param file the File to be checked.
-	 * @return the extension of the given File.
+	 * @param file the File to be checked
+	 * @return the extension of the given File
 	 */
 	@NotNull
 	public static String getExtension(final @NotNull File file) {
@@ -293,10 +293,10 @@ public class SMFileUtils {
 	}
 
 	/**
-	 * Returns the extension of a given File.
+	 * Returns the extension of a given File
 	 *
-	 * @param filePath the Path of the File to be checked.
-	 * @return the extension of the given File.
+	 * @param filePath the Path of the File to be checked
+	 * @return the extension of the given File
 	 */
 	@NotNull
 	public static String getExtension(final @NotNull Path filePath) {
@@ -304,10 +304,10 @@ public class SMFileUtils {
 	}
 
 	/**
-	 * Returns the extension of a given File.
+	 * Returns the extension of a given File
 	 *
-	 * @param filePath the Path of the File to be checked.
-	 * @return the extension of the given File.
+	 * @param filePath the Path of the File to be checked
+	 * @return the extension of the given File
 	 */
 	@NotNull
 	public static String getExtension(final @NotNull String filePath) {
@@ -330,10 +330,10 @@ public class SMFileUtils {
 	}
 
 	/**
-	 * Removes the extension of a given File.
+	 * Removes the extension of a given File
 	 *
-	 * @param file the File to be checked.
-	 * @return the File without it's extension.
+	 * @param file the File to be checked
+	 * @return the File without it's extension
 	 */
 	@NotNull
 	public static File removeExtension(final @NotNull File file) {
@@ -341,10 +341,10 @@ public class SMFileUtils {
 	}
 
 	/**
-	 * Removes the extension of a given File.
+	 * Removes the extension of a given File
 	 *
-	 * @param filePath the Path of the File to be checked.
-	 * @return the Path without the extension.
+	 * @param filePath the Path of the File to be checked
+	 * @return the Path without the extension
 	 */
 	@NotNull
 	public static Path removeExtension(final @NotNull Path filePath) {
@@ -352,10 +352,10 @@ public class SMFileUtils {
 	}
 
 	/**
-	 * Removes the extension of a given File.
+	 * Removes the extension of a given File
 	 *
-	 * @param filePath the Path of the File to be checked.
-	 * @return the Path without the extension.
+	 * @param filePath the Path of the File to be checked
+	 * @return the Path without the extension
 	 */
 	@NotNull
 	public static String removeExtension(final @NotNull String filePath) {

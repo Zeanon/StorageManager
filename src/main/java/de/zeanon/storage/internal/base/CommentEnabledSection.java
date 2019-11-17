@@ -42,7 +42,7 @@ public abstract class CommentEnabledSection extends FlatSection {
 	/**
 	 * Set with a specific {@link de.zeanon.storage.internal.base.interfaces.CommentSettingBase}.
 	 *
-	 * @see FlatSection#set(String, Object) .
+	 * @see FlatSection#set(String, Object)
 	 */
 	public void set(final @NotNull CommentSettingBase commentSetting, final @NotNull String key, final @Nullable Object value) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
@@ -61,9 +61,9 @@ public abstract class CommentEnabledSection extends FlatSection {
 
 
 	/**
-	 * Remove with a specific {@link de.zeanon.storage.internal.base.interfaces.CommentSettingBase}.
+	 * Remove with a specific {@link de.zeanon.storage.internal.base.interfaces.CommentSettingBase}
 	 *
-	 * @see FlatSection#remove(String).
+	 * @see FlatSection#remove(String)
 	 */
 	public void remove(final @NotNull CommentSettingBase commentSetting, final @NotNull String key) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));

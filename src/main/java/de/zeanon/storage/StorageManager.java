@@ -287,9 +287,9 @@ public abstract class StorageManager<C> {
 
 
 	/**
-	 * Create the defined File.
+	 * Create the defined File
 	 *
-	 * @return the FlatFile to be created.
+	 * @return the FlatFile to be created
 	 */
 	@Nullable
 	public abstract FlatFile create();

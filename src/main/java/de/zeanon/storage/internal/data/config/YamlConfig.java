@@ -35,13 +35,13 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 
 
 	/**
-	 * @param file           the File to be used as a backend.
-	 * @param inputStream    the FileContent to be set on the creation of the File.
-	 * @param reloadSetting  the ReloadSetting to be used with this instance.
-	 * @param commentSetting the CommentSetting to be used with this instance.
-	 * @param dataType       the DataType to be used with this instance.
-	 * @throws RuntimeIOException if the File can not be accessed properly.
-	 * @throws FileParseException if the Content of the File can not be parsed properly.
+	 * @param file           the File to be used as a backend
+	 * @param inputStream    the FileContent to be set on the creation of the File
+	 * @param reloadSetting  the ReloadSetting to be used with this instance
+	 * @param commentSetting the CommentSetting to be used with this instance
+	 * @param dataType       the DataType to be used with this instance
+	 * @throws RuntimeIOException if the File can not be accessed properly
+	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
 	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, inputStream, reloadSetting, commentSetting == null ? Comment.PRESERVE : commentSetting, dataType);

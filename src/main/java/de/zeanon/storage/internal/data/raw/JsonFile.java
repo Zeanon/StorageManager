@@ -33,11 +33,11 @@ public class JsonFile extends FlatFile {
 
 
 	/**
-	 * @param file          the File to be used as a backend.
-	 * @param inputStream   the FileContent to be set on the creation of the File.
-	 * @param reloadSetting the ReloadSetting to be used with this instance.
-	 * @throws RuntimeIOException if the File can not be accessed properly.
-	 * @throws FileParseException if the Content of the File can not be parsed properly.
+	 * @param file          the File to be used as a backend
+	 * @param inputStream   the FileContent to be set on the creation of the File
+	 * @param reloadSetting the ReloadSetting to be used with this instance
+	 * @throws FileParseException if the Content of the File can not be parsed properly
+	 * @throws RuntimeIOException if the File can not be accessed properly
 	 */
 	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting) {
 		super(file, FileType.JSON, reloadSetting);
