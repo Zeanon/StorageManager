@@ -3,7 +3,7 @@ package de.zeanon.storage.internal.utils.datafiles;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
-import de.zeanon.storage.internal.data.FileData;
+import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import de.zeanon.storage.internal.utils.editor.ThunderEditor;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class ThunderUtils {
 	/**
 	 * Get the Header from a give FileData
 	 *
-	 * @param fileData       the FileData to be used
+	 * @param fileData       the FileDataBase to be used
 	 * @param dataType       the FileDataType to be used with the given FileData
 	 * @param commentSetting the CommentSetting to be used
 	 * @return a List containing the Header of the FileData
@@ -47,7 +47,7 @@ public class ThunderUtils {
 	/**
 	 * Set the Header of a FileData
 	 *
-	 * @param fileData       the FileData to be used
+	 * @param fileData       the FileDataBase to be used
 	 * @param header         the Header to be set
 	 * @param dataType       the FileDataType to be used with the given FileData
 	 * @param commentSetting the CommentSetting to be used
@@ -79,13 +79,13 @@ public class ThunderUtils {
 	/**
 	 * Set the Header of a FileData
 	 *
-	 * @param fileData       the FileData to be used
+	 * @param fileData       the FileDataBase to be used
 	 * @param key            the Key of the SubBlock the Header shall be set to
 	 * @param header         the Header to be set
 	 * @param dataType       the FileDataType to be used with the given FileData
 	 * @param commentSetting the CommentSetting to be used
 	 * @return a Map with the given Header
-	 * @throws ObjectNullException if the given FileData does not contain the given key
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@NotNull
 	@SuppressWarnings("DuplicatedCode")
@@ -117,7 +117,7 @@ public class ThunderUtils {
 	/**
 	 * Get the Footer from a give FileData
 	 *
-	 * @param fileData       the FileData to be used
+	 * @param fileData       the FileDataBase to be used
 	 * @param dataType       the FileDataType to be used with the given FileData
 	 * @param commentSetting the CommentSetting to be used
 	 * @return a List containing the Footer of the FileData
@@ -142,7 +142,7 @@ public class ThunderUtils {
 	/**
 	 * Set the Footer of a FileData
 	 *
-	 * @param fileData       the FileData to be used
+	 * @param fileData       the FileDataBase to be used
 	 * @param footer         the Footer to be set
 	 * @param dataType       the FileDataType to be used with the given FileData
 	 * @param commentSetting the CommentSetting to be used
@@ -175,13 +175,13 @@ public class ThunderUtils {
 	/**
 	 * Set the Footer of a FileData
 	 *
-	 * @param fileData       the FileData to be used
+	 * @param fileData       the FileDataBase to be used
 	 * @param key            the Key of the SubBlock the Footer shall be set to
 	 * @param footer         the Header to be set
 	 * @param dataType       the FileDataType to be used with the given FileData
 	 * @param commentSetting the CommentSetting to be used
 	 * @return a Map with the given Footer
-	 * @throws ObjectNullException if the given FileData does not contain the given key
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@NotNull
 	@SuppressWarnings("DuplicatedCode")
@@ -215,12 +215,12 @@ public class ThunderUtils {
 	/**
 	 * Get the Header from a give FileData
 	 *
-	 * @param fileData       the FileData to be used
+	 * @param fileData       the FileDataBase to be used
 	 * @param key            the Key of the SubBlock the Header shall be getted from
 	 * @param dataType       the FileDataType to be used with the given FileData
 	 * @param commentSetting the CommentSetting to be used
 	 * @return a List containing the Header of the SubBlock
-	 * @throws ObjectNullException if the given FileData does not contain the given key
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@NotNull
 	public static List<String> getHeader(final @NotNull FileData fileData, final @NotNull String key, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
@@ -238,12 +238,12 @@ public class ThunderUtils {
 	/**
 	 * Get the Footer from a give FileData
 	 *
-	 * @param fileData       the FileData to be used
+	 * @param fileData       the FileDataBase to be used
 	 * @param key            the key of the SubBlock the Footer shall be getted from
 	 * @param dataType       the FileDataType to be used with the given FileData
 	 * @param commentSetting the CommentSetting to be used
 	 * @return a List containing the Footer of the SubBlock
-	 * @throws ObjectNullException if the given FileData does not contain the given key
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@NotNull
 	public static List<String> getFooter(final @NotNull FileData fileData, final @NotNull String key, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
@@ -263,9 +263,9 @@ public class ThunderUtils {
 	}
 
 	/**
-	 * Get the Comments from a given FileData compatible with ThunderFile
+	 * Get the Comments from a given FileDataBase compatible with ThunderFile
 	 *
-	 * @param fileData       the FileData to be used
+	 * @param fileData       the FileDataBase to be used
 	 * @param dataType       the FileDataType to be used with the given FileData
 	 * @param commentSetting the CommentSetting to be used
 	 * @param deep           defining, if it should get all comments or only the ones in the top Layer
@@ -284,15 +284,15 @@ public class ThunderUtils {
 	}
 
 	/**
-	 * Get the Comments from a given FileData compatible with ThunderFile
+	 * Get the Comments from a given FileDataBase compatible with ThunderFile
 	 *
-	 * @param fileData       the FileData to be used
+	 * @param fileData       the FileDataBase to be used
 	 * @param key            the key of the SubBlock the Footer shall be getted from
 	 * @param dataType       the FileDataType to be used with the given FileData
 	 * @param commentSetting the CommentSetting to be used
 	 * @param deep           defining, if it should get all comments or only the ones in the given SubBlock
 	 * @return a List containing the Comments of the SubBlock
-	 * @throws ObjectNullException if the given FileData does not contain the given key
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@NotNull
 	public static List<String> getComments(final @NotNull FileData fileData, final @NotNull String key, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting, final boolean deep) {

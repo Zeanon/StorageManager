@@ -2,10 +2,10 @@ package de.zeanon.storage.internal.base;
 
 import de.zeanon.storage.internal.base.exceptions.FileTypeException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
+import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.base.interfaces.StorageBase;
-import de.zeanon.storage.internal.data.FileData;
 import de.zeanon.storage.internal.settings.Reload;
 import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
@@ -45,11 +45,11 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	private ReloadSettingBase reloadSetting = Reload.INTELLIGENT;
 
 
-	protected FlatFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting) {
+	protected FlatFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @NotNull FileData fileData) {
 		if (fileType.isTypeOf(file)) {
 			this.fileType = fileType;
 			this.file = file;
-			this.fileData = new LocalFileData();
+			this.fileData = fileData;
 			if (reloadSetting != null) {
 				this.setReloadSetting(reloadSetting);
 			}
@@ -670,13 +670,5 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	@Override
 	public int compareTo(final @NotNull FlatFile flatFile) {
 		return this.file.compareTo(flatFile.file);
-	}
-
-
-	protected static class LocalFileData extends FileData {
-
-		public LocalFileData() {
-			super();
-		}
 	}
 }

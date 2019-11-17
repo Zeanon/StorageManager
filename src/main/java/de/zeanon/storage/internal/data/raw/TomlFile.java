@@ -6,6 +6,7 @@ import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
+import de.zeanon.storage.internal.data.cache.StandardFileData;
 import de.zeanon.storage.internal.data.section.TomlFileSection;
 import de.zeanon.storage.internal.utils.SMFileUtils;
 import java.io.File;
@@ -34,7 +35,7 @@ public class TomlFile extends FlatFile {
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
 	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting) {
-		super(file, FileType.TOML, reloadSetting);
+		super(file, FileType.TOML, reloadSetting, new LocalStandardFileData());
 
 		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
 			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
@@ -125,6 +126,13 @@ public class TomlFile extends FlatFile {
 
 		private LocalSection(final @NotNull String[] sectionKey, final @NotNull TomlFile tomlFile) {
 			super(sectionKey, tomlFile);
+		}
+	}
+
+	private static class LocalStandardFileData extends StandardFileData {
+
+		private LocalStandardFileData() {
+			super();
 		}
 	}
 }

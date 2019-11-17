@@ -8,6 +8,7 @@ import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
+import de.zeanon.storage.internal.data.cache.SortedFileData;
 import de.zeanon.storage.internal.data.section.ThunderFileSection;
 import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
@@ -43,7 +44,7 @@ public class ThunderFile extends CommentEnabledFile {
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
 	protected ThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
-		super(file, FileType.THUNDER, reloadSetting, commentSetting, dataType);
+		super(file, FileType.THUNDER, reloadSetting, commentSetting, dataType, new LocalFileData());
 
 		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
 			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
@@ -243,6 +244,13 @@ public class ThunderFile extends CommentEnabledFile {
 
 		private LocalSection(final @NotNull String[] sectionKey, final @NotNull ThunderFile thunderFile) {
 			super(sectionKey, thunderFile);
+		}
+	}
+
+	private static class LocalFileData extends SortedFileData {
+
+		private LocalFileData() {
+			super();
 		}
 	}
 }

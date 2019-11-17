@@ -2,9 +2,11 @@ package de.zeanon.storage.internal.data.raw;
 
 import de.zeanon.storage.internal.base.FlatFile;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
+import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
+import de.zeanon.storage.internal.data.cache.StandardFileData;
 import de.zeanon.storage.internal.data.section.JsonFileSection;
 import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
@@ -40,7 +42,7 @@ public class JsonFile extends FlatFile {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 */
 	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting) {
-		super(file, FileType.JSON, reloadSetting);
+		super(file, FileType.JSON, reloadSetting, new LocalStandardFileData());
 
 		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
 			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
@@ -210,6 +212,13 @@ public class JsonFile extends FlatFile {
 
 		private LocalSection(final @NotNull String[] sectionKey, final @NotNull JsonFile jsonFile) {
 			super(sectionKey, jsonFile);
+		}
+	}
+
+	private static class LocalStandardFileData extends StandardFileData {
+
+		private LocalStandardFileData() {
+			super();
 		}
 	}
 }

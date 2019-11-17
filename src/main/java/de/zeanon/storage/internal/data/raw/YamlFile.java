@@ -10,6 +10,7 @@ import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
+import de.zeanon.storage.internal.data.cache.StandardFileData;
 import de.zeanon.storage.internal.data.section.YamlFileSection;
 import de.zeanon.storage.internal.settings.Comment;
 import de.zeanon.storage.internal.utils.SMFileUtils;
@@ -44,7 +45,7 @@ public class YamlFile extends CommentEnabledFile {
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
 	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
-		super(file, FileType.YAML, reloadSetting, commentSetting, dataType);
+		super(file, FileType.YAML, reloadSetting, commentSetting, dataType, new LocalStandardFileData());
 
 		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
 			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
@@ -155,6 +156,13 @@ public class YamlFile extends CommentEnabledFile {
 
 		private LocalSection(final @NotNull String[] sectionKey, final @NotNull YamlFile yamlFile) {
 			super(sectionKey, yamlFile);
+		}
+	}
+
+	private static class LocalStandardFileData extends StandardFileData {
+
+		private LocalStandardFileData() {
+			super();
 		}
 	}
 }

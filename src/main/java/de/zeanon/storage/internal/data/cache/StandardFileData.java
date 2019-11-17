@@ -1,14 +1,13 @@
-package de.zeanon.storage.internal.data;
+package de.zeanon.storage.internal.data.cache;
 
+import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.utils.basic.Objects;
-import de.zeanon.storage.internal.utils.datafiles.JsonUtils;
 import java.util.*;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
 
 
 /**
@@ -17,7 +16,7 @@ import org.json.JSONObject;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuppressWarnings("unused")
-public class FileData implements Comparable<FileData> {
+public class StandardFileData implements FileData<String, String, Object>, Comparable<StandardFileData> {
 
 	@NotNull
 	private Map<@NotNull String, @NotNull Object> localMap = new HashMap<>();
@@ -28,24 +27,13 @@ public class FileData implements Comparable<FileData> {
 	 *
 	 * @param map the Contents to be inserted
 	 */
+	@Override
 	public void loadData(final @Nullable Map<@NotNull String, @NotNull Object> map) {
 		if (map != null) {
 			if (map instanceof LinkedHashMap) {
 				this.localMap = new LinkedHashMap<>(map);
 			} else {
 				this.localMap = new HashMap<>(map);
-			}
-		} else {
-			this.localMap = new HashMap<>();
-		}
-	}
-
-	public void loadData(final @Nullable JSONObject jsonObject) {
-		if (jsonObject != null) {
-			if (jsonObject.toMap() instanceof LinkedHashMap) {
-				this.localMap = new LinkedHashMap<>(jsonObject.toMap());
-			} else {
-				this.localMap = new HashMap<>(jsonObject.toMap());
 			}
 		} else {
 			this.localMap = new HashMap<>();
@@ -59,11 +47,23 @@ public class FileData implements Comparable<FileData> {
 	 * @param key   the key to be used
 	 * @param value the value to be assigned to the key
 	 */
+	@Override
 	public void insert(final @NotNull String key, final @Nullable Object value) {
+		Objects.checkNull(key, "Key must not be null");
 		final String[] parts = key.split("\\.");
-		this.insertUseArray(parts, value);
+		if (value == null) {
+			this.removeUseArray(key);
+		} else {
+			//noinspection unchecked
+			this.localMap.put(parts[0],
+							  this.localMap.containsKey(parts[0])
+							  && this.localMap.get(parts[0]) instanceof Map
+							  ? this.insert((Map) this.localMap.get(parts[0]), parts, value, 1)
+							  : this.insert(new HashMap<>(), parts, value, 1));
+		}
 	}
 
+	@Override
 	public void insertUseArray(final @NotNull String[] key, final @Nullable Object value) {
 		Objects.checkNull(key, "Key must not be null");
 		if (value == null) {
@@ -83,6 +83,7 @@ public class FileData implements Comparable<FileData> {
 	 *
 	 * @param key the key to be removed from the map
 	 */
+	@Override
 	public void remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		if (this.containsKey(key)) {
@@ -104,6 +105,7 @@ public class FileData implements Comparable<FileData> {
 	 * @param key the key to be looked for
 	 * @return true if the key exists, otherwise false
 	 */
+	@Override
 	public boolean containsKey(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		String[] parts = key.split("\\.");
@@ -121,11 +123,13 @@ public class FileData implements Comparable<FileData> {
 	 * @return the keySet of all layers of localMap combined (Format: key.subkey)
 	 */
 	@NotNull
+	@Override
 	public Set<String> keySet() {
 		return this.keySet(this.localMap);
 	}
 
 	@NotNull
+	@Override
 	public Set<String[]> keySetUseArray() {
 		return this.keySetUseArray(this.localMap);
 	}
@@ -137,6 +141,7 @@ public class FileData implements Comparable<FileData> {
 	 * @return the keySet of all sublayers of the given key or null if the key does not exist (Format: key.subkey)
 	 */
 	@NotNull
+	@Override
 	public Set<String> keySet(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		Object tempObject = this.get(key);
@@ -145,6 +150,7 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	@NotNull
+	@Override
 	public Set<String[]> keySetUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		Object tempObject = this.getUseArray(key);
@@ -159,6 +165,7 @@ public class FileData implements Comparable<FileData> {
 	 * @return the value assigned to the given key or null if the key does not exist
 	 */
 	@Nullable
+	@Override
 	public Object get(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		final String[] parts = key.split("\\.");
@@ -166,6 +173,7 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	@Nullable
+	@Override
 	public Object getUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		return this.get(this.localMap, key, 0);
@@ -177,6 +185,7 @@ public class FileData implements Comparable<FileData> {
 	 * @return the keySet of the top layer of localMap
 	 */
 	@NotNull
+	@Override
 	public Set<String> blockKeySet() {
 		return this.localMap.keySet();
 	}
@@ -188,6 +197,7 @@ public class FileData implements Comparable<FileData> {
 	 * @return the keySet of the given layer
 	 */
 	@NotNull
+	@Override
 	public Set<String> blockKeySet(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		Object tempObject = this.get(key);
@@ -196,6 +206,7 @@ public class FileData implements Comparable<FileData> {
 	}
 
 	@NotNull
+	@Override
 	public Set<String> blockKeySetUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		Object tempObject = this.getUseArray(key);
@@ -208,6 +219,7 @@ public class FileData implements Comparable<FileData> {
 	 *
 	 * @return the size of the top layer of map
 	 */
+	@Override
 	public int blockSize() {
 		return this.localMap.size();
 	}
@@ -218,12 +230,14 @@ public class FileData implements Comparable<FileData> {
 	 * @param key the key of the layer
 	 * @return the size of the given layer or 0 if the key does not exist
 	 */
+	@Override
 	public int blockSize(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		Object tempObject = this.get(key);
 		return tempObject instanceof Map ? ((Map) tempObject).size() : 0;
 	}
 
+	@Override
 	public int blockSizeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		Object tempObject = this.getUseArray(key);
@@ -235,24 +249,16 @@ public class FileData implements Comparable<FileData> {
 	 *
 	 * @return the size of all layers of localMap combined
 	 */
+	@Override
 	public int size() {
 		return this.size(this.localMap);
-	}
-
-	/**
-	 * Convert FileData to a JsonObject
-	 *
-	 * @return JsonObject from localMap
-	 */
-	@NotNull
-	public JSONObject toJsonObject() {
-		return JsonUtils.getJsonFromMap(this.localMap);
 	}
 
 	/**
 	 * Convert FileData to a nested HashMap
 	 */
 	@NotNull
+	@Override
 	public Map<@NotNull String, @NotNull Object> toMap() {
 		return this.localMap;
 	}
@@ -263,12 +269,14 @@ public class FileData implements Comparable<FileData> {
 	 * @param key the key of the layer
 	 * @return the size of all sublayers of the given key or 0 if the key does not exist
 	 */
+	@Override
 	public int size(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		Object tempObject = this.get(key);
 		return tempObject instanceof Map ? this.size((Map) tempObject) : 0;
 	}
 
+	@Override
 	public int sizeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		Object tempObject = this.getUseArray(key);
@@ -278,8 +286,14 @@ public class FileData implements Comparable<FileData> {
 	/**
 	 * Clear the contents of this FileData
 	 */
+	@Override
 	public void clear() {
 		this.localMap = new HashMap<>();
+	}
+
+	@Override
+	public Set<Entry<String, Object>> entrySet() {
+		return null;
 	}
 
 
@@ -339,7 +353,7 @@ public class FileData implements Comparable<FileData> {
 					map.containsKey(key[id])
 					&& map.get(key[id]) instanceof Map
 					? (Map<@NotNull String, @NotNull Object>) map.get(key[id])
-					: this.getMap(map);
+					: map;
 			tempMap.put(key[id], this.insert(childMap, key, value, id + 1));
 			return tempMap;
 		} else {
@@ -394,14 +408,9 @@ public class FileData implements Comparable<FileData> {
 		return size;
 	}
 
-	@NotNull
-	private Map<@NotNull String, @NotNull Object> getMap(final @NotNull Map<@NotNull String, @NotNull Object> map) {
-		return map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
-	}
-
 	@Override
-	public int compareTo(final @NotNull FileData fileData) {
-		return Integer.compare(this.localMap.size(), Objects.notNull(fileData.localMap).size());
+	public int compareTo(final @NotNull StandardFileData standardFileData) {
+		return Integer.compare(this.localMap.size(), Objects.notNull(standardFileData.localMap).size());
 	}
 
 	@Override
