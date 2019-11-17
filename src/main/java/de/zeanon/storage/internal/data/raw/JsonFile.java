@@ -84,7 +84,6 @@ public class JsonFile extends FlatFile {
 	 * @param key Path to Map-List in JSON
 	 * @return Map
 	 */
-
 	@NotNull
 	@Override
 	public Map getMap(final @NotNull String key) {
@@ -139,11 +138,11 @@ public class JsonFile extends FlatFile {
 			return new HashMap<>();
 		}
 		if (map instanceof Map) {
-			return (Map<?, ?>) Objects.notNull(this.getFileData().get(key), "File does not contain '" + key + "'");
+			return (Map<?, ?>) Objects.notNull(this.getFileData().get(key), "The File does not contain '" + key + "'");
 		} else if (map instanceof JSONObject) {
 			return JsonUtils.jsonToMap((JSONObject) map);
 		} else {
-			throw new FileParseException("Json does not contain: '" + key + "'");
+			throw new ObjectNullException("The File does not contain: '" + key + "'");
 		}
 	}
 
@@ -163,11 +162,11 @@ public class JsonFile extends FlatFile {
 			return new HashMap<>();
 		}
 		if (map instanceof Map) {
-			return (Map<?, ?>) Objects.notNull(this.getFileData().getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'");
+			return (Map<?, ?>) Objects.notNull(this.getFileData().getUseArray(key), "The File does not contain '" + Arrays.toString(key) + "'");
 		} else if (map instanceof JSONObject) {
 			return JsonUtils.jsonToMap((JSONObject) map);
 		} else {
-			throw new FileParseException("Json does not contain: '" + Arrays.toString(key) + "'");
+			throw new ObjectNullException("The File does not contain: '" + Arrays.toString(key) + "'");
 		}
 	}
 
