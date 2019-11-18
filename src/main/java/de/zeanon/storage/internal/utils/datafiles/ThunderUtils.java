@@ -52,7 +52,6 @@ public class ThunderUtils {
 	 * @param header         the Header to be set
 	 * @param dataType       the FileDataType to be used with the given FileData
 	 * @param commentSetting the CommentSetting to be used
-	 * @return a Map with the given Header
 	 */
 	@SuppressWarnings("DuplicatedCode")
 	public static void setHeader(final @NotNull FileData<String, Pair<Integer, String>, Object> fileData, final @Nullable List<String> header, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
@@ -84,7 +83,6 @@ public class ThunderUtils {
 	 * @param header         the Header to be set
 	 * @param dataType       the FileDataType to be used with the given FileData
 	 * @param commentSetting the CommentSetting to be used
-	 * @return a Map with the given Header
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@SuppressWarnings("DuplicatedCode")
@@ -144,7 +142,6 @@ public class ThunderUtils {
 	 * @param footer         the Footer to be set
 	 * @param dataType       the FileDataType to be used with the given FileData
 	 * @param commentSetting the CommentSetting to be used
-	 * @return a Map with the given Footer
 	 */
 	@SuppressWarnings("DuplicatedCode")
 	public static void setFooter(final @NotNull FileData<String, Pair<Integer, String>, Object> fileData, final @Nullable List<String> footer, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
@@ -177,7 +174,6 @@ public class ThunderUtils {
 	 * @param footer         the Header to be set
 	 * @param dataType       the FileDataType to be used with the given FileData
 	 * @param commentSetting the CommentSetting to be used
-	 * @return a Map with the given Footer
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@SuppressWarnings("DuplicatedCode")

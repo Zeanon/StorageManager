@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +106,6 @@ public class ThunderEditor {
 			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e.getCause());
 		}
 	}
-	// </Read Data with Comments>
 
 	@NotNull
 	private static Map<Pair<Integer, String>, Object> internalReadWithComments(final @NotNull String filePath, final @NotNull List<String> lines, int line, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {
@@ -121,7 +119,8 @@ public class ThunderEditor {
 			if (tempLine.equals("}")) {
 				return tempMap;
 			} else if (tempLine.contains("}")) {
-				throw new ThunderException("Error at '" + filePath + "' -> Block closed without being opened");
+				throw new ThunderException("Error at '" + filePath + "' -> " +
+										   "Illegal Character placement: '}' only allowed as a single Character in line to close blocks");
 			} else if (tempLine.isEmpty()) {
 				tempMap.put(new Pair<>(line, ""), LineType.BLANK_LINE);
 			} else if (tempLine.startsWith("#")) {
@@ -140,6 +139,7 @@ public class ThunderEditor {
 		}
 		throw new ThunderException("Error at '" + filePath + "' -> Block does not close");
 	}
+	// </Read Data with Comments>
 
 	// <Read Data without Comments>
 	@NotNull
@@ -192,7 +192,8 @@ public class ThunderEditor {
 				if (tempLine.equals("}")) {
 					return tempMap;
 				} else if (tempLine.contains("}")) {
-					throw new ThunderException("Error at '" + filePath + "' -> Block closed without being opened");
+					throw new ThunderException("Error at '" + filePath + "' -> " +
+											   "Illegal Character placement: '}' only allowed as a single Character in line to close blocks");
 				} else if (tempLine.endsWith("{")) {
 					if (!tempLine.equals("{")) {
 						tempKey = tempLine.replace("{", "").trim();
@@ -211,25 +212,21 @@ public class ThunderEditor {
 
 	private static String readKey(final @NotNull String filePath, final @NotNull List<String> lines, final @NotNull DataTypeBase dataType, final @NotNull Map<Pair<Integer, String>, Object> tempMap, String tempKey, final @NotNull String tempLine, final @NotNull CommentSettingBase commentSetting, final int lineId) throws ThunderException {
 		if (tempLine.contains("=")) {
-			@NotNull String[] line = split(tempLine, "=");
-			if (line.length > 2) {
-				throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> illegal amount of delimiters");
-			}
+			@NotNull String[] line = tempLine.split("=", 2);
 			line[0] = line[0].trim();
 			line[1] = line[1].trim();
 			if (line[1].startsWith("[")) {
 				if (line[1].endsWith("]")) {
-					@NotNull String[] listArray = split(line[1].substring(1, line[1].length() - 1), ",");
+					@NotNull String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
 					@NotNull List<String> list = dataType.getNewDataList(commentSetting, null);
 					for (@NotNull String value : listArray) {
-						list.add(value.trim().replace("\"", ""));
+						list.add(value.trim());
 					}
 					tempMap.put(new Pair<>(lineId, line[0]), list);
 				} else {
 					tempMap.put(new Pair<>(lineId, line[0]), readList(filePath, lines, dataType, commentSetting));
 				}
 			} else {
-				line[1] = line[1].replace("\"", "");
 				if (line[1].equalsIgnoreCase("true") || line[1].equalsIgnoreCase("false")) {
 					tempMap.put(new Pair<>(lineId, line[0]), line[1].equalsIgnoreCase("true"));
 				} else {
@@ -386,39 +383,6 @@ public class ThunderEditor {
 		}
 		writer.print(indentationString + "]");
 	}
-
-
-	// <Utility>
-	@NotNull
-	private static String[] split(final @NotNull String string, final @NotNull CharSequence delimiter) {
-		@NotNull List<String> tempList = new ArrayList<>();
-		@NotNull char[] chars = string.toCharArray();
-		int splitStart = 0;
-		boolean outOfString = true;
-		for (int i = 0; i < string.length(); i++) {
-			if (chars[i] == '\"') {
-				outOfString = !outOfString;
-			} else if (outOfString && chars[i] == delimiter.charAt(0)) {
-				boolean split = true;
-				for (int i1 = 1; i < delimiter.length(); i1++) {
-					if (chars[i + i1] != delimiter.charAt(i1)) {
-						split = false;
-						break;
-					}
-				}
-				if (split) {
-					tempList.add(string.substring(splitStart, i));
-					i += delimiter.length();
-					splitStart = i;
-				}
-			}
-		}
-		if (splitStart != chars.length) {
-			tempList.add(string.substring(splitStart, chars.length));
-		}
-		return tempList.toArray(new String[0]);
-	}
-	// </Utility>
 
 
 	@SuppressWarnings("unused")
