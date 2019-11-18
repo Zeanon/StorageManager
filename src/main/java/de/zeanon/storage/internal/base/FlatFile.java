@@ -2,10 +2,10 @@ package de.zeanon.storage.internal.base;
 
 import de.zeanon.storage.internal.base.exceptions.FileTypeException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
-import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.base.interfaces.StorageBase;
+import de.zeanon.storage.internal.data.cache.FileData;
 import de.zeanon.storage.internal.settings.Reload;
 import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
@@ -27,14 +27,14 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 @ToString(callSuper = true)
 @SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
-public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<FlatFile> {
+public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	@NotNull
 	private final File file;
 	@NotNull
 	private final FileTypeBase fileType;
 	@NotNull
-	private final FileData<String, K, Object> fileData;
+	private final FileData fileData;
 	@Setter(AccessLevel.PROTECTED)
 	private long lastLoaded;
 	/**
@@ -45,7 +45,7 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 	private ReloadSettingBase reloadSetting = Reload.INTELLIGENT;
 
 
-	protected FlatFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @NotNull FileData<String, K, Object> fileData) {
+	protected FlatFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @NotNull FileData fileData) {
 		if (fileType.isTypeOf(file)) {
 			this.fileType = fileType;
 			this.file = file;
@@ -165,55 +165,55 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 
 	@NotNull
 	@Override
-	public Set<String> keySet() {
+	public List<String> keyList() {
 		this.update();
-		return this.fileData.keySet();
+		return this.fileData.keyList();
 	}
 
 	@NotNull
 	@Override
-	public Set<String[]> keySetUseArray() {
+	public List<String[]> keyListUseArray() {
 		this.update();
-		return Objects.notNull(this.fileData.keySetUseArray(), "DataMap is empty");
+		return this.fileData.keyListUseArray();
 	}
 
 	@NotNull
 	@Override
-	public Set<String> keySet(final @NotNull String key) {
+	public List<String> keyList(final @NotNull String key) {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
-		return Objects.notNull(this.fileData.keySet(key), "File does not contain '" + key + "'");
+		return this.fileData.keyList(key);
 	}
 
 	@NotNull
 	@Override
-	public Set<String[]> keySetUseArray(final @NotNull String... key) {
+	public List<String[]> keyListUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
-		return Objects.notNull(this.fileData.keySetUseArray(key), "File does not contain '" + Arrays.toString(key) + "'");
+		return this.fileData.keyListUseArray(key);
 	}
 
 	@NotNull
 	@Override
-	public Set<String> blockKeySet() {
+	public List<String> blockKeyList() {
 		this.update();
-		return this.fileData.blockKeySet();
+		return this.fileData.blockKeyList();
 	}
 
 	@NotNull
 	@Override
-	public Set<String> blockKeySet(final @NotNull String key) {
+	public List<String> blockKeyList(final @NotNull String key) {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
-		return Objects.notNull(this.fileData.blockKeySet(key), "File does not contain '" + key + "'");
+		return this.fileData.blockKeyList(key);
 	}
 
 	@NotNull
 	@Override
-	public Set<String> blockKeySetUseArray(final @NotNull String... key) {
+	public List<String> blockKeyListUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
-		return Objects.notNull(this.fileData.blockKeySetUseArray(key), "File does not contain '" + Arrays.toString(key) + "'");
+		return this.fileData.blockKeyListUseArray(key);
 	}
 
 	/**

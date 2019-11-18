@@ -10,7 +10,7 @@ import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
-import de.zeanon.storage.internal.data.cache.StandardFileData;
+import de.zeanon.storage.internal.data.cache.FileData;
 import de.zeanon.storage.internal.data.section.YamlFileSection;
 import de.zeanon.storage.internal.settings.Comment;
 import de.zeanon.storage.internal.utils.SMFileUtils;
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class YamlFile extends CommentEnabledFile<String> {
+public class YamlFile extends CommentEnabledFile {
 
 
 	/**
@@ -159,7 +159,7 @@ public class YamlFile extends CommentEnabledFile<String> {
 		}
 	}
 
-	private static class LocalFileData extends StandardFileData {
+	private static class LocalFileData extends FileData {
 
 		private LocalFileData() {
 			super();

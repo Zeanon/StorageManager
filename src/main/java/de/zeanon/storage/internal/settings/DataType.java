@@ -2,9 +2,14 @@ package de.zeanon.storage.internal.settings;
 
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
+import de.zeanon.storage.internal.base.interfaces.DataList;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
+import de.zeanon.storage.internal.base.lists.ArrayDataList;
+import de.zeanon.storage.internal.base.lists.LinkedDataList;
 import de.zeanon.storage.internal.utils.basic.Objects;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,13 +26,19 @@ public enum DataType implements DataTypeBase {
 	SORTED {
 		@NotNull
 		@Override
-		public <K, V> Map<K, V> getNewDataMap(final @Nullable CommentSettingBase commentSetting, final @Nullable Map<K, V> map) {
-			return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
+		public <E> DataList<E> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable DataList<E> list) {
+			return list == null ? new LinkedDataList<>() : new LinkedDataList<>(list);
 		}
 
 		@NotNull
 		@Override
-		public <K> List<K> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<K> list) {
+		public <E> DataList<E> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<E> list) {
+			return list == null ? new LinkedDataList<>() : new LinkedDataList<>(list);
+		}
+
+		@NotNull
+		@Override
+		public <K> List<K> getNewList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<K> list) {
 			return list == null ? new LinkedList<>() : new LinkedList<>(list);
 		}
 	},
@@ -37,13 +48,19 @@ public enum DataType implements DataTypeBase {
 	STANDARD {
 		@NotNull
 		@Override
-		public <K, V> Map<K, V> getNewDataMap(final @Nullable CommentSettingBase commentSetting, final @Nullable Map<K, V> map) {
-			return map == null ? new HashMap<>() : new HashMap<>(map);
+		public <E> DataList<E> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable DataList<E> list) {
+			return list == null ? new ArrayDataList<>() : new ArrayDataList<>(list);
 		}
 
 		@NotNull
 		@Override
-		public <K> List<K> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<K> list) {
+		public <E> DataList<E> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<E> list) {
+			return list == null ? new ArrayDataList<>() : new ArrayDataList<>(list);
+		}
+
+		@NotNull
+		@Override
+		public <K> List<K> getNewList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<K> list) {
 			return list == null ? new ArrayList<>() : new ArrayList<>(list);
 		}
 	},
@@ -56,11 +73,21 @@ public enum DataType implements DataTypeBase {
 		 */
 		@NotNull
 		@Override
-		public <K, V> Map<K, V> getNewDataMap(final @Nullable CommentSettingBase commentSetting, final @Nullable Map<K, V> map) {
+		public <E> DataList<E> getNewDataList(final @NotNull CommentSettingBase commentSetting, final @Nullable DataList<E> list) {
 			if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
-				return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
+				return list == null ? new LinkedDataList<>() : new LinkedDataList<>(list);
 			} else {
-				return map == null ? new HashMap<>() : new HashMap<>(map);
+				return list == null ? new ArrayDataList<>() : new ArrayDataList<>(list);
+			}
+		}
+
+		@NotNull
+		@Override
+		public <E> DataList<E> getNewDataList(final @NotNull CommentSettingBase commentSetting, final @Nullable List<E> list) {
+			if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
+				return list == null ? new LinkedDataList<>() : new LinkedDataList<>(list);
+			} else {
+				return list == null ? new ArrayDataList<>() : new ArrayDataList<>(list);
 			}
 		}
 
@@ -69,7 +96,7 @@ public enum DataType implements DataTypeBase {
 		 */
 		@NotNull
 		@Override
-		public <K> List<K> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<K> list) {
+		public <K> List<K> getNewList(final @NotNull CommentSettingBase commentSetting, final @Nullable List<K> list) {
 			if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
 				return list == null ? new LinkedList<>() : new LinkedList<>(list);
 			} else {
@@ -80,9 +107,13 @@ public enum DataType implements DataTypeBase {
 
 	@NotNull
 	@Override
-	public abstract <K, V> Map<K, V> getNewDataMap(final @Nullable CommentSettingBase commentSetting, final @Nullable Map<K, V> map);
+	public abstract <E> DataList<E> getNewDataList(final @NotNull CommentSettingBase commentSetting, final @Nullable DataList<E> list);
 
 	@NotNull
 	@Override
-	public abstract <K> List<K> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<K> list);
+	public abstract <E> DataList<E> getNewDataList(final @NotNull CommentSettingBase commentSetting, final @Nullable List<E> list);
+
+	@NotNull
+	@Override
+	public abstract <K> List<K> getNewList(final @NotNull CommentSettingBase commentSetting, final @Nullable List<K> list);
 }

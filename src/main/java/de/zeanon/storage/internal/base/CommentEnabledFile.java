@@ -1,6 +1,10 @@
 package de.zeanon.storage.internal.base;
 
-import de.zeanon.storage.internal.base.interfaces.*;
+import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
+import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
+import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
+import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
+import de.zeanon.storage.internal.data.cache.FileData;
 import de.zeanon.storage.internal.settings.Comment;
 import de.zeanon.storage.internal.settings.DataType;
 import de.zeanon.storage.internal.utils.basic.Objects;
@@ -24,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public abstract class CommentEnabledFile<@NotNull K> extends FlatFile<K> {
+public abstract class CommentEnabledFile extends FlatFile {
 
 
 	/**
@@ -41,7 +45,7 @@ public abstract class CommentEnabledFile<@NotNull K> extends FlatFile<K> {
 	private DataTypeBase dataType = DataType.AUTOMATIC;
 
 
-	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType, final @NotNull FileData<String, K, Object> fileData) {
+	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType, final @NotNull FileData fileData) {
 		super(file, fileType, reloadSetting, fileData);
 		if (commentSetting != null) {
 			this.setCommentSetting(commentSetting);

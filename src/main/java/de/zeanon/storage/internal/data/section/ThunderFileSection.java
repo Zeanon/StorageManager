@@ -3,7 +3,6 @@ package de.zeanon.storage.internal.data.section;
 import de.zeanon.storage.internal.base.CommentEnabledSection;
 import de.zeanon.storage.internal.data.raw.ThunderFile;
 import de.zeanon.storage.internal.utils.basic.Objects;
-import javafx.util.Pair;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ThunderFileSection extends CommentEnabledSection<Pair<Integer, String>> {
+public class ThunderFileSection extends CommentEnabledSection {
 
 	@NotNull
 	private final ThunderFile thunderFile;

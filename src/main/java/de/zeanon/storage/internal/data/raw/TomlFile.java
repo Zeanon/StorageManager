@@ -6,7 +6,7 @@ import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
-import de.zeanon.storage.internal.data.cache.StandardFileData;
+import de.zeanon.storage.internal.data.cache.FileData;
 import de.zeanon.storage.internal.data.section.TomlFileSection;
 import de.zeanon.storage.internal.utils.SMFileUtils;
 import java.io.File;
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class TomlFile extends FlatFile<String> {
+public class TomlFile extends FlatFile {
 
 
 	/**
@@ -129,7 +129,7 @@ public class TomlFile extends FlatFile<String> {
 		}
 	}
 
-	private static class LocalFileData extends StandardFileData {
+	private static class LocalFileData extends FileData {
 
 		private LocalFileData() {
 			super();

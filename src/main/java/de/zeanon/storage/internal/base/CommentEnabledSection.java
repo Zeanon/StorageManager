@@ -14,18 +14,18 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public abstract class CommentEnabledSection<@NotNull K> extends FlatSection<K> {
+public abstract class CommentEnabledSection extends FlatSection {
 
 	@NotNull
-	private final CommentEnabledFile<K> commentEnabledFile;
+	private final CommentEnabledFile commentEnabledFile;
 
 
-	protected CommentEnabledSection(final @NotNull String sectionKey, final @NotNull CommentEnabledFile<K> commentEnabledFile) {
+	protected CommentEnabledSection(final @NotNull String sectionKey, final @NotNull CommentEnabledFile commentEnabledFile) {
 		super(sectionKey, commentEnabledFile);
 		this.commentEnabledFile = commentEnabledFile;
 	}
 
-	protected CommentEnabledSection(final @NotNull String[] sectionKey, final @NotNull CommentEnabledFile<K> commentEnabledFile) {
+	protected CommentEnabledSection(final @NotNull String[] sectionKey, final @NotNull CommentEnabledFile commentEnabledFile) {
 		super(sectionKey, commentEnabledFile);
 		this.commentEnabledFile = commentEnabledFile;
 	}

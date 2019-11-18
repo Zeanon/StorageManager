@@ -4,22 +4,19 @@ import de.zeanon.storage.internal.base.CommentEnabledFile;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.exceptions.ThunderException;
-import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
-import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
-import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
-import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
-import de.zeanon.storage.internal.data.cache.SortedFileData;
+import de.zeanon.storage.internal.base.interfaces.*;
+import de.zeanon.storage.internal.base.lists.LinkedDataList;
+import de.zeanon.storage.internal.data.cache.FileData;
 import de.zeanon.storage.internal.data.section.ThunderFileSection;
 import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import de.zeanon.storage.internal.utils.editor.ThunderEditor;
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import javafx.util.Pair;
+import java.util.LinkedList;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ThunderFile extends CommentEnabledFile<Pair<Integer, String>> {
+public class ThunderFile extends CommentEnabledFile {
 
 
 	/**
@@ -85,63 +82,63 @@ public class ThunderFile extends CommentEnabledFile<Pair<Integer, String>> {
 
 	@NotNull
 	@Override
-	public Set<String> keySet() {
+	public List<String> keyList() {
 		this.update();
-		return this.keySet(this.getFileData().toMap());
+		return this.keyList(this.getFileData().getDataList());
 	}
 
 	@NotNull
 	@Override
-	public Set<String[]> keySetUseArray() {
+	public List<String[]> keyListUseArray() {
 		this.update();
-		return this.keySetUseArray(this.getFileData().toMap());
+		return this.keyListUseArray(this.getFileData().getDataList());
 	}
 
 	@NotNull
 	@Override
-	public Set<String> keySet(final @NotNull String key) {
+	public List<String> keyList(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
 		@Nullable Object tempMap = this.getFileData().get(key);
 		//noinspection unchecked
-		return Objects.notNull(tempMap instanceof Map ? this.keySet((Map<String, Object>) tempMap) : null, "File does not contain '" + key + "'");
+		return Objects.notNull(tempMap instanceof DataList ? this.keyList((DataList) tempMap) : null, "File does not contain '" + key + "'");
 	}
 
 	@NotNull
 	@Override
-	public Set<String[]> keySetUseArray(final @NotNull String... key) {
+	public List<String[]> keyListUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
 		@Nullable Object tempMap = this.getFileData().getUseArray(key);
 		//noinspection unchecked
-		return Objects.notNull(tempMap instanceof Map ? this.keySetUseArray((Map<String, Object>) tempMap) : null, "File does not contain '" + Arrays.toString(key) + "'");
+		return Objects.notNull(tempMap instanceof DataList ? this.keyListUseArray((DataList) tempMap) : null, "File does not contain '" + Arrays.toString(key) + "'");
 	}
 
 	@NotNull
 	@Override
-	public Set<String> blockKeySet() {
+	public List<String> blockKeyList() {
 		this.update();
-		return this.blockKeySet(this.getFileData().toMap());
+		return this.blockKeyList(this.getFileData().getDataList());
 	}
 
 	@NotNull
 	@Override
-	public Set<String> blockKeySet(final @NotNull String key) {
+	public List<String> blockKeyList(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
 		@Nullable Object tempMap = this.getFileData().get(key);
 		//noinspection unchecked
-		return Objects.notNull(tempMap instanceof Map ? this.blockKeySet((Map<String, Object>) tempMap) : null, "File does not contain '" + key + "'");
+		return Objects.notNull(tempMap instanceof DataList ? this.blockKeyList((DataList) tempMap) : null, "File does not contain '" + key + "'");
 	}
 
 	@NotNull
 	@Override
-	public Set<String> blockKeySetUseArray(final @NotNull String... key) {
+	public List<String> blockKeyListUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
 		@Nullable Object tempMap = this.getFileData().getUseArray(key);
 		//noinspection unchecked
-		return Objects.notNull(tempMap instanceof Map ? this.blockKeySet((Map<String, Object>) tempMap) : null, "File does not contain '" + Arrays.toString(key) + "'");
+		return Objects.notNull(tempMap instanceof DataList ? this.blockKeyList((DataList) tempMap) : null, "File does not contain '" + Arrays.toString(key) + "'");
 	}
 
 	/**
@@ -163,51 +160,51 @@ public class ThunderFile extends CommentEnabledFile<Pair<Integer, String>> {
 	}
 
 	@NotNull
-	private Set<String> keySet(@NotNull final Map<String, Object> map) {
-		@NotNull Set<String> tempSet = new HashSet<>();
-		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
-			if (entry.getValue() instanceof Map) {
+	private List<String> keyList(@NotNull final DataList<DataList.Entry<String, Object>> list) {
+		final @NotNull List<String> tempList = list instanceof LinkedDataList ? new LinkedList<>() : new ArrayList<>();
+		for (DataList.Entry<String, Object> entry : list) {
+			if (entry.getValue() instanceof DataList) {
 				//noinspection unchecked
-				for (String tempKey : this.keySet((Map<String, Object>) entry.getValue())) {
-					tempSet.add(entry.getKey() + "." + tempKey);
+				for (String tempKey : this.keyList((DataList<DataList.Entry<String, Object>>) entry.getValue())) {
+					tempList.add(entry.getKey() + "." + tempKey);
 				}
 			} else if (entry.getValue() != ThunderEditor.LineType.COMMENT && entry.getValue() != ThunderEditor.LineType.BLANK_LINE) {
-				tempSet.add(entry.getKey());
+				tempList.add(entry.getKey());
 			}
 		}
-		return tempSet;
+		return tempList;
 	}
 
 	@NotNull
-	private Set<String[]> keySetUseArray(@NotNull final Map<String, Object> map) {
-		@NotNull Set<String[]> tempSet = new HashSet<>();
-		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
-			if (entry.getValue() instanceof Map) {
+	private List<String[]> keyListUseArray(@NotNull final DataList<DataList.Entry<String, Object>> list) {
+		final @NotNull List<String[]> tempList = list instanceof LinkedDataList ? new LinkedList<>() : new ArrayList<>();
+		for (DataList.Entry<String, Object> entry : list) {
+			if (entry.getValue() instanceof DataList) {
 				//noinspection unchecked
-				for (@NotNull String[] tempKey : this.keySetUseArray((Map<String, Object>) entry.getValue())) {
+				for (String[] tempKey : this.keyListUseArray((DataList<DataList.Entry<String, Object>>) entry.getValue())) {
 					@NotNull String[] key = new String[1 + tempKey.length];
 					key[0] = entry.getKey();
 					System.arraycopy(tempKey, 0, key, 1, tempKey.length);
-					tempSet.add(key);
+					tempList.add(key);
 				}
 			} else if (entry.getValue() != ThunderEditor.LineType.COMMENT && entry.getValue() != ThunderEditor.LineType.BLANK_LINE) {
-				tempSet.add(new String[]{
+				tempList.add(new String[]{
 						entry.getKey()
 				});
 			}
 		}
-		return tempSet;
+		return tempList;
 	}
 
 	@NotNull
-	private Set<String> blockKeySet(@NotNull final Map<String, Object> map) {
-		@NotNull Set<String> tempSet = new HashSet<>();
-		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
+	private List<String> blockKeyList(@NotNull final DataList<DataList.Entry<String, Object>> list) {
+		final @NotNull List<String> tempList = list instanceof LinkedDataList ? new LinkedList<>() : new ArrayList<>();
+		for (DataList.Entry<String, Object> entry : list) {
 			if (entry.getValue() != ThunderEditor.LineType.COMMENT && entry.getValue() != ThunderEditor.LineType.BLANK_LINE) {
-				tempSet.add(entry.getKey());
+				tempList.add(entry.getKey());
 			}
 		}
-		return tempSet;
+		return tempList;
 	}
 
 
@@ -248,7 +245,7 @@ public class ThunderFile extends CommentEnabledFile<Pair<Integer, String>> {
 		}
 	}
 
-	private static class LocalFileData extends SortedFileData {
+	private static class LocalFileData extends FileData {
 
 		private LocalFileData() {
 			super();

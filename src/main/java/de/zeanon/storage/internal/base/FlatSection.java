@@ -4,8 +4,8 @@ import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.base.interfaces.StorageBase;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,10 +18,10 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 @ToString(callSuper = true)
 @SuppressWarnings("unused")
-public abstract class FlatSection<@NotNull K> implements StorageBase, Comparable<FlatSection> {
+public abstract class FlatSection implements StorageBase, Comparable<FlatSection> {
 
 	@NotNull
-	private final FlatFile<K> flatFile;
+	private final FlatFile flatFile;
 	@NotNull
 	@Setter
 	protected String sectionKey = "";
@@ -30,13 +30,13 @@ public abstract class FlatSection<@NotNull K> implements StorageBase, Comparable
 	protected String[] arraySectionKey = new String[0];
 
 
-	protected FlatSection(final @NotNull String sectionKey, final @NotNull FlatFile<K> flatFile) {
+	protected FlatSection(final @NotNull String sectionKey, final @NotNull FlatFile flatFile) {
 		this.setSectionKey(Objects.notNull(sectionKey, "SectionKey  must not be null"));
 		this.setArraySectionKey(Objects.notNull(sectionKey, "SectionKey  must not be null").split("\\."));
 		this.flatFile = flatFile;
 	}
 
-	protected FlatSection(final @NotNull String[] sectionKey, final @NotNull FlatFile<K> flatFile) {
+	protected FlatSection(final @NotNull String[] sectionKey, final @NotNull FlatFile flatFile) {
 		@NotNull StringBuilder tempKey = new StringBuilder(sectionKey[0]);
 		for (int i = 1; i < sectionKey.length; i++) {
 			tempKey.append(".").append(sectionKey[i]);
@@ -114,26 +114,26 @@ public abstract class FlatSection<@NotNull K> implements StorageBase, Comparable
 
 	@NotNull
 	@Override
-	public Set<String> keySet() {
-		return this.flatFile.keySet(this.getSectionKey());
+	public List<String> keyList() {
+		return this.flatFile.keyList(this.getSectionKey());
 	}
 
 	@NotNull
 	@Override
-	public Set<String> blockKeySet() {
-		return this.flatFile.blockKeySet(this.getSectionKey());
+	public List<String> blockKeyList() {
+		return this.flatFile.blockKeyList(this.getSectionKey());
 	}
 
 	@NotNull
 	@Override
-	public Set<String> keySet(final @NotNull String key) {
-		return this.flatFile.keySet(this.getFinalKey(key));
+	public List<String> keyList(final @NotNull String key) {
+		return this.flatFile.keyList(this.getFinalKey(key));
 	}
 
 	@NotNull
 	@Override
-	public Set<String> blockKeySet(final @NotNull String key) {
-		return this.flatFile.blockKeySet(this.getFinalKey(key));
+	public List<String> blockKeyList(final @NotNull String key) {
+		return this.flatFile.blockKeyList(this.getFinalKey(key));
 	}
 
 	@NotNull
@@ -200,20 +200,20 @@ public abstract class FlatSection<@NotNull K> implements StorageBase, Comparable
 
 	@NotNull
 	@Override
-	public Set<String[]> keySetUseArray() {
-		return this.flatFile.keySetUseArray(this.getArraySectionKey());
+	public List<String[]> keyListUseArray() {
+		return this.flatFile.keyListUseArray(this.getArraySectionKey());
 	}
 
 	@NotNull
 	@Override
-	public Set<String[]> keySetUseArray(final @NotNull String... key) {
-		return this.flatFile.keySetUseArray(this.getFinalArrayKey(key));
+	public List<String[]> keyListUseArray(final @NotNull String... key) {
+		return this.flatFile.keyListUseArray(this.getFinalArrayKey(key));
 	}
 
 	@NotNull
 	@Override
-	public Set<String> blockKeySetUseArray(final @NotNull String... key) {
-		return this.flatFile.blockKeySetUseArray(this.getFinalArrayKey(key));
+	public List<String> blockKeyListUseArray(final @NotNull String... key) {
+		return this.flatFile.blockKeyListUseArray(this.getFinalArrayKey(key));
 	}
 
 	@Override
