@@ -335,11 +335,11 @@ public class FileData implements Comparable<FileData> {
 	private DataList<DataList.Entry<String, Object>> parseMap(final @NotNull Map<String, Object> map, int line) {
 		DataList<DataList.Entry<String, Object>> tempList = map instanceof LinkedHashMap ? new LinkedDataList<>() : new ArrayDataList<>();
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
-			if (entry.getValue() instanceof DataList) {
+			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
 				tempList.add(new DataList.Entry<>(entry.getKey(), this.parseMap((Map) entry.getValue(), line)));
 			} else {
-				tempList.add(new DataList.Entry<>(entry.getKey(), entry.getValue()));
+				tempList.add(new DataList.Entry<>(entry.getKey(), entry.getValue(), line));
 			}
 			line++;
 		}

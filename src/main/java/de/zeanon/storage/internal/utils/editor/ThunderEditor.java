@@ -293,7 +293,7 @@ public class ThunderEditor {
 		} else if (entry.getValue() instanceof Map) {
 			writer.print(entry.getKey() + " " + "{");
 			//noinspection unchecked
-			internalWriteWithComments((Map<String, Object>) entry.getValue(), "", writer);
+			internalWriteWithComments((List<DataList.Entry<String, Object>>) entry.getValue(), "", writer);
 		} else if (entry.getValue() instanceof List) {
 			writer.println(entry.getKey() + " = [");
 			//noinspection unchecked
@@ -304,15 +304,15 @@ public class ThunderEditor {
 	}
 	// </Write Data with Comments
 
-	private static void internalWriteWithComments(final @NotNull Map<String, Object> map, final String indentationString, final @NotNull PrintWriter writer) {
-		for (@NotNull final Map.Entry<String, Object> entry : map.entrySet()) {
+	private static void internalWriteWithComments(final @NotNull List<DataList.Entry<String, Object>> entryList, final String indentationString, final @NotNull PrintWriter writer) {
+		for (@NotNull final DataList.Entry<String, Object> entry : entryList) {
 			writer.println();
 			if (entry.getKey().startsWith("#") && entry.getValue() == LineType.COMMENT) {
 				writer.print(indentationString + "  " + entry.getKey());
 			} else if (entry.getValue() instanceof Map) {
 				writer.print(indentationString + "  " + entry.getKey() + " " + "{");
 				//noinspection unchecked
-				internalWriteWithComments((Map<String, Object>) entry.getValue(), indentationString + "  ", writer);
+				internalWriteWithComments((List<DataList.Entry<String, Object>>) entry.getValue(), indentationString + "  ", writer);
 			} else if (entry.getValue() instanceof List) {
 				writer.println(indentationString + "  " + entry.getKey() + " = [");
 				//noinspection unchecked
@@ -352,7 +352,7 @@ public class ThunderEditor {
 		if (entry.getValue() instanceof Map) {
 			writer.print(entry.getKey() + " " + "{");
 			//noinspection unchecked
-			internalWriteWithoutComments((Map<String, Object>) entry.getValue(), "", writer);
+			internalWriteWithoutComments((List<DataList.Entry<String, Object>>) entry.getValue(), "", writer);
 		} else if (entry.getValue() instanceof List) {
 			writer.println("  " + entry.getKey() + " = [");
 			//noinspection unchecked
@@ -363,14 +363,14 @@ public class ThunderEditor {
 	}
 	// </Write Data without Comments>
 
-	private static void internalWriteWithoutComments(final @NotNull Map<String, Object> map, final String indentationString, final @NotNull PrintWriter writer) {
-		for (@NotNull final Map.Entry<String, Object> entry : map.entrySet()) {
+	private static void internalWriteWithoutComments(final @NotNull List<DataList.Entry<String, Object>> entryList, final String indentationString, final @NotNull PrintWriter writer) {
+		for (@NotNull final DataList.Entry<String, Object> entry : entryList) {
 			if (!entry.getKey().startsWith("#") && entry.getValue() != LineType.COMMENT && !entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
 				writer.println();
 				if (entry.getValue() instanceof Map) {
 					writer.print(indentationString + "  " + entry.getKey() + " " + "{");
 					//noinspection unchecked
-					internalWriteWithoutComments((Map<String, Object>) entry.getValue(), indentationString + "  ", writer);
+					internalWriteWithoutComments((List<DataList.Entry<String, Object>>) entry.getValue(), indentationString + "  ", writer);
 				} else if (entry.getValue() instanceof List) {
 					writer.println(indentationString + "  " + entry.getKey() + " = [");
 					//noinspection unchecked
