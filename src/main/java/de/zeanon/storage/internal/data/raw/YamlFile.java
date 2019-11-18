@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class YamlFile extends CommentEnabledFile {
+public class YamlFile extends CommentEnabledFile<String> {
 
 
 	/**
@@ -45,7 +45,7 @@ public class YamlFile extends CommentEnabledFile {
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
 	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
-		super(file, FileType.YAML, reloadSetting, commentSetting, dataType, new LocalStandardFileData());
+		super(file, FileType.YAML, reloadSetting, commentSetting, dataType, new LocalFileData());
 
 		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
 			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
@@ -159,9 +159,9 @@ public class YamlFile extends CommentEnabledFile {
 		}
 	}
 
-	private static class LocalStandardFileData extends StandardFileData {
+	private static class LocalFileData extends StandardFileData {
 
-		private LocalStandardFileData() {
+		private LocalFileData() {
 			super();
 		}
 	}

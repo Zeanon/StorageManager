@@ -2,11 +2,15 @@ package de.zeanon.storage.internal.base.interfaces;
 
 import java.util.Map;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public interface FileData<T, K, V> {
+@SuppressWarnings({"unchecked", "unused"})
+public interface FileData<@NotNull T, @NotNull K, @NotNull V> {
 
 
 	/**
@@ -68,6 +72,7 @@ public interface FileData<T, K, V> {
 	@NotNull
 	Set<T[]> keySetUseArray(final T... key);
 
+
 	/**
 	 * Method to get the object assign to a key from a FileData Object
 	 *
@@ -75,10 +80,10 @@ public interface FileData<T, K, V> {
 	 * @return the value assigned to the given key or null if the key does not exist
 	 */
 	@Nullable
-	Object get(final T key);
+	V get(final @NotNull T key);
 
 	@Nullable
-	Object getUseArray(final T... key);
+	V getUseArray(final @NotNull T... key);
 
 	/**
 	 * get the keySet of a single layer of the map
@@ -95,10 +100,10 @@ public interface FileData<T, K, V> {
 	 * @return the keySet of the given layer
 	 */
 	@NotNull
-	Set<T> blockKeySet(final T key);
+	Set<T> blockKeySet(final @NotNull T key);
 
 	@NotNull
-	Set<T> blockKeySetUseArray(final T... key);
+	Set<T> blockKeySetUseArray(final @NotNull T... key);
 
 	/**
 	 * Get the size of a single layer of the map
@@ -113,9 +118,9 @@ public interface FileData<T, K, V> {
 	 * @param key the key of the layer
 	 * @return the size of the given layer or 0 if the key does not exist
 	 */
-	int blockSize(final T key);
+	int blockSize(final @NotNull T key);
 
-	int blockSizeUseArray(final T... key);
+	int blockSizeUseArray(final @NotNull T... key);
 
 	/**
 	 * Get the size of the local map
@@ -130,32 +135,51 @@ public interface FileData<T, K, V> {
 	@NotNull
 	Map<T, V> toMap();
 
+	@NotNull
+	Map<K, V> toRawMap();
+
 	/**
 	 * get the size of all sublayers of the given key combined
 	 *
 	 * @param key the key of the layer
 	 * @return the size of all sublayers of the given key or 0 if the key does not exist
 	 */
-	int size(final T key);
+	int size(final @NotNull T key);
 
-	int sizeUseArray(final T... key);
+	int sizeUseArray(final @NotNull T... key);
 
 	/**
 	 * Clear the contents of this FileData
 	 */
 	void clear();
 
+	boolean isEmpty();
+
+	@NotNull
 	Set<FileData.Entry<T, V>> entrySet();
 
+	@NotNull
+	Set<FileData.Entry<K, V>> rawEntrySet();
+
+	@NotNull
+	String toRawString();
+
 	@Override
+	@NotNull
 	String toString();
 
-	interface Entry<T, V> {
 
-		T getKey();
+	@Getter
+	@Setter
+	@Accessors(chain = true)
+	class Entry<T, V> {
 
-		V getValue();
+		private T key;
+		private V value;
 
-		V setValue(V value);
+		public Entry(final @NotNull T key, final @NotNull V value) {
+			this.key = key;
+			this.value = value;
+		}
 	}
 }

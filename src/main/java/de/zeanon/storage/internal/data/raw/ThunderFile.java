@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javafx.util.Pair;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ThunderFile extends CommentEnabledFile {
+public class ThunderFile extends CommentEnabledFile<Pair<Integer, String>> {
 
 
 	/**
@@ -76,7 +77,7 @@ public class ThunderFile extends CommentEnabledFile {
 	@Override
 	public synchronized void save() {
 		try {
-			ThunderEditor.writeData(this.getFile(), this.getFileData().toMap(), this.getCommentSetting());
+			ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
 		} catch (RuntimeIOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
 		}

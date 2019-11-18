@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public abstract class CommentEnabledFile extends FlatFile {
+public abstract class CommentEnabledFile<@NotNull K> extends FlatFile<K> {
 
 
 	/**
@@ -41,7 +41,7 @@ public abstract class CommentEnabledFile extends FlatFile {
 	private DataTypeBase dataType = DataType.AUTOMATIC;
 
 
-	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType, final @NotNull FileData fileData) {
+	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType, final @NotNull FileData<String, K, Object> fileData) {
 		super(file, fileType, reloadSetting, fileData);
 		if (commentSetting != null) {
 			this.setCommentSetting(commentSetting);

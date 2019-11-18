@@ -5,6 +5,7 @@ import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.exceptions.ThunderException;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
+import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.settings.Comment;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.io.File;
@@ -12,9 +13,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javafx.util.Pair;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -30,16 +33,16 @@ public class ThunderEditor {
 	 * Write the given Data to a File
 	 *
 	 * @param file           the File to be written to
-	 * @param map            a HashMap containing the Data to be written
+	 * @param fileData       the FileData containing the Data to be written
 	 * @param commentSetting the CommentSetting to be used
 	 * @throws RuntimeIOException  if the File can not be accessed properly
 	 * @throws ObjectNullException if a passed value is null
 	 */
-	public static void writeData(final @NotNull File file, final @NotNull Map<String, Object> map, final @NotNull CommentSettingBase commentSetting) {
+	public static void writeData(final @NotNull File file, final @NotNull FileData<String, Pair<Integer, String>, Object> fileData, final @NotNull CommentSettingBase commentSetting) {
 		if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
-			initialWriteWithComments(Objects.notNull(file, "File must not be null"), Objects.notNull(map, "Map must not be null"));
+			initialWriteWithComments(Objects.notNull(file, "File must not be null"), Objects.notNull(fileData, "Map must not be null"));
 		} else {
-			initialWriteWithOutComments(Objects.notNull(file, "File must not be null"), Objects.notNull(map, "Map must not be null"));
+			initialWriteWithOutComments(Objects.notNull(file, "File must not be null"), Objects.notNull(fileData, "Map must not be null"));
 		}
 	}
 
@@ -55,7 +58,7 @@ public class ThunderEditor {
 	 * @throws ObjectNullException if a passed value is null
 	 */
 	@NotNull
-	public static Map<String, Object> readData(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {
+	public static Map<Pair<Integer, String>, Object> readData(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {
 		if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
 			return initialReadWithComments(Objects.notNull(file, "File must not be null"), Objects.notNull(dataType, "DataType must not be null"), Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		} else {
@@ -63,17 +66,17 @@ public class ThunderEditor {
 		}
 	}
 
+
 	// <Read Data>
 	// <Read Data with Comments>
 	@NotNull
-	private static Map<String, Object> initialReadWithComments(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {
+	private static Map<Pair<Integer, String>, Object> initialReadWithComments(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
-			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
+			Map<Pair<Integer, String>, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 
 			String tempKey = null;
-			int blankLine = 0;
-			int commentLine = 0;
+			int line = 0;
 			while (!lines.isEmpty()) {
 				String tempLine = lines.get(0).trim();
 				lines.remove(0);
@@ -81,21 +84,20 @@ public class ThunderEditor {
 				if (tempLine.contains("}")) {
 					throw new ThunderException("Error at '" + file.getAbsolutePath() + "' -> Block closed without being opened");
 				} else if (tempLine.isEmpty()) {
-					tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
-					blankLine++;
+					tempMap.put(new Pair<>(line, ""), LineType.BLANK_LINE);
 				} else if (tempLine.startsWith("#")) {
-					tempMap.put(tempLine + "{=}" + commentLine, LineType.COMMENT);
-					commentLine++;
+					tempMap.put(new Pair<>(line, tempLine), LineType.COMMENT);
 				} else if (tempLine.endsWith("{")) {
 					if (!tempLine.equals("{")) {
 						tempKey = tempLine.replace("{", "").trim();
 					} else if (tempKey == null) {
 						throw new ThunderException("Error at '" + file.getAbsolutePath() + "' -> '" + tempLine + "' -> Key must not be null");
 					}
-					tempMap.put(tempKey, internalReadWithComments(file.getAbsolutePath(), lines, blankLine, commentLine, dataType, commentSetting));
+					tempMap.put(new Pair<>(line, tempKey), internalReadWithComments(file.getAbsolutePath(), lines, line, dataType, commentSetting));
 				} else {
-					tempKey = readKey(file.getAbsolutePath(), lines, dataType, tempMap, tempKey, tempLine, commentSetting);
+					tempKey = readKey(file.getAbsolutePath(), lines, dataType, tempMap, tempKey, tempLine, commentSetting, line);
 				}
+				line++;
 			}
 			return tempMap;
 		} catch (ArrayIndexOutOfBoundsException e) {
@@ -104,10 +106,11 @@ public class ThunderEditor {
 			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e.getCause());
 		}
 	}
+	// </Read Data with Comments>
 
 	@NotNull
-	private static Map<String, Object> internalReadWithComments(final String filePath, @NotNull final List<String> lines, int blankLine, int commentLine, @NotNull final DataTypeBase dataType, @NotNull final CommentSettingBase commentSetting) throws ThunderException {
-		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
+	private static Map<Pair<Integer, String>, Object> internalReadWithComments(final @NotNull String filePath, final @NotNull List<String> lines, int line, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {
+		Map<Pair<Integer, String>, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 
 		while (!lines.isEmpty()) {
@@ -119,34 +122,33 @@ public class ThunderEditor {
 			} else if (tempLine.contains("}")) {
 				throw new ThunderException("Error at '" + filePath + "' -> Block closed without being opened");
 			} else if (tempLine.isEmpty()) {
-				tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
-				blankLine++;
+				tempMap.put(new Pair<>(line, ""), LineType.BLANK_LINE);
 			} else if (tempLine.startsWith("#")) {
-				tempMap.put(tempLine + "{=}" + commentLine, LineType.COMMENT);
-				commentLine++;
+				tempMap.put(new Pair<>(line, tempLine), LineType.COMMENT);
 			} else if (tempLine.endsWith("{")) {
 				if (!tempLine.equals("{")) {
 					tempKey = tempLine.replace("{", "").trim();
 				} else if (tempKey == null) {
 					throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 				}
-				tempMap.put(tempKey, internalReadWithComments(filePath, lines, blankLine, commentLine, dataType, commentSetting));
+				tempMap.put(new Pair<>(line, tempKey), internalReadWithComments(filePath, lines, line, dataType, commentSetting));
 			} else {
-				tempKey = readKey(filePath, lines, dataType, tempMap, tempKey, tempLine, commentSetting);
+				tempKey = readKey(filePath, lines, dataType, tempMap, tempKey, tempLine, commentSetting, line);
 			}
+			line++;
 		}
 		throw new ThunderException("Error at '" + filePath + "' -> Block does not close");
 	}
-	// </Read Data with Comments>
 
 	// <Read Data without Comments>
 	@NotNull
-	private static Map<String, Object> initialReadWithOutComments(@NotNull final File file, @NotNull final DataTypeBase dataType, @NotNull final CommentSettingBase commentSetting) throws ThunderException {
+	private static Map<Pair<Integer, String>, Object> initialReadWithOutComments(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
-			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
+			Map<Pair<Integer, String>, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 
 			String tempKey = null;
+			int line = 0;
 			while (!lines.isEmpty()) {
 				String tempLine = lines.get(0).trim();
 				lines.remove(0);
@@ -160,11 +162,12 @@ public class ThunderEditor {
 						} else if (tempKey == null) {
 							throw new ThunderException("Error at '" + file.getAbsolutePath() + "' - > '" + tempLine + "' -> Key must not be null");
 						}
-						tempMap.put(tempKey, internalReadWithOutComments(file.getAbsolutePath(), lines, dataType, commentSetting));
+						tempMap.put(new Pair<>(line, tempKey), internalReadWithOutComments(file.getAbsolutePath(), lines, dataType, commentSetting, line));
 					} else {
-						tempKey = readKey(file.getAbsolutePath(), lines, dataType, tempMap, tempKey, tempLine, commentSetting);
+						tempKey = readKey(file.getAbsolutePath(), lines, dataType, tempMap, tempKey, tempLine, commentSetting, line);
 					}
 				}
+				line++;
 			}
 			return tempMap;
 		} catch (ArrayIndexOutOfBoundsException e) {
@@ -173,10 +176,11 @@ public class ThunderEditor {
 			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e.getCause());
 		}
 	}
+	// </Read without Comments>
 
 	@NotNull
-	private static Map<String, Object> internalReadWithOutComments(final String filePath, @NotNull final List<String> lines, @NotNull final DataTypeBase dataType, @NotNull final CommentSettingBase commentSetting) throws ThunderException {
-		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
+	private static Map<Pair<Integer, String>, Object> internalReadWithOutComments(final @NotNull String filePath, final @NotNull List<String> lines, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting, int line) throws ThunderException {
+		Map<Pair<Integer, String>, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 
 		while (!lines.isEmpty()) {
@@ -194,37 +198,41 @@ public class ThunderEditor {
 					} else if (tempKey == null) {
 						throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 					}
-					tempMap.put(tempKey, internalReadWithOutComments(filePath, lines, dataType, commentSetting));
+					tempMap.put(new Pair<>(line, tempKey), internalReadWithOutComments(filePath, lines, dataType, commentSetting, line));
 				} else {
-					tempKey = readKey(filePath, lines, dataType, tempMap, tempKey, tempLine, commentSetting);
+					tempKey = readKey(filePath, lines, dataType, tempMap, tempKey, tempLine, commentSetting, line);
 				}
 			}
+			line++;
 		}
 		throw new ThunderException("Error at '" + filePath + "' -> Block does not close");
 	}
-	// </Read without Comments>
 
-	private static String readKey(final String filePath, @NotNull final List<String> lines, @NotNull final DataTypeBase dataType, @NotNull final Map<String, Object> tempMap, String tempKey, @NotNull final String tempLine, @NotNull final CommentSettingBase commentSetting) throws ThunderException {
+	private static String readKey(final @NotNull String filePath, final @NotNull List<String> lines, final @NotNull DataTypeBase dataType, final @NotNull Map<Pair<Integer, String>, Object> tempMap, String tempKey, final @NotNull String tempLine, final @NotNull CommentSettingBase commentSetting, final int lineId) throws ThunderException {
 		if (tempLine.contains("=")) {
-			String[] line = tempLine.split("=");
+			String[] line = split(tempLine, "=");
+			if (line.length > 2) {
+				throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> illegal amount of delimiters");
+			}
 			line[0] = line[0].trim();
 			line[1] = line[1].trim();
 			if (line[1].startsWith("[")) {
 				if (line[1].endsWith("]")) {
-					String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
+					String[] listArray = split(line[1].substring(1, line[1].length() - 1), ",");
 					List<String> list = dataType.getNewDataList(commentSetting, null);
 					for (String value : listArray) {
-						list.add(value.trim());
+						list.add(value.trim().replace("\"", ""));
 					}
-					tempMap.put(line[0], list);
+					tempMap.put(new Pair<>(lineId, line[0]), list);
 				} else {
-					tempMap.put(line[0], readList(filePath, lines, dataType, commentSetting));
+					tempMap.put(new Pair<>(lineId, line[0]), readList(filePath, lines, dataType, commentSetting));
 				}
 			} else {
+				line[1] = line[1].replace("\"", "");
 				if (line[1].equalsIgnoreCase("true") || line[1].equalsIgnoreCase("false")) {
-					tempMap.put(line[0], line[1].equalsIgnoreCase("true"));
+					tempMap.put(new Pair<>(lineId, line[0]), line[1].equalsIgnoreCase("true"));
 				} else {
-					tempMap.put(line[0], line[1]);
+					tempMap.put(new Pair<>(lineId, line[0]), line[1]);
 				}
 			}
 		} else {
@@ -236,15 +244,16 @@ public class ThunderEditor {
 		}
 		return tempKey;
 	}
+	// </Read Data>
 
 	@NotNull
-	private static List<String> readList(final String filePath, @NotNull final List<String> lines, @NotNull final DataTypeBase dataType, @NotNull final CommentSettingBase commentSetting) throws ThunderException {
+	private static List<String> readList(final String filePath, final @NotNull List<String> lines, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {
 		List<String> tempList = dataType.getNewDataList(commentSetting, null);
 		while (!lines.isEmpty()) {
 			String tempLine = lines.get(0).trim();
 			lines.remove(0);
 			if (tempLine.startsWith("-")) {
-				tempList.add(tempLine.substring(1).trim());
+				tempList.add(tempLine.substring(1).trim().replace("\"", ""));
 			} else if (tempLine.endsWith("]")) {
 				return tempList;
 			} else {
@@ -253,15 +262,13 @@ public class ThunderEditor {
 		}
 		throw new ThunderException("Error at '" + filePath + "' -> List not closed properly");
 	}
-	// </Read Data>
-
 
 	// <Write Data>
 	// <Write Data with Comments>
-	private static void initialWriteWithComments(@NotNull final File file, @NotNull final Map<String, Object> map) {
+	private static void initialWriteWithComments(final @NotNull File file, final @NotNull FileData<String, Pair<Integer, String>, Object> fileData) {
 		try (final PrintWriter writer = new PrintWriter(file)) {
-			if (!map.isEmpty()) {
-				final Iterator<Map.Entry<String, Object>> mapIterator = map.entrySet().iterator();
+			if (!fileData.isEmpty()) {
+				final Iterator<FileData.Entry<String, Object>> mapIterator = fileData.entrySet().iterator();
 				topLayerWriteWithComments(writer, mapIterator.next());
 				mapIterator.forEachRemaining(entry -> {
 					writer.println();
@@ -274,9 +281,9 @@ public class ThunderEditor {
 		}
 	}
 
-	private static void topLayerWriteWithComments(@NotNull final PrintWriter writer, @NotNull final Map.Entry<String, Object> entry) {
+	private static void topLayerWriteWithComments(final @NotNull PrintWriter writer, final @NotNull FileData.Entry<String, Object> entry) {
 		if (entry.getKey().startsWith("#") && entry.getValue() == LineType.COMMENT) {
-			writer.print(entry.getKey().substring(0, entry.getKey().lastIndexOf("{=}")));
+			writer.print(entry.getKey());
 		} else if (entry.getValue() instanceof Map) {
 			writer.print(entry.getKey() + " " + "{");
 			//noinspection unchecked
@@ -285,16 +292,17 @@ public class ThunderEditor {
 			writer.println(entry.getKey() + " = [");
 			//noinspection unchecked
 			writeList((List<String>) entry.getValue(), "  ", writer);
-		} else if (!entry.getKey().startsWith("{=}emptyline") && entry.getValue() != LineType.BLANK_LINE) {
+		} else if (!entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
 			writer.print(entry.getKey() + " = " + entry.getValue());
 		}
 	}
+	// </Write Data with Comments
 
-	private static void internalWriteWithComments(@NotNull final Map<String, Object> map, final String indentationString, @NotNull final PrintWriter writer) {
+	private static void internalWriteWithComments(final @NotNull Map<String, Object> map, final String indentationString, final @NotNull PrintWriter writer) {
 		for (final Map.Entry<String, Object> entry : map.entrySet()) {
 			writer.println();
 			if (entry.getKey().startsWith("#") && entry.getValue() == LineType.COMMENT) {
-				writer.print(indentationString + "  " + entry.getKey().substring(0, entry.getKey().lastIndexOf("{=}")));
+				writer.print(indentationString + "  " + entry.getKey());
 			} else if (entry.getValue() instanceof Map) {
 				writer.print(indentationString + "  " + entry.getKey() + " " + "{");
 				//noinspection unchecked
@@ -303,27 +311,26 @@ public class ThunderEditor {
 				writer.println(indentationString + "  " + entry.getKey() + " = [");
 				//noinspection unchecked
 				writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
-			} else if (!entry.getKey().startsWith("{=}emptyline") && entry.getValue() != LineType.BLANK_LINE) {
+			} else if (!entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
 				writer.print(indentationString + "  " + entry.getKey() + " = " + entry.getValue());
 			}
 		}
 		writer.println();
 		writer.print(indentationString + "}");
 	}
-	// </Write Data with Comments
 
 	// <Write Data without Comments>
-	private static void initialWriteWithOutComments(@NotNull final File file, @NotNull final Map<String, Object> map) {
+	private static void initialWriteWithOutComments(final @NotNull File file, final @NotNull FileData<String, Pair<Integer, String>, Object> fileData) {
 		try (final PrintWriter writer = new PrintWriter(file)) {
-			if (!map.isEmpty()) {
-				Iterator<Map.Entry<String, Object>> mapIterator = map.entrySet().iterator();
-				Map.Entry<String, Object> initialEntry = mapIterator.next();
-				while (initialEntry.getKey().startsWith("#") || initialEntry.getValue() == LineType.COMMENT || initialEntry.getKey().startsWith("{=}emptyline") || initialEntry.getValue() == LineType.BLANK_LINE) {
+			if (!fileData.isEmpty()) {
+				Iterator<FileData.Entry<String, Object>> mapIterator = fileData.entrySet().iterator();
+				FileData.Entry<String, Object> initialEntry = mapIterator.next();
+				while (initialEntry.getKey().startsWith("#") || initialEntry.getValue() == LineType.COMMENT || initialEntry.getKey().equals("") || initialEntry.getValue() == LineType.BLANK_LINE) {
 					initialEntry = mapIterator.next();
 				}
 				topLayerWriteWithOutComments(writer, initialEntry);
 				mapIterator.forEachRemaining(entry -> {
-					if (!entry.getKey().startsWith("#") && entry.getValue() != LineType.COMMENT && !entry.getKey().startsWith("{=}emptyline") && entry.getValue() != LineType.BLANK_LINE) {
+					if (!entry.getKey().startsWith("#") && entry.getValue() != LineType.COMMENT && !entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
 						writer.println();
 						topLayerWriteWithOutComments(writer, entry);
 					}
@@ -335,7 +342,7 @@ public class ThunderEditor {
 		}
 	}
 
-	private static void topLayerWriteWithOutComments(@NotNull final PrintWriter writer, @NotNull final Map.Entry<String, Object> entry) {
+	private static void topLayerWriteWithOutComments(final @NotNull PrintWriter writer, final @NotNull FileData.Entry<String, Object> entry) {
 		if (entry.getValue() instanceof Map) {
 			writer.print(entry.getKey() + " " + "{");
 			//noinspection unchecked
@@ -348,10 +355,11 @@ public class ThunderEditor {
 			writer.print(entry.getKey() + " = " + entry.getValue());
 		}
 	}
+	// </Write Data without Comments>
 
-	private static void internalWriteWithoutComments(@NotNull final Map<String, Object> map, final String indentationString, @NotNull final PrintWriter writer) {
+	private static void internalWriteWithoutComments(final @NotNull Map<String, Object> map, final String indentationString, final @NotNull PrintWriter writer) {
 		for (final Map.Entry<String, Object> entry : map.entrySet()) {
-			if (!entry.getKey().startsWith("#") && entry.getValue() != LineType.COMMENT && !entry.getKey().startsWith("{=}emptyline") && entry.getValue() != LineType.BLANK_LINE) {
+			if (!entry.getKey().startsWith("#") && entry.getValue() != LineType.COMMENT && !entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
 				writer.println();
 				if (entry.getValue() instanceof Map) {
 					writer.print(indentationString + "  " + entry.getKey() + " " + "{");
@@ -369,15 +377,47 @@ public class ThunderEditor {
 		writer.println();
 		writer.print(indentationString + "}");
 	}
-	// </Write Data without Comments>
+	// </Write Data>
 
-	private static void writeList(@NotNull final List<String> list, final String indentationString, @NotNull final PrintWriter writer) {
+	private static void writeList(final @NotNull List<String> list, final String indentationString, final @NotNull PrintWriter writer) {
 		for (final String line : list) {
 			writer.println(indentationString + "  - " + line);
 		}
 		writer.print(indentationString + "]");
 	}
-	// </Write Data>
+
+
+	// <Utility>
+	@NotNull
+	private static String[] split(final @NotNull String string, final @NotNull CharSequence delimiter) {
+		List<String> tempList = new ArrayList<>();
+		char[] chars = string.toCharArray();
+		int splitStart = 0;
+		boolean outOfString = true;
+		for (int i = 0; i < string.length(); i++) {
+			if (chars[i] == '\"') {
+				outOfString = !outOfString;
+			} else if (outOfString && chars[i] == delimiter.charAt(0)) {
+				boolean split = true;
+				for (int i1 = 1; i < delimiter.length(); i1++) {
+					if (chars[i + i1] != delimiter.charAt(i1)) {
+						split = false;
+						break;
+					}
+				}
+				if (split) {
+					tempList.add(string.substring(splitStart, i));
+					i += delimiter.length();
+					splitStart = i;
+				}
+			}
+		}
+		if (splitStart != chars.length) {
+			tempList.add(string.substring(splitStart, chars.length));
+		}
+		return tempList.toArray(new String[0]);
+	}
+	// </Utility>
 
 
 	@SuppressWarnings("unused")

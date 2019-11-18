@@ -257,12 +257,12 @@ public interface StorageBase {
 	 * Sets a value to the File if the File doesn't already contain the value or returns the value if the value exists
 	 *
 	 * @param key   key to set the value
-	 * @param value Value to set
+	 * @param value value to set
 	 * @return the value set in the File
 	 */
 	@NotNull
 	@SuppressWarnings("DuplicatedCode")
-	default <T> T getOrSetDefault(final @NotNull String key, final @NotNull T value) {
+	default <O> O getOrSetDefault(final @NotNull String key, final @NotNull O value) {
 		if (!this.hasKey(key)) {
 			this.set(key, value);
 			return value;
@@ -281,13 +281,13 @@ public interface StorageBase {
 			} else if (tempObj instanceof String && value instanceof Primitive.BOOLEAN) {
 				tempObj = ((String) tempObj).equalsIgnoreCase("true");
 			}
-			return (T) tempObj;
+			return (O) tempObj;
 		}
 	}
 
 	@NotNull
 	@SuppressWarnings("DuplicatedCode")
-	default <T> T getOrSetDefaultUseArray(final @NotNull String[] key, final @NotNull T value) {
+	default <O> O getOrSetDefaultUseArray(final @NotNull String[] key, final @NotNull O value) {
 		if (!this.hasKeyUseArray(key)) {
 			this.setUseArray(key, value);
 			return value;
@@ -306,7 +306,7 @@ public interface StorageBase {
 			} else if (tempObj instanceof String && value instanceof Primitive.BOOLEAN) {
 				tempObj = ((String) tempObj).equalsIgnoreCase("true");
 			}
-			return (T) tempObj;
+			return (O) tempObj;
 		}
 	}
 
@@ -323,8 +323,8 @@ public interface StorageBase {
 	/**
 	 * Set an Object to your File
 	 *
-	 * @param key   The key your value should be associated with
-	 * @param value The value you want to set in your File
+	 * @param key   the key your value should be associated with
+	 * @param value the value you want to set in your File
 	 */
 	void set(final @NotNull String key, final @Nullable Object value);
 
@@ -391,16 +391,16 @@ public interface StorageBase {
 	 *
 	 * @param key key to value in File
 	 * @param def the Class to be casted to
-	 * @param <T> returnType
+	 * @param <O> ReturnType
 	 * @return returns the value of the key casted to def
 	 */
 	@NotNull
-	default <T> T get(final @NotNull String key, final @NotNull Class<T> def) {
+	default <O> O get(final @NotNull String key, final @NotNull Class<O> def) {
 		return Primitive.getFromDef(this.get(key), def);
 	}
 
 	@NotNull
-	default <T> T getUseArray(final @NotNull String[] key, final @NotNull Class<T> def) {
+	default <O> O getUseArray(final @NotNull String[] key, final @NotNull Class<O> def) {
 		return Primitive.getFromDef(this.getUseArray(key), def);
 	}
 
@@ -481,7 +481,7 @@ public interface StorageBase {
 	 * (Do not mix up with Bukkit addDefault)
 	 *
 	 * @param key   key to set the value
-	 * @param value Value to set
+	 * @param value value to set
 	 */
 	default void setDefault(final @NotNull String key, final @Nullable Object value) {
 		if (!this.hasKey(key)) {

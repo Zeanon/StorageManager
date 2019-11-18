@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class JsonFileSection extends FlatSection {
+public class JsonFileSection extends FlatSection<String> {
 
 	@NotNull
 	private final JsonFile jsonFile;

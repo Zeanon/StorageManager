@@ -27,14 +27,14 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 @ToString(callSuper = true)
 @SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
-public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
+public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<FlatFile> {
 
 	@NotNull
 	private final File file;
 	@NotNull
 	private final FileTypeBase fileType;
 	@NotNull
-	private final FileData fileData;
+	private final FileData<String, K, Object> fileData;
 	@Setter(AccessLevel.PROTECTED)
 	private long lastLoaded;
 	/**
@@ -45,7 +45,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	private ReloadSettingBase reloadSetting = Reload.INTELLIGENT;
 
 
-	protected FlatFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @NotNull FileData fileData) {
+	protected FlatFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @NotNull FileData<String, K, Object> fileData) {
 		if (fileType.isTypeOf(file)) {
 			this.fileType = fileType;
 			this.file = file;

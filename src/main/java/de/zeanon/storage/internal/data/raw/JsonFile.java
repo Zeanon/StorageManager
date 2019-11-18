@@ -31,7 +31,7 @@ import org.json.JSONTokener;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class JsonFile extends FlatFile {
+public class JsonFile extends FlatFile<String> {
 
 
 	/**
@@ -42,7 +42,7 @@ public class JsonFile extends FlatFile {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 */
 	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting) {
-		super(file, FileType.JSON, reloadSetting, new LocalStandardFileData());
+		super(file, FileType.JSON, reloadSetting, new LocalFileData());
 
 		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
 			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
@@ -50,7 +50,7 @@ public class JsonFile extends FlatFile {
 
 		try {
 			final JSONTokener jsonTokener = new JSONTokener(SMFileUtils.createNewInputStream(this.getFile()));
-			this.getFileData().loadData(new JSONObject(jsonTokener));
+			this.getFileData().loadData(new JSONObject(jsonTokener).toMap());
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (JSONException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
@@ -64,7 +64,7 @@ public class JsonFile extends FlatFile {
 	public void reload() {
 		try {
 			final JSONTokener jsonTokener = new JSONTokener(SMFileUtils.createNewInputStream(this.getFile()));
-			this.getFileData().loadData(new JSONObject(jsonTokener));
+			this.getFileData().loadData(new JSONObject(jsonTokener).toMap());
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
 			throw new FileParseException("Error while reloading '" + this.getAbsolutePath() + "'", e.getCause());
@@ -215,9 +215,9 @@ public class JsonFile extends FlatFile {
 		}
 	}
 
-	private static class LocalStandardFileData extends StandardFileData {
+	private static class LocalFileData extends StandardFileData {
 
-		private LocalStandardFileData() {
+		private LocalFileData() {
 			super();
 		}
 	}

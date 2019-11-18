@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
@@ -64,9 +63,10 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			Map<String, Object> tempMap = ThunderUtils.setHeader(this.getFileData(), header, this.getDataType(), this.getCommentSetting());
-			if (!this.getFileData().toString().equals(tempMap.toString())) {
-				ThunderEditor.writeData(this.getFile(), tempMap, this.getCommentSetting());
+			String tempData = this.getFileData().toString();
+			ThunderUtils.setHeader(this.getFileData(), header, this.getDataType(), this.getCommentSetting());
+			if (!this.getFileData().toString().equals(tempData)) {
+				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
 			}
 		}
 	}
@@ -94,9 +94,10 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			Map<String, Object> tempMap = ThunderUtils.setHeader(this.getFileData(), key, header, this.getDataType(), this.getCommentSetting());
-			if (!this.getFileData().toString().equals(tempMap.toString())) {
-				ThunderEditor.writeData(this.getFile(), tempMap, this.getCommentSetting());
+			String tempData = this.getFileData().toString();
+			ThunderUtils.setHeader(this.getFileData(), key, header, this.getDataType(), this.getCommentSetting());
+			if (!this.getFileData().toString().equals(tempData)) {
+				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
 			}
 		}
 	}
@@ -119,9 +120,10 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			Map<String, Object> tempMap = ThunderUtils.setFooter(this.getFileData(), footer, this.getDataType(), this.getCommentSetting());
-			if (!this.getFileData().toString().equals(tempMap.toString())) {
-				ThunderEditor.writeData(this.getFile(), tempMap, this.getCommentSetting());
+			String tempData = this.getFileData().toString();
+			ThunderUtils.setFooter(this.getFileData(), footer, this.getDataType(), this.getCommentSetting());
+			if (!this.getFileData().toString().equals(tempData)) {
+				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
 			}
 		}
 	}
@@ -149,9 +151,10 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			Map<String, Object> tempMap = ThunderUtils.setFooter(this.getFileData(), key, footer, this.getDataType(), this.getCommentSetting());
-			if (!this.getFileData().toString().equals(tempMap.toString())) {
-				ThunderEditor.writeData(this.getFile(), tempMap, this.getCommentSetting());
+			String tempData = this.getFileData().toString();
+			ThunderUtils.setFooter(this.getFileData(), key, footer, this.getDataType(), this.getCommentSetting());
+			if (!this.getFileData().toString().equals(tempData)) {
+				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
 			}
 		}
 	}

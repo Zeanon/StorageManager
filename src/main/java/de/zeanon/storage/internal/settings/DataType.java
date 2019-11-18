@@ -21,13 +21,13 @@ public enum DataType implements DataTypeBase {
 	SORTED {
 		@NotNull
 		@Override
-		public Map<String, Object> getNewDataMap(final @Nullable CommentSettingBase commentSetting, final @Nullable Map<String, Object> map) {
+		public <K, V> Map<K, V> getNewDataMap(final @Nullable CommentSettingBase commentSetting, final @Nullable Map<K, V> map) {
 			return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
 		}
 
 		@NotNull
 		@Override
-		public List<String> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<String> list) {
+		public <K> List<K> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<K> list) {
 			return list == null ? new LinkedList<>() : new LinkedList<>(list);
 		}
 	},
@@ -37,13 +37,13 @@ public enum DataType implements DataTypeBase {
 	STANDARD {
 		@NotNull
 		@Override
-		public Map<String, Object> getNewDataMap(final @Nullable CommentSettingBase commentSetting, final @Nullable Map<String, Object> map) {
+		public <K, V> Map<K, V> getNewDataMap(final @Nullable CommentSettingBase commentSetting, final @Nullable Map<K, V> map) {
 			return map == null ? new HashMap<>() : new HashMap<>(map);
 		}
 
 		@NotNull
 		@Override
-		public List<String> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<String> list) {
+		public <K> List<K> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<K> list) {
 			return list == null ? new ArrayList<>() : new ArrayList<>(list);
 		}
 	},
@@ -56,7 +56,7 @@ public enum DataType implements DataTypeBase {
 		 */
 		@NotNull
 		@Override
-		public Map<String, Object> getNewDataMap(final @NotNull CommentSettingBase commentSetting, final @Nullable Map<String, Object> map) {
+		public <K, V> Map<K, V> getNewDataMap(final @Nullable CommentSettingBase commentSetting, final @Nullable Map<K, V> map) {
 			if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
 				return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
 			} else {
@@ -69,7 +69,7 @@ public enum DataType implements DataTypeBase {
 		 */
 		@NotNull
 		@Override
-		public List<String> getNewDataList(final @NotNull CommentSettingBase commentSetting, final @Nullable List<String> list) {
+		public <K> List<K> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<K> list) {
 			if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
 				return list == null ? new LinkedList<>() : new LinkedList<>(list);
 			} else {
@@ -80,9 +80,9 @@ public enum DataType implements DataTypeBase {
 
 	@NotNull
 	@Override
-	public abstract Map<String, Object> getNewDataMap(final @NotNull CommentSettingBase commentSetting, final @Nullable Map<String, Object> map);
+	public abstract <K, V> Map<K, V> getNewDataMap(final @Nullable CommentSettingBase commentSetting, final @Nullable Map<K, V> map);
 
 	@NotNull
 	@Override
-	public abstract List<String> getNewDataList(final @NotNull CommentSettingBase commentSetting, final @Nullable List<String> list);
+	public abstract <K> List<K> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<K> list);
 }

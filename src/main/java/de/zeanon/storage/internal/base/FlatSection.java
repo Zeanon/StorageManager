@@ -18,10 +18,10 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 @ToString(callSuper = true)
 @SuppressWarnings("unused")
-public abstract class FlatSection implements StorageBase, Comparable<FlatSection> {
+public abstract class FlatSection<@NotNull K> implements StorageBase, Comparable<FlatSection> {
 
 	@NotNull
-	private final FlatFile flatFile;
+	private final FlatFile<K> flatFile;
 	@NotNull
 	@Setter
 	protected String sectionKey = "";
@@ -30,13 +30,13 @@ public abstract class FlatSection implements StorageBase, Comparable<FlatSection
 	protected String[] arraySectionKey = new String[0];
 
 
-	protected FlatSection(final @NotNull String sectionKey, final @NotNull FlatFile flatFile) {
+	protected FlatSection(final @NotNull String sectionKey, final @NotNull FlatFile<K> flatFile) {
 		this.setSectionKey(Objects.notNull(sectionKey, "SectionKey  must not be null"));
 		this.setArraySectionKey(Objects.notNull(sectionKey, "SectionKey  must not be null").split("\\."));
 		this.flatFile = flatFile;
 	}
 
-	protected FlatSection(final @NotNull String[] sectionKey, final @NotNull FlatFile flatFile) {
+	protected FlatSection(final @NotNull String[] sectionKey, final @NotNull FlatFile<K> flatFile) {
 		StringBuilder tempKey = new StringBuilder(sectionKey[0]);
 		for (int i = 1; i < sectionKey.length; i++) {
 			tempKey.append(".").append(sectionKey[i]);
