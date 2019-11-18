@@ -34,8 +34,8 @@ public class ThunderUtils {
 	 */
 	@NotNull
 	public static List<String> getHeader(final @NotNull FileData<String, Pair<Integer, String>, Object> fileData, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
-		final List<String> returnList = dataType.getNewDataList(commentSetting, null);
-		for (final String tempKey : fileData.blockKeySet()) {
+		@NotNull final List<String> returnList = dataType.getNewDataList(commentSetting, null);
+		for (@NotNull final String tempKey : fileData.blockKeySet()) {
 			if (fileData.get(tempKey) == ThunderEditor.LineType.COMMENT) {
 				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			} else {
@@ -56,18 +56,18 @@ public class ThunderUtils {
 	 */
 	@SuppressWarnings("DuplicatedCode")
 	public static void setHeader(final @NotNull FileData<String, Pair<Integer, String>, Object> fileData, final @Nullable List<String> header, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
-		final Map<Pair<Integer, String>, Object> tempMap = fileData.toRawMap();
-		for (final Map.Entry<Pair<Integer, String>, Object> entry : tempMap.entrySet()) {
+		@NotNull final Map<Pair<Integer, String>, Object> tempMap = fileData.toRawMap();
+		for (@NotNull final Map.Entry<Pair<Integer, String>, Object> entry : tempMap.entrySet()) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT) {
 				tempMap.remove(entry.getKey());
 			} else {
 				break;
 			}
 		}
-		final Map<Pair<Integer, String>, Object> finalMap = dataType.getNewDataMap(commentSetting, null);
+		@NotNull final Map<Pair<Integer, String>, Object> finalMap = dataType.getNewDataMap(commentSetting, null);
 		if (header != null) {
 			int commentLine = 0;
-			for (String comment : header) {
+			for (@NotNull String comment : header) {
 				finalMap.put(new Pair<>(commentLine, comment.startsWith("#") ? comment : "#" + comment), ThunderEditor.LineType.COMMENT);
 				commentLine++;
 			}
@@ -91,18 +91,18 @@ public class ThunderUtils {
 	public static void setHeader(final @NotNull FileData<String, Pair<Integer, String>, Object> fileData, final @NotNull String key, final @Nullable List<String> header, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
 		if (fileData.get(key) instanceof Map) {
 			//noinspection unchecked
-			final Map<Pair<Integer, String>, Object> tempMap = (Map<Pair<Integer, String>, Object>) Objects.notNull(fileData.get(key), "ThunderFile does not contain '" + key + "'");
-			for (final Map.Entry<Pair<Integer, String>, Object> entry : tempMap.entrySet()) {
+			@NotNull final Map<Pair<Integer, String>, Object> tempMap = (Map<Pair<Integer, String>, Object>) Objects.notNull(fileData.get(key), "ThunderFile does not contain '" + key + "'");
+			for (@NotNull final Map.Entry<Pair<Integer, String>, Object> entry : tempMap.entrySet()) {
 				if (entry.getValue() == ThunderEditor.LineType.COMMENT) {
 					tempMap.remove(entry.getKey());
 				} else {
 					break;
 				}
 			}
-			final Map<Pair<Integer, String>, Object> finalMap = dataType.getNewDataMap(commentSetting, null);
+			@NotNull final Map<Pair<Integer, String>, Object> finalMap = dataType.getNewDataMap(commentSetting, null);
 			if (header != null) {
 				int commentLine = 0;
-				for (String comment : header) {
+				for (@NotNull String comment : header) {
 					finalMap.put(new Pair<>(commentLine, comment.startsWith("#") ? comment : "#" + comment), ThunderEditor.LineType.COMMENT);
 					commentLine++;
 				}
@@ -122,10 +122,10 @@ public class ThunderUtils {
 	 */
 	@NotNull
 	public static List<String> getFooter(final @NotNull FileData<String, Pair<Integer, String>, Object> fileData, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
-		final List<String> returnList = dataType.getNewDataList(commentSetting, null);
-		final List<String> keyList = new ArrayList<>(fileData.blockKeySet());
+		@NotNull final List<String> returnList = dataType.getNewDataList(commentSetting, null);
+		@NotNull final List<String> keyList = new ArrayList<>(fileData.blockKeySet());
 		Collections.reverse(keyList);
-		for (final String tempKey : keyList) {
+		for (@NotNull final String tempKey : keyList) {
 			if (fileData.get(tempKey) == ThunderEditor.LineType.COMMENT) {
 				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			} else {
@@ -148,20 +148,20 @@ public class ThunderUtils {
 	 */
 	@SuppressWarnings("DuplicatedCode")
 	public static void setFooter(final @NotNull FileData<String, Pair<Integer, String>, Object> fileData, final @Nullable List<String> footer, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
-		final Map<Pair<Integer, String>, Object> tempMap = fileData.toRawMap();
-		final List<FileData.Entry<Pair<Integer, String>, Object>> entrySet = new ArrayList<>(fileData.rawEntrySet());
+		@NotNull final Map<Pair<Integer, String>, Object> tempMap = fileData.toRawMap();
+		@NotNull final List<FileData.Entry<Pair<Integer, String>, Object>> entrySet = new ArrayList<>(fileData.rawEntrySet());
 		Collections.reverse(entrySet);
-		for (final FileData.Entry<Pair<Integer, String>, Object> entry : entrySet) {
+		for (@NotNull final FileData.Entry<Pair<Integer, String>, Object> entry : entrySet) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT) {
 				tempMap.remove(entry.getKey());
 			} else {
 				break;
 			}
 		}
-		final Map<Pair<Integer, String>, Object> finalMap = dataType.getNewDataMap(commentSetting, tempMap);
+		@NotNull final Map<Pair<Integer, String>, Object> finalMap = dataType.getNewDataMap(commentSetting, tempMap);
 		if (footer != null) {
 			int commentLine = 0;
-			for (String comment : footer) {
+			for (@NotNull String comment : footer) {
 				finalMap.put(new Pair<>(commentLine, comment.startsWith("#") ? comment : "#" + comment), ThunderEditor.LineType.COMMENT);
 				commentLine++;
 			}
@@ -184,20 +184,20 @@ public class ThunderUtils {
 	public static void setFooter(final @NotNull FileData<String, Pair<Integer, String>, Object> fileData, final @NotNull String key, final @Nullable List<String> footer, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
 		if (fileData.get(key) instanceof Map) {
 			//noinspection unchecked
-			final Map<Pair<Integer, String>, Object> tempMap = (Map<Pair<Integer, String>, Object>) Objects.notNull(fileData.get(key), "ThunderFile does not contain '" + key + "'");
-			final List<FileData.Entry<Pair<Integer, String>, Object>> entrySet = new ArrayList<>(fileData.rawEntrySet());
+			@NotNull final Map<Pair<Integer, String>, Object> tempMap = (Map<Pair<Integer, String>, Object>) Objects.notNull(fileData.get(key), "ThunderFile does not contain '" + key + "'");
+			@NotNull final List<FileData.Entry<Pair<Integer, String>, Object>> entrySet = new ArrayList<>(fileData.rawEntrySet());
 			Collections.reverse(entrySet);
-			for (final FileData.Entry<Pair<Integer, String>, Object> entry : entrySet) {
+			for (@NotNull final FileData.Entry<Pair<Integer, String>, Object> entry : entrySet) {
 				if (entry.getValue() == ThunderEditor.LineType.COMMENT) {
 					tempMap.remove(entry.getKey());
 				} else {
 					break;
 				}
 			}
-			final Map<Pair<Integer, String>, Object> finalMap = dataType.getNewDataMap(commentSetting, tempMap);
+			@NotNull final Map<Pair<Integer, String>, Object> finalMap = dataType.getNewDataMap(commentSetting, tempMap);
 			if (footer != null) {
 				int commentLine = 0;
-				for (String comment : footer) {
+				for (@NotNull String comment : footer) {
 					finalMap.put(new Pair<>(commentLine, comment.startsWith("#") ? comment : "#" + comment), ThunderEditor.LineType.COMMENT);
 					commentLine++;
 				}
@@ -218,8 +218,8 @@ public class ThunderUtils {
 	 */
 	@NotNull
 	public static List<String> getHeader(final @NotNull FileData<String, Pair<Integer, String>, Object> fileData, final @NotNull String key, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
-		final List<String> returnList = dataType.getNewDataList(commentSetting, null);
-		for (final String tempKey : Objects.notNull(fileData.blockKeySet(key), "ThunderFile does not contain '" + key + "'")) {
+		@NotNull final List<String> returnList = dataType.getNewDataList(commentSetting, null);
+		for (@NotNull final String tempKey : Objects.notNull(fileData.blockKeySet(key), "ThunderFile does not contain '" + key + "'")) {
 			if (fileData.get(key + "." + tempKey) == ThunderEditor.LineType.COMMENT) {
 				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			} else {
@@ -241,10 +241,10 @@ public class ThunderUtils {
 	 */
 	@NotNull
 	public static List<String> getFooter(final @NotNull FileData<String, Pair<Integer, String>, Object> fileData, final @NotNull String key, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
-		final List<String> returnList = dataType.getNewDataList(commentSetting, null);
-		final List<String> keyList = new ArrayList<>(Objects.notNull(fileData.blockKeySet(key), "ThunderFile does not contain '" + key + "'"));
+		@NotNull final List<String> returnList = dataType.getNewDataList(commentSetting, null);
+		@NotNull final List<String> keyList = new ArrayList<>(Objects.notNull(fileData.blockKeySet(key), "ThunderFile does not contain '" + key + "'"));
 		Collections.reverse(keyList);
-		for (final String tempKey : keyList) {
+		for (@NotNull final String tempKey : keyList) {
 			if (fileData.get(key + "." + tempKey) == ThunderEditor.LineType.COMMENT) {
 				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			} else {
@@ -267,9 +267,9 @@ public class ThunderUtils {
 	 */
 	@NotNull
 	public static List<String> getComments(final @NotNull FileData<String, Pair<Integer, String>, Object> fileData, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting, final boolean deep) {
-		final List<String> returnList = dataType.getNewDataList(commentSetting, null);
-		final List<String> keyList = deep ? new ArrayList<>(fileData.keySet()) : new ArrayList<>(fileData.blockKeySet());
-		for (final String tempKey : keyList) {
+		@NotNull final List<String> returnList = dataType.getNewDataList(commentSetting, null);
+		@NotNull final List<String> keyList = deep ? new ArrayList<>(fileData.keySet()) : new ArrayList<>(fileData.blockKeySet());
+		for (@NotNull final String tempKey : keyList) {
 			if (fileData.get(tempKey) == ThunderEditor.LineType.COMMENT) {
 				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			}
@@ -290,9 +290,9 @@ public class ThunderUtils {
 	 */
 	@NotNull
 	public static List<String> getComments(final @NotNull FileData<String, Pair<Integer, String>, Object> fileData, final @NotNull String key, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting, final boolean deep) {
-		final List<String> returnList = dataType.getNewDataList(commentSetting, null);
-		final List<String> keyList = deep ? new ArrayList<>(Objects.notNull(fileData.keySet(key), "ThunderFile does not contain '" + key + "'")) : new ArrayList<>(Objects.notNull(fileData.blockKeySet(key), "ThunderFile does not contain '" + key + "'"));
-		for (final String tempKey : keyList) {
+		@NotNull final List<String> returnList = dataType.getNewDataList(commentSetting, null);
+		@NotNull final List<String> keyList = deep ? new ArrayList<>(Objects.notNull(fileData.keySet(key), "ThunderFile does not contain '" + key + "'")) : new ArrayList<>(Objects.notNull(fileData.blockKeySet(key), "ThunderFile does not contain '" + key + "'"));
+		for (@NotNull final String tempKey : keyList) {
 			if (fileData.get(key + "." + tempKey) == ThunderEditor.LineType.COMMENT) {
 				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			}

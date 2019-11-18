@@ -63,7 +63,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			String tempData = this.getFileData().toString();
+			@NotNull String tempData = this.getFileData().toString();
 			ThunderUtils.setHeader(this.getFileData(), header, this.getDataType(), this.getCommentSetting());
 			if (!this.getFileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
@@ -94,7 +94,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			String tempData = this.getFileData().toString();
+			@NotNull String tempData = this.getFileData().toString();
 			ThunderUtils.setHeader(this.getFileData(), key, header, this.getDataType(), this.getCommentSetting());
 			if (!this.getFileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
@@ -120,7 +120,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			String tempData = this.getFileData().toString();
+			@NotNull String tempData = this.getFileData().toString();
 			ThunderUtils.setFooter(this.getFileData(), footer, this.getDataType(), this.getCommentSetting());
 			if (!this.getFileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
@@ -151,7 +151,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			String tempData = this.getFileData().toString();
+			@NotNull String tempData = this.getFileData().toString();
 			ThunderUtils.setFooter(this.getFileData(), key, footer, this.getDataType(), this.getCommentSetting());
 			if (!this.getFileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());

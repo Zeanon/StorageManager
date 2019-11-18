@@ -54,11 +54,9 @@ public interface FileData<@NotNull T, @NotNull K, @NotNull V> {
 	 *
 	 * @return the keySet of all layers of localMap combined (Format: key.subkey)
 	 */
-	@NotNull
-	Set<T> keySet();
+	@NotNull Set<T> keySet();
 
-	@NotNull
-	Set<T[]> keySetUseArray();
+	@NotNull Set<T[]> keySetUseArray();
 
 	/**
 	 * get the keySet of all sublayers of the given key combined
@@ -66,11 +64,9 @@ public interface FileData<@NotNull T, @NotNull K, @NotNull V> {
 	 * @param key the key of the Block
 	 * @return the keySet of all sublayers of the given key or null if the key does not exist (Format: key.subkey)
 	 */
-	@NotNull
-	Set<T> keySet(final T key);
+	@NotNull Set<T> keySet(final T key);
 
-	@NotNull
-	Set<T[]> keySetUseArray(final T... key);
+	@NotNull Set<T[]> keySetUseArray(final T... key);
 
 
 	/**
@@ -79,19 +75,16 @@ public interface FileData<@NotNull T, @NotNull K, @NotNull V> {
 	 * @param key the key to look for
 	 * @return the value assigned to the given key or null if the key does not exist
 	 */
-	@Nullable
-	V get(final @NotNull T key);
+	@Nullable V get(final @NotNull T key);
 
-	@Nullable
-	V getUseArray(final @NotNull T... key);
+	@Nullable V getUseArray(final @NotNull T... key);
 
 	/**
 	 * get the keySet of a single layer of the map
 	 *
 	 * @return the keySet of the top layer of localMap
 	 */
-	@NotNull
-	Set<T> blockKeySet();
+	@NotNull Set<T> blockKeySet();
 
 	/**
 	 * get the keySet of a single layer of the map
@@ -99,11 +92,9 @@ public interface FileData<@NotNull T, @NotNull K, @NotNull V> {
 	 * @param key the key of the layer
 	 * @return the keySet of the given layer
 	 */
-	@NotNull
-	Set<T> blockKeySet(final @NotNull T key);
+	@NotNull Set<T> blockKeySet(final @NotNull T key);
 
-	@NotNull
-	Set<T> blockKeySetUseArray(final @NotNull T... key);
+	@NotNull Set<T> blockKeySetUseArray(final @NotNull T... key);
 
 	/**
 	 * Get the size of a single layer of the map
@@ -132,11 +123,9 @@ public interface FileData<@NotNull T, @NotNull K, @NotNull V> {
 	/**
 	 * Convert FileData to a nested HashMap
 	 */
-	@NotNull
-	Map<T, V> toMap();
+	@NotNull Map<T, V> toMap();
 
-	@NotNull
-	Map<K, V> toRawMap();
+	@NotNull Map<K, V> toRawMap();
 
 	/**
 	 * get the size of all sublayers of the given key combined
@@ -155,17 +144,14 @@ public interface FileData<@NotNull T, @NotNull K, @NotNull V> {
 
 	boolean isEmpty();
 
-	@NotNull
-	Set<FileData.Entry<T, V>> entrySet();
+	@NotNull Set<FileData.Entry<T, V>> entrySet();
+
+	@NotNull Set<FileData.Entry<K, V>> rawEntrySet();
+
+	@NotNull String toRawString();
 
 	@NotNull
-	Set<FileData.Entry<K, V>> rawEntrySet();
-
-	@NotNull
-	String toRawString();
-
 	@Override
-	@NotNull
 	String toString();
 
 

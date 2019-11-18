@@ -37,7 +37,7 @@ public abstract class FlatSection<@NotNull K> implements StorageBase, Comparable
 	}
 
 	protected FlatSection(final @NotNull String[] sectionKey, final @NotNull FlatFile<K> flatFile) {
-		StringBuilder tempKey = new StringBuilder(sectionKey[0]);
+		@NotNull StringBuilder tempKey = new StringBuilder(sectionKey[0]);
 		for (int i = 1; i < sectionKey.length; i++) {
 			tempKey.append(".").append(sectionKey[i]);
 		}
@@ -258,7 +258,7 @@ public abstract class FlatSection<@NotNull K> implements StorageBase, Comparable
 
 	@NotNull
 	protected String[] getFinalArrayKey(final @NotNull String... key) {
-		String[] tempKey = new String[this.getArraySectionKey().length + key.length];
+		@NotNull String[] tempKey = new String[this.getArraySectionKey().length + key.length];
 		System.arraycopy(this.getArraySectionKey(), 0, tempKey, 0, this.getArraySectionKey().length);
 		System.arraycopy(key, 0, tempKey, this.getArraySectionKey().length, key.length);
 		return tempKey;

@@ -83,8 +83,8 @@ public class YamlFile extends CommentEnabledFile<String> {
 				this.write(this.getFileData().toMap());
 			} else {
 				final List<String> unEdited = YamlEditor.read(this.getFile());
-				final List<String> header = YamlEditor.readHeader(this.getFile());
-				final List<String> footer = YamlEditor.readFooter(this.getFile());
+				@NotNull final List<String> header = YamlEditor.readHeader(this.getFile());
+				@NotNull final List<String> footer = YamlEditor.readFooter(this.getFile());
 				this.write(this.getFileData().toMap());
 				header.addAll(YamlEditor.read(this.getFile()));
 				if (!header.containsAll(footer)) {
@@ -117,7 +117,7 @@ public class YamlFile extends CommentEnabledFile<String> {
 	}
 
 	private void write(final @NotNull Map fileData) throws IOException {
-		@Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.getFile()));
+		@NotNull @Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.getFile()));
 		writer.write(fileData);
 	}
 

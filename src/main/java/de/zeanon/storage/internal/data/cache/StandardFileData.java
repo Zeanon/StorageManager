@@ -50,7 +50,7 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 	@Override
 	public void insert(final @NotNull String key, final @Nullable Object value) {
 		Objects.checkNull(key, "Key must not be null");
-		final String[] parts = key.split("\\.");
+		@NotNull final String[] parts = key.split("\\.");
 		if (value == null) {
 			this.removeUseArray(key);
 		} else {
@@ -87,7 +87,7 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 	public void remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		if (this.containsKey(key)) {
-			final String[] parts = key.split("\\.");
+			@NotNull final String[] parts = key.split("\\.");
 			this.removeKey(this.localMap, parts, 0);
 		}
 	}
@@ -108,7 +108,7 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 	@Override
 	public boolean containsKey(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		String[] parts = key.split("\\.");
+		@NotNull String[] parts = key.split("\\.");
 		return this.containsKey(this.localMap, parts, 0);
 	}
 
@@ -144,7 +144,7 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 	@Override
 	public Set<String> keySet(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.get(key);
+		@Nullable Object tempObject = this.get(key);
 		//noinspection unchecked
 		return tempObject instanceof Map ? this.keySet((Map<String, Object>) tempObject) : new HashSet<>();
 	}
@@ -153,7 +153,7 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 	@Override
 	public Set<String[]> keySetUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.getUseArray(key);
+		@Nullable Object tempObject = this.getUseArray(key);
 		//noinspection unchecked
 		return tempObject instanceof Map ? this.keySetUseArray((Map<String, Object>) tempObject) : new HashSet<>();
 	}
@@ -168,7 +168,7 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 	@Override
 	public Object get(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		final String[] parts = key.split("\\.");
+		@NotNull final String[] parts = key.split("\\.");
 		return this.get(this.localMap, parts, 0);
 	}
 
@@ -200,7 +200,7 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 	@Override
 	public Set<String> blockKeySet(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.get(key);
+		@Nullable Object tempObject = this.get(key);
 		//noinspection unchecked
 		return tempObject instanceof Map ? ((Map<String, Object>) tempObject).keySet() : new HashSet<>();
 	}
@@ -209,7 +209,7 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 	@Override
 	public Set<String> blockKeySetUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.getUseArray(key);
+		@Nullable Object tempObject = this.getUseArray(key);
 		//noinspection unchecked
 		return tempObject instanceof Map ? ((Map<String, Object>) tempObject).keySet() : new HashSet<>();
 	}
@@ -233,14 +233,14 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 	@Override
 	public int blockSize(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.get(key);
+		@Nullable Object tempObject = this.get(key);
 		return tempObject instanceof Map ? ((Map) tempObject).size() : 0;
 	}
 
 	@Override
 	public int blockSizeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.getUseArray(key);
+		@Nullable Object tempObject = this.getUseArray(key);
 		return tempObject instanceof Map ? ((Map) tempObject).size() : 0;
 	}
 
@@ -278,14 +278,14 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 	@Override
 	public int size(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.get(key);
+		@Nullable Object tempObject = this.get(key);
 		return tempObject instanceof Map ? this.size((Map) tempObject) : 0;
 	}
 
 	@Override
 	public int sizeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.getUseArray(key);
+		@Nullable Object tempObject = this.getUseArray(key);
 		return tempObject instanceof Map ? this.size((Map) tempObject) : 0;
 	}
 
@@ -305,8 +305,8 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 	@Override
 	@NotNull
 	public Set<FileData.Entry<String, Object>> entrySet() {
-		Set<Entry<String, Object>> tempSet = new HashSet<>();
-		for (Map.Entry<String, Object> entry : this.localMap.entrySet()) {
+		@NotNull Set<Entry<String, Object>> tempSet = new HashSet<>();
+		for (@NotNull Map.Entry<String, Object> entry : this.localMap.entrySet()) {
 			tempSet.add(new FileData.Entry<>(entry.getKey(), entry.getValue()));
 		}
 		return tempSet;
@@ -326,7 +326,7 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 
 	@NotNull
 	private Map<String, Object> removeKey(Map<String, Object> map, @NotNull String[] key, int id) {
-		Map<String, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
+		@NotNull Map<String, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
 		if (id < key.length) {
 			if (id == key.length - 1) {
 				tempMap.remove(key[id]);
@@ -347,7 +347,7 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 		if (id < key.length - 1) {
 			if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
 				//noinspection unchecked
-				Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
+				@NotNull Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
 				return this.containsKey(tempMap, key, id + 1);
 			} else {
 				return false;
@@ -362,7 +362,7 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 		if (id < key.length - 1) {
 			if (map.get(key[id]) instanceof Map) {
 				//noinspection unchecked
-				Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
+				@NotNull Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
 				return this.get(tempMap, key, id + 1);
 			} else {
 				return null;
@@ -374,9 +374,9 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 
 	private Object insert(final Map<String, Object> map, @NotNull final String[] key, final Object value, final int id) {
 		if (id < key.length) {
-			Map<String, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
+			@NotNull Map<String, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
 			//noinspection unchecked
-			Map<String, Object> childMap =
+			@NotNull Map<String, Object> childMap =
 					map.containsKey(key[id])
 					&& map.get(key[id]) instanceof Map
 					? (Map<String, Object>) map.get(key[id])
@@ -390,8 +390,8 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 
 	@NotNull
 	private Set<String> keySet(@NotNull final Map<String, Object> map) {
-		Set<String> tempSet = new HashSet<>();
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
+		@NotNull Set<String> tempSet = new HashSet<>();
+		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
 				for (String tempKey : this.keySet((Map<String, Object>) entry.getValue())) {
@@ -406,12 +406,12 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 
 	@NotNull
 	private Set<String[]> keySetUseArray(@NotNull final Map<String, Object> map) {
-		Set<String[]> tempSet = new HashSet<>();
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
+		@NotNull Set<String[]> tempSet = new HashSet<>();
+		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
-				for (String[] tempKey : this.keySetUseArray((Map<String, Object>) entry.getValue())) {
-					String[] key = new String[1 + tempKey.length];
+				for (@NotNull String[] tempKey : this.keySetUseArray((Map<String, Object>) entry.getValue())) {
+					@NotNull String[] key = new String[1 + tempKey.length];
 					key[0] = entry.getKey();
 					System.arraycopy(tempKey, 0, key, 1, tempKey.length);
 					tempSet.add(key);
@@ -427,7 +427,7 @@ public class StandardFileData implements FileData<String, String, Object>, Compa
 
 	private int size(@NotNull final Map<?, ?> map) {
 		int size = map.size();
-		for (Map.Entry<?, ?> entry : map.entrySet()) {
+		for (@NotNull Map.Entry<?, ?> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map) {
 				size += this.size((Map) entry.getValue());
 			}

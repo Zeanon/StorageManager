@@ -43,7 +43,7 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 	@Override
 	public void insert(final @NotNull String key, final @Nullable Object value) {
 		Objects.checkNull(key, "Key must not be null");
-		final String[] parts = key.split("\\.");
+		@NotNull final String[] parts = key.split("\\.");
 		if (value == null) {
 			this.removeUseArray(parts);
 		} else {
@@ -80,7 +80,7 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 	public void remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		if (this.containsKey(key)) {
-			final String[] parts = key.split("\\.");
+			@NotNull final String[] parts = key.split("\\.");
 			this.removeKey(this.localMap, parts, 0);
 		}
 	}
@@ -102,7 +102,7 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 	@Override
 	public boolean containsKey(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		String[] parts = key.split("\\.");
+		@NotNull String[] parts = key.split("\\.");
 		return this.containsKey(this.localMap, parts, 0);
 	}
 
@@ -139,7 +139,7 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 	@Override
 	public Set<String> keySet(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.get(key);
+		@Nullable Object tempObject = this.get(key);
 		//noinspection unchecked
 		return tempObject instanceof Map ? this.keySet((Map<Pair<Integer, String>, Object>) tempObject, true) : new HashSet<>();
 	}
@@ -148,7 +148,7 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 	@Override
 	public Set<String[]> keySetUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.getUseArray(key);
+		@Nullable Object tempObject = this.getUseArray(key);
 		//noinspection unchecked
 		return tempObject instanceof Map ? this.keySetUseArray((Map<Pair<Integer, String>, Object>) tempObject) : new HashSet<>();
 	}
@@ -163,7 +163,7 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 	@Override
 	public Object get(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		final String[] parts = key.split("\\.");
+		@NotNull final String[] parts = key.split("\\.");
 		return this.get(this.localMap, parts, 0);
 	}
 
@@ -194,7 +194,7 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 	@Override
 	public Set<String> blockKeySet(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.get(key);
+		@Nullable Object tempObject = this.get(key);
 		//noinspection unchecked
 		return tempObject instanceof Map ? this.keySet((Map<Pair<Integer, String>, Object>) tempObject, false) : new HashSet<>();
 	}
@@ -203,7 +203,7 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 	@Override
 	public Set<String> blockKeySetUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.getUseArray(key);
+		@Nullable Object tempObject = this.getUseArray(key);
 		//noinspection unchecked
 		return tempObject instanceof Map ? this.keySet((Map<Pair<Integer, String>, Object>) tempObject, false) : new HashSet<>();
 	}
@@ -227,14 +227,14 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 	@Override
 	public int blockSize(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.get(key);
+		@Nullable Object tempObject = this.get(key);
 		return tempObject instanceof Map ? ((Map) tempObject).size() : 0;
 	}
 
 	@Override
 	public int blockSizeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.getUseArray(key);
+		@Nullable Object tempObject = this.getUseArray(key);
 		return tempObject instanceof Map ? ((Map) tempObject).size() : 0;
 	}
 
@@ -272,14 +272,14 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 	@Override
 	public int size(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.get(key);
+		@Nullable Object tempObject = this.get(key);
 		return tempObject instanceof Map ? this.size((Map) tempObject) : 0;
 	}
 
 	@Override
 	public int sizeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		Object tempObject = this.getUseArray(key);
+		@Nullable Object tempObject = this.getUseArray(key);
 		return tempObject instanceof Map ? this.size((Map) tempObject) : 0;
 	}
 
@@ -299,8 +299,8 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 	@Override
 	@NotNull
 	public Set<Entry<String, Object>> entrySet() {
-		Set<Entry<String, Object>> tempSet = new HashSet<>();
-		for (Map.Entry<Pair<Integer, String>, Object> entry : this.localMap.entrySet()) {
+		@NotNull Set<Entry<String, Object>> tempSet = new HashSet<>();
+		for (@NotNull Map.Entry<Pair<Integer, String>, Object> entry : this.localMap.entrySet()) {
 			tempSet.add(new FileData.Entry<>(entry.getKey().getValue(), entry.getValue()));
 		}
 		return tempSet;
@@ -309,8 +309,8 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 	@Override
 	@NotNull
 	public Set<Entry<Pair<Integer, String>, Object>> rawEntrySet() {
-		Set<Entry<Pair<Integer, String>, Object>> tempSet = new HashSet<>();
-		for (Map.Entry<Pair<Integer, String>, Object> entry : this.localMap.entrySet()) {
+		@NotNull Set<Entry<Pair<Integer, String>, Object>> tempSet = new HashSet<>();
+		for (@NotNull Map.Entry<Pair<Integer, String>, Object> entry : this.localMap.entrySet()) {
 			tempSet.add(new FileData.Entry<>(entry.getKey(), entry.getValue()));
 		}
 		return tempSet;
@@ -323,7 +323,7 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 	}
 
 	private void put(@NotNull Map<Pair<Integer, String>, Object> map, @NotNull String key, @NotNull Object value) {
-		for (final Map.Entry<Pair<Integer, String>, Object> entry : map.entrySet()) {
+		for (@NotNull final Map.Entry<Pair<Integer, String>, Object> entry : map.entrySet()) {
 			if (entry.getKey().getValue().equals(key)) {
 				entry.setValue(value);
 				return;
@@ -334,7 +334,7 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 
 	@NotNull
 	private Map<Pair<Integer, String>, Object> removeKey(final @NotNull Map<Pair<Integer, String>, Object> map, final @NotNull String[] key, final int id) {
-		Map<Pair<Integer, String>, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
+		@NotNull Map<Pair<Integer, String>, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
 		if (id < key.length) {
 			if (id == key.length - 1) {
 				this.remove(tempMap, key[id]);
@@ -355,8 +355,8 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 		if (id < key.length - 1) {
 			if (this.containsKey(map, key[id]) && this.get(map, key[id]) instanceof Map) {
 				//noinspection unchecked
-				Map<Pair<Integer, String>, Object> tempMap = (Map<Pair<Integer, String>, Object>) this.get(map, key[id]);
-				return this.containsKey(Objects.notNull(tempMap), key, id + 1);
+				@NotNull Map<Pair<Integer, String>, Object> tempMap = (Map<Pair<Integer, String>, Object>) Objects.notNull(this.get(map, key[id]));
+				return this.containsKey(tempMap, key, id + 1);
 			} else {
 				return false;
 			}
@@ -370,7 +370,7 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 		if (id < key.length - 1) {
 			if (this.get(map, key[id]) instanceof Map) {
 				//noinspection unchecked
-				Map<Pair<Integer, String>, Object> tempMap = (Map<Pair<Integer, String>, Object>) this.get(map, key[id]);
+				@Nullable Map<Pair<Integer, String>, Object> tempMap = (Map<Pair<Integer, String>, Object>) this.get(map, key[id]);
 				return this.get(Objects.notNull(tempMap), key, id + 1);
 			} else {
 				return null;
@@ -386,9 +386,9 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 
 	private Object insert(final Map<Pair<Integer, String>, Object> map, final @NotNull String[] key, final Object value, final int id) {
 		if (id < key.length) {
-			final Map<Pair<Integer, String>, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
+			@NotNull final Map<Pair<Integer, String>, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
 			//noinspection unchecked
-			final Map<Pair<Integer, String>, Object> childMap =
+			@Nullable final Map<Pair<Integer, String>, Object> childMap =
 					this.containsKey(map, key[id])
 					&& this.get(map, key[id]) instanceof Map
 					? (Map<Pair<Integer, String>, Object>) this.get(map, key[id])
@@ -402,8 +402,8 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 
 	@NotNull
 	private Set<String> keySet(final @NotNull Map<Pair<Integer, String>, Object> map, final boolean deep) {
-		Set<String> tempSet = new HashSet<>();
-		for (final Map.Entry<Pair<Integer, String>, Object> entry : map.entrySet()) {
+		@NotNull Set<String> tempSet = new HashSet<>();
+		for (@NotNull final Map.Entry<Pair<Integer, String>, Object> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map && deep) {
 				//noinspection unchecked
 				for (String tempKey : this.keySet((Map<Pair<Integer, String>, Object>) entry.getValue(), true)) {
@@ -418,12 +418,12 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 
 	@NotNull
 	private Set<String[]> keySetUseArray(final @NotNull Map<Pair<Integer, String>, Object> map) {
-		Set<String[]> tempSet = new HashSet<>();
-		for (Map.Entry<Pair<Integer, String>, Object> entry : map.entrySet()) {
+		@NotNull Set<String[]> tempSet = new HashSet<>();
+		for (@NotNull Map.Entry<Pair<Integer, String>, Object> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
-				for (String[] tempKey : this.keySetUseArray((Map<Pair<Integer, String>, Object>) entry.getValue())) {
-					String[] key = new String[1 + tempKey.length];
+				for (@NotNull String[] tempKey : this.keySetUseArray((Map<Pair<Integer, String>, Object>) entry.getValue())) {
+					@NotNull String[] key = new String[1 + tempKey.length];
 					key[0] = entry.getKey().getValue();
 					System.arraycopy(tempKey, 0, key, 1, tempKey.length);
 					tempSet.add(key);
@@ -439,7 +439,7 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 
 	private int size(final @NotNull Map<?, ?> map) {
 		int size = map.size();
-		for (Map.Entry<?, ?> entry : map.entrySet()) {
+		for (@NotNull Map.Entry<?, ?> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map) {
 				size += this.size((Map) entry.getValue());
 			}
@@ -448,7 +448,7 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 	}
 
 	private boolean containsKey(final @NotNull Map<Pair<Integer, String>, Object> map, final @NotNull String key) {
-		for (final Pair<Integer, String> entry : map.keySet()) {
+		for (@NotNull final Pair<Integer, String> entry : map.keySet()) {
 			if (entry.getValue().equals(key)) {
 				return true;
 			}
@@ -458,7 +458,7 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 
 	@Nullable
 	private <V> V get(final @NotNull Map<Pair<Integer, String>, V> map, final @NotNull String key) {
-		for (final Map.Entry<Pair<Integer, String>, V> entry : map.entrySet()) {
+		for (@NotNull final Map.Entry<Pair<Integer, String>, V> entry : map.entrySet()) {
 			if (entry.getKey().getValue().equals(key)) {
 				return entry.getValue();
 			}
@@ -468,8 +468,8 @@ public class SortedFileData implements FileData<String, Pair<Integer, String>, O
 
 	@NotNull
 	private Map<String, Object> toMap(final @NotNull Map<Pair<Integer, String>, Object> map) {
-		Map<String, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>() : new HashMap<>();
-		for (Map.Entry<Pair<Integer, String>, Object> entry : map.entrySet()) {
+		@NotNull Map<String, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>() : new HashMap<>();
+		for (@NotNull Map.Entry<Pair<Integer, String>, Object> entry : map.entrySet()) {
 			//noinspection unchecked
 			tempMap.put(entry.getKey().getValue(), entry.getValue() instanceof Map ? this.toMap((Map) entry.getValue()) : entry.getValue());
 		}

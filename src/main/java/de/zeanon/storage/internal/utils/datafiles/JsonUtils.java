@@ -17,8 +17,8 @@ public class JsonUtils {
 
 	@NotNull
 	public static JSONObject getJsonFromMap(final @NotNull Map<String, Object> map) {
-		final JSONObject jsonData = new JSONObject();
-		for (final Map.Entry<String, Object> entry : map.entrySet()) {
+		@NotNull final JSONObject jsonData = new JSONObject();
+		for (@NotNull final Map.Entry<String, Object> entry : map.entrySet()) {
 			Object value = entry.getValue();
 			if (value instanceof Map<?, ?>) {
 				value = getJsonFromMap((Map<String, Object>) value);
@@ -30,7 +30,7 @@ public class JsonUtils {
 
 	@NotNull
 	public static Map<String, Object> jsonToMap(final @NotNull JSONObject json) {
-		final Map<String, Object> retMap = new HashMap<>();
+		@NotNull final Map<String, Object> retMap = new HashMap<>();
 		if (json != JSONObject.NULL) {
 			retMap.putAll(json.toMap());
 		}
@@ -39,7 +39,7 @@ public class JsonUtils {
 
 	@NotNull
 	public static List<Object> toList(final @NotNull JSONArray array) {
-		final List<Object> list = new ArrayList<>();
+		@NotNull final List<Object> list = new ArrayList<>();
 		for (int i = 0; i < array.length(); i++) {
 			list.add(getValue(array.get(i)));
 		}

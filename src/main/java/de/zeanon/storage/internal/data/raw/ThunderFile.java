@@ -102,7 +102,7 @@ public class ThunderFile extends CommentEnabledFile<Pair<Integer, String>> {
 	public Set<String> keySet(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
-		Object tempMap = this.getFileData().get(key);
+		@Nullable Object tempMap = this.getFileData().get(key);
 		//noinspection unchecked
 		return Objects.notNull(tempMap instanceof Map ? this.keySet((Map<String, Object>) tempMap) : null, "File does not contain '" + key + "'");
 	}
@@ -112,7 +112,7 @@ public class ThunderFile extends CommentEnabledFile<Pair<Integer, String>> {
 	public Set<String[]> keySetUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
-		Object tempMap = this.getFileData().getUseArray(key);
+		@Nullable Object tempMap = this.getFileData().getUseArray(key);
 		//noinspection unchecked
 		return Objects.notNull(tempMap instanceof Map ? this.keySetUseArray((Map<String, Object>) tempMap) : null, "File does not contain '" + Arrays.toString(key) + "'");
 	}
@@ -129,7 +129,7 @@ public class ThunderFile extends CommentEnabledFile<Pair<Integer, String>> {
 	public Set<String> blockKeySet(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
-		Object tempMap = this.getFileData().get(key);
+		@Nullable Object tempMap = this.getFileData().get(key);
 		//noinspection unchecked
 		return Objects.notNull(tempMap instanceof Map ? this.blockKeySet((Map<String, Object>) tempMap) : null, "File does not contain '" + key + "'");
 	}
@@ -139,7 +139,7 @@ public class ThunderFile extends CommentEnabledFile<Pair<Integer, String>> {
 	public Set<String> blockKeySetUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
-		Object tempMap = this.getFileData().getUseArray(key);
+		@Nullable Object tempMap = this.getFileData().getUseArray(key);
 		//noinspection unchecked
 		return Objects.notNull(tempMap instanceof Map ? this.blockKeySet((Map<String, Object>) tempMap) : null, "File does not contain '" + Arrays.toString(key) + "'");
 	}
@@ -164,8 +164,8 @@ public class ThunderFile extends CommentEnabledFile<Pair<Integer, String>> {
 
 	@NotNull
 	private Set<String> keySet(@NotNull final Map<String, Object> map) {
-		Set<String> tempSet = new HashSet<>();
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
+		@NotNull Set<String> tempSet = new HashSet<>();
+		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
 				for (String tempKey : this.keySet((Map<String, Object>) entry.getValue())) {
@@ -180,12 +180,12 @@ public class ThunderFile extends CommentEnabledFile<Pair<Integer, String>> {
 
 	@NotNull
 	private Set<String[]> keySetUseArray(@NotNull final Map<String, Object> map) {
-		Set<String[]> tempSet = new HashSet<>();
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
+		@NotNull Set<String[]> tempSet = new HashSet<>();
+		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
-				for (String[] tempKey : this.keySetUseArray((Map<String, Object>) entry.getValue())) {
-					String[] key = new String[1 + tempKey.length];
+				for (@NotNull String[] tempKey : this.keySetUseArray((Map<String, Object>) entry.getValue())) {
+					@NotNull String[] key = new String[1 + tempKey.length];
 					key[0] = entry.getKey();
 					System.arraycopy(tempKey, 0, key, 1, tempKey.length);
 					tempSet.add(key);
@@ -201,8 +201,8 @@ public class ThunderFile extends CommentEnabledFile<Pair<Integer, String>> {
 
 	@NotNull
 	private Set<String> blockKeySet(@NotNull final Map<String, Object> map) {
-		Set<String> tempSet = new HashSet<>();
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
+		@NotNull Set<String> tempSet = new HashSet<>();
+		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			if (entry.getValue() != ThunderEditor.LineType.COMMENT && entry.getValue() != ThunderEditor.LineType.BLANK_LINE) {
 				tempSet.add(entry.getKey());
 			}

@@ -70,8 +70,8 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 	@Override
 	public void setHeader(final @Nullable List<String> header) {
 		if (header != null) {
-			List<String> tmp = new ArrayList<>();
-			for (final String line : header) {
+			@NotNull List<String> tmp = new ArrayList<>();
+			for (@NotNull final String line : header) {
 				if (!line.startsWith("#")) {
 					tmp.add("#" + line);
 				} else {
@@ -91,7 +91,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 			} else {
 				try {
 					final List<String> lines = YamlEditor.read(this.getFile());
-					final List<String> oldHeader = YamlEditor.readHeader(this.getFile());
+					@NotNull final List<String> oldHeader = YamlEditor.readHeader(this.getFile());
 
 					List<String> newLines = this.header;
 					lines.removeAll(oldHeader);
@@ -109,7 +109,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 
 			try {
 				final List<String> lines = YamlEditor.read(this.getFile());
-				final List<String> oldHeader = YamlEditor.readHeader(this.getFile());
+				@NotNull final List<String> oldHeader = YamlEditor.readHeader(this.getFile());
 
 				lines.removeAll(oldHeader);
 
@@ -144,8 +144,8 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 	@Override
 	public void setFooter(@Nullable List<String> footer) {
 		if (footer != null) {
-			List<String> tmp = new ArrayList<>();
-			for (final String line : footer) {
+			@NotNull List<String> tmp = new ArrayList<>();
+			for (@NotNull final String line : footer) {
 				if (!line.startsWith("#")) {
 					tmp.add("#" + line);
 				} else {
@@ -165,7 +165,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 			} else {
 				try {
 					final List<String> lines = YamlEditor.read(this.getFile());
-					final List<String> oldFooter = YamlEditor.readFooter(this.getFile());
+					@NotNull final List<String> oldFooter = YamlEditor.readFooter(this.getFile());
 
 					lines.removeAll(oldFooter);
 					lines.addAll(this.footer);
@@ -182,7 +182,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 
 			try {
 				final List<String> lines = YamlEditor.read(this.getFile());
-				final List<String> oldFooter = YamlEditor.readFooter(this.getFile());
+				@NotNull final List<String> oldFooter = YamlEditor.readFooter(this.getFile());
 
 				lines.removeAll(oldFooter);
 

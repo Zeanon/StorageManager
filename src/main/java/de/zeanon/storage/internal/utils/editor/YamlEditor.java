@@ -55,8 +55,8 @@ public class YamlEditor {
 	}
 
 	public static void write(final @NotNull File file, final @NotNull List<String> lines) throws IOException {
-		@Cleanup final PrintWriter writer = new PrintWriter(new FileWriter(file));
-		final Iterator<String> linesIterator = lines.iterator();
+		@NotNull @Cleanup final PrintWriter writer = new PrintWriter(new FileWriter(file));
+		@NotNull final Iterator<String> linesIterator = lines.iterator();
 		writer.print(linesIterator.next());
 		linesIterator.forEachRemaining(line -> {
 			writer.println();
@@ -66,8 +66,8 @@ public class YamlEditor {
 
 	@NotNull
 	public static List<String> getLinesWithoutFooterAndHeaderFromLines(final @NotNull List<String> lines) {
-		final List<String> header = getHeaderFromLines(lines);
-		final List<String> footer = getFooterFromLines(lines);
+		@NotNull final List<String> header = getHeaderFromLines(lines);
+		@NotNull final List<String> footer = getFooterFromLines(lines);
 
 		lines.removeAll(header);
 		lines.removeAll(footer);
@@ -77,8 +77,8 @@ public class YamlEditor {
 
 	@NotNull
 	private static List<String> getCommentsFromLines(final @NotNull List<String> lines) {
-		final List<String> result = new ArrayList<>();
-		for (final String line : Objects.notNull(lines, "Lines must not be null")) {
+		@NotNull final List<String> result = new ArrayList<>();
+		for (@NotNull final String line : Objects.notNull(lines, "Lines must not be null")) {
 			if (line.startsWith("#")) {
 				result.add(line);
 			}
@@ -90,9 +90,9 @@ public class YamlEditor {
 	private static List<String> getFooterFromLines(final @NotNull List<String> lines) {
 		Objects.checkNull(lines, "Lines must not be null");
 
-		final List<String> result = new ArrayList<>();
+		@NotNull final List<String> result = new ArrayList<>();
 		Collections.reverse(lines);
-		for (final String line : lines) {
+		for (@NotNull final String line : lines) {
 			if (!line.startsWith("#")) {
 				Collections.reverse(result);
 				return result;
@@ -106,8 +106,8 @@ public class YamlEditor {
 
 	@NotNull
 	private static List<String> getHeaderFromLines(final @NotNull List<String> lines) {
-		final List<String> result = new ArrayList<>();
-		for (final String line : Objects.notNull(lines, "Lines must not be null")) {
+		@NotNull final List<String> result = new ArrayList<>();
+		for (@NotNull final String line : Objects.notNull(lines, "Lines must not be null")) {
 			if (!line.startsWith("#")) {
 				return result;
 			} else {
@@ -119,8 +119,8 @@ public class YamlEditor {
 
 	@NotNull
 	private static List<String> getKeys(final @NotNull List<String> lines) {
-		final List<String> result = new ArrayList<>();
-		for (final String line : Objects.notNull(lines, "Lines must not be null")) {
+		@NotNull final List<String> result = new ArrayList<>();
+		for (@NotNull final String line : Objects.notNull(lines, "Lines must not be null")) {
 			if (!line.replaceAll("\\s+", "").startsWith("#")) {
 				result.add(line);
 			}
@@ -133,9 +133,9 @@ public class YamlEditor {
 	 */
 	@NotNull
 	private static List<String> getPureCommentsFromLines(final @NotNull List<String> lines) {
-		final List<String> comments = getCommentsFromLines(lines);
-		final List<String> header = getHeaderFromLines(lines);
-		final List<String> footer = getFooterFromLines(lines);
+		@NotNull final List<String> comments = getCommentsFromLines(lines);
+		@NotNull final List<String> header = getHeaderFromLines(lines);
+		@NotNull final List<String> footer = getFooterFromLines(lines);
 
 		comments.removeAll(header);
 		comments.removeAll(footer);

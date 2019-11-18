@@ -76,12 +76,12 @@ public interface StorageBase {
 	 * @return Byte from File
 	 */
 	default byte getByte(final @NotNull String key) {
-		Object tempObject = this.get(key);
+		@NotNull Object tempObject = this.get(key);
 		return Primitive.BYTE.getByte(tempObject);
 	}
 
 	default byte getByteUseArray(final @NotNull String... key) {
-		Object tempObject = this.getUseArray(key);
+		@NotNull Object tempObject = this.getUseArray(key);
 		return Primitive.BYTE.getByte(tempObject);
 	}
 
@@ -93,13 +93,13 @@ public interface StorageBase {
 	 */
 	@NotNull
 	default List<Byte> getByteList(final @NotNull String key) {
-		Object tempObject = this.get(key);
+		@NotNull Object tempObject = this.get(key);
 		return (List<Byte>) tempObject;
 	}
 
 	@NotNull
 	default List<Byte> getByteListUseArray(final @NotNull String... key) {
-		Object tempObject = this.getUseArray(key);
+		@NotNull Object tempObject = this.getUseArray(key);
 		return (List<Byte>) tempObject;
 	}
 
@@ -110,12 +110,12 @@ public interface StorageBase {
 	 * @return Double from File
 	 */
 	default double getDouble(final @NotNull String key) {
-		Object tempObject = this.get(key);
+		@NotNull Object tempObject = this.get(key);
 		return Primitive.DOUBLE.getDouble(tempObject);
 	}
 
 	default double getDoubleUseArray(final @NotNull String... key) {
-		Object tempObject = this.getUseArray(key);
+		@NotNull Object tempObject = this.getUseArray(key);
 		return Primitive.DOUBLE.getDouble(tempObject);
 	}
 
@@ -126,12 +126,12 @@ public interface StorageBase {
 	 * @return Float from File
 	 */
 	default float getFloat(final @NotNull String key) {
-		Object tempObject = this.get(key);
+		@NotNull Object tempObject = this.get(key);
 		return Primitive.FLOAT.getFloat(tempObject);
 	}
 
 	default float getFloatUseArray(final @NotNull String... key) {
-		Object tempObject = this.getUseArray(key);
+		@NotNull Object tempObject = this.getUseArray(key);
 		return Primitive.FLOAT.getFloat(tempObject);
 	}
 
@@ -142,12 +142,12 @@ public interface StorageBase {
 	 * @return Int from File
 	 */
 	default int getInt(final @NotNull String key) {
-		Object tempObject = this.get(key);
+		@NotNull Object tempObject = this.get(key);
 		return Primitive.INTEGER.getInt(tempObject);
 	}
 
 	default int getIntUseArray(final @NotNull String... key) {
-		Object tempObject = this.getUseArray(key);
+		@NotNull Object tempObject = this.getUseArray(key);
 		return Primitive.INTEGER.getInt(tempObject);
 	}
 
@@ -158,12 +158,12 @@ public interface StorageBase {
 	 * @return Short from File
 	 */
 	default short getShort(final @NotNull String key) {
-		Object tempObject = this.get(key);
+		@NotNull Object tempObject = this.get(key);
 		return Primitive.SHORT.getShort(tempObject);
 	}
 
 	default short getShortUseArray(final @NotNull String... key) {
-		Object tempObject = this.getUseArray(key);
+		@NotNull Object tempObject = this.getUseArray(key);
 		return Primitive.SHORT.getShort(tempObject);
 	}
 
@@ -175,13 +175,13 @@ public interface StorageBase {
 	 */
 	@NotNull
 	default List<Integer> getIntegerList(final @NotNull String key) {
-		Object tempObject = this.get(key);
+		@NotNull Object tempObject = this.get(key);
 		return (List<Integer>) tempObject;
 	}
 
 	@NotNull
 	default List<Integer> getIntegerListUseArray(final @NotNull String... key) {
-		Object tempObject = this.getUseArray(key);
+		@NotNull Object tempObject = this.getUseArray(key);
 		return (List<Integer>) tempObject;
 	}
 
@@ -193,13 +193,13 @@ public interface StorageBase {
 	 */
 	@NotNull
 	default List getList(final @NotNull String key) {
-		Object tempObject = this.get(key);
+		@NotNull Object tempObject = this.get(key);
 		return (List) tempObject;
 	}
 
 	@NotNull
 	default List getListUseArray(final @NotNull String... key) {
-		Object tempObject = this.getUseArray(key);
+		@NotNull Object tempObject = this.getUseArray(key);
 		return (List) tempObject;
 	}
 
@@ -210,12 +210,12 @@ public interface StorageBase {
 	 * @return String from File
 	 */
 	default long getLong(final @NotNull String key) {
-		Object tempObject = this.get(key);
+		@NotNull Object tempObject = this.get(key);
 		return Primitive.LONG.getLong(tempObject);
 	}
 
 	default long getLongUseArray(final @NotNull String... key) {
-		Object tempObject = this.getUseArray(key);
+		@NotNull Object tempObject = this.getUseArray(key);
 		return Primitive.LONG.getLong(tempObject);
 	}
 
@@ -243,13 +243,13 @@ public interface StorageBase {
 	 */
 	@NotNull
 	default Map getMap(final @NotNull String key) {
-		Object tempObject = this.get(key);
+		@NotNull Object tempObject = this.get(key);
 		return (Map) tempObject;
 	}
 
 	@NotNull
 	default Map getMapUseArray(final @NotNull String... key) {
-		Object tempObject = this.getUseArray(key);
+		@NotNull Object tempObject = this.getUseArray(key);
 		return (Map) tempObject;
 	}
 
@@ -412,13 +412,13 @@ public interface StorageBase {
 	 */
 	@NotNull
 	default String getString(final @NotNull String key) {
-		Object tempObject = this.get(key);
+		@NotNull Object tempObject = this.get(key);
 		return tempObject instanceof String ? (String) tempObject : tempObject.toString();
 	}
 
 	@NotNull
 	default String getStringUseArray(final @NotNull String... key) {
-		Object tempObject = this.getUseArray(key);
+		@NotNull Object tempObject = this.getUseArray(key);
 		return tempObject instanceof String ? (String) tempObject : tempObject.toString();
 	}
 
@@ -430,13 +430,13 @@ public interface StorageBase {
 	 */
 	@NotNull
 	default List<String> getStringList(final @NotNull String key) {
-		Object tempObject = this.get(key);
+		@NotNull Object tempObject = this.get(key);
 		return (List<String>) tempObject;
 	}
 
 	@NotNull
 	default List<String> getStringListUseArray(final @NotNull String... key) {
-		Object tempObject = this.getUseArray(key);
+		@NotNull Object tempObject = this.getUseArray(key);
 		return (List<String>) tempObject;
 	}
 

@@ -67,14 +67,16 @@ public class SMFileUtils {
 	@NotNull
 	public static Collection<File> listFolders(final @NotNull File directory, final boolean deep) {
 		Objects.checkNull(directory, "Directory must not be null");
-		Collection<File> files = new LinkedList<>();
+		@NotNull Collection<File> files = new LinkedList<>();
 		if (directory.isDirectory()) {
-			File[] fileList = directory.listFiles();
-			for (File file : fileList != null ? fileList : new File[0]) {
-				if (file.isDirectory()) {
-					files.add(file);
-					if (deep) {
-						files.addAll(listFolders(file, true));
+			@Nullable File[] fileList = directory.listFiles();
+			if (fileList != null) {
+				for (@Nullable File file : fileList) {
+					if (file != null && file.isDirectory()) {
+						files.add(file);
+						if (deep) {
+							files.addAll(listFolders(file, true));
+						}
 					}
 				}
 			}
@@ -106,15 +108,19 @@ public class SMFileUtils {
 	public static Collection<File> listFiles(final @NotNull File directory, final @NotNull List<String> extensions, final boolean deep) {
 		Objects.checkNull(directory, "Directory must not be null");
 		Objects.checkNull(extensions, "Extensions must not be null");
-		Collection<File> files = new LinkedList<>();
+		@NotNull Collection<File> files = new LinkedList<>();
 		if (directory.isDirectory()) {
-			File[] fileList = directory.listFiles();
-			for (File file : fileList != null ? fileList : new File[0]) {
-				if (extensions.stream().anyMatch(SMFileUtils.getExtension(file)::equalsIgnoreCase)) {
-					files.add(file);
-				}
-				if (deep) {
-					files.addAll(listFiles(file, extensions, true));
+			@Nullable File[] fileList = directory.listFiles();
+			if (fileList != null) {
+				for (@Nullable File file : fileList) {
+					if (file != null) {
+						if (extensions.stream().anyMatch(SMFileUtils.getExtension(file)::equalsIgnoreCase)) {
+							files.add(file);
+						}
+						if (deep) {
+							files.addAll(listFiles(file, extensions, true));
+						}
+					}
 				}
 			}
 		}
@@ -168,13 +174,17 @@ public class SMFileUtils {
 	@NotNull
 	public static Collection<File> listFiles(final @NotNull File directory, final boolean deep) {
 		Objects.checkNull(directory, "Directory must not be null");
-		Collection<File> files = new LinkedList<>();
+		@NotNull Collection<File> files = new LinkedList<>();
 		if (directory.isDirectory()) {
-			File[] fileList = directory.listFiles();
-			for (File file : fileList != null ? fileList : new File[0]) {
-				files.add(file);
-				if (deep) {
-					files.addAll(listFiles(file, true));
+			@Nullable File[] fileList = directory.listFiles();
+			if (fileList != null) {
+				for (@Nullable File file : fileList) {
+					if (file != null) {
+						files.add(file);
+						if (deep) {
+							files.addAll(listFiles(file, true));
+						}
+					}
 				}
 			}
 		}
@@ -262,15 +272,15 @@ public class SMFileUtils {
 	public static synchronized void writeToFile(final @NotNull File file, final @Nullable BufferedInputStream inputStream) {
 		SMFileUtils.createFile(Objects.notNull(file, "File must not be null"));
 		if (inputStream == null) {
-			try (final BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+			try (@NotNull final BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
 				outputStream.write(new byte[0], 0, 0);
 			} catch (IOException e) {
 				throw new RuntimeIOException("Error while clearing '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		} else {
-			try (final BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+			try (@NotNull final BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
 				createFile(file);
-				final byte[] data = new byte[8192];
+				@NotNull final byte[] data = new byte[8192];
 				int count;
 				while ((count = inputStream.read(data, 0, 8192)) != -1) {
 					outputStream.write(data, 0, count);

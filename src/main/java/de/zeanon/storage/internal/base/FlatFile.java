@@ -226,8 +226,8 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(target, "Target  must not be null");
 		Objects.checkNull(replacement, "Replacement  must not be null");
 
-		final Iterator<String> lines = Files.readAllLines(this.file.toPath()).iterator();
-		@Cleanup PrintWriter writer = new PrintWriter(this.file);
+		@NotNull final Iterator<String> lines = Files.readAllLines(this.file.toPath()).iterator();
+		@NotNull @Cleanup PrintWriter writer = new PrintWriter(this.file);
 		writer.print((lines.next()).replace(target, replacement));
 		lines.forEachRemaining(line -> {
 			writer.println();
@@ -257,8 +257,8 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		Map<String, Object> tempMap = new HashMap<>();
-		for (String key : keys) {
+		@NotNull Map<String, Object> tempMap = new HashMap<>();
+		for (@NotNull String key : keys) {
 			tempMap.put(key, Objects.notNull(this.fileData.get(key), "File does not contain '" + key + "'"));
 		}
 		return tempMap;
@@ -270,7 +270,7 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		Map<String[], Object> tempMap = new HashMap<>();
+		@NotNull Map<String[], Object> tempMap = new HashMap<>();
 		for (String[] key : keys) {
 			tempMap.put(key, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
 		}
@@ -283,8 +283,8 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		Map<String, Object> tempMap = new HashMap<>();
-		for (String key : keys) {
+		@NotNull Map<String, Object> tempMap = new HashMap<>();
+		for (@NotNull String key : keys) {
 			tempMap.put(key, Objects.notNull(this.fileData.get(key), "File does not contain '" + key + "'"));
 		}
 		return tempMap;
@@ -296,7 +296,7 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		Map<String[], Object> tempMap = new HashMap<>();
+		@NotNull Map<String[], Object> tempMap = new HashMap<>();
 		for (String[] key : keys) {
 			tempMap.put(key, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
 		}
@@ -310,7 +310,7 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		Map<String, Object> tempMap = new HashMap<>();
+		@NotNull Map<String, Object> tempMap = new HashMap<>();
 		for (String tempKey : keys) {
 			tempMap.put(blockKey, Objects.notNull(this.fileData.get(blockKey + "." + tempKey), "File does not contain '" + blockKey + "." + tempKey + "'"));
 		}
@@ -325,9 +325,9 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		Map<String[], Object> tempMap = new HashMap<>();
-		for (String[] tempKey : keys) {
-			String[] key = new String[blockKey.length + tempKey.length];
+		@NotNull Map<String[], Object> tempMap = new HashMap<>();
+		for (@NotNull String[] tempKey : keys) {
+			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
 			tempMap.put(blockKey, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
@@ -342,7 +342,7 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		Map<String, Object> tempMap = new HashMap<>();
+		@NotNull Map<String, Object> tempMap = new HashMap<>();
 		for (String tempKey : keys) {
 			tempMap.put(blockKey, Objects.notNull(this.fileData.get(blockKey + "." + tempKey), "File does not contain '" + blockKey + "." + tempKey + "'"));
 		}
@@ -357,9 +357,9 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		Map<String[], Object> tempMap = new HashMap<>();
-		for (String[] tempKey : keys) {
-			String[] key = new String[blockKey.length + tempKey.length];
+		@NotNull Map<String[], Object> tempMap = new HashMap<>();
+		for (@NotNull String[] tempKey : keys) {
+			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
 			tempMap.put(blockKey, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
@@ -541,8 +541,8 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 
 		this.update();
 
-		for (String[] tempKey : keys) {
-			String[] key = new String[blockKey.length + tempKey.length];
+		for (@NotNull String[] tempKey : keys) {
+			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
 			this.getFileData().removeUseArray(key);
@@ -559,8 +559,8 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 
 		this.update();
 
-		for (String[] tempKey : keys) {
-			String[] key = new String[blockKey.length + tempKey.length];
+		for (@NotNull String[] tempKey : keys) {
+			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
 			this.getFileData().removeUseArray(key);
@@ -605,7 +605,7 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
-		String tempData = this.fileData.toString();
+		@NotNull String tempData = this.fileData.toString();
 		this.fileData.insert(key, value);
 		return !this.fileData.toString().equals(tempData);
 	}
@@ -614,7 +614,7 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
-		String tempData = this.fileData.toString();
+		@NotNull String tempData = this.fileData.toString();
 		this.fileData.insertUseArray(key, value);
 		return !this.fileData.toString().equals(tempData);
 	}
@@ -623,8 +623,8 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
-		String tempData = this.fileData.toString();
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
+		@NotNull String tempData = this.fileData.toString();
+		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			this.fileData.insert(entry.getKey(), entry.getValue());
 		}
 		return !this.fileData.toString().equals(tempData);
@@ -634,8 +634,8 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
-		String tempData = this.fileData.toString();
-		for (Map.Entry<String[], Object> entry : map.entrySet()) {
+		@NotNull String tempData = this.fileData.toString();
+		for (@NotNull Map.Entry<String[], Object> entry : map.entrySet()) {
 			this.fileData.insertUseArray(entry.getKey(), entry.getValue());
 		}
 		return !this.fileData.toString().equals(tempData);
@@ -646,8 +646,8 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
-		String tempData = this.fileData.toString();
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
+		@NotNull String tempData = this.fileData.toString();
+		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			this.fileData.insert(key + "." + entry.getKey(), entry.getValue());
 		}
 		return !this.fileData.toString().equals(tempData);
@@ -657,9 +657,9 @@ public abstract class FlatFile<@NotNull K> implements StorageBase, Comparable<Fl
 		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
-		String tempData = this.fileData.toString();
-		for (Map.Entry<String[], Object> entry : map.entrySet()) {
-			String[] tempKey = new String[key.length + entry.getKey().length];
+		@NotNull String tempData = this.fileData.toString();
+		for (@NotNull Map.Entry<String[], Object> entry : map.entrySet()) {
+			@NotNull String[] tempKey = new String[key.length + entry.getKey().length];
 			System.arraycopy(key, 0, tempKey, 0, key.length);
 			System.arraycopy(entry.getKey(), 0, tempKey, key.length, entry.getKey().length);
 			this.fileData.insertUseArray(tempKey, entry.getValue());

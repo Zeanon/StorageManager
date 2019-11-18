@@ -21,6 +21,7 @@ import javafx.util.Pair;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -73,12 +74,12 @@ public class ThunderEditor {
 	private static Map<Pair<Integer, String>, Object> initialReadWithComments(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
-			Map<Pair<Integer, String>, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
+			@NotNull Map<Pair<Integer, String>, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 
-			String tempKey = null;
+			@Nullable String tempKey = null;
 			int line = 0;
 			while (!lines.isEmpty()) {
-				String tempLine = lines.get(0).trim();
+				@NotNull String tempLine = lines.get(0).trim();
 				lines.remove(0);
 
 				if (tempLine.contains("}")) {
@@ -110,11 +111,11 @@ public class ThunderEditor {
 
 	@NotNull
 	private static Map<Pair<Integer, String>, Object> internalReadWithComments(final @NotNull String filePath, final @NotNull List<String> lines, int line, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {
-		Map<Pair<Integer, String>, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
-		String tempKey = null;
+		@NotNull Map<Pair<Integer, String>, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
+		@Nullable String tempKey = null;
 
 		while (!lines.isEmpty()) {
-			String tempLine = lines.get(0).trim();
+			@NotNull String tempLine = lines.get(0).trim();
 			lines.remove(0);
 
 			if (tempLine.equals("}")) {
@@ -145,12 +146,12 @@ public class ThunderEditor {
 	private static Map<Pair<Integer, String>, Object> initialReadWithOutComments(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
-			Map<Pair<Integer, String>, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
+			@NotNull Map<Pair<Integer, String>, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 
-			String tempKey = null;
+			@Nullable String tempKey = null;
 			int line = 0;
 			while (!lines.isEmpty()) {
-				String tempLine = lines.get(0).trim();
+				@NotNull String tempLine = lines.get(0).trim();
 				lines.remove(0);
 
 				if (!tempLine.isEmpty() && !tempLine.startsWith("#")) {
@@ -180,11 +181,11 @@ public class ThunderEditor {
 
 	@NotNull
 	private static Map<Pair<Integer, String>, Object> internalReadWithOutComments(final @NotNull String filePath, final @NotNull List<String> lines, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting, int line) throws ThunderException {
-		Map<Pair<Integer, String>, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
-		String tempKey = null;
+		@NotNull Map<Pair<Integer, String>, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
+		@Nullable String tempKey = null;
 
 		while (!lines.isEmpty()) {
-			String tempLine = lines.get(0).trim();
+			@NotNull String tempLine = lines.get(0).trim();
 			lines.remove(0);
 
 			if (!tempLine.isEmpty() && !tempLine.startsWith("#")) {
@@ -210,7 +211,7 @@ public class ThunderEditor {
 
 	private static String readKey(final @NotNull String filePath, final @NotNull List<String> lines, final @NotNull DataTypeBase dataType, final @NotNull Map<Pair<Integer, String>, Object> tempMap, String tempKey, final @NotNull String tempLine, final @NotNull CommentSettingBase commentSetting, final int lineId) throws ThunderException {
 		if (tempLine.contains("=")) {
-			String[] line = split(tempLine, "=");
+			@NotNull String[] line = split(tempLine, "=");
 			if (line.length > 2) {
 				throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> illegal amount of delimiters");
 			}
@@ -218,9 +219,9 @@ public class ThunderEditor {
 			line[1] = line[1].trim();
 			if (line[1].startsWith("[")) {
 				if (line[1].endsWith("]")) {
-					String[] listArray = split(line[1].substring(1, line[1].length() - 1), ",");
-					List<String> list = dataType.getNewDataList(commentSetting, null);
-					for (String value : listArray) {
+					@NotNull String[] listArray = split(line[1].substring(1, line[1].length() - 1), ",");
+					@NotNull List<String> list = dataType.getNewDataList(commentSetting, null);
+					for (@NotNull String value : listArray) {
 						list.add(value.trim().replace("\"", ""));
 					}
 					tempMap.put(new Pair<>(lineId, line[0]), list);
@@ -248,9 +249,9 @@ public class ThunderEditor {
 
 	@NotNull
 	private static List<String> readList(final String filePath, final @NotNull List<String> lines, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) throws ThunderException {
-		List<String> tempList = dataType.getNewDataList(commentSetting, null);
+		@NotNull List<String> tempList = dataType.getNewDataList(commentSetting, null);
 		while (!lines.isEmpty()) {
-			String tempLine = lines.get(0).trim();
+			@NotNull String tempLine = lines.get(0).trim();
 			lines.remove(0);
 			if (tempLine.startsWith("-")) {
 				tempList.add(tempLine.substring(1).trim().replace("\"", ""));
@@ -266,9 +267,9 @@ public class ThunderEditor {
 	// <Write Data>
 	// <Write Data with Comments>
 	private static void initialWriteWithComments(final @NotNull File file, final @NotNull FileData<String, Pair<Integer, String>, Object> fileData) {
-		try (final PrintWriter writer = new PrintWriter(file)) {
+		try (@NotNull final PrintWriter writer = new PrintWriter(file)) {
 			if (!fileData.isEmpty()) {
-				final Iterator<FileData.Entry<String, Object>> mapIterator = fileData.entrySet().iterator();
+				@NotNull final Iterator<FileData.Entry<String, Object>> mapIterator = fileData.entrySet().iterator();
 				topLayerWriteWithComments(writer, mapIterator.next());
 				mapIterator.forEachRemaining(entry -> {
 					writer.println();
@@ -299,7 +300,7 @@ public class ThunderEditor {
 	// </Write Data with Comments
 
 	private static void internalWriteWithComments(final @NotNull Map<String, Object> map, final String indentationString, final @NotNull PrintWriter writer) {
-		for (final Map.Entry<String, Object> entry : map.entrySet()) {
+		for (@NotNull final Map.Entry<String, Object> entry : map.entrySet()) {
 			writer.println();
 			if (entry.getKey().startsWith("#") && entry.getValue() == LineType.COMMENT) {
 				writer.print(indentationString + "  " + entry.getKey());
@@ -321,9 +322,9 @@ public class ThunderEditor {
 
 	// <Write Data without Comments>
 	private static void initialWriteWithOutComments(final @NotNull File file, final @NotNull FileData<String, Pair<Integer, String>, Object> fileData) {
-		try (final PrintWriter writer = new PrintWriter(file)) {
+		try (@NotNull final PrintWriter writer = new PrintWriter(file)) {
 			if (!fileData.isEmpty()) {
-				Iterator<FileData.Entry<String, Object>> mapIterator = fileData.entrySet().iterator();
+				@NotNull Iterator<FileData.Entry<String, Object>> mapIterator = fileData.entrySet().iterator();
 				FileData.Entry<String, Object> initialEntry = mapIterator.next();
 				while (initialEntry.getKey().startsWith("#") || initialEntry.getValue() == LineType.COMMENT || initialEntry.getKey().equals("") || initialEntry.getValue() == LineType.BLANK_LINE) {
 					initialEntry = mapIterator.next();
@@ -358,7 +359,7 @@ public class ThunderEditor {
 	// </Write Data without Comments>
 
 	private static void internalWriteWithoutComments(final @NotNull Map<String, Object> map, final String indentationString, final @NotNull PrintWriter writer) {
-		for (final Map.Entry<String, Object> entry : map.entrySet()) {
+		for (@NotNull final Map.Entry<String, Object> entry : map.entrySet()) {
 			if (!entry.getKey().startsWith("#") && entry.getValue() != LineType.COMMENT && !entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
 				writer.println();
 				if (entry.getValue() instanceof Map) {
@@ -390,8 +391,8 @@ public class ThunderEditor {
 	// <Utility>
 	@NotNull
 	private static String[] split(final @NotNull String string, final @NotNull CharSequence delimiter) {
-		List<String> tempList = new ArrayList<>();
-		char[] chars = string.toCharArray();
+		@NotNull List<String> tempList = new ArrayList<>();
+		@NotNull char[] chars = string.toCharArray();
 		int splitStart = 0;
 		boolean outOfString = true;
 		for (int i = 0; i < string.length(); i++) {
