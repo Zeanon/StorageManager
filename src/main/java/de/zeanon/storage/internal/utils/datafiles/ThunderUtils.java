@@ -1,7 +1,6 @@
 package de.zeanon.storage.internal.utils.datafiles;
 
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
-import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.maps.DataMap;
 import de.zeanon.storage.internal.data.cache.ThunderFileData;
 import de.zeanon.storage.internal.utils.basic.Objects;
@@ -19,19 +18,17 @@ import org.jetbrains.annotations.Nullable;
  * Adds the utility methods, used by ThunderConfig
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@SuppressWarnings("unused")
 public class ThunderUtils {
 
 
 	/**
 	 * Get the Header from a give FileData
 	 *
-	 * @param fileData       the FileDataBase to be used
-	 * @param commentSetting the CommentSetting to be used
+	 * @param fileData the FileDataBase to be used
 	 * @return a List containing the Header of the FileData
 	 */
 	@NotNull
-	public static List<String> getHeader(final @NotNull ThunderFileData fileData, final @NotNull CommentSettingBase commentSetting) {
+	public static List<String> getHeader(final @NotNull ThunderFileData fileData) {
 		@NotNull final List<String> returnList = new LinkedList<>();
 		for (@NotNull final DataMap.Entry<String, Object> entry : fileData.blockEntryList()) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT) {
@@ -46,12 +43,10 @@ public class ThunderUtils {
 	/**
 	 * Set the Header of a FileData
 	 *
-	 * @param fileData       the FileDataBase to be used
-	 * @param header         the Header to be set
-	 * @param commentSetting the CommentSetting to be used
+	 * @param fileData the FileDataBase to be used
+	 * @param header   the Header to be set
 	 */
-	@SuppressWarnings("DuplicatedCode")
-	public static void setHeader(final @NotNull ThunderFileData fileData, final @Nullable List<String> header, final @NotNull CommentSettingBase commentSetting) {
+	public static void setHeader(final @NotNull ThunderFileData fileData, final @Nullable List<String> header) {
 		@NotNull final List<DataMap.Entry<String, Object>> entryList = fileData.blockEntryList();
 		for (@NotNull final DataMap.Entry<String, Object> entry : entryList) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT) {
@@ -62,10 +57,8 @@ public class ThunderUtils {
 		}
 		@NotNull final DataMap<String, Object> returnList = new DataMap<>();
 		if (header != null) {
-			int commentLine = 0;
 			for (@NotNull String comment : header) {
-				returnList.add(comment.startsWith("#") ? comment : "#" + comment, ThunderEditor.LineType.COMMENT, commentLine);
-				commentLine++;
+				returnList.add(comment.startsWith("#") ? comment : "#" + comment, ThunderEditor.LineType.COMMENT);
 			}
 		}
 		returnList.addAll(entryList);
@@ -75,14 +68,12 @@ public class ThunderUtils {
 	/**
 	 * Set the Header of a FileData
 	 *
-	 * @param fileData       the FileDataBase to be used
-	 * @param key            the Key of the SubBlock the Header shall be set to
-	 * @param header         the Header to be set
-	 * @param commentSetting the CommentSetting to be used
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the Key of the SubBlock the Header shall be set to
+	 * @param header   the Header to be set
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	@SuppressWarnings("DuplicatedCode")
-	public static void setHeader(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable List<String> header, final @NotNull CommentSettingBase commentSetting) {
+	public static void setHeader(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable List<String> header) {
 		if (fileData.get(key) instanceof DataMap) {
 			@NotNull final List<DataMap.Entry<String, Object>> entryList = fileData.blockEntryList(key);
 			for (@NotNull final DataMap.Entry<String, Object> entry : entryList) {
@@ -94,10 +85,8 @@ public class ThunderUtils {
 			}
 			@NotNull final DataMap<String, Object> returnMap = new DataMap<>();
 			if (header != null) {
-				int commentLine = 0;
 				for (@NotNull String comment : header) {
-					returnMap.add(comment.startsWith("#") ? comment : "#" + comment, ThunderEditor.LineType.COMMENT, commentLine);
-					commentLine++;
+					returnMap.add(comment.startsWith("#") ? comment : "#" + comment, ThunderEditor.LineType.COMMENT);
 				}
 			}
 			returnMap.addAll(entryList);
@@ -110,12 +99,11 @@ public class ThunderUtils {
 	/**
 	 * Get the Footer from a give FileData
 	 *
-	 * @param fileData       the FileDataBase to be used
-	 * @param commentSetting the CommentSetting to be used
+	 * @param fileData the FileDataBase to be used
 	 * @return a List containing the Footer of the FileData
 	 */
 	@NotNull
-	public static List<String> getFooter(final @NotNull ThunderFileData fileData, final @NotNull CommentSettingBase commentSetting) {
+	public static List<String> getFooter(final @NotNull ThunderFileData fileData) {
 		@NotNull final List<String> returnList = new LinkedList<>();
 		@NotNull final List<DataMap.Entry<String, Object>> entryList = fileData.blockEntryList();
 		Collections.reverse(entryList);
@@ -134,12 +122,11 @@ public class ThunderUtils {
 	/**
 	 * Set the Footer of a FileData
 	 *
-	 * @param fileData       the FileDataBase to be used
-	 * @param footer         the Footer to be set
-	 * @param commentSetting the CommentSetting to be used
+	 * @param fileData the FileDataBase to be used
+	 * @param footer   the Footer to be set
 	 */
 	@SuppressWarnings("DuplicatedCode")
-	public static void setFooter(final @NotNull ThunderFileData fileData, final @Nullable List<String> footer, final @NotNull CommentSettingBase commentSetting) {
+	public static void setFooter(final @NotNull ThunderFileData fileData, final @Nullable List<String> footer) {
 		@NotNull final List<DataMap.Entry<String, Object>> entryList = fileData.blockEntryList();
 		Collections.reverse(entryList);
 		for (@NotNull final DataMap.Entry<String, Object> entry : entryList) {
@@ -152,10 +139,8 @@ public class ThunderUtils {
 		Collections.reverse(entryList);
 		@NotNull final DataMap<String, Object> returnList = new DataMap<>();
 		if (footer != null) {
-			int commentLine = 0;
 			for (@NotNull String comment : footer) {
-				returnList.add(comment.startsWith("#") ? comment : "#" + comment, ThunderEditor.LineType.COMMENT, commentLine);
-				commentLine++;
+				returnList.add(comment.startsWith("#") ? comment : "#" + comment, ThunderEditor.LineType.COMMENT);
 			}
 		}
 		fileData.loadData(returnList);
@@ -164,14 +149,13 @@ public class ThunderUtils {
 	/**
 	 * Set the Footer of a FileData
 	 *
-	 * @param fileData       the FileDataBase to be used
-	 * @param key            the Key of the SubBlock the Footer shall be set to
-	 * @param footer         the Header to be set
-	 * @param commentSetting the CommentSetting to be used
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the Key of the SubBlock the Footer shall be set to
+	 * @param footer   the Header to be set
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@SuppressWarnings("DuplicatedCode")
-	public static void setFooter(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable List<String> footer, final @NotNull CommentSettingBase commentSetting) {
+	public static void setFooter(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable List<String> footer) {
 		if (fileData.get(key) instanceof DataMap) {
 			@NotNull final List<DataMap.Entry<String, Object>> entryList = fileData.blockEntryList(key);
 			Collections.reverse(entryList);
@@ -184,10 +168,8 @@ public class ThunderUtils {
 			}
 			@NotNull final DataMap<String, Object> returnList = new DataMap<>();
 			if (footer != null) {
-				int commentLine = 0;
 				for (@NotNull String comment : footer) {
-					returnList.add(comment.startsWith("#") ? comment : "#" + comment, ThunderEditor.LineType.COMMENT, commentLine);
-					commentLine++;
+					returnList.add(comment.startsWith("#") ? comment : "#" + comment, ThunderEditor.LineType.COMMENT);
 				}
 			}
 			fileData.insert(key, returnList);
@@ -199,14 +181,13 @@ public class ThunderUtils {
 	/**
 	 * Get the Header from a give FileData
 	 *
-	 * @param fileData       the FileDataBase to be used
-	 * @param key            the Key of the SubBlock the Header shall be getted from
-	 * @param commentSetting the CommentSetting to be used
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the Key of the SubBlock the Header shall be getted from
 	 * @return a List containing the Header of the SubBlock
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@NotNull
-	public static List<String> getHeader(final @NotNull ThunderFileData fileData, final @NotNull String key, final @NotNull CommentSettingBase commentSetting) {
+	public static List<String> getHeader(final @NotNull ThunderFileData fileData, final @NotNull String key) {
 		@NotNull final List<String> returnList = new LinkedList<>();
 		for (@NotNull final DataMap.Entry<String, Object> entry : Objects.notNull(fileData.blockEntryList(key), "ThunderFile does not contain '" + key + "'")) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT) {
@@ -221,15 +202,14 @@ public class ThunderUtils {
 	/**
 	 * Get the Footer from a give FileData
 	 *
-	 * @param fileData       the FileDataBase to be used
-	 * @param key            the key of the SubBlock the Footer shall be getted from
-	 * @param commentSetting the CommentSetting to be used
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the key of the SubBlock the Footer shall be getted from
 	 * @return a List containing the Footer of the SubBlock
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@SuppressWarnings("DuplicatedCode")
 	@NotNull
-	public static List<String> getFooter(final @NotNull ThunderFileData fileData, final @NotNull String key, final @NotNull CommentSettingBase commentSetting) {
+	public static List<String> getFooter(final @NotNull ThunderFileData fileData, final @NotNull String key) {
 		@NotNull final List<String> returnList = new LinkedList<>();
 		@NotNull final List<DataMap.Entry<String, Object>> entryList = Objects.notNull(fileData.entryList(key), "ThunderFile does not contain '" + key + "'");
 		Collections.reverse(entryList);
@@ -248,14 +228,13 @@ public class ThunderUtils {
 	/**
 	 * Get the Comments from a given FileDataBase compatible with ThunderFile
 	 *
-	 * @param fileData       the FileDataBase to be used
-	 * @param commentSetting the CommentSetting to be used
-	 * @param deep           defining, if it should get all comments or only the ones in the top Layer
+	 * @param fileData the FileDataBase to be used
+	 * @param deep     defining, if it should get all comments or only the ones in the top Layer
 	 * @return a List containing the Comments of the FileData
 	 */
 	@SuppressWarnings("DuplicatedCode")
 	@NotNull
-	public static List<String> getComments(final @NotNull ThunderFileData fileData, final @NotNull CommentSettingBase commentSetting, final boolean deep) {
+	public static List<String> getComments(final @NotNull ThunderFileData fileData, final boolean deep) {
 		@NotNull final List<String> returnList = new LinkedList<>();
 		@NotNull final List<DataMap.Entry<String, Object>> entryList = deep ? fileData.entryList() : fileData.blockEntryList();
 		for (@NotNull final DataMap.Entry<String, Object> entry : entryList) {
@@ -269,16 +248,15 @@ public class ThunderUtils {
 	/**
 	 * Get the Comments from a given FileDataBase compatible with ThunderFile
 	 *
-	 * @param fileData       the FileDataBase to be used
-	 * @param key            the key of the SubBlock the Footer shall be getted from
-	 * @param commentSetting the CommentSetting to be used
-	 * @param deep           defining, if it should get all comments or only the ones in the given SubBlock
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the key of the SubBlock the Footer shall be getted from
+	 * @param deep     defining, if it should get all comments or only the ones in the given SubBlock
 	 * @return a List containing the Comments of the SubBlock
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@SuppressWarnings("DuplicatedCode")
 	@NotNull
-	public static List<String> getComments(final @NotNull ThunderFileData fileData, final @NotNull String key, final @NotNull CommentSettingBase commentSetting, final boolean deep) {
+	public static List<String> getComments(final @NotNull ThunderFileData fileData, final @NotNull String key, final boolean deep) {
 		@NotNull final List<String> returnList = new LinkedList<>();
 		@NotNull final List<DataMap.Entry<String, Object>> entryList = deep ? Objects.notNull(fileData.entryList(key), "ThunderFile does not contain '" + key + "'") : Objects.notNull(fileData.blockEntryList(key), "ThunderFile does not contain '" + key + "'");
 		for (@NotNull final DataMap.Entry<String, Object> entry : entryList) {

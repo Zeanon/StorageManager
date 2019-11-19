@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 @NoArgsConstructor
@@ -13,13 +14,6 @@ public class DataMap<K, V> {
 
 	@NotNull
 	private LinkedList<DataMap.Entry<K, V>> localList = new LinkedList<>();
-
-
-// --Commented out by Inspection START (19.11.2019 14:36):
-//	public DataMap(final @NotNull DataMap<K, V> list) {
-//		this.localList = new LinkedList<>(list.entryList());
-//	}
-// --Commented out by Inspection STOP (19.11.2019 14:36)
 
 	public int size() {
 		return this.localList.size();
@@ -38,33 +32,18 @@ public class DataMap<K, V> {
 		return false;
 	}
 
-	public void put(K key, V value) {
+	public void put(@NotNull K key, @NotNull V value) {
 		for (DataMap.Entry<K, V> entry : this.entryList()) {
 			if (entry.getKey().equals(key)) {
 				entry.setValue(value);
 				return;
 			}
 		}
-		this.localList.add(new DataMap.Entry<>(key, value, 0));
+		this.localList.add(new DataMap.Entry<>(key, value, this.localList.size()));
 	}
 
-// --Commented out by Inspection START (19.11.2019 14:36):
-//	public V put(K key, V value, int line) {
-//		for (DataMap.Entry<K, V> entry : this.entryList()) {
-//			if (entry.getKey().equals(key)) {
-//				V tempValue = entry.getValue();
-//				entry.setValue(value);
-//				entry.setLine(line);
-//				return tempValue;
-//			}
-//		}
-//		this.localList.add(new DataMap.Entry<>(key, value, line));
-//		return null;
-//	}
-// --Commented out by Inspection STOP (19.11.2019 14:36)
-
-	public void add(K key, V value, int line) {
-		this.localList.add(new Entry<>(key, value, line));
+	public void add(@NotNull K key, @NotNull V value) {
+		this.localList.add(new Entry<>(key, value, this.localList.size()));
 	}
 
 	public void addAll(List<Entry<K, V>> list) {
@@ -85,6 +64,7 @@ public class DataMap<K, V> {
 		return this.localList;
 	}
 
+	@Nullable
 	public V get(Object key) {
 		for (DataMap.Entry<K, V> entry : this.entryList()) {
 			if (entry.getKey().equals(key)) {
@@ -127,7 +107,7 @@ public class DataMap<K, V> {
 		@NotNull
 		@Override
 		public String toString() {
-			return "[" + this.key + "," + this.value + "," + this.line + "]";
+			return "(" + this.key + "," + this.value + "," + this.line + ")";
 		}
 	}
 }

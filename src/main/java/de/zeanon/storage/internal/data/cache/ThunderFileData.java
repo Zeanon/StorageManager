@@ -135,14 +135,16 @@ public class ThunderFileData implements FileData<DataMap<String, Object>, DataMa
 	}
 
 	@Override
-	public @Nullable Object get(final @NotNull String key) {
+	@Nullable
+	public Object get(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		final String[] parts = key.split("\\.");
 		return this.get(this.dataMap, parts, 0);
 	}
 
 	@Override
-	public @Nullable Object getUseArray(final @NotNull String... key) {
+	@Nullable
+	public Object getUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		return this.get(this.dataMap, key, 0);
 	}
@@ -214,7 +216,7 @@ public class ThunderFileData implements FileData<DataMap<String, Object>, DataMa
 	}
 
 
-	private void initialInsert(@Nullable Object value, String[] parts) {
+	private void initialInsert(@Nullable Object value, @NotNull String[] parts) {
 		if (value == null) {
 			this.removeUseArray(parts);
 		} else {
@@ -247,14 +249,14 @@ public class ThunderFileData implements FileData<DataMap<String, Object>, DataMa
 	}
 
 
-	private void initialRemove(String[] parts) {
+	private void initialRemove(@NotNull String[] parts) {
 		if (parts.length == 1) {
 			this.dataMap.remove(parts[0]);
 		} else {
 			final Object tempValue = this.dataMap.get(parts[0]);
 			if (tempValue instanceof DataMap) {
 				this.dataMap.put(parts[0], this.remove((DataMap) tempValue, parts, 1));
-				if (((DataMap) this.dataMap.get(parts[0])).isEmpty()) {
+				if (((DataMap) tempValue).isEmpty()) {
 					this.dataMap.remove(parts[0]);
 				}
 			} else {
@@ -270,7 +272,8 @@ public class ThunderFileData implements FileData<DataMap<String, Object>, DataMa
 			if (tempValue instanceof DataMap) {
 				//noinspection unchecked
 				map.put(key[keyIndex], this.remove((DataMap) tempValue, key, keyIndex + 1));
-				if (((DataMap) map.get(key[keyIndex])).isEmpty()) {
+				if (((DataMap) tempValue
+				).isEmpty()) {
 					map.remove(key[keyIndex]);
 				}
 				return map;

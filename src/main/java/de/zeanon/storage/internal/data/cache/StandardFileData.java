@@ -132,14 +132,16 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	}
 
 	@Override
-	public @Nullable Object get(final @NotNull String key) {
+	@Nullable
+	public Object get(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		final String[] parts = key.split("\\.");
 		return this.get(this.dataMap, parts, 0);
 	}
 
 	@Override
-	public @Nullable Object getUseArray(final @NotNull String... key) {
+	@Nullable
+	public Object getUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		return this.get(this.dataMap, key, 0);
 	}
@@ -211,12 +213,12 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	}
 
 
-	private void initialInsert(@Nullable Object value, String[] parts) {
+	private void initialInsert(@Nullable Object value, @NotNull String[] parts) {
 		if (value == null) {
 			this.removeUseArray(parts);
 		} else {
 			final Object tempValue = this.dataMap.get(parts[0]);
-//noinspection unchecked
+			//noinspection unchecked
 			final Map<String, Object> childMap =
 					this.dataMap.containsKey(parts[0])
 					&& tempValue instanceof Map
@@ -248,7 +250,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	}
 
 
-	private void initialRemove(String[] parts) {
+	private void initialRemove(@NotNull String[] parts) {
 		if (parts.length == 1) {
 			this.dataMap.remove(parts[0]);
 		} else {

@@ -5,6 +5,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Basic interface for different classes for cashing the Data read from the DataFile
+ *
+ * @param <M> the Collection implementation to be used, can also be an own version
+ * @param <E> the Entry from it, to be returned by the entryList methods
+ */
 @SuppressWarnings("unused")
 public interface FileData<M, E> {
 

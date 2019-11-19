@@ -75,7 +75,6 @@ public class ThunderEditor {
 			@NotNull DataMap<String, Object> tempMap = new DataMap<>();
 
 			@Nullable String tempKey = null;
-			int line = 0;
 			while (!lines.isEmpty()) {
 				@NotNull String tempLine = lines.get(0).trim();
 				lines.remove(0);
@@ -83,20 +82,19 @@ public class ThunderEditor {
 				if (tempLine.contains("}")) {
 					throw new ThunderException("Error at '" + file.getAbsolutePath() + "' -> Block closed without being opened");
 				} else if (tempLine.isEmpty()) {
-					tempMap.add(tempLine, LineType.BLANK_LINE, line);
+					tempMap.add(tempLine, LineType.BLANK_LINE);
 				} else if (tempLine.startsWith("#")) {
-					tempMap.add(tempLine, LineType.COMMENT, line);
+					tempMap.add(tempLine, LineType.COMMENT);
 				} else if (tempLine.endsWith("{")) {
 					if (!tempLine.equals("{")) {
 						tempKey = tempLine.replace("{", "").trim();
 					} else if (tempKey == null) {
 						throw new ThunderException("Error at '" + file.getAbsolutePath() + "' -> '" + tempLine + "' -> Key must not be null");
 					}
-					tempMap.add(tempKey, internalReadWithComments(file.getAbsolutePath(), lines, line), line);
+					tempMap.add(tempKey, internalReadWithComments(file.getAbsolutePath(), lines));
 				} else {
-					tempKey = readKey(file.getAbsolutePath(), lines, tempMap, tempKey, tempLine, line);
+					tempKey = readKey(file.getAbsolutePath(), lines, tempMap, tempKey, tempLine);
 				}
-				line++;
 			}
 			return tempMap;
 		} catch (ArrayIndexOutOfBoundsException e) {
@@ -107,7 +105,7 @@ public class ThunderEditor {
 	}
 
 	@NotNull
-	private static DataMap<String, Object> internalReadWithComments(final @NotNull String filePath, final @NotNull List<String> lines, int line) throws ThunderException {
+	private static DataMap<String, Object> internalReadWithComments(final @NotNull String filePath, final @NotNull List<String> lines) throws ThunderException {
 		@NotNull DataMap<String, Object> tempMap = new DataMap<>();
 		@Nullable String tempKey = null;
 
@@ -121,20 +119,19 @@ public class ThunderEditor {
 				throw new ThunderException("Error at '" + filePath + "' -> " +
 										   "Illegal Character placement: '}' only allowed as a single Character in line to close blocks");
 			} else if (tempLine.isEmpty()) {
-				tempMap.add(tempLine, LineType.BLANK_LINE, line);
+				tempMap.add(tempLine, LineType.BLANK_LINE);
 			} else if (tempLine.startsWith("#")) {
-				tempMap.add(tempLine, LineType.COMMENT, line);
+				tempMap.add(tempLine, LineType.COMMENT);
 			} else if (tempLine.endsWith("{")) {
 				if (!tempLine.equals("{")) {
 					tempKey = tempLine.replace("{", "").trim();
 				} else if (tempKey == null) {
 					throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 				}
-				tempMap.add(tempKey, internalReadWithComments(filePath, lines, line), line);
+				tempMap.add(tempKey, internalReadWithComments(filePath, lines));
 			} else {
-				tempKey = readKey(filePath, lines, tempMap, tempKey, tempLine, line);
+				tempKey = readKey(filePath, lines, tempMap, tempKey, tempLine);
 			}
-			line++;
 		}
 		throw new ThunderException("Error at '" + filePath + "' -> Block does not close");
 	}
@@ -148,7 +145,6 @@ public class ThunderEditor {
 			@NotNull DataMap<String, Object> tempMap = new DataMap<>();
 
 			@Nullable String tempKey = null;
-			int line = 0;
 			while (!lines.isEmpty()) {
 				@NotNull String tempLine = lines.get(0).trim();
 				lines.remove(0);
@@ -162,12 +158,11 @@ public class ThunderEditor {
 						} else if (tempKey == null) {
 							throw new ThunderException("Error at '" + file.getAbsolutePath() + "' - > '" + tempLine + "' -> Key must not be null");
 						}
-						tempMap.add(tempKey, internalReadWithOutComments(file.getAbsolutePath(), lines, line), line);
+						tempMap.add(tempKey, internalReadWithOutComments(file.getAbsolutePath(), lines));
 					} else {
-						tempKey = readKey(file.getAbsolutePath(), lines, tempMap, tempKey, tempLine, line);
+						tempKey = readKey(file.getAbsolutePath(), lines, tempMap, tempKey, tempLine);
 					}
 				}
-				line++;
 			}
 			return tempMap;
 		} catch (ArrayIndexOutOfBoundsException e) {
@@ -179,7 +174,7 @@ public class ThunderEditor {
 	// </Read without Comments>
 
 	@NotNull
-	private static DataMap<String, Object> internalReadWithOutComments(final @NotNull String filePath, final @NotNull List<String> lines, int line) throws ThunderException {
+	private static DataMap<String, Object> internalReadWithOutComments(final @NotNull String filePath, final @NotNull List<String> lines) throws ThunderException {
 		@NotNull DataMap<String, Object> tempMap = new DataMap<>();
 		@Nullable String tempKey = null;
 
@@ -199,12 +194,11 @@ public class ThunderEditor {
 					} else if (tempKey == null) {
 						throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 					}
-					tempMap.add(tempKey, internalReadWithOutComments(filePath, lines, line), line);
+					tempMap.add(tempKey, internalReadWithOutComments(filePath, lines));
 				} else {
-					tempKey = readKey(filePath, lines, tempMap, tempKey, tempLine, line);
+					tempKey = readKey(filePath, lines, tempMap, tempKey, tempLine);
 				}
 			}
-			line++;
 		}
 		throw new ThunderException("Error at '" + filePath + "' -> Block does not close");
 	}
@@ -214,8 +208,7 @@ public class ThunderEditor {
 								  final @NotNull List<String> lines,
 								  final @NotNull DataMap<String, Object> tempMap,
 								  @Nullable String tempKey,
-								  final @NotNull String tempLine,
-								  final int line) throws ThunderException {
+								  final @NotNull String tempLine) throws ThunderException {
 		if (tempLine.contains("=")) {
 			@NotNull String[] splitLine = tempLine.split("=", 2);
 			splitLine[0] = splitLine[0].trim();
@@ -227,15 +220,15 @@ public class ThunderEditor {
 					for (@NotNull String value : listArray) {
 						list.add(value.trim());
 					}
-					tempMap.add(splitLine[0], list, line);
+					tempMap.add(splitLine[0], list);
 				} else {
-					tempMap.add(splitLine[0], readList(filePath, lines), line);
+					tempMap.add(splitLine[0], readList(filePath, lines));
 				}
 			} else {
 				if (splitLine[1].equalsIgnoreCase("true") || splitLine[1].equalsIgnoreCase("false")) {
-					tempMap.add(splitLine[0], splitLine[1].equalsIgnoreCase("true"), line);
+					tempMap.add(splitLine[0], splitLine[1].equalsIgnoreCase("true"));
 				} else {
-					tempMap.add(splitLine[0], splitLine[1], line);
+					tempMap.add(splitLine[0], splitLine[1]);
 				}
 			}
 		} else {

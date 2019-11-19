@@ -50,7 +50,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getHeader(this.getFileData(), this.getCommentSetting());
+			return ThunderUtils.getHeader(this.getFileData());
 		} else {
 			return new ArrayList<>();
 		}
@@ -62,7 +62,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			@NotNull String tempData = this.getFileData().toString();
-			ThunderUtils.setHeader(this.getFileData(), header, this.getCommentSetting());
+			ThunderUtils.setHeader(this.getFileData(), header);
 			if (!this.getFileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
 			}
@@ -76,7 +76,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getHeader(this.getFileData(), key, this.getCommentSetting());
+			return ThunderUtils.getHeader(this.getFileData(), key);
 		} else {
 			return new ArrayList<>();
 		}
@@ -93,7 +93,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			@NotNull String tempData = this.getFileData().toString();
-			ThunderUtils.setHeader(this.getFileData(), key, header, this.getCommentSetting());
+			ThunderUtils.setHeader(this.getFileData(), key, header);
 			if (!this.getFileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
 			}
@@ -107,7 +107,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getFooter(this.getFileData(), this.getCommentSetting());
+			return ThunderUtils.getFooter(this.getFileData());
 		} else {
 			return new ArrayList<>();
 		}
@@ -119,7 +119,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			@NotNull String tempData = this.getFileData().toString();
-			ThunderUtils.setFooter(this.getFileData(), footer, this.getCommentSetting());
+			ThunderUtils.setFooter(this.getFileData(), footer);
 			if (!this.getFileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
 			}
@@ -133,7 +133,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getFooter(this.getFileData(), key, this.getCommentSetting());
+			return ThunderUtils.getFooter(this.getFileData(), key);
 		} else {
 			return new ArrayList<>();
 		}
@@ -150,7 +150,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			@NotNull String tempData = this.getFileData().toString();
-			ThunderUtils.setFooter(this.getFileData(), key, footer, this.getCommentSetting());
+			ThunderUtils.setFooter(this.getFileData(), key, footer);
 			if (!this.getFileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
 			}
@@ -164,7 +164,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.getFileData(), this.getCommentSetting(), true);
+			return ThunderUtils.getComments(this.getFileData(), true);
 		} else {
 			return new ArrayList<>();
 		}
@@ -177,7 +177,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.getFileData(), key, this.getCommentSetting(), true);
+			return ThunderUtils.getComments(this.getFileData(), key, true);
 		} else {
 			return new ArrayList<>();
 		}
@@ -188,7 +188,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.getFileData(), this.getCommentSetting(), false);
+			return ThunderUtils.getComments(this.getFileData(), false);
 		} else {
 			return new ArrayList<>();
 		}
@@ -201,7 +201,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.getFileData(), key, this.getCommentSetting(), false);
+			return ThunderUtils.getComments(this.getFileData(), key, false);
 		} else {
 			return new ArrayList<>();
 		}
