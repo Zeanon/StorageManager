@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -280,7 +279,7 @@ public class ThunderEditor {
 	private static void topLayerWriteWithComments(final @NotNull PrintWriter writer, final @NotNull DataMap.Entry<String, Object> entry) {
 		if (entry.getKey().startsWith("#") && entry.getValue() == LineType.COMMENT) {
 			writer.print(entry.getKey());
-		} else if (entry.getValue() instanceof Map) {
+		} else if (entry.getValue() instanceof DataMap) {
 			writer.print(entry.getKey() + " " + "{");
 			//noinspection unchecked
 			internalWriteWithComments((List<DataMap.Entry<String, Object>>) entry.getValue(), "", writer);
@@ -299,7 +298,7 @@ public class ThunderEditor {
 			writer.println();
 			if (entry.getKey().startsWith("#") && entry.getValue() == LineType.COMMENT) {
 				writer.print(indentationString + "  " + entry.getKey());
-			} else if (entry.getValue() instanceof Map) {
+			} else if (entry.getValue() instanceof DataMap) {
 				writer.print(indentationString + "  " + entry.getKey() + " " + "{");
 				//noinspection unchecked
 				internalWriteWithComments((List<DataMap.Entry<String, Object>>) entry.getValue(), indentationString + "  ", writer);
@@ -339,7 +338,7 @@ public class ThunderEditor {
 	}
 
 	private static void topLayerWriteWithOutComments(final @NotNull PrintWriter writer, final @NotNull DataMap.Entry<String, Object> entry) {
-		if (entry.getValue() instanceof Map) {
+		if (entry.getValue() instanceof DataMap) {
 			writer.print(entry.getKey() + " " + "{");
 			//noinspection unchecked
 			internalWriteWithoutComments((List<DataMap.Entry<String, Object>>) entry.getValue(), "", writer);
@@ -357,7 +356,7 @@ public class ThunderEditor {
 		for (@NotNull final DataMap.Entry<String, Object> entry : entryList) {
 			if (!entry.getKey().startsWith("#") && entry.getValue() != LineType.COMMENT && !entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
 				writer.println();
-				if (entry.getValue() instanceof Map) {
+				if (entry.getValue() instanceof DataMap) {
 					writer.print(indentationString + "  " + entry.getKey() + " " + "{");
 					//noinspection unchecked
 					internalWriteWithoutComments((List<DataMap.Entry<String, Object>>) entry.getValue(), indentationString + "  ", writer);
