@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class TomlFileSection extends FlatSection {
+public class TomlFileSection extends FlatSection<TomlFile> {
 
 	@NotNull
 	private final TomlFile tomlFile;

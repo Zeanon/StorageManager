@@ -12,8 +12,6 @@ public interface ConfigBase extends StorageBase {
 
 	void setCommentSetting(final CommentSettingBase commentSetting);
 
-	void setDataType(final DataTypeBase dataType);
-
 	@NotNull List<String> getHeader();
 
 	default void setHeader(final @Nullable String... header) {

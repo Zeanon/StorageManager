@@ -2,10 +2,10 @@ package de.zeanon.storage.internal.base;
 
 import de.zeanon.storage.internal.base.exceptions.FileTypeException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
+import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.base.interfaces.StorageBase;
-import de.zeanon.storage.internal.data.cache.FileData;
 import de.zeanon.storage.internal.settings.Reload;
 import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
@@ -27,14 +27,14 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 @ToString(callSuper = true)
 @SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
-public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
+public abstract class FlatFile<M extends FileData<?, ?>> implements StorageBase, Comparable<FlatFile> {
 
 	@NotNull
 	private final File file;
 	@NotNull
 	private final FileTypeBase fileType;
 	@NotNull
-	private final FileData fileData;
+	private final M fileData;
 	@Setter(AccessLevel.PROTECTED)
 	private long lastLoaded;
 	/**
@@ -45,7 +45,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	private ReloadSettingBase reloadSetting = Reload.INTELLIGENT;
 
 
-	protected FlatFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @NotNull FileData fileData) {
+	protected FlatFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @NotNull M fileData) {
 		if (fileType.isTypeOf(file)) {
 			this.fileType = fileType;
 			this.file = file;
@@ -161,59 +161,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 		return fileData.containsKeyUseArray(key);
-	}
-
-	@NotNull
-	@Override
-	public List<String> keyList() {
-		this.update();
-		return this.fileData.keyList();
-	}
-
-	@NotNull
-	@Override
-	public List<String[]> keyListUseArray() {
-		this.update();
-		return this.fileData.keyListUseArray();
-	}
-
-	@NotNull
-	@Override
-	public List<String> keyList(final @NotNull String key) {
-		Objects.checkNull(key, "Key  must not be null");
-		this.update();
-		return this.fileData.keyList(key);
-	}
-
-	@NotNull
-	@Override
-	public List<String[]> keyListUseArray(final @NotNull String... key) {
-		Objects.checkNull(key, "Key  must not be null");
-		this.update();
-		return this.fileData.keyListUseArray(key);
-	}
-
-	@NotNull
-	@Override
-	public List<String> blockKeyList() {
-		this.update();
-		return this.fileData.blockKeyList();
-	}
-
-	@NotNull
-	@Override
-	public List<String> blockKeyList(final @NotNull String key) {
-		Objects.checkNull(key, "Key  must not be null");
-		this.update();
-		return this.fileData.blockKeyList(key);
-	}
-
-	@NotNull
-	@Override
-	public List<String> blockKeyListUseArray(final @NotNull String... key) {
-		Objects.checkNull(key, "Key  must not be null");
-		this.update();
-		return this.fileData.blockKeyListUseArray(key);
 	}
 
 	/**
@@ -578,11 +525,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 */
 	public boolean shouldReload() {
 		return this.reloadSetting.shouldReload(this);
-	}
-
-	@NotNull
-	public Map<String, Object> getDataMap() {
-		return this.getFileData().toMap();
 	}
 
 	/**

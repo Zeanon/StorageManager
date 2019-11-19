@@ -6,7 +6,7 @@ import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.FileTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
-import de.zeanon.storage.internal.data.cache.FileData;
+import de.zeanon.storage.internal.data.cache.StandardFileData;
 import de.zeanon.storage.internal.data.section.JsonFileSection;
 import de.zeanon.storage.internal.utils.SMFileUtils;
 import de.zeanon.storage.internal.utils.basic.Objects;
@@ -31,7 +31,7 @@ import org.json.JSONTokener;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class JsonFile extends FlatFile {
+public class JsonFile extends FlatFile<StandardFileData> {
 
 
 	/**
@@ -74,7 +74,7 @@ public class JsonFile extends FlatFile {
 	@Override
 	public synchronized void save() {
 		try {
-			this.write(new JSONObject(this.getFileData().toMap()));
+			this.write(new JSONObject(this.getFileData().getDataMap()));
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
 		}
@@ -215,7 +215,7 @@ public class JsonFile extends FlatFile {
 		}
 	}
 
-	private static class LocalFileData extends FileData {
+	private static class LocalFileData extends StandardFileData {
 
 		private LocalFileData() {
 			super();

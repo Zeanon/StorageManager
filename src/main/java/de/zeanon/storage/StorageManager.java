@@ -2,7 +2,6 @@ package de.zeanon.storage;
 
 import de.zeanon.storage.internal.base.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
-import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.data.config.ThunderConfig;
 import de.zeanon.storage.internal.data.config.YamlConfig;
@@ -331,7 +330,6 @@ public abstract class StorageManager<C> {
 
 		private ReloadSettingBase reloadSetting;
 		private CommentSettingBase commentSetting;
-		private DataTypeBase dataType;
 
 
 		private ThunderFileBuilder(final @NotNull File file) {
@@ -342,14 +340,14 @@ public abstract class StorageManager<C> {
 		@NotNull
 		@Override
 		public final ThunderFile create() {
-			return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.dataType);
+			return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting);
 		}
 
 
 		private static final class LocalThunderFile extends ThunderFile {
 
-			private LocalThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
-				super(file, inputStream, reloadSetting, commentSetting, dataType);
+			private LocalThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting) {
+				super(file, inputStream, reloadSetting, commentSetting);
 			}
 		}
 	}
@@ -362,7 +360,6 @@ public abstract class StorageManager<C> {
 
 		private ReloadSettingBase reloadSetting;
 		private CommentSettingBase commentSetting;
-		private DataTypeBase dataType;
 
 
 		private ThunderConfigBuilder(final @NotNull File file) {
@@ -373,14 +370,14 @@ public abstract class StorageManager<C> {
 		@NotNull
 		@Override
 		public final ThunderConfig create() {
-			return new LocalThunderConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.dataType);
+			return new LocalThunderConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting);
 		}
 
 
 		private static final class LocalThunderConfig extends ThunderConfig {
 
-			private LocalThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
-				super(file, inputStream, reloadSetting, commentSetting, dataType);
+			private LocalThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting) {
+				super(file, inputStream, reloadSetting, commentSetting);
 			}
 		}
 	}
@@ -439,7 +436,7 @@ public abstract class StorageManager<C> {
 		private static final class LocalYamlFile extends YamlFile {
 
 			private LocalYamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting) {
-				super(file, inputStream, reloadSetting, commentSetting, null);
+				super(file, inputStream, reloadSetting, commentSetting);
 			}
 		}
 	}
@@ -469,7 +466,7 @@ public abstract class StorageManager<C> {
 		private static final class LocalYamlConfig extends YamlConfig {
 
 			private LocalYamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting) {
-				super(file, inputStream, reloadSetting, commentSetting, null);
+				super(file, inputStream, reloadSetting, commentSetting);
 			}
 		}
 	}

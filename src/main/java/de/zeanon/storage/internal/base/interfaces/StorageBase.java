@@ -349,43 +349,6 @@ public interface StorageBase {
 	void setAllUseArray(final @NotNull String[] blockKey, final @NotNull Map<String[], Object> dataMap);
 
 	/**
-	 * get the keySet of all layers of the map combined.
-	 *
-	 * @return the keySet of all layers of localMap combined (Format: key.subkey).
-	 */
-	@NotNull List<String> keyList();
-
-	@NotNull List<String[]> keyListUseArray();
-
-	/**
-	 * get the keyList of all sublayers of the given key combined.
-	 *
-	 * @param key the key of the layer
-	 * @return the keyList of all sublayers of the given key or an empty set if the key does not exist (Format: key.subkey).
-	 */
-	@NotNull List<String> keyList(final @NotNull String key);
-
-	@NotNull List<String[]> keyListUseArray(final @NotNull String... key);
-
-
-	/**
-	 * get the keyList of a single layer of the map.
-	 *
-	 * @return the keyList of the top layer of localMap.
-	 */
-	@NotNull List<String> blockKeyList();
-
-	/**
-	 * get the keyList of a single layer of the map.
-	 *
-	 * @param key the key of the layer.
-	 * @return the keyList of the given layer or an empty set if the key does not exist.
-	 */
-	@NotNull List<String> blockKeyList(final @NotNull String key);
-
-	@NotNull List<String> blockKeyListUseArray(final @NotNull String... key);
-
-	/**
 	 * Get an Object from the File casted to a certain type
 	 *
 	 * @param key key to value in File

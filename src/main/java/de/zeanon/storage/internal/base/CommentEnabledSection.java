@@ -1,7 +1,7 @@
 package de.zeanon.storage.internal.base;
 
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
-import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
+import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.util.List;
 import java.util.Map;
@@ -14,18 +14,18 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public abstract class CommentEnabledSection extends FlatSection {
+public abstract class CommentEnabledSection<F extends CommentEnabledFile<? extends FileData<?, ?>>> extends FlatSection<F> {
 
 	@NotNull
-	private final CommentEnabledFile commentEnabledFile;
+	private final F commentEnabledFile;
 
 
-	protected CommentEnabledSection(final @NotNull String sectionKey, final @NotNull CommentEnabledFile commentEnabledFile) {
+	protected CommentEnabledSection(final @NotNull String sectionKey, final @NotNull F commentEnabledFile) {
 		super(sectionKey, commentEnabledFile);
 		this.commentEnabledFile = commentEnabledFile;
 	}
 
-	protected CommentEnabledSection(final @NotNull String[] sectionKey, final @NotNull CommentEnabledFile commentEnabledFile) {
+	protected CommentEnabledSection(final @NotNull String[] sectionKey, final @NotNull F commentEnabledFile) {
 		super(sectionKey, commentEnabledFile);
 		this.commentEnabledFile = commentEnabledFile;
 	}
@@ -33,11 +33,6 @@ public abstract class CommentEnabledSection extends FlatSection {
 	public void setCommentSetting(final @NotNull CommentSettingBase commentSetting) {
 		this.commentEnabledFile.setCommentSetting(commentSetting);
 	}
-
-	public void setDataType(final @NotNull DataTypeBase dataType) {
-		this.commentEnabledFile.setDataType(dataType);
-	}
-
 
 	/**
 	 * Set with a specific {@link de.zeanon.storage.internal.base.interfaces.CommentSettingBase}.

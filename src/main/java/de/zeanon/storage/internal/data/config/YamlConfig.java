@@ -5,7 +5,6 @@ import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.ConfigBase;
-import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.data.raw.YamlFile;
 import de.zeanon.storage.internal.settings.Comment;
@@ -39,12 +38,11 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 	 * @param inputStream    the FileContent to be set on the creation of the File
 	 * @param reloadSetting  the ReloadSetting to be used with this instance
 	 * @param commentSetting the CommentSetting to be used with this instance
-	 * @param dataType       the DataType to be used with this instance
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
-		super(file, inputStream, reloadSetting, commentSetting == null ? Comment.PRESERVE : commentSetting, dataType);
+	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting) {
+		super(file, inputStream, reloadSetting, commentSetting == null ? Comment.PRESERVE : commentSetting);
 	}
 
 

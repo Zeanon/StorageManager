@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class YamlFileSection extends CommentEnabledSection {
+public class YamlFileSection extends CommentEnabledSection<YamlFile> {
 
 	@NotNull
 	private final YamlFile yamlFile;

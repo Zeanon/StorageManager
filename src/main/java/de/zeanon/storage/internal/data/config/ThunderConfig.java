@@ -4,7 +4,6 @@ import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
 import de.zeanon.storage.internal.base.interfaces.ConfigBase;
-import de.zeanon.storage.internal.base.interfaces.DataTypeBase;
 import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
 import de.zeanon.storage.internal.data.raw.ThunderFile;
 import de.zeanon.storage.internal.data.section.ThunderConfigSection;
@@ -37,12 +36,11 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 	 * @param inputStream    the FileContent to be set on the creation of the File
 	 * @param reloadSetting  the ReloadSetting to be used with this instance
 	 * @param commentSetting the CommentSetting to be used with this instance
-	 * @param dataType       the DataType to be used with this instance
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected ThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
-		super(file, inputStream, reloadSetting, commentSetting == null ? Comment.PRESERVE : commentSetting, dataType);
+	protected ThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting) {
+		super(file, inputStream, reloadSetting, commentSetting == null ? Comment.PRESERVE : commentSetting);
 	}
 
 
@@ -52,7 +50,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getHeader(this.getFileData(), this.getDataType(), this.getCommentSetting());
+			return ThunderUtils.getHeader(this.getFileData(), this.getCommentSetting());
 		} else {
 			return new ArrayList<>();
 		}
@@ -64,7 +62,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			@NotNull String tempData = this.getFileData().toString();
-			ThunderUtils.setHeader(this.getFileData(), header, this.getDataType(), this.getCommentSetting());
+			ThunderUtils.setHeader(this.getFileData(), header, this.getCommentSetting());
 			if (!this.getFileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
 			}
@@ -78,7 +76,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getHeader(this.getFileData(), key, this.getDataType(), this.getCommentSetting());
+			return ThunderUtils.getHeader(this.getFileData(), key, this.getCommentSetting());
 		} else {
 			return new ArrayList<>();
 		}
@@ -95,7 +93,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			@NotNull String tempData = this.getFileData().toString();
-			ThunderUtils.setHeader(this.getFileData(), key, header, this.getDataType(), this.getCommentSetting());
+			ThunderUtils.setHeader(this.getFileData(), key, header, this.getCommentSetting());
 			if (!this.getFileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
 			}
@@ -109,7 +107,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getFooter(this.getFileData(), this.getDataType(), this.getCommentSetting());
+			return ThunderUtils.getFooter(this.getFileData(), this.getCommentSetting());
 		} else {
 			return new ArrayList<>();
 		}
@@ -121,7 +119,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			@NotNull String tempData = this.getFileData().toString();
-			ThunderUtils.setFooter(this.getFileData(), footer, this.getDataType(), this.getCommentSetting());
+			ThunderUtils.setFooter(this.getFileData(), footer, this.getCommentSetting());
 			if (!this.getFileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
 			}
@@ -135,7 +133,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getFooter(this.getFileData(), key, this.getDataType(), this.getCommentSetting());
+			return ThunderUtils.getFooter(this.getFileData(), key, this.getCommentSetting());
 		} else {
 			return new ArrayList<>();
 		}
@@ -152,7 +150,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			@NotNull String tempData = this.getFileData().toString();
-			ThunderUtils.setFooter(this.getFileData(), key, footer, this.getDataType(), this.getCommentSetting());
+			ThunderUtils.setFooter(this.getFileData(), key, footer, this.getCommentSetting());
 			if (!this.getFileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
 			}
@@ -166,7 +164,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.getFileData(), this.getDataType(), this.getCommentSetting(), true);
+			return ThunderUtils.getComments(this.getFileData(), this.getCommentSetting(), true);
 		} else {
 			return new ArrayList<>();
 		}
@@ -179,7 +177,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.getFileData(), key, this.getDataType(), this.getCommentSetting(), true);
+			return ThunderUtils.getComments(this.getFileData(), key, this.getCommentSetting(), true);
 		} else {
 			return new ArrayList<>();
 		}
@@ -190,7 +188,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.getFileData(), this.getDataType(), this.getCommentSetting(), false);
+			return ThunderUtils.getComments(this.getFileData(), this.getCommentSetting(), false);
 		} else {
 			return new ArrayList<>();
 		}
@@ -203,7 +201,7 @@ public class ThunderConfig extends ThunderFile implements ConfigBase {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.getFileData(), key, this.getDataType(), this.getCommentSetting(), false);
+			return ThunderUtils.getComments(this.getFileData(), key, this.getCommentSetting(), false);
 		} else {
 			return new ArrayList<>();
 		}
