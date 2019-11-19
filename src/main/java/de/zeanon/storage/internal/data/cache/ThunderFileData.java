@@ -249,6 +249,7 @@ public class ThunderFileData implements FileData<DataMap<String, Object>, DataMa
 	}
 
 
+	// <Internal>
 	private void initialRemove(@NotNull String[] parts) {
 		if (parts.length == 1) {
 			this.dataMap.remove(parts[0]);
@@ -341,6 +342,7 @@ public class ThunderFileData implements FileData<DataMap<String, Object>, DataMa
 		}
 		return size;
 	}
+	// </Internal>
 
 
 	@Override

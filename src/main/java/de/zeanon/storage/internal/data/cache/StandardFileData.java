@@ -213,6 +213,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	}
 
 
+	// <Internal>
 	private void initialInsert(@Nullable Object value, @NotNull String[] parts) {
 		if (value == null) {
 			this.removeUseArray(parts);
@@ -234,7 +235,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	private Object insert(final @NotNull Map<String, Object> map, final @NotNull String[] key, final @NotNull Object value, final int keyIndex) {
 		if (keyIndex < key.length) {
 			final Object tempValue = map.get(key[keyIndex]);
-//noinspection unchecked
+			//noinspection unchecked
 			final Map<String, Object> childMap =
 					map.containsKey(key[keyIndex])
 					&& tempValue instanceof Map
@@ -344,6 +345,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 		return size;
 	}
+	// </Internal>
 
 
 	@Override

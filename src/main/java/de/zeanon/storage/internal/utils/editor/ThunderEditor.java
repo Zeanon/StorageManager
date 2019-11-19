@@ -65,6 +65,131 @@ public class ThunderEditor {
 	}
 
 
+	// <Internal>
+	// <Write Data>
+	// <Write Data with Comments>
+	private static void initialWriteWithComments(final @NotNull File file, final @NotNull ThunderFileData fileData) {
+		try (@NotNull final PrintWriter writer = new PrintWriter(file)) {
+			if (!fileData.isEmpty()) {
+				@NotNull final Iterator<DataMap.Entry<String, Object>> mapIterator = fileData.entryList().iterator();
+				topLayerWriteWithComments(writer, mapIterator.next());
+				mapIterator.forEachRemaining(entry -> {
+					writer.println();
+					topLayerWriteWithComments(writer, entry);
+				});
+			}
+			writer.flush();
+		} catch (FileNotFoundException e) {
+			throw new RuntimeIOException("Could not write to '" + file.getAbsolutePath() + "'", e.getCause());
+		}
+	}
+
+	private static void topLayerWriteWithComments(final @NotNull PrintWriter writer, final @NotNull DataMap.Entry<String, Object> entry) {
+		if (entry.getKey().startsWith("#") && entry.getValue() == LineType.COMMENT) {
+			writer.print(entry.getKey());
+		} else if (entry.getValue() instanceof DataMap) {
+			writer.print(entry.getKey() + " " + "{");
+			//noinspection unchecked
+			internalWriteWithComments((List<DataMap.Entry<String, Object>>) entry.getValue(), "", writer);
+		} else if (entry.getValue() instanceof List) {
+			writer.println(entry.getKey() + " = [");
+			//noinspection unchecked
+			writeList((List<String>) entry.getValue(), "  ", writer);
+		} else if (!entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
+			writer.print(entry.getKey() + " = " + entry.getValue());
+		}
+	}
+
+	private static void internalWriteWithComments(final @NotNull List<DataMap.Entry<String, Object>> entryList, final String indentationString, final @NotNull PrintWriter writer) {
+		for (@NotNull final DataMap.Entry<String, Object> entry : entryList) {
+			writer.println();
+			if (entry.getKey().startsWith("#") && entry.getValue() == LineType.COMMENT) {
+				writer.print(indentationString + "  " + entry.getKey());
+			} else if (entry.getValue() instanceof DataMap) {
+				writer.print(indentationString + "  " + entry.getKey() + " " + "{");
+				//noinspection unchecked
+				internalWriteWithComments((List<DataMap.Entry<String, Object>>) entry.getValue(), indentationString + "  ", writer);
+			} else if (entry.getValue() instanceof List) {
+				writer.println(indentationString + "  " + entry.getKey() + " = [");
+				//noinspection unchecked
+				writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
+			} else if (!entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
+				writer.print(indentationString + "  " + entry.getKey() + " = " + entry.getValue());
+			}
+		}
+		writer.println();
+		writer.print(indentationString + "}");
+	}
+	// </Write Data with Comments>
+
+	// <Write Data without Comments>
+	private static void initialWriteWithOutComments(final @NotNull File file, final @NotNull ThunderFileData fileData) {
+		try (@NotNull final PrintWriter writer = new PrintWriter(file)) {
+			if (!fileData.isEmpty()) {
+				@NotNull Iterator<DataMap.Entry<String, Object>> mapIterator = fileData.entryList().iterator();
+				DataMap.Entry<String, Object> initialEntry = mapIterator.next();
+				while (initialEntry.getKey().startsWith("#") || initialEntry.getValue() == LineType.COMMENT || initialEntry.getKey().equals("") || initialEntry.getValue() == LineType.BLANK_LINE) {
+					initialEntry = mapIterator.next();
+				}
+				topLayerWriteWithOutComments(writer, initialEntry);
+				mapIterator.forEachRemaining(entry -> {
+					if (!entry.getKey().startsWith("#") && entry.getValue() != LineType.COMMENT && !entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
+						writer.println();
+						topLayerWriteWithOutComments(writer, entry);
+					}
+				});
+			}
+			writer.flush();
+		} catch (FileNotFoundException e) {
+			throw new RuntimeIOException("Could not write to '" + file.getAbsolutePath() + "'", e.getCause());
+		}
+	}
+
+	private static void topLayerWriteWithOutComments(final @NotNull PrintWriter writer, final @NotNull DataMap.Entry<String, Object> entry) {
+		if (entry.getValue() instanceof DataMap) {
+			writer.print(entry.getKey() + " " + "{");
+			//noinspection unchecked
+			internalWriteWithoutComments((List<DataMap.Entry<String, Object>>) entry.getValue(), "", writer);
+		} else if (entry.getValue() instanceof List) {
+			writer.println("  " + entry.getKey() + " = [");
+			//noinspection unchecked
+			writeList((List<String>) entry.getValue(), "  ", writer);
+		} else {
+			writer.print(entry.getKey() + " = " + entry.getValue());
+		}
+	}
+
+	private static void internalWriteWithoutComments(final @NotNull List<DataMap.Entry<String, Object>> entryList, final String indentationString, final @NotNull PrintWriter writer) {
+		for (@NotNull final DataMap.Entry<String, Object> entry : entryList) {
+			if (!entry.getKey().startsWith("#") && entry.getValue() != LineType.COMMENT && !entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
+				writer.println();
+				if (entry.getValue() instanceof DataMap) {
+					writer.print(indentationString + "  " + entry.getKey() + " " + "{");
+					//noinspection unchecked
+					internalWriteWithoutComments((List<DataMap.Entry<String, Object>>) entry.getValue(), indentationString + "  ", writer);
+				} else if (entry.getValue() instanceof List) {
+					writer.println(indentationString + "  " + entry.getKey() + " = [");
+					//noinspection unchecked
+					writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
+				} else {
+					writer.print(indentationString + "  " + entry.getKey() + " = " + entry.getValue());
+				}
+			}
+		}
+		writer.println();
+		writer.print(indentationString + "}");
+	}
+	// </Write Data without Comments>
+
+	private static void writeList(final @NotNull List<String> list, final String indentationString, final @NotNull PrintWriter writer) {
+		for (final String line : list) {
+			writer.println(indentationString + "  - " + line);
+		}
+		writer.print(indentationString + "]");
+	}
+	// </Write Data>
+
+
 	// <Read Data>
 	// <Read Data with Comments>
 	@NotNull
@@ -170,7 +295,6 @@ public class ThunderEditor {
 			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e.getCause());
 		}
 	}
-	// </Read without Comments>
 
 	@NotNull
 	private static DataMap<String, Object> internalReadWithOutComments(final @NotNull String filePath, final @NotNull List<String> lines) throws ThunderException {
@@ -201,6 +325,7 @@ public class ThunderEditor {
 		}
 		throw new ThunderException("Error at '" + filePath + "' -> Block does not close");
 	}
+	// </Read without Comments>
 
 	@Nullable
 	private static String readKey(final @NotNull String filePath,
@@ -239,7 +364,6 @@ public class ThunderEditor {
 		}
 		return tempKey;
 	}
-	// </Read Data>
 
 	@NotNull
 	private static List<String> readList(final String filePath, final @NotNull List<String> lines) throws ThunderException {
@@ -257,129 +381,8 @@ public class ThunderEditor {
 		}
 		throw new ThunderException("Error at '" + filePath + "' -> List not closed properly");
 	}
-
-	// <Write Data>
-	// <Write Data with Comments>
-	private static void initialWriteWithComments(final @NotNull File file, final @NotNull ThunderFileData fileData) {
-		try (@NotNull final PrintWriter writer = new PrintWriter(file)) {
-			if (!fileData.isEmpty()) {
-				@NotNull final Iterator<DataMap.Entry<String, Object>> mapIterator = fileData.entryList().iterator();
-				topLayerWriteWithComments(writer, mapIterator.next());
-				mapIterator.forEachRemaining(entry -> {
-					writer.println();
-					topLayerWriteWithComments(writer, entry);
-				});
-			}
-			writer.flush();
-		} catch (FileNotFoundException e) {
-			throw new RuntimeIOException("Could not write to '" + file.getAbsolutePath() + "'", e.getCause());
-		}
-	}
-
-	private static void topLayerWriteWithComments(final @NotNull PrintWriter writer, final @NotNull DataMap.Entry<String, Object> entry) {
-		if (entry.getKey().startsWith("#") && entry.getValue() == LineType.COMMENT) {
-			writer.print(entry.getKey());
-		} else if (entry.getValue() instanceof DataMap) {
-			writer.print(entry.getKey() + " " + "{");
-			//noinspection unchecked
-			internalWriteWithComments((List<DataMap.Entry<String, Object>>) entry.getValue(), "", writer);
-		} else if (entry.getValue() instanceof List) {
-			writer.println(entry.getKey() + " = [");
-			//noinspection unchecked
-			writeList((List<String>) entry.getValue(), "  ", writer);
-		} else if (!entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
-			writer.print(entry.getKey() + " = " + entry.getValue());
-		}
-	}
-	// </Write Data with Comments
-
-	private static void internalWriteWithComments(final @NotNull List<DataMap.Entry<String, Object>> entryList, final String indentationString, final @NotNull PrintWriter writer) {
-		for (@NotNull final DataMap.Entry<String, Object> entry : entryList) {
-			writer.println();
-			if (entry.getKey().startsWith("#") && entry.getValue() == LineType.COMMENT) {
-				writer.print(indentationString + "  " + entry.getKey());
-			} else if (entry.getValue() instanceof DataMap) {
-				writer.print(indentationString + "  " + entry.getKey() + " " + "{");
-				//noinspection unchecked
-				internalWriteWithComments((List<DataMap.Entry<String, Object>>) entry.getValue(), indentationString + "  ", writer);
-			} else if (entry.getValue() instanceof List) {
-				writer.println(indentationString + "  " + entry.getKey() + " = [");
-				//noinspection unchecked
-				writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
-			} else if (!entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
-				writer.print(indentationString + "  " + entry.getKey() + " = " + entry.getValue());
-			}
-		}
-		writer.println();
-		writer.print(indentationString + "}");
-	}
-
-	// <Write Data without Comments>
-	private static void initialWriteWithOutComments(final @NotNull File file, final @NotNull ThunderFileData fileData) {
-		try (@NotNull final PrintWriter writer = new PrintWriter(file)) {
-			if (!fileData.isEmpty()) {
-				@NotNull Iterator<DataMap.Entry<String, Object>> mapIterator = fileData.entryList().iterator();
-				DataMap.Entry<String, Object> initialEntry = mapIterator.next();
-				while (initialEntry.getKey().startsWith("#") || initialEntry.getValue() == LineType.COMMENT || initialEntry.getKey().equals("") || initialEntry.getValue() == LineType.BLANK_LINE) {
-					initialEntry = mapIterator.next();
-				}
-				topLayerWriteWithOutComments(writer, initialEntry);
-				mapIterator.forEachRemaining(entry -> {
-					if (!entry.getKey().startsWith("#") && entry.getValue() != LineType.COMMENT && !entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
-						writer.println();
-						topLayerWriteWithOutComments(writer, entry);
-					}
-				});
-			}
-			writer.flush();
-		} catch (FileNotFoundException e) {
-			throw new RuntimeIOException("Could not write to '" + file.getAbsolutePath() + "'", e.getCause());
-		}
-	}
-
-	private static void topLayerWriteWithOutComments(final @NotNull PrintWriter writer, final @NotNull DataMap.Entry<String, Object> entry) {
-		if (entry.getValue() instanceof DataMap) {
-			writer.print(entry.getKey() + " " + "{");
-			//noinspection unchecked
-			internalWriteWithoutComments((List<DataMap.Entry<String, Object>>) entry.getValue(), "", writer);
-		} else if (entry.getValue() instanceof List) {
-			writer.println("  " + entry.getKey() + " = [");
-			//noinspection unchecked
-			writeList((List<String>) entry.getValue(), "  ", writer);
-		} else {
-			writer.print(entry.getKey() + " = " + entry.getValue());
-		}
-	}
-	// </Write Data without Comments>
-
-	private static void internalWriteWithoutComments(final @NotNull List<DataMap.Entry<String, Object>> entryList, final String indentationString, final @NotNull PrintWriter writer) {
-		for (@NotNull final DataMap.Entry<String, Object> entry : entryList) {
-			if (!entry.getKey().startsWith("#") && entry.getValue() != LineType.COMMENT && !entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
-				writer.println();
-				if (entry.getValue() instanceof DataMap) {
-					writer.print(indentationString + "  " + entry.getKey() + " " + "{");
-					//noinspection unchecked
-					internalWriteWithoutComments((List<DataMap.Entry<String, Object>>) entry.getValue(), indentationString + "  ", writer);
-				} else if (entry.getValue() instanceof List) {
-					writer.println(indentationString + "  " + entry.getKey() + " = [");
-					//noinspection unchecked
-					writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
-				} else {
-					writer.print(indentationString + "  " + entry.getKey() + " = " + entry.getValue());
-				}
-			}
-		}
-		writer.println();
-		writer.print(indentationString + "}");
-	}
-	// </Write Data>
-
-	private static void writeList(final @NotNull List<String> list, final String indentationString, final @NotNull PrintWriter writer) {
-		for (final String line : list) {
-			writer.println(indentationString + "  - " + line);
-		}
-		writer.print(indentationString + "]");
-	}
+	// </Read Data>
+	// </Internal>
 
 
 	@SuppressWarnings("unused")
