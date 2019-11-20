@@ -97,7 +97,7 @@ public class ThunderEditor {
 			//noinspection unchecked
 			writeList((List<String>) entry.getValue(), "  ", writer);
 		} else if (entry.getValue() instanceof Pair) {
-			writer.print(entry.getKey() + " = [\"" + ((Pair) entry.getValue()).getKey() + "\" \"" + ((Pair) entry.getValue()).getValue() + "\"]");
+			writer.print(entry.getKey() + " = [" + ((Pair) entry.getValue()).getKey() + " : " + ((Pair) entry.getValue()).getValue() + "]");
 		} else if (entry.getValue() != LineType.BLANK_LINE) {
 			writer.print(entry.getKey() + " = " + entry.getValue());
 		}
@@ -117,7 +117,7 @@ public class ThunderEditor {
 				//noinspection unchecked
 				writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
 			} else if (entry.getValue() instanceof Pair) {
-				writer.print(entry.getKey() + " = [\"" + ((Pair) entry.getValue()).getKey() + "\" \"" + ((Pair) entry.getValue()).getValue() + "\"]");
+				writer.print(indentationString + "  " + entry.getKey() + " = [" + ((Pair) entry.getValue()).getKey() + " : " + ((Pair) entry.getValue()).getValue() + "]");
 			} else if (entry.getValue() != LineType.BLANK_LINE) {
 				writer.print(indentationString + "  " + entry.getKey() + " = " + entry.getValue());
 			}
@@ -156,11 +156,11 @@ public class ThunderEditor {
 			//noinspection unchecked
 			internalWriteWithoutComments((List<DataMap.Entry<String, Object>>) entry.getValue(), "", writer);
 		} else if (entry.getValue() instanceof List) {
-			writer.println("  " + entry.getKey() + " = [");
+			writer.println(entry.getKey() + " = [");
 			//noinspection unchecked
 			writeList((List<String>) entry.getValue(), "  ", writer);
 		} else if (entry.getValue() instanceof Pair) {
-			writer.print(entry.getKey() + " = [\"" + ((Pair) entry.getValue()).getKey() + "\" \"" + ((Pair) entry.getValue()).getValue() + "\"]");
+			writer.print(entry.getKey() + " = [" + ((Pair) entry.getValue()).getKey() + " : " + ((Pair) entry.getValue()).getValue() + "]");
 		} else {
 			writer.print(entry.getKey() + " = " + entry.getValue());
 		}
@@ -179,7 +179,7 @@ public class ThunderEditor {
 					//noinspection unchecked
 					writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
 				} else if (entry.getValue() instanceof Pair) {
-					writer.print(entry.getKey() + " = [\"" + ((Pair) entry.getValue()).getKey() + "\" \"" + ((Pair) entry.getValue()).getValue() + "\"]");
+					writer.print(indentationString + "  " + entry.getKey() + " = [" + ((Pair) entry.getValue()).getKey() + " : " + ((Pair) entry.getValue()).getValue() + "]");
 				} else {
 					writer.print(indentationString + "  " + entry.getKey() + " = " + entry.getValue());
 				}
@@ -348,12 +348,12 @@ public class ThunderEditor {
 			line[1] = line[1].trim();
 			if (line[1].startsWith("[")) {
 				if (line[1].endsWith("]")) {
-					if (line[1].startsWith("[\"") && line[1].endsWith("\"]") && line[1].contains("\" \"")) {
-						@NotNull String[] pair = line[1].substring(2, line[1].length() - 2).split("\" \"");
+					if (line[1].startsWith("[") && line[1].endsWith("]") && line[1].contains(":")) {
+						@NotNull String[] pair = line[1].substring(2, line[1].length() - 2).split(":");
 						if (pair.length > 2) {
 							throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' ->  Illegal Object(Pairs may only have two values");
 						} else {
-							tempMap.add(line[0], new Pair<>(pair[0], pair[1]));
+							tempMap.add(line[0], new Pair<>(pair[0].trim(), pair[1].trim()));
 						}
 					} else {
 						@NotNull String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
