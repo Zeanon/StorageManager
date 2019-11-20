@@ -1,7 +1,7 @@
 package de.zeanon.storage.internal.utils.datafiles;
 
+import de.zeanon.storage.internal.base.data.DataMap;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
-import de.zeanon.storage.internal.base.maps.DataMap;
 import de.zeanon.storage.internal.data.cache.ThunderFileData;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import de.zeanon.storage.internal.utils.editor.ThunderEditor;

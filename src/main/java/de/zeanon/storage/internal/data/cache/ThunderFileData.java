@@ -1,8 +1,8 @@
 package de.zeanon.storage.internal.data.cache;
 
+import de.zeanon.storage.internal.base.data.DataMap;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.FileData;
-import de.zeanon.storage.internal.base.maps.DataMap;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import java.util.Arrays;
 import java.util.List;

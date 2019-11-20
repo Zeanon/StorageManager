@@ -1,10 +1,10 @@
 package de.zeanon.storage.internal.utils.editor;
 
+import de.zeanon.storage.internal.base.data.DataMap;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.exceptions.ThunderException;
 import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
-import de.zeanon.storage.internal.base.maps.DataMap;
 import de.zeanon.storage.internal.data.cache.ThunderFileData;
 import de.zeanon.storage.internal.settings.Comment;
 import de.zeanon.storage.internal.utils.basic.Objects;
@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import javafx.util.Pair;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -85,8 +86,8 @@ public class ThunderEditor {
 	}
 
 	private static void topLayerWriteWithComments(final @NotNull PrintWriter writer, final @NotNull DataMap.Entry<String, Object> entry) {
-		if (entry.getKey().startsWith("#") && entry.getValue() == LineType.COMMENT) {
-			writer.print(entry.getKey());
+		if (entry.getValue() == LineType.COMMENT) {
+			writer.print((entry.getKey().startsWith("#") ? entry.getKey() : "#" + entry.getKey()));
 		} else if (entry.getValue() instanceof DataMap) {
 			writer.print(entry.getKey() + " " + "{");
 			//noinspection unchecked
@@ -95,7 +96,9 @@ public class ThunderEditor {
 			writer.println(entry.getKey() + " = [");
 			//noinspection unchecked
 			writeList((List<String>) entry.getValue(), "  ", writer);
-		} else if (!entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
+		} else if (entry.getValue() instanceof Pair) {
+			writer.print(entry.getKey() + " = [\"" + ((Pair) entry.getValue()).getKey() + "\" \"" + ((Pair) entry.getValue()).getValue() + "\"]");
+		} else if (entry.getValue() != LineType.BLANK_LINE) {
 			writer.print(entry.getKey() + " = " + entry.getValue());
 		}
 	}
@@ -103,8 +106,8 @@ public class ThunderEditor {
 	private static void internalWriteWithComments(final @NotNull List<DataMap.Entry<String, Object>> entryList, final String indentationString, final @NotNull PrintWriter writer) {
 		for (@NotNull final DataMap.Entry<String, Object> entry : entryList) {
 			writer.println();
-			if (entry.getKey().startsWith("#") && entry.getValue() == LineType.COMMENT) {
-				writer.print(indentationString + "  " + entry.getKey());
+			if (entry.getValue() == LineType.COMMENT) {
+				writer.print(indentationString + "  " + (entry.getKey().startsWith("#") ? entry.getKey() : "#" + entry.getKey()));
 			} else if (entry.getValue() instanceof DataMap) {
 				writer.print(indentationString + "  " + entry.getKey() + " " + "{");
 				//noinspection unchecked
@@ -113,7 +116,9 @@ public class ThunderEditor {
 				writer.println(indentationString + "  " + entry.getKey() + " = [");
 				//noinspection unchecked
 				writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
-			} else if (!entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
+			} else if (entry.getValue() instanceof Pair) {
+				writer.print(entry.getKey() + " = [\"" + ((Pair) entry.getValue()).getKey() + "\" \"" + ((Pair) entry.getValue()).getValue() + "\"]");
+			} else if (entry.getValue() != LineType.BLANK_LINE) {
 				writer.print(indentationString + "  " + entry.getKey() + " = " + entry.getValue());
 			}
 		}
@@ -128,12 +133,12 @@ public class ThunderEditor {
 			if (!fileData.isEmpty()) {
 				@NotNull Iterator<DataMap.Entry<String, Object>> mapIterator = fileData.entryList().iterator();
 				DataMap.Entry<String, Object> initialEntry = mapIterator.next();
-				while (initialEntry.getKey().startsWith("#") || initialEntry.getValue() == LineType.COMMENT || initialEntry.getKey().equals("") || initialEntry.getValue() == LineType.BLANK_LINE) {
+				while (initialEntry.getValue() == LineType.COMMENT || initialEntry.getValue() == LineType.BLANK_LINE) {
 					initialEntry = mapIterator.next();
 				}
 				topLayerWriteWithOutComments(writer, initialEntry);
 				mapIterator.forEachRemaining(entry -> {
-					if (!entry.getKey().startsWith("#") && entry.getValue() != LineType.COMMENT && !entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
+					if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.BLANK_LINE) {
 						writer.println();
 						topLayerWriteWithOutComments(writer, entry);
 					}
@@ -154,6 +159,8 @@ public class ThunderEditor {
 			writer.println("  " + entry.getKey() + " = [");
 			//noinspection unchecked
 			writeList((List<String>) entry.getValue(), "  ", writer);
+		} else if (entry.getValue() instanceof Pair) {
+			writer.print(entry.getKey() + " = [\"" + ((Pair) entry.getValue()).getKey() + "\" \"" + ((Pair) entry.getValue()).getValue() + "\"]");
 		} else {
 			writer.print(entry.getKey() + " = " + entry.getValue());
 		}
@@ -161,7 +168,7 @@ public class ThunderEditor {
 
 	private static void internalWriteWithoutComments(final @NotNull List<DataMap.Entry<String, Object>> entryList, final String indentationString, final @NotNull PrintWriter writer) {
 		for (@NotNull final DataMap.Entry<String, Object> entry : entryList) {
-			if (!entry.getKey().startsWith("#") && entry.getValue() != LineType.COMMENT && !entry.getKey().equals("") && entry.getValue() != LineType.BLANK_LINE) {
+			if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.BLANK_LINE) {
 				writer.println();
 				if (entry.getValue() instanceof DataMap) {
 					writer.print(indentationString + "  " + entry.getKey() + " " + "{");
@@ -171,6 +178,8 @@ public class ThunderEditor {
 					writer.println(indentationString + "  " + entry.getKey() + " = [");
 					//noinspection unchecked
 					writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
+				} else if (entry.getValue() instanceof Pair) {
+					writer.print(entry.getKey() + " = [\"" + ((Pair) entry.getValue()).getKey() + "\" \"" + ((Pair) entry.getValue()).getValue() + "\"]");
 				} else {
 					writer.print(indentationString + "  " + entry.getKey() + " = " + entry.getValue());
 				}
@@ -181,8 +190,8 @@ public class ThunderEditor {
 	}
 	// </Write Data without Comments>
 
-	private static void writeList(final @NotNull List<String> list, final String indentationString, final @NotNull PrintWriter writer) {
-		for (final String line : list) {
+	private static <E> void writeList(final @NotNull List<E> list, final @NotNull String indentationString, final @NotNull PrintWriter writer) {
+		for (final E line : list) {
 			writer.println(indentationString + "  - " + line);
 		}
 		writer.print(indentationString + "]");
@@ -334,25 +343,34 @@ public class ThunderEditor {
 								  @Nullable String tempKey,
 								  final @NotNull String tempLine) throws ThunderException {
 		if (tempLine.contains("=")) {
-			@NotNull String[] splitLine = tempLine.split("=", 2);
-			splitLine[0] = splitLine[0].trim();
-			splitLine[1] = splitLine[1].trim();
-			if (splitLine[1].startsWith("[")) {
-				if (splitLine[1].endsWith("]")) {
-					@NotNull String[] listArray = splitLine[1].substring(1, splitLine[1].length() - 1).split(",");
-					@NotNull List<String> list = new LinkedList<>();
-					for (@NotNull String value : listArray) {
-						list.add(value.trim());
+			@NotNull String[] line = tempLine.split("=", 2);
+			line[0] = line[0].trim();
+			line[1] = line[1].trim();
+			if (line[1].startsWith("[")) {
+				if (line[1].endsWith("]")) {
+					if (line[1].startsWith("[\"") && line[1].endsWith("\"]") && line[1].contains("\" \"")) {
+						@NotNull String[] pair = line[1].substring(2, line[1].length() - 2).split("\" \"");
+						if (pair.length > 2) {
+							throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' ->  Illegal Object(Pairs may only have two values");
+						} else {
+							tempMap.add(line[0], new Pair<>(pair[0], pair[1]));
+						}
+					} else {
+						@NotNull String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
+						@NotNull List<String> list = new LinkedList<>();
+						for (@NotNull String value : listArray) {
+							list.add(value.trim());
+						}
+						tempMap.add(line[0], list);
 					}
-					tempMap.add(splitLine[0], list);
 				} else {
-					tempMap.add(splitLine[0], readList(filePath, lines));
+					tempMap.add(line[0], readList(filePath, lines));
 				}
 			} else {
-				if (splitLine[1].equalsIgnoreCase("true") || splitLine[1].equalsIgnoreCase("false")) {
-					tempMap.add(splitLine[0], splitLine[1].equalsIgnoreCase("true"));
+				if (line[1].equalsIgnoreCase("true") || line[1].equalsIgnoreCase("false")) {
+					tempMap.add(line[0], line[1].equalsIgnoreCase("true"));
 				} else {
-					tempMap.add(splitLine[0], splitLine[1]);
+					tempMap.add(line[0], line[1]);
 				}
 			}
 		} else {

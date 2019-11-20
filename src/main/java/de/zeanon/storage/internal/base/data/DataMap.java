@@ -1,4 +1,4 @@
-package de.zeanon.storage.internal.base.maps;
+package de.zeanon.storage.internal.base.data;
 
 import java.util.LinkedList;
 import java.util.List;
