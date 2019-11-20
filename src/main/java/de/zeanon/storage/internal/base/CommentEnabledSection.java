@@ -11,6 +11,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * An extended FlatSection, to accommodate Languages supporting Comments
+ *
+ * @author Zeanon
+ * @version 1.5.0
+ * @see FlatSection
+ */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")

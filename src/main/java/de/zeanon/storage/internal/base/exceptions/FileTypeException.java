@@ -1,5 +1,11 @@
 package de.zeanon.storage.internal.base.exceptions;
 
+/**
+ * Indicates that there is some type of conflict based on FileTypes
+ *
+ * @author Zeanon
+ * @version 1.0.0
+ */
 @SuppressWarnings("unused")
 public class FileTypeException extends StorageManagerException {
 

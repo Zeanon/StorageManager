@@ -11,6 +11,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 
+/**
+ * Different Utility methods for Json-Type Files
+ *
+ * @author Zeanon
+ * @version 1.1.0
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @SuppressWarnings({"unchecked", "WeakerAccess", "unused"})
 public class JsonUtils {

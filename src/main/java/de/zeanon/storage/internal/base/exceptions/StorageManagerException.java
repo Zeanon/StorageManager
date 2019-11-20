@@ -1,5 +1,11 @@
 package de.zeanon.storage.internal.base.exceptions;
 
+/**
+ * The base for all custom Exceptions thrown by StorageManager for more precise catching
+ *
+ * @author Zeanon
+ * @version 1.0.0
+ */
 @SuppressWarnings("WeakerAccess")
 public abstract class StorageManagerException extends RuntimeException {
 

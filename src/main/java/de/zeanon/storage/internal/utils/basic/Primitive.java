@@ -8,6 +8,9 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Parsing utilities for Primitive Types
+ *
+ * @author Zeanon
+ * @version 1.7.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @SuppressWarnings("unused")
@@ -19,7 +22,9 @@ public class Primitive {
 	 * @param object the Object to be casted
 	 * @param def    the Class to be casted to
 	 * @param <T>    the Type of def
+	 *
 	 * @return the passed Object casted to the given Type
+	 *
 	 * @throws ObjectNullException if a passed value is null
 	 */
 	@NotNull

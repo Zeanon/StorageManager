@@ -10,6 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Utility Class to benchmark
+ *
+ * @author Zeanon
+ * @version 1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @SuppressWarnings({"WeakerAccess", "unused"})

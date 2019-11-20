@@ -6,10 +6,13 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Basic interface for different classes for cashing the Data read from the DataFile
+ * Basic interface for different classes dedicated to cashing the Data read from the DataFile
  *
  * @param <M> the Collection implementation to be used, can also be an own version
  * @param <E> the Entry from it, to be returned by the entryList methods
+ *
+ * @author Zeanon
+ * @version 2.1.0
  */
 @SuppressWarnings("unused")
 public interface FileData<M, E> {
@@ -40,6 +43,7 @@ public interface FileData<M, E> {
 	 * Check whether the map contains a certain key
 	 *
 	 * @param key the key to be looked for
+	 *
 	 * @return true if the key exists, otherwise false
 	 */
 	boolean containsKey(final @NotNull String key);
@@ -51,6 +55,7 @@ public interface FileData<M, E> {
 	 * Method to get the object assign to a key from a FileData Object
 	 *
 	 * @param key the key to look for
+	 *
 	 * @return the value assigned to the given key or null if the key does not exist
 	 */
 	@Nullable
@@ -70,6 +75,7 @@ public interface FileData<M, E> {
 	 * get the size of a single layer of the map
 	 *
 	 * @param key the key of the layer
+	 *
 	 * @return the size of the given layer or 0 if the key does not exist
 	 */
 	int blockSize(final @NotNull String key);
@@ -87,6 +93,7 @@ public interface FileData<M, E> {
 	 * get the size of all sublayers of the given key combined
 	 *
 	 * @param key the key of the layer
+	 *
 	 * @return the size of all sublayers of the given key or 0 if the key does not exist
 	 */
 	int size(final @NotNull String key);

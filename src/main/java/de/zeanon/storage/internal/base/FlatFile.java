@@ -21,7 +21,10 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Basic foundation for the Data Classes
+ * Basic foundation for the Data Classes, providing the necessary fields and basic methods
+ *
+ * @author Zeanon
+ * @version 2.4.0
  */
 @Getter
 @EqualsAndHashCode
@@ -541,6 +544,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements StorageBase,
 	 *
 	 * @param key   the key to be used.
 	 * @param value the value to be assigned to @param key.
+	 *
 	 * @return true if the Data contained by FileData contained after adding the key-value-pair.
 	 */
 	private boolean insert(final @NotNull String key, final @Nullable Object value) {

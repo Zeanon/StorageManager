@@ -18,6 +18,9 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Basic utility methods for Files
+ *
+ * @author Zeanon
+ * @version 2.2.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @SuppressWarnings({"unused", "WeakerAccess"})
@@ -31,7 +34,7 @@ public class SMFileUtils {
 	@SuppressWarnings("UnusedReturnValue")
 	public static synchronized boolean createFile(final @NotNull File file) {
 		try {
-			return createFileInternally(Objects.notNull(file, "File must not be null"));
+			return createFileInternally(Objects.notNull(file, "File must not be null"), false);
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while creating '" + file.getAbsolutePath() + "'"
 										 + System.lineSeparator() + e.getMessage(), e.getCause());
@@ -46,7 +49,7 @@ public class SMFileUtils {
 	public static synchronized boolean createParents(final @NotNull File file) {
 		try {
 			if (Objects.notNull(file, "File must not be null").getParentFile() != null) {
-				return createFileInternally(file.getParentFile());
+				return createFileInternally(file.getParentFile(), true);
 			} else {
 				return false;
 			}
@@ -62,6 +65,7 @@ public class SMFileUtils {
 	 *
 	 * @param directory the directory to look into
 	 * @param deep      also look through subdirectories
+	 *
 	 * @return the files of the directory that are folders
 	 */
 	@NotNull
@@ -88,6 +92,7 @@ public class SMFileUtils {
 	 * List all folders in a given directory
 	 *
 	 * @param directory the directory to look into
+	 *
 	 * @return the files of the directory that are folders
 	 */
 	@NotNull
@@ -102,6 +107,7 @@ public class SMFileUtils {
 	 * @param directory  the directory to look into
 	 * @param extensions the file extensions to look for
 	 * @param deep       also look through subdirectories
+	 *
 	 * @return the files of the given directory with the given extensions
 	 */
 	@NotNull
@@ -133,6 +139,7 @@ public class SMFileUtils {
 	 * @param directory  the directory to look into
 	 * @param extensions the file extensions to look for
 	 * @param deep       also look through subdirectories
+	 *
 	 * @return the files of the given directory with the given extensions
 	 */
 	@NotNull
@@ -145,6 +152,7 @@ public class SMFileUtils {
 	 *
 	 * @param directory  the directory to look into
 	 * @param extensions the file extensions to look for
+	 *
 	 * @return the files of the given directory with the given extensions
 	 */
 	@NotNull
@@ -157,6 +165,7 @@ public class SMFileUtils {
 	 *
 	 * @param directory  the directory to look into
 	 * @param extensions the file extensions to look for
+	 *
 	 * @return the files of the given directory with the given extensions
 	 */
 	@NotNull
@@ -169,6 +178,7 @@ public class SMFileUtils {
 	 *
 	 * @param directory the directory to look into
 	 * @param deep      also look through subdirectories
+	 *
 	 * @return the files of the given directory
 	 */
 	@NotNull
@@ -195,6 +205,7 @@ public class SMFileUtils {
 	 * List all Files in a given directory
 	 *
 	 * @param directory the directory to look into
+	 *
 	 * @return the files of the given directory
 	 */
 	@NotNull
@@ -207,6 +218,7 @@ public class SMFileUtils {
 	 * Create a BufferedInputStream from a File
 	 *
 	 * @param file the File to be read
+	 *
 	 * @return BufferedInputstream containing the contents of the given File
 	 */
 	@NotNull
@@ -223,6 +235,7 @@ public class SMFileUtils {
 	 * Create a BufferedInputStream from a given internal resource
 	 *
 	 * @param resource the Path to the resource
+	 *
 	 * @return BufferedInputStream containing the contents of the resource file
 	 */
 	@NotNull
@@ -239,6 +252,7 @@ public class SMFileUtils {
 	 * Create a BufferedInputStream from a given InputStream
 	 *
 	 * @param inputStream the InputStream to be converted
+	 *
 	 * @return null if {@code inputStream} is null or a BufferedInputStream from the given InputStream
 	 */
 	@Nullable
@@ -257,6 +271,7 @@ public class SMFileUtils {
 	 *
 	 * @param file      the File to be checked
 	 * @param timeStamp the TimeStamp to be checked against
+	 *
 	 * @return true if the File has changed since the {@code timeStamp}
 	 */
 	public static boolean hasChanged(final @NotNull File file, final long timeStamp) {
@@ -295,6 +310,7 @@ public class SMFileUtils {
 	 * Returns the extension of a given File
 	 *
 	 * @param file the File to be checked
+	 *
 	 * @return the extension of the given File
 	 */
 	@NotNull
@@ -306,6 +322,7 @@ public class SMFileUtils {
 	 * Returns the extension of a given File
 	 *
 	 * @param filePath the Path of the File to be checked
+	 *
 	 * @return the extension of the given File
 	 */
 	@NotNull
@@ -317,6 +334,7 @@ public class SMFileUtils {
 	 * Returns the extension of a given File
 	 *
 	 * @param filePath the Path of the File to be checked
+	 *
 	 * @return the extension of the given File
 	 */
 	@NotNull
@@ -343,6 +361,7 @@ public class SMFileUtils {
 	 * Removes the extension of a given File
 	 *
 	 * @param file the File to be checked
+	 *
 	 * @return the File without it's extension
 	 */
 	@NotNull
@@ -354,6 +373,7 @@ public class SMFileUtils {
 	 * Removes the extension of a given File
 	 *
 	 * @param filePath the Path of the File to be checked
+	 *
 	 * @return the Path without the extension
 	 */
 	@NotNull
@@ -365,6 +385,7 @@ public class SMFileUtils {
 	 * Removes the extension of a given File
 	 *
 	 * @param filePath the Path of the File to be checked
+	 *
 	 * @return the Path without the extension
 	 */
 	@NotNull
@@ -387,10 +408,10 @@ public class SMFileUtils {
 		}
 	}
 
-	private static boolean createFileInternally(@NotNull File file) throws IOException {
+	private static boolean createFileInternally(@NotNull File file, final boolean directory) throws IOException {
 		if (file.getParentFile() != null && !file.getParentFile().exists()) {
 			try {
-				if (!createFileInternally(file.getParentFile())) {
+				if (!createFileInternally(file.getParentFile(), true)) {
 					throw new IOException();
 				}
 			} catch (IOException e) {
@@ -400,10 +421,18 @@ public class SMFileUtils {
 		}
 		if (!file.exists()) {
 			try {
-				if (file.createNewFile()) {
-					return true;
+				if (directory) {
+					if (file.mkdir()) {
+						return true;
+					} else {
+						throw new IOException();
+					}
 				} else {
-					throw new IOException();
+					if (file.createNewFile()) {
+						return true;
+					} else {
+						throw new IOException();
+					}
 				}
 			} catch (IOException e) {
 				throw new IOException("Could not create '" + file.getAbsolutePath() + "'", e.getCause());

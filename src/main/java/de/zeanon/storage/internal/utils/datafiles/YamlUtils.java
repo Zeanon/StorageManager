@@ -8,7 +8,10 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * Adds several utility Methods for Yaml-Files
+ * Different Utility methods for Yaml-Type Files
+ *
+ * @author Zeanon
+ * @version 1.2.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @SuppressWarnings("unused")

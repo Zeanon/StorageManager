@@ -8,6 +8,12 @@ import java.nio.file.Paths;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * Base interface for FileType enums, providing different methods to be implemented
+ *
+ * @author Zeanon
+ * @version 1.3.0
+ */
 @SuppressWarnings("unused")
 public interface FileTypeBase {
 

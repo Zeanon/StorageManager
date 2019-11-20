@@ -23,6 +23,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Builder for StorageManager DataFile Classes
+ *
+ * @author Zeanon
+ * @version 2.0.0
+ */
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor

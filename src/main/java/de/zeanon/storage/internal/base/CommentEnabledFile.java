@@ -18,8 +18,10 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
+ * An extended FlatFile, to accommodate Languages supporting Comments
+ *
  * @author Zeanon
- * An exteded FlatFile, to accomodate Config files
+ * @version 1.5.0
  * @see FlatFile
  */
 @Getter

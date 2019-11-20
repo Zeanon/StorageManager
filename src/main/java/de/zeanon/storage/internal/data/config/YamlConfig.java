@@ -22,6 +22,9 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Extended YamlFile with added methods for Config purposes
+ *
+ * @author Zeanon
+ * @version 2.4.0
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -38,6 +41,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 	 * @param inputStream    the FileContent to be set on the creation of the File
 	 * @param reloadSetting  the ReloadSetting to be used with this instance
 	 * @param commentSetting the CommentSetting to be used with this instance
+	 *
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */

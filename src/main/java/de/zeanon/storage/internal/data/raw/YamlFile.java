@@ -27,6 +27,9 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Class to manage Yaml-Type Files
+ *
+ * @author Zeanon
+ * @version 1.3.0
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -39,6 +42,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 	 * @param inputStream    the FileContent to be set on the creation of the File
 	 * @param reloadSetting  the ReloadSetting to be used with this instance
 	 * @param commentSetting the CommentSetting to be used with this instance
+	 *
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
@@ -100,6 +104,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 	 * Get a Section with a defined SectionKey
 	 *
 	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 *
 	 * @return the Section using the given sectionKey
 	 */
 	@NotNull

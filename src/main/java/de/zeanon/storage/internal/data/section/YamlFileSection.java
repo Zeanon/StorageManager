@@ -1,6 +1,7 @@
 package de.zeanon.storage.internal.data.section;
 
 import de.zeanon.storage.internal.base.CommentEnabledSection;
+import de.zeanon.storage.internal.data.config.YamlConfig;
 import de.zeanon.storage.internal.data.raw.YamlFile;
 import de.zeanon.storage.internal.utils.basic.Objects;
 import lombok.EqualsAndHashCode;
@@ -8,6 +9,12 @@ import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * Section for {@link YamlFile} and {@link YamlConfig}
+ *
+ * @author Zeanon
+ * @version 1.1.0
+ */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")

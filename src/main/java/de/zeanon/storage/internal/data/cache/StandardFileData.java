@@ -12,6 +12,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Default FileData, storing the Data in Maps
+ *
+ * @author Zeanon
+ * @version 2.5.0
+ */
 @SuppressWarnings("unused")
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

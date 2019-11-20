@@ -16,6 +16,12 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * Class for parsing a Yaml-Type File
+ *
+ * @author Zeanon
+ * @version 1.4.0
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @SuppressWarnings("unused")
 public class YamlEditor {

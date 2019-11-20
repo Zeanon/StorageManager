@@ -8,7 +8,10 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Class to check validities
+ * Class to check Objects
+ *
+ * @author Zeanon
+ * @version 1.2.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @SuppressWarnings("unused")

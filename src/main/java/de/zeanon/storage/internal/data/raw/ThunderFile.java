@@ -21,6 +21,9 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Class to manage Thunder-Type Files
+ *
+ * @author Zeanon
+ * @version 2.5.0
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -33,6 +36,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 	 * @param inputStream    the FileContent to be set on the creation of the File
 	 * @param reloadSetting  the ReloadSetting to be used with this instance
 	 * @param commentSetting the CommentSetting to be used with this instance
+	 *
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
@@ -79,6 +83,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 	 * Get a Section with a defined SectionKey
 	 *
 	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 *
 	 * @return the Section using the given sectionKey
 	 */
 	@NotNull

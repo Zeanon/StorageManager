@@ -14,6 +14,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Advanced FileData, storing the Data in a TripletMap({@link DataMap})
+ *
+ * @author Zeanon
+ * @version 1.5.0
+ */
 @SuppressWarnings("unused")
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PUBLIC)

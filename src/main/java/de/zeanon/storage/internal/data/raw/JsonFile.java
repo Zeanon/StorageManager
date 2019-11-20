@@ -27,6 +27,9 @@ import org.json.JSONTokener;
 
 /**
  * Class to manage Json-Type Files
+ *
+ * @author Zeanon
+ * @version 2.0.0
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -38,6 +41,7 @@ public class JsonFile extends FlatFile<StandardFileData> {
 	 * @param file          the File to be used as a backend
 	 * @param inputStream   the FileContent to be set on the creation of the File
 	 * @param reloadSetting the ReloadSetting to be used with this instance
+	 *
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 */
@@ -84,6 +88,7 @@ public class JsonFile extends FlatFile<StandardFileData> {
 	 * Gets a Map by key, also used to get nested objects {@link JsonFile}
 	 *
 	 * @param key Path to Map-List in JSON
+	 *
 	 * @return Map
 	 */
 	@NotNull
@@ -110,6 +115,7 @@ public class JsonFile extends FlatFile<StandardFileData> {
 	 * Get a Section with a defined SectionKey
 	 *
 	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 *
 	 * @return the Section using the given sectionKey
 	 */
 	@NotNull

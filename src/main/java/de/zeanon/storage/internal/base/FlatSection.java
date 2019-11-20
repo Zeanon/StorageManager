@@ -14,6 +14,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Basic foundation for the Sections, providing the necessary fields and basic methods
+ *
+ * @author Zeanon
+ * @version 2.4.0
+ */
 @Getter
 @EqualsAndHashCode
 @ToString(callSuper = true)

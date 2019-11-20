@@ -25,6 +25,9 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Class for parsing a Thunder-Type File
+ *
+ * @author Zeanon
+ * @version 2.8.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ThunderEditor {
@@ -35,6 +38,7 @@ public class ThunderEditor {
 	 * @param file           the File to be written to
 	 * @param fileData       the FileData containing the Data to be written
 	 * @param commentSetting the CommentSetting to be used
+	 *
 	 * @throws RuntimeIOException  if the File can not be accessed properly
 	 * @throws ObjectNullException if a passed value is null
 	 */
@@ -51,7 +55,9 @@ public class ThunderEditor {
 	 *
 	 * @param file           the File to be read from
 	 * @param commentSetting the CommentSetting to be used
+	 *
 	 * @return a Map containing the Data of the File
+	 *
 	 * @throws RuntimeIOException  if the File can not be accessed properly
 	 * @throws ThunderException    if the Content of the File can not be parsed properly
 	 * @throws ObjectNullException if a passed value is null
@@ -72,7 +78,7 @@ public class ThunderEditor {
 	private static void initialWriteWithComments(final @NotNull File file, final @NotNull ThunderFileData fileData) {
 		try (@NotNull final PrintWriter writer = new PrintWriter(file)) {
 			if (!fileData.isEmpty()) {
-				@NotNull final Iterator<DataMap.Entry<String, Object>> mapIterator = fileData.entryList().iterator();
+				@NotNull final Iterator<DataMap.Entry<String, Object>> mapIterator = fileData.blockEntryList().iterator();
 				topLayerWriteWithComments(writer, mapIterator.next());
 				mapIterator.forEachRemaining(entry -> {
 					writer.println();
@@ -91,7 +97,7 @@ public class ThunderEditor {
 		} else if (entry.getValue() instanceof DataMap) {
 			writer.print(entry.getKey() + " " + "{");
 			//noinspection unchecked
-			internalWriteWithComments((List<DataMap.Entry<String, Object>>) entry.getValue(), "", writer);
+			internalWriteWithComments((DataMap<String, Object>) entry.getValue(), "", writer);
 		} else if (entry.getValue() instanceof List) {
 			writer.println(entry.getKey() + " = [");
 			//noinspection unchecked
@@ -103,15 +109,15 @@ public class ThunderEditor {
 		}
 	}
 
-	private static void internalWriteWithComments(final @NotNull List<DataMap.Entry<String, Object>> entryList, final String indentationString, final @NotNull PrintWriter writer) {
-		for (@NotNull final DataMap.Entry<String, Object> entry : entryList) {
+	private static void internalWriteWithComments(final @NotNull DataMap<String, Object> map, final String indentationString, final @NotNull PrintWriter writer) {
+		for (@NotNull final DataMap.Entry<String, Object> entry : map.entryList()) {
 			writer.println();
 			if (entry.getValue() == LineType.COMMENT) {
 				writer.print(indentationString + "  " + (entry.getKey().startsWith("#") ? entry.getKey() : "#" + entry.getKey()));
 			} else if (entry.getValue() instanceof DataMap) {
 				writer.print(indentationString + "  " + entry.getKey() + " " + "{");
 				//noinspection unchecked
-				internalWriteWithComments((List<DataMap.Entry<String, Object>>) entry.getValue(), indentationString + "  ", writer);
+				internalWriteWithComments((DataMap<String, Object>) entry.getValue(), indentationString + "  ", writer);
 			} else if (entry.getValue() instanceof List) {
 				writer.println(indentationString + "  " + entry.getKey() + " = [");
 				//noinspection unchecked
@@ -131,7 +137,7 @@ public class ThunderEditor {
 	private static void initialWriteWithOutComments(final @NotNull File file, final @NotNull ThunderFileData fileData) {
 		try (@NotNull final PrintWriter writer = new PrintWriter(file)) {
 			if (!fileData.isEmpty()) {
-				@NotNull Iterator<DataMap.Entry<String, Object>> mapIterator = fileData.entryList().iterator();
+				@NotNull Iterator<DataMap.Entry<String, Object>> mapIterator = fileData.blockEntryList().iterator();
 				DataMap.Entry<String, Object> initialEntry = mapIterator.next();
 				while (initialEntry.getValue() == LineType.COMMENT || initialEntry.getValue() == LineType.BLANK_LINE) {
 					initialEntry = mapIterator.next();
@@ -154,7 +160,7 @@ public class ThunderEditor {
 		if (entry.getValue() instanceof DataMap) {
 			writer.print(entry.getKey() + " " + "{");
 			//noinspection unchecked
-			internalWriteWithoutComments((List<DataMap.Entry<String, Object>>) entry.getValue(), "", writer);
+			internalWriteWithoutComments((DataMap<String, Object>) entry.getValue(), "", writer);
 		} else if (entry.getValue() instanceof List) {
 			writer.println(entry.getKey() + " = [");
 			//noinspection unchecked
@@ -166,14 +172,14 @@ public class ThunderEditor {
 		}
 	}
 
-	private static void internalWriteWithoutComments(final @NotNull List<DataMap.Entry<String, Object>> entryList, final String indentationString, final @NotNull PrintWriter writer) {
-		for (@NotNull final DataMap.Entry<String, Object> entry : entryList) {
+	private static void internalWriteWithoutComments(final @NotNull DataMap<String, Object> map, final String indentationString, final @NotNull PrintWriter writer) {
+		for (@NotNull final DataMap.Entry<String, Object> entry : map.entryList()) {
 			if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.BLANK_LINE) {
 				writer.println();
 				if (entry.getValue() instanceof DataMap) {
 					writer.print(indentationString + "  " + entry.getKey() + " " + "{");
 					//noinspection unchecked
-					internalWriteWithoutComments((List<DataMap.Entry<String, Object>>) entry.getValue(), indentationString + "  ", writer);
+					internalWriteWithoutComments((DataMap<String, Object>) entry.getValue(), indentationString + "  ", writer);
 				} else if (entry.getValue() instanceof List) {
 					writer.println(indentationString + "  " + entry.getKey() + " = [");
 					//noinspection unchecked

@@ -9,7 +9,10 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * an Enum defining the reload behaviour of the Data classes
+ * Enum defining the reload behaviour of the Data classes
+ *
+ * @author Zeanon
+ * @version 2.1.0
  */
 @SuppressWarnings("unused")
 public enum Reload implements ReloadSettingBase {
@@ -23,6 +26,7 @@ public enum Reload implements ReloadSettingBase {
 			return true;
 		}
 	},
+
 	/**
 	 * reloads only if the File has changed
 	 */
@@ -35,6 +39,7 @@ public enum Reload implements ReloadSettingBase {
 			return Objects.notNull(flatFile, "FlatFile must not be null").hasChanged();
 		}
 	},
+
 	/**
 	 * only reloads if you manually call the reload
 	 */
@@ -46,7 +51,7 @@ public enum Reload implements ReloadSettingBase {
 	};
 
 	/**
-	 * @return if the a reload is necessary
+	 * @return if the File should be reloaded
 	 */
 	@Override
 	public abstract boolean shouldReload(final @NotNull FlatFile flatFile);

@@ -8,6 +8,12 @@ import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * Section for {@link ThunderFile}
+ *
+ * @author Zeanon
+ * @version 1.1.0
+ */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")

@@ -15,7 +15,10 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Adds the utility methods, used by ThunderConfig
+ * Different Utility methods for Thunder-Type Files
+ *
+ * @author Zeanon
+ * @version 1.3.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ThunderUtils {
@@ -25,6 +28,7 @@ public class ThunderUtils {
 	 * Get the Header from a give FileData
 	 *
 	 * @param fileData the FileDataBase to be used
+	 *
 	 * @return a List containing the Header of the FileData
 	 */
 	@NotNull
@@ -71,6 +75,7 @@ public class ThunderUtils {
 	 * @param fileData the FileDataBase to be used
 	 * @param key      the Key of the SubBlock the Header shall be set to
 	 * @param header   the Header to be set
+	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	public static void setHeader(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable List<String> header) {
@@ -100,6 +105,7 @@ public class ThunderUtils {
 	 * Get the Footer from a give FileData
 	 *
 	 * @param fileData the FileDataBase to be used
+	 *
 	 * @return a List containing the Footer of the FileData
 	 */
 	@NotNull
@@ -152,6 +158,7 @@ public class ThunderUtils {
 	 * @param fileData the FileDataBase to be used
 	 * @param key      the Key of the SubBlock the Footer shall be set to
 	 * @param footer   the Header to be set
+	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@SuppressWarnings("DuplicatedCode")
@@ -183,7 +190,9 @@ public class ThunderUtils {
 	 *
 	 * @param fileData the FileDataBase to be used
 	 * @param key      the Key of the SubBlock the Header shall be getted from
+	 *
 	 * @return a List containing the Header of the SubBlock
+	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@NotNull
@@ -204,7 +213,9 @@ public class ThunderUtils {
 	 *
 	 * @param fileData the FileDataBase to be used
 	 * @param key      the key of the SubBlock the Footer shall be getted from
+	 *
 	 * @return a List containing the Footer of the SubBlock
+	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@SuppressWarnings("DuplicatedCode")
@@ -230,6 +241,7 @@ public class ThunderUtils {
 	 *
 	 * @param fileData the FileDataBase to be used
 	 * @param deep     defining, if it should get all comments or only the ones in the top Layer
+	 *
 	 * @return a List containing the Comments of the FileData
 	 */
 	@SuppressWarnings("DuplicatedCode")
@@ -251,7 +263,9 @@ public class ThunderUtils {
 	 * @param fileData the FileDataBase to be used
 	 * @param key      the key of the SubBlock the Footer shall be getted from
 	 * @param deep     defining, if it should get all comments or only the ones in the given SubBlock
+	 *
 	 * @return a List containing the Comments of the SubBlock
+	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
 	@SuppressWarnings("DuplicatedCode")

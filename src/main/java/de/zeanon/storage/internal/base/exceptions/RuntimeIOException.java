@@ -1,5 +1,11 @@
 package de.zeanon.storage.internal.base.exceptions;
 
+/**
+ * Just a basic unchecked version of an IOException
+ *
+ * @author Zeanon
+ * @version 1.0.0
+ */
 @SuppressWarnings("unused")
 public class RuntimeIOException extends StorageManagerException {
 

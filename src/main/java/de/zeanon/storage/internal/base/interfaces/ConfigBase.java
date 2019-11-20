@@ -7,6 +7,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Base Interface for Config type DataFiles
+ *
+ * @author Zeanon
+ * @version 1.1.0
+ */
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public interface ConfigBase extends StorageBase {
 

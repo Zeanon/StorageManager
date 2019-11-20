@@ -1,5 +1,11 @@
 package de.zeanon.storage.internal.base.exceptions;
 
+/**
+ * Indicates that a File somehow could not be parsed
+ *
+ * @author Zeanon
+ * @version 1.0.0
+ */
 @SuppressWarnings("unused")
 public class FileParseException extends StorageManagerException {
 

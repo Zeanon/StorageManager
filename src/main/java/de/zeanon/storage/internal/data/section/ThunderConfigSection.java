@@ -10,6 +10,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Section for {@link ThunderConfig}
+ *
+ * @author Zeanon
+ * @version 1.1.0
+ */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
