@@ -1,10 +1,6 @@
 package de.zeanon.storage;
 
-import de.zeanon.storage.internal.base.FlatFile;
-import de.zeanon.storage.internal.base.interfaces.CommentSettingBase;
-import de.zeanon.storage.internal.base.interfaces.ReloadSettingBase;
-import de.zeanon.storage.internal.data.config.ThunderConfig;
-import de.zeanon.storage.internal.data.config.YamlConfig;
+import de.zeanon.storage.internal.builders.*;
 import de.zeanon.storage.internal.data.raw.JsonFile;
 import de.zeanon.storage.internal.data.raw.ThunderFile;
 import de.zeanon.storage.internal.data.raw.TomlFile;
@@ -16,7 +12,6 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -34,10 +29,10 @@ import org.jetbrains.annotations.Nullable;
 @RequiredArgsConstructor
 @Accessors(fluent = true)
 @SuppressWarnings("unused")
-public abstract class StorageManager<C> {
+public abstract class StorageManager<C, F> {
 
 	@NotNull
-	private final File file;
+	protected final File file;
 	@Nullable
 	protected BufferedInputStream inputStream;
 
@@ -294,186 +289,8 @@ public abstract class StorageManager<C> {
 	/**
 	 * Create the defined File
 	 *
-	 * @return the FlatFile to be created
+	 * @return the Instance of the FlatFile to be created
 	 */
 	@Nullable
-	public abstract FlatFile create();
-
-
-	@Setter
-	@ToString(callSuper = true)
-	@EqualsAndHashCode(callSuper = true)
-	public static final class JsonFileBuilder extends StorageManager<JsonFileBuilder> {
-
-		private ReloadSettingBase reloadSetting;
-
-
-		private JsonFileBuilder(final @NotNull File file) {
-			super(file);
-		}
-
-
-		@NotNull
-		@Override
-		public final JsonFile create() {
-			return new LocalJsonFile(super.file, this.inputStream, this.reloadSetting);
-		}
-
-
-		private static final class LocalJsonFile extends JsonFile {
-
-			private LocalJsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting) {
-				super(file, inputStream, reloadSetting);
-			}
-		}
-	}
-
-
-	@Setter
-	@ToString(callSuper = true)
-	@EqualsAndHashCode(callSuper = true)
-	public static final class ThunderFileBuilder extends StorageManager<ThunderFileBuilder> {
-
-		private ReloadSettingBase reloadSetting;
-		private CommentSettingBase commentSetting;
-
-
-		private ThunderFileBuilder(final @NotNull File file) {
-			super(file);
-		}
-
-
-		@NotNull
-		@Override
-		public final ThunderFile create() {
-			return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting);
-		}
-
-
-		private static final class LocalThunderFile extends ThunderFile {
-
-			private LocalThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting) {
-				super(file, inputStream, reloadSetting, commentSetting);
-			}
-		}
-	}
-
-
-	@Setter
-	@ToString(callSuper = true)
-	@EqualsAndHashCode(callSuper = true)
-	public static final class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder> {
-
-		private ReloadSettingBase reloadSetting;
-		private CommentSettingBase commentSetting;
-
-
-		private ThunderConfigBuilder(final @NotNull File file) {
-			super(file);
-		}
-
-
-		@NotNull
-		@Override
-		public final ThunderConfig create() {
-			return new LocalThunderConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting);
-		}
-
-
-		private static final class LocalThunderConfig extends ThunderConfig {
-
-			private LocalThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting) {
-				super(file, inputStream, reloadSetting, commentSetting);
-			}
-		}
-	}
-
-
-	@Setter
-	@ToString(callSuper = true)
-	@EqualsAndHashCode(callSuper = true)
-	public static final class TomlFileBuilder extends StorageManager<TomlFileBuilder> {
-
-		private ReloadSettingBase reloadSetting;
-
-
-		private TomlFileBuilder(final @NotNull File file) {
-			super(file);
-		}
-
-
-		@NotNull
-		@Override
-		public final TomlFile create() {
-			return new LocalTomlFile(super.file, this.inputStream, this.reloadSetting);
-		}
-
-
-		private static final class LocalTomlFile extends TomlFile {
-
-			private LocalTomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting) {
-				super(file, inputStream, reloadSetting);
-			}
-		}
-	}
-
-
-	@Setter
-	@ToString(callSuper = true)
-	@EqualsAndHashCode(callSuper = true)
-	public static final class YamlFileBuilder extends StorageManager<YamlFileBuilder> {
-
-		private ReloadSettingBase reloadSetting;
-		private CommentSettingBase commentSetting;
-
-
-		private YamlFileBuilder(final @NotNull File file) {
-			super(file);
-		}
-
-
-		@NotNull
-		@Override
-		public final YamlFile create() {
-			return new LocalYamlFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting);
-		}
-
-
-		private static final class LocalYamlFile extends YamlFile {
-
-			private LocalYamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting) {
-				super(file, inputStream, reloadSetting, commentSetting);
-			}
-		}
-	}
-
-
-	@Setter
-	@ToString(callSuper = true)
-	@EqualsAndHashCode(callSuper = true)
-	public static final class YamlConfigBuilder extends StorageManager<YamlConfigBuilder> {
-
-		private ReloadSettingBase reloadSetting;
-		private CommentSettingBase commentSetting;
-
-
-		private YamlConfigBuilder(final @NotNull File file) {
-			super(file);
-		}
-
-
-		@NotNull
-		@Override
-		public final YamlConfig create() {
-			return new LocalYamlConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting);
-		}
-
-
-		private static final class LocalYamlConfig extends YamlConfig {
-
-			private LocalYamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting) {
-				super(file, inputStream, reloadSetting, commentSetting);
-			}
-		}
-	}
+	public abstract F create();
 }
