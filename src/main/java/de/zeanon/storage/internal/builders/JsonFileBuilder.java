@@ -8,11 +8,13 @@ import java.io.InputStream;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
 @Setter
+@Accessors(fluent = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
