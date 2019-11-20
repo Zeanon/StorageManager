@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,6 +33,7 @@ public final class ThunderConfigBuilder extends StorageManager<ThunderConfigBuil
 
 	@NotNull
 	@Override
+	@Contract("-> new")
 	public final ThunderConfig create() {
 		return new LocalThunderConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting);
 	}

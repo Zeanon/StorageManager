@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +31,7 @@ public final class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonF
 
 	@NotNull
 	@Override
+	@Contract("-> new")
 	public final JsonFile create() {
 		return new LocalJsonFile(super.file, this.inputStream, this.reloadSetting);
 	}

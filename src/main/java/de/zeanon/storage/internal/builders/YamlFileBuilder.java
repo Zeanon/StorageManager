@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,6 +33,7 @@ public final class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlF
 
 	@NotNull
 	@Override
+	@Contract("-> new")
 	public final YamlFile create() {
 		return new LocalYamlFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting);
 	}
