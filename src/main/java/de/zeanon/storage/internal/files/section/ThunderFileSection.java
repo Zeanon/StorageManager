@@ -3,7 +3,6 @@ package de.zeanon.storage.internal.files.section;
 import de.zeanon.storage.internal.base.sections.CommentEnabledSection;
 import de.zeanon.storage.internal.files.raw.ThunderFile;
 import de.zeanon.storage.internal.utility.utils.basic.Objects;
-import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
@@ -32,28 +31,6 @@ public class ThunderFileSection extends CommentEnabledSection<ThunderFile> {
 	protected ThunderFileSection(final @NotNull String[] sectionKey, final @NotNull ThunderFile thunderFile) {
 		super(sectionKey, thunderFile);
 		this.thunderFile = thunderFile;
-	}
-
-	@NotNull
-	@Override
-	public Map getMap(final @NotNull String key) {
-		return this.thunderFile.getMap(key);
-	}
-
-	@NotNull
-	@Override
-	public Map getMapUseArray(final @NotNull String... key) {
-		return this.thunderFile.getMapUseArray(key);
-	}
-
-	@NotNull
-	public Map getBlockAsMap(final @NotNull String key) {
-		return this.thunderFile.getBlockAsMap(key);
-	}
-
-	@NotNull
-	public Map getBlockAsMapUseArray(final @NotNull String... key) {
-		return this.thunderFile.getBlockAsMapUseArray(key);
 	}
 
 	@NotNull

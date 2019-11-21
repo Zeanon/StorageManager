@@ -286,7 +286,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
-
 	private void initialRemove(@NotNull String[] parts) {
 		if (parts.length == 1) {
 			this.dataMap.remove(parts[0]);
@@ -305,6 +304,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	}
 
 	@NotNull
+	@Contract("_, _, _ -> param1")
 	private Map<String, Object> remove(final @NotNull Map<String, Object> map, final @NotNull String[] key, final int keyIndex) {
 		if (keyIndex < key.length - 1) {
 			final Object tempValue = map.get(key[keyIndex]);
@@ -324,7 +324,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
-
 	@NotNull
 	private List<Map.Entry<String, Object>> entryList(final @NotNull Map<String, Object> map) {
 		final List<Map.Entry<String, Object>> tempList = new ArrayList<>(map.entrySet());
@@ -336,7 +335,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 		return tempList;
 	}
-
 
 	private boolean containsKey(final @NotNull Map<String, Object> map, final @NotNull String[] key, final int keyIndex) {
 		if (keyIndex < key.length - 1) {
@@ -352,7 +350,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
-
 	@Nullable
 	private Object get(final @NotNull Map map, final @NotNull String[] key) {
 		Object tempValue = map;
@@ -365,7 +362,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 		return tempValue;
 	}
-
 
 	private int size(final @NotNull Map<String, Object> map) {
 		int size = 0;

@@ -1,39 +1,47 @@
 package de.zeanon.storage.internal.base.interfaces;
 
-import java.util.List;
+import java.util.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 
-public interface TripletMap<K, V> {
-
-	int size();
-
-	boolean isEmpty();
-
-	boolean containsKey(final @NotNull Object key);
-
-	void put(final @NotNull K key, final @NotNull V value);
+public interface TripletMap<K, V> extends Map<K, V> {
 
 	void add(final @NotNull K key, final @NotNull V value);
 
-	void addAll(final @NotNull List<TripletMap.Entry<K, V>> list);
-
-	void remove(final @NotNull Object key);
+	void addAll(final @NotNull List<TripletNode<K, V>> nodes);
 
 	@NotNull
-	List<TripletMap.Entry<K, V>> entryList();
+	List<TripletNode<K, V>> entryList();
 
-	@Nullable
-	V get(final @NotNull Object key);
+	@NotNull
+	@Override
+	default Set<K> keySet() {
+		Set<K> tempCollection = new HashSet<>();
+		for (TripletNode<K, V> entry : this.entryList()) {
+			tempCollection.add(entry.getKey());
+		}
+		return tempCollection;
+	}
 
-	void clear();
+	@NotNull
+	@Override
+	default Collection<V> values() {
+		Collection<V> tempCollection = new HashSet<>();
+		for (TripletNode<K, V> entry : this.entryList()) {
+			tempCollection.add(entry.getValue());
+		}
+		return tempCollection;
+	}
 
+	@NotNull
+	@Override
+	default Set<Map.Entry<K, V>> entrySet() {
+		return new HashSet<>(this.entryList());
+	}
 
 	@NotNull
 	@Override
@@ -47,23 +55,35 @@ public interface TripletMap<K, V> {
 	 * @param <V> the type of mapped values
 	 */
 	@Getter
+	@Setter
 	@EqualsAndHashCode
 	@AllArgsConstructor
-	@Accessors(chain = true)
-	class Entry<K, V> implements Comparable<Entry> {
+	@SuppressWarnings("unused")
+	class TripletNode<K, V> implements Map.Entry<K, V>, Comparable<TripletNode> {
 
-		@Setter
 		private int line;
-		@Setter
 		@NotNull
 		private K key;
-		@Setter
 		@NotNull
 		private V value;
 
+		@NotNull
+		public K setKey(final @NotNull K key) {
+			final K tempKey = this.key;
+			this.key = key;
+			return tempKey;
+		}
+
+		@NotNull
+		public V setValue(final @NotNull V value) {
+			final V tempValue = this.value;
+			this.value = value;
+			return tempValue;
+		}
+
 
 		@Override
-		public int compareTo(final @NotNull TripletMap.Entry entry) {
+		public int compareTo(final @NotNull TripletMap.TripletNode entry) {
 			return Integer.compare(line, entry.line);
 		}
 

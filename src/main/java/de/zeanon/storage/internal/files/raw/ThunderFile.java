@@ -1,6 +1,5 @@
 package de.zeanon.storage.internal.files.raw;
 
-import de.zeanon.storage.internal.base.cache.datamap.HashTripletMap;
 import de.zeanon.storage.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
@@ -13,8 +12,6 @@ import de.zeanon.storage.internal.utility.utils.SMFileUtils;
 import de.zeanon.storage.internal.utility.utils.editor.ThunderEditor;
 import java.io.File;
 import java.io.InputStream;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -89,36 +86,6 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 		}
 	}
 
-	@NotNull
-	@Override
-	public Map getMap(final @NotNull String key) {
-		@NotNull Object tempValue = this.get(key);
-		//noinspection unchecked
-		return tempValue instanceof HashTripletMap ? this.parseToMap((HashTripletMap) tempValue, true) : (Map) tempValue;
-	}
-
-	@NotNull
-	@Override
-	public Map getMapUseArray(final @NotNull String... key) {
-		@NotNull Object tempValue = this.getUseArray(key);
-		//noinspection unchecked
-		return tempValue instanceof HashTripletMap ? this.parseToMap((HashTripletMap) tempValue, true) : (Map) tempValue;
-	}
-
-	@NotNull
-	public Map getBlockAsMap(final @NotNull String key) {
-		@NotNull Object tempValue = this.get(key);
-		//noinspection unchecked
-		return tempValue instanceof HashTripletMap ? this.parseToMap((HashTripletMap) tempValue, false) : (Map) tempValue;
-	}
-
-	@NotNull
-	public Map getBlockAsMapUseArray(final @NotNull String... key) {
-		@NotNull Object tempValue = this.getUseArray(key);
-		//noinspection unchecked
-		return tempValue instanceof HashTripletMap ? this.parseToMap((HashTripletMap) tempValue, false) : (Map) tempValue;
-	}
-
 	/**
 	 * Get a Section with a defined SectionKey
 	 *
@@ -136,21 +103,6 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 	@Override
 	public ThunderFileSection getSectionUseArray(final @NotNull String[] sectionKey) {
 		return new LocalSection(sectionKey, this);
-	}
-
-
-	@NotNull
-	private Map<String, Object> parseToMap(final @NotNull HashTripletMap<String, Object> map, final boolean deep) {
-		final @NotNull Map<String, Object> tempMap = new LinkedHashMap<>();
-		for (HashTripletMap.Entry<String, Object> entry : map.entryList()) {
-			if (deep && entry.getValue() instanceof HashTripletMap) {
-				//noinspection unchecked
-				tempMap.put(entry.getKey(), this.parseToMap((HashTripletMap) entry.getValue(), true));
-			} else {
-				tempMap.put(entry.getKey(), entry.getValue());
-			}
-		}
-		return tempMap;
 	}
 
 
