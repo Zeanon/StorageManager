@@ -1,7 +1,7 @@
 package de.zeanon.storage.internal.utility.utils;
 
 import de.zeanon.storage.StorageManager;
-import de.zeanon.storage.internal.basic.exceptions.RuntimeIOException;
+import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.io.*;
 import java.nio.file.Path;

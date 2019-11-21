@@ -1,12 +1,14 @@
 package de.zeanon.storage.internal.utility.utils.editor;
 
-import de.zeanon.storage.internal.basic.exceptions.ObjectNullException;
-import de.zeanon.storage.internal.basic.exceptions.RuntimeIOException;
-import de.zeanon.storage.internal.basic.exceptions.ThunderException;
-import de.zeanon.storage.internal.basic.interfaces.CommentSetting;
-import de.zeanon.storage.internal.data.cache.ThunderFileData;
-import de.zeanon.storage.internal.data.cache.datamap.TripletMap;
-import de.zeanon.storage.internal.utility.setting.Comment;
+import de.zeanon.storage.internal.base.cache.datamap.HashTripletMap;
+import de.zeanon.storage.internal.base.cache.datamap.LinkedTripletMap;
+import de.zeanon.storage.internal.base.cache.filedata.ThunderFileData;
+import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
+import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
+import de.zeanon.storage.internal.base.exceptions.ThunderException;
+import de.zeanon.storage.internal.base.interfaces.CommentSetting;
+import de.zeanon.storage.internal.base.interfaces.TripletMap;
+import de.zeanon.storage.internal.base.settings.Comment;
 import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,11 +65,11 @@ public class ThunderEditor {
 	 * @throws ObjectNullException if a passed value is null
 	 */
 	@NotNull
-	public static TripletMap<String, Object> readData(final @NotNull File file, final @NotNull CommentSetting commentSetting) throws ThunderException {
+	public static TripletMap<String, Object> readData(final @NotNull File file, final @NotNull CommentSetting commentSetting, final boolean fastMap) throws ThunderException {
 		if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
-			return initialReadWithComments(Objects.notNull(file, "File must not be null"));
+			return initialReadWithComments(Objects.notNull(file, "File must not be null"), fastMap);
 		} else {
-			return initialReadWithOutComments(Objects.notNull(file, "File must not be null"));
+			return initialReadWithOutComments(Objects.notNull(file, "File must not be null"), fastMap);
 		}
 	}
 
@@ -208,10 +210,10 @@ public class ThunderEditor {
 	// <Read Data>
 	// <Read Data with Comments>
 	@NotNull
-	private static TripletMap<String, Object> initialReadWithComments(final @NotNull File file) throws ThunderException {
+	private static TripletMap<String, Object> initialReadWithComments(final @NotNull File file, final boolean fastMap) throws ThunderException {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
-			@NotNull TripletMap<String, Object> tempMap = new TripletMap<>();
+			@NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 
 			@Nullable String tempKey = null;
 			while (!lines.isEmpty()) {
@@ -230,7 +232,7 @@ public class ThunderEditor {
 					} else if (tempKey == null) {
 						throw new ThunderException("Error at '" + file.getAbsolutePath() + "' -> '" + tempLine + "' -> Key must not be null");
 					}
-					tempMap.add(tempKey, internalReadWithComments(file.getAbsolutePath(), lines));
+					tempMap.add(tempKey, internalReadWithComments(file.getAbsolutePath(), lines, fastMap));
 				} else {
 					tempKey = readKey(file.getAbsolutePath(), lines, tempMap, tempKey, tempLine);
 				}
@@ -244,8 +246,8 @@ public class ThunderEditor {
 	}
 
 	@NotNull
-	private static TripletMap<String, Object> internalReadWithComments(final @NotNull String filePath, final @NotNull List<String> lines) throws ThunderException {
-		@NotNull TripletMap<String, Object> tempMap = new TripletMap<>();
+	private static TripletMap<String, Object> internalReadWithComments(final @NotNull String filePath, final @NotNull List<String> lines, final boolean fastMap) throws ThunderException {
+		@NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 		@Nullable String tempKey = null;
 
 		while (!lines.isEmpty()) {
@@ -267,7 +269,7 @@ public class ThunderEditor {
 				} else if (tempKey == null) {
 					throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 				}
-				tempMap.add(tempKey, internalReadWithComments(filePath, lines));
+				tempMap.add(tempKey, internalReadWithComments(filePath, lines, fastMap));
 			} else {
 				tempKey = readKey(filePath, lines, tempMap, tempKey, tempLine);
 			}
@@ -278,10 +280,10 @@ public class ThunderEditor {
 
 	// <Read Data without Comments>
 	@NotNull
-	private static TripletMap<String, Object> initialReadWithOutComments(final @NotNull File file) throws ThunderException {
+	private static TripletMap<String, Object> initialReadWithOutComments(final @NotNull File file, final boolean fastMap) throws ThunderException {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
-			@NotNull TripletMap<String, Object> tempMap = new TripletMap<>();
+			@NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 
 			@Nullable String tempKey = null;
 			while (!lines.isEmpty()) {
@@ -297,7 +299,7 @@ public class ThunderEditor {
 						} else if (tempKey == null) {
 							throw new ThunderException("Error at '" + file.getAbsolutePath() + "' - > '" + tempLine + "' -> Key must not be null");
 						}
-						tempMap.add(tempKey, internalReadWithOutComments(file.getAbsolutePath(), lines));
+						tempMap.add(tempKey, internalReadWithOutComments(file.getAbsolutePath(), lines, fastMap));
 					} else {
 						tempKey = readKey(file.getAbsolutePath(), lines, tempMap, tempKey, tempLine);
 					}
@@ -312,8 +314,8 @@ public class ThunderEditor {
 	}
 
 	@NotNull
-	private static TripletMap<String, Object> internalReadWithOutComments(final @NotNull String filePath, final @NotNull List<String> lines) throws ThunderException {
-		@NotNull TripletMap<String, Object> tempMap = new TripletMap<>();
+	private static TripletMap<String, Object> internalReadWithOutComments(final @NotNull String filePath, final @NotNull List<String> lines, final boolean fastMap) throws ThunderException {
+		@NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 		@Nullable String tempKey = null;
 
 		while (!lines.isEmpty()) {
@@ -332,7 +334,7 @@ public class ThunderEditor {
 					} else if (tempKey == null) {
 						throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 					}
-					tempMap.add(tempKey, internalReadWithOutComments(filePath, lines));
+					tempMap.add(tempKey, internalReadWithOutComments(filePath, lines, fastMap));
 				} else {
 					tempKey = readKey(filePath, lines, tempMap, tempKey, tempLine);
 				}

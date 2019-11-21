@@ -1,10 +1,10 @@
 package de.zeanon.storage;
 
-import de.zeanon.storage.internal.data.files.raw.JsonFile;
-import de.zeanon.storage.internal.data.files.raw.ThunderFile;
-import de.zeanon.storage.internal.data.files.raw.TomlFile;
-import de.zeanon.storage.internal.data.files.raw.YamlFile;
-import de.zeanon.storage.internal.utility.builders.*;
+import de.zeanon.storage.internal.files.raw.JsonFile;
+import de.zeanon.storage.internal.files.raw.ThunderFile;
+import de.zeanon.storage.internal.files.raw.TomlFile;
+import de.zeanon.storage.internal.files.raw.YamlFile;
+import de.zeanon.storage.internal.utility.builder.*;
 import de.zeanon.storage.internal.utility.utils.SMFileUtils;
 import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.io.BufferedInputStream;

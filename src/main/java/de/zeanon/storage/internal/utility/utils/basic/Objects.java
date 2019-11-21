@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.utility.utils.basic;
 
-import de.zeanon.storage.internal.basic.exceptions.ObjectNullException;
+import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.Contract;

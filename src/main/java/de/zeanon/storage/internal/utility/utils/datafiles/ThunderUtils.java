@@ -1,8 +1,10 @@
 package de.zeanon.storage.internal.utility.utils.datafiles;
 
-import de.zeanon.storage.internal.basic.exceptions.ObjectNullException;
-import de.zeanon.storage.internal.data.cache.ThunderFileData;
-import de.zeanon.storage.internal.data.cache.datamap.TripletMap;
+import de.zeanon.storage.internal.base.cache.datamap.HashTripletMap;
+import de.zeanon.storage.internal.base.cache.datamap.LinkedTripletMap;
+import de.zeanon.storage.internal.base.cache.filedata.ThunderFileData;
+import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
+import de.zeanon.storage.internal.base.interfaces.TripletMap;
 import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import de.zeanon.storage.internal.utility.utils.editor.ThunderEditor;
 import java.util.ArrayList;
@@ -52,9 +54,9 @@ public class ThunderUtils {
 	 * @param fileData the FileDataBase to be used
 	 * @param header   the Header to be set
 	 */
-	public static void setHeader(final @NotNull ThunderFileData fileData, final @Nullable String[] header) {
+	public static void setHeader(final @NotNull ThunderFileData fileData, final @Nullable String[] header, final boolean fastMap) {
 		@NotNull final List<TripletMap.Entry<String, Object>> entryList = fileData.blockEntryList();
-		@NotNull final TripletMap<String, Object> returnMap = new TripletMap<>();
+		@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 		internalSetHeader(header, entryList, returnMap);
 		fileData.loadData(returnMap);
 	}
@@ -68,10 +70,10 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static void setHeader(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable String[] header) {
+	public static void setHeader(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable String[] header, final boolean fastMap) {
 		if (fileData.get(key) instanceof TripletMap) {
 			@NotNull final List<TripletMap.Entry<String, Object>> entryList = fileData.blockEntryList(key);
-			@NotNull final TripletMap<String, Object> returnMap = new TripletMap<>();
+			@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 			internalSetHeader(header, entryList, returnMap);
 			fileData.insert(key, returnMap);
 		} else {
@@ -79,10 +81,10 @@ public class ThunderUtils {
 		}
 	}
 
-	public static void setHeaderUseArray(final @NotNull ThunderFileData fileData, final @NotNull String[] key, final @Nullable String[] header) {
+	public static void setHeaderUseArray(final @NotNull ThunderFileData fileData, final @NotNull String[] key, final @Nullable String[] header, final boolean fastMap) {
 		if (fileData.getUseArray(key) instanceof TripletMap) {
 			@NotNull final List<TripletMap.Entry<String, Object>> entryList = fileData.blockEntryListUseArray(key);
-			@NotNull final TripletMap<String, Object> returnMap = new TripletMap<>();
+			@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 			internalSetHeader(header, entryList, returnMap);
 			fileData.insertUseArray(key, returnMap);
 		} else {
@@ -110,9 +112,9 @@ public class ThunderUtils {
 	 * @param fileData the FileDataBase to be used
 	 * @param footer   the Footer to be set
 	 */
-	public static void setFooter(final @NotNull ThunderFileData fileData, final @Nullable String[] footer) {
+	public static void setFooter(final @NotNull ThunderFileData fileData, final @Nullable String[] footer, final boolean fastMap) {
 		@NotNull final List<TripletMap.Entry<String, Object>> entryList = fileData.blockEntryList();
-		@NotNull final TripletMap<String, Object> returnMap = new TripletMap<>();
+		@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 		internalSetFooter(footer, entryList, returnMap);
 		fileData.loadData(returnMap);
 	}
@@ -126,10 +128,10 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static void setFooter(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable String[] footer) {
+	public static void setFooter(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable String[] footer, final boolean fastMap) {
 		if (fileData.get(key) instanceof TripletMap) {
 			@NotNull final List<TripletMap.Entry<String, Object>> entryList = fileData.blockEntryList(key);
-			@NotNull final TripletMap<String, Object> returnMap = new TripletMap<>();
+			@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 			internalSetFooter(footer, entryList, returnMap);
 			fileData.insert(key, returnMap);
 		} else {
@@ -137,10 +139,10 @@ public class ThunderUtils {
 		}
 	}
 
-	public static void setFooterUseArray(final @NotNull ThunderFileData fileData, final @NotNull String[] key, final @Nullable String[] footer) {
+	public static void setFooterUseArray(final @NotNull ThunderFileData fileData, final @NotNull String[] key, final @Nullable String[] footer, final boolean fastMap) {
 		if (fileData.getUseArray(key) instanceof TripletMap) {
 			@NotNull final List<TripletMap.Entry<String, Object>> entryList = fileData.blockEntryListUseArray(key);
-			@NotNull final TripletMap<String, Object> returnMap = new TripletMap<>();
+			@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 			internalSetFooter(footer, entryList, returnMap);
 			fileData.insertUseArray(key, returnMap);
 		} else {
