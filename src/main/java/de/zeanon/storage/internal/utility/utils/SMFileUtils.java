@@ -6,9 +6,9 @@ import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -71,7 +71,7 @@ public class SMFileUtils {
 	@NotNull
 	public static Collection<File> listFolders(final @NotNull File directory, final boolean deep) {
 		Objects.checkNull(directory, "Directory must not be null");
-		@NotNull Collection<File> files = new LinkedList<>();
+		@NotNull Collection<File> files = new ArrayList<>();
 		if (directory.isDirectory()) {
 			@Nullable File[] fileList = directory.listFiles();
 			if (fileList != null) {
@@ -114,7 +114,7 @@ public class SMFileUtils {
 	public static Collection<File> listFiles(final @NotNull File directory, final @NotNull List<String> extensions, final boolean deep) {
 		Objects.checkNull(directory, "Directory must not be null");
 		Objects.checkNull(extensions, "Extensions must not be null");
-		@NotNull Collection<File> files = new LinkedList<>();
+		@NotNull Collection<File> files = new ArrayList<>();
 		if (directory.isDirectory()) {
 			@Nullable File[] fileList = directory.listFiles();
 			if (fileList != null) {
@@ -184,7 +184,7 @@ public class SMFileUtils {
 	@NotNull
 	public static Collection<File> listFiles(final @NotNull File directory, final boolean deep) {
 		Objects.checkNull(directory, "Directory must not be null");
-		@NotNull Collection<File> files = new LinkedList<>();
+		@NotNull Collection<File> files = new ArrayList<>();
 		if (directory.isDirectory()) {
 			@Nullable File[] fileList = directory.listFiles();
 			if (fileList != null) {

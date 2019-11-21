@@ -13,8 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import javafx.util.Pair;
 import lombok.AccessLevel;
@@ -363,7 +363,7 @@ public class ThunderEditor {
 						}
 					} else {
 						@NotNull String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
-						@NotNull List<String> list = new LinkedList<>();
+						@NotNull List<String> list = new ArrayList<>();
 						for (@NotNull String value : listArray) {
 							list.add(value.trim());
 						}
@@ -391,7 +391,7 @@ public class ThunderEditor {
 
 	@NotNull
 	private static List<String> readList(final String filePath, final @NotNull List<String> lines) throws ThunderException {
-		@NotNull List<String> tempList = new LinkedList<>();
+		@NotNull List<String> tempList = new ArrayList<>();
 		while (!lines.isEmpty()) {
 			@NotNull String tempLine = lines.get(0).trim();
 			lines.remove(0);
