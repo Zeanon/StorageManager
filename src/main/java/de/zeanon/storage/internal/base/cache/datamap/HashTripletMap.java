@@ -4,6 +4,7 @@ import de.zeanon.storage.internal.base.interfaces.TripletMap;
 import java.util.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,6 +14,9 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
+ *
+ * @author Zeanon
+ * @version 1.3.0
  */
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,7 +27,7 @@ public class HashTripletMap<K, V> implements TripletMap<K, V> {
 
 
 	public HashTripletMap(final @NotNull Map<K, V> map) {
-		this.putAll(map);
+		this.addAll(map);
 	}
 
 	@Override
@@ -32,11 +36,13 @@ public class HashTripletMap<K, V> implements TripletMap<K, V> {
 	}
 
 	@Override
+	@Contract(pure = true)
 	public boolean isEmpty() {
 		return this.localList.isEmpty();
 	}
 
 	@Override
+	@Contract(pure = true)
 	public boolean containsKey(final @NotNull Object key) {
 		for (TripletNode<K, V> entry : this.localList) {
 			if (entry.getKey().equals(key)) {
@@ -47,6 +53,7 @@ public class HashTripletMap<K, V> implements TripletMap<K, V> {
 	}
 
 	@Override
+	@Contract(pure = true)
 	public boolean containsValue(Object value) {
 		return false;
 	}
@@ -72,6 +79,13 @@ public class HashTripletMap<K, V> implements TripletMap<K, V> {
 	@Override
 	public void addAll(final @NotNull List<TripletNode<K, V>> nodes) {
 		this.localList.addAll(nodes);
+	}
+
+	@Override
+	public void addAll(final @NotNull Map<K, V> map) {
+		for (Map.Entry<K, V> node : map.entrySet()) {
+			this.localList.add(new TripletNode<>(this.localList.size(), node.getKey(), node.getValue()));
+		}
 	}
 
 	@Nullable

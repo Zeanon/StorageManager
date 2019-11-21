@@ -39,8 +39,9 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	@NotNull
+	@Contract("-> new")
 	public final List<Map.Entry<String, Object>> entryList() {
-		return this.entryList(this.dataMap);
+		return this.internalEntryList(this.dataMap);
 	}
 
 	/**
@@ -64,12 +65,13 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	@NotNull
+	@Contract("_ -> new")
 	public final List<Map.Entry<String, Object>> entryList(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		final Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
-			return this.entryList((Map) tempObject);
+			return this.internalEntryList((Map) tempObject);
 		} else {
 			throw new ObjectNullException("File does not contain '" + key + "'");
 		}
@@ -84,6 +86,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	@NotNull
+	@Contract("_ -> new")
 	public final List<Map.Entry<String, Object>> blockEntryList(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		final Object tempObject = this.get(key);
@@ -97,12 +100,13 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 
 	@Override
 	@NotNull
+	@Contract("_ -> new")
 	public final List<Map.Entry<String, Object>> entryListUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		final Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
-			return this.entryList((Map) tempObject);
+			return this.internalEntryList((Map) tempObject);
 		} else {
 			throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "'");
 		}
@@ -110,6 +114,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 
 	@Override
 	@NotNull
+	@Contract("_ -> new")
 	public final List<Map.Entry<String, Object>> blockEntryListUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		final Object tempObject = this.getUseArray(key);
@@ -158,28 +163,28 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	public boolean containsKey(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		final String[] parts = key.split("\\.");
-		return this.containsKey(this.dataMap, parts, 0);
+		return this.internalContainsKey(this.dataMap, parts, 0);
 	}
 
 	@Override
 	public boolean containsKeyUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		return this.containsKey(this.dataMap, key, 0);
+		return this.internalContainsKey(this.dataMap, key, 0);
 	}
 
 	@Override
-	@Nullable
+	@NotNull
 	public Object get(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		final String[] parts = key.split("\\.");
-		return this.get(this.dataMap, parts);
+		return this.internalGet(this.dataMap, parts);
 	}
 
 	@Override
-	@Nullable
+	@NotNull
 	public Object getUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		return this.get(this.dataMap, key);
+		return this.internalGet(this.dataMap, key);
 	}
 
 	@Override
@@ -211,7 +216,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 
 	@Override
 	public int size() {
-		return this.size(this.dataMap);
+		return this.internalSize(this.dataMap);
 	}
 
 	@Override
@@ -220,7 +225,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		final Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
-			return this.size((Map) tempObject);
+			return this.internalSize((Map) tempObject);
 		} else {
 			throw new ObjectNullException("File does not contain '" + key + "'");
 		}
@@ -232,7 +237,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		final Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
-			return this.size((Map) tempObject);
+			return this.internalSize((Map) tempObject);
 		} else {
 			throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "'");
 		}
@@ -263,12 +268,12 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 					: (this.dataMap instanceof LinkedHashMap
 					   ? new LinkedHashMap<>()
 					   : new HashMap<>());
-			this.dataMap.put(parts[0], this.insert(childMap, parts, value, 1));
+			this.dataMap.put(parts[0], this.internalInsert(childMap, parts, value, 1));
 		}
 	}
 
 	@NotNull
-	private Object insert(final @NotNull Map<String, Object> map, final @NotNull String[] key, final @NotNull Object value, final int keyIndex) {
+	private Object internalInsert(final @NotNull Map<String, Object> map, final @NotNull String[] key, final @NotNull Object value, final int keyIndex) {
 		if (keyIndex < key.length) {
 			final Object tempValue = map.get(key[keyIndex]);
 			//noinspection unchecked
@@ -279,7 +284,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 					: (map instanceof LinkedHashMap
 					   ? new LinkedHashMap<>()
 					   : new HashMap<>());
-			map.put(key[keyIndex], this.insert(childMap, key, value, keyIndex + 1));
+			map.put(key[keyIndex], this.internalInsert(childMap, key, value, keyIndex + 1));
 			return map;
 		} else {
 			return value;
@@ -293,7 +298,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 			final Object tempValue = this.dataMap.get(parts[0]);
 			if (tempValue instanceof Map) {
 				//noinspection unchecked
-				this.dataMap.put(parts[0], this.remove((Map) tempValue, parts, 1));
+				this.dataMap.put(parts[0], this.internalRemove((Map) tempValue, parts, 1));
 				if (((Map) this.dataMap.get(parts[0])).isEmpty()) {
 					this.dataMap.remove(parts[0]);
 				}
@@ -305,12 +310,12 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 
 	@NotNull
 	@Contract("_, _, _ -> param1")
-	private Map<String, Object> remove(final @NotNull Map<String, Object> map, final @NotNull String[] key, final int keyIndex) {
+	private Map<String, Object> internalRemove(final @NotNull Map<String, Object> map, final @NotNull String[] key, final int keyIndex) {
 		if (keyIndex < key.length - 1) {
 			final Object tempValue = map.get(key[keyIndex]);
 			if (tempValue instanceof Map) {
 				//noinspection unchecked
-				map.put(key[keyIndex], this.remove((Map) tempValue, key, keyIndex + 1));
+				map.put(key[keyIndex], this.internalRemove((Map) tempValue, key, keyIndex + 1));
 				if (((Map) map.get(key[keyIndex])).isEmpty()) {
 					map.remove(key[keyIndex]);
 				}
@@ -325,23 +330,23 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	}
 
 	@NotNull
-	private List<Map.Entry<String, Object>> entryList(final @NotNull Map<String, Object> map) {
+	private List<Map.Entry<String, Object>> internalEntryList(final @NotNull Map<String, Object> map) {
 		final List<Map.Entry<String, Object>> tempList = new ArrayList<>(map.entrySet());
 		for (Map.Entry<String, Object> entry : tempList) {
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
-				entry.setValue(this.entryList((Map<String, Object>) entry.getValue()));
+				entry.setValue(this.internalEntryList((Map<String, Object>) entry.getValue()));
 			}
 		}
 		return tempList;
 	}
 
-	private boolean containsKey(final @NotNull Map<String, Object> map, final @NotNull String[] key, final int keyIndex) {
+	private boolean internalContainsKey(final @NotNull Map<String, Object> map, final @NotNull String[] key, final int keyIndex) {
 		if (keyIndex < key.length - 1) {
 			final Object tempValue = map.get(key[keyIndex]);
 			if (tempValue instanceof Map) {
 				//noinspection unchecked
-				return this.containsKey((Map) tempValue, key, keyIndex + 1);
+				return this.internalContainsKey((Map) tempValue, key, keyIndex + 1);
 			} else {
 				throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "' -> could not find '" + key[keyIndex] + "'");
 			}
@@ -350,8 +355,8 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
-	@Nullable
-	private Object get(final @NotNull Map map, final @NotNull String[] key) {
+	@NotNull
+	private Object internalGet(final @NotNull Map map, final @NotNull String[] key) {
 		Object tempValue = map;
 		for (String tempKey : key) {
 			if (tempValue instanceof Map) {
@@ -363,12 +368,12 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		return tempValue;
 	}
 
-	private int size(final @NotNull Map<String, Object> map) {
+	private int internalSize(final @NotNull Map<String, Object> map) {
 		int size = 0;
 		for (Map.Entry entry : new ArrayList<>(map.entrySet())) {
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
-				size += this.size((Map) entry.getValue());
+				size += this.internalSize((Map) entry.getValue());
 			} else {
 				size++;
 			}

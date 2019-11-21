@@ -8,11 +8,23 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * Basic interface for TripletMaps
+ *
+ * @param <K> the type of keys maintained by this map
+ * @param <V> the type of mapped values
+ *
+ * @author Zeanon
+ * @version 1.3.0
+ */
+@SuppressWarnings("unused")
 public interface TripletMap<K, V> extends Map<K, V> {
 
 	void add(final @NotNull K key, final @NotNull V value);
 
 	void addAll(final @NotNull List<TripletNode<K, V>> nodes);
+
+	void addAll(final @NotNull Map<K, V> map);
 
 	@NotNull
 	List<TripletNode<K, V>> entryList();
@@ -53,6 +65,9 @@ public interface TripletMap<K, V> extends Map<K, V> {
 	 *
 	 * @param <K> the type of keys maintained by this map
 	 * @param <V> the type of mapped values
+	 *
+	 * @author Zeanon
+	 * @version 1.3.0
 	 */
 	@Getter
 	@Setter
