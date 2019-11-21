@@ -1,12 +1,12 @@
 package de.zeanon.storage;
 
-import de.zeanon.storage.internal.builders.*;
-import de.zeanon.storage.internal.data.raw.JsonFile;
-import de.zeanon.storage.internal.data.raw.ThunderFile;
-import de.zeanon.storage.internal.data.raw.TomlFile;
-import de.zeanon.storage.internal.data.raw.YamlFile;
-import de.zeanon.storage.internal.utils.SMFileUtils;
-import de.zeanon.storage.internal.utils.basic.Objects;
+import de.zeanon.storage.internal.data.files.raw.JsonFile;
+import de.zeanon.storage.internal.data.files.raw.ThunderFile;
+import de.zeanon.storage.internal.data.files.raw.TomlFile;
+import de.zeanon.storage.internal.data.files.raw.YamlFile;
+import de.zeanon.storage.internal.utility.builders.*;
+import de.zeanon.storage.internal.utility.utils.SMFileUtils;
+import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 @RequiredArgsConstructor
 @Accessors(fluent = true)
 @SuppressWarnings("unused")
-public abstract class StorageManager<C, F> {
+public abstract class StorageManager<B, F> {
 
 	@NotNull
 	protected final File file;
@@ -263,72 +263,72 @@ public abstract class StorageManager<C, F> {
 
 	@NotNull
 	@Contract("_ -> this")
-	public final C fromInputStream(final @Nullable InputStream inputStream) {
+	public final B fromInputStream(final @Nullable InputStream inputStream) {
 		this.inputStream = SMFileUtils.createNewInputStream(inputStream);
 		//noinspection unchecked
-		return (C) this;
+		return (B) this;
 	}
 
 	@NotNull
 	@Contract("_ -> this")
-	public final C fromFile(final @Nullable File file) {
+	public final B fromFile(final @Nullable File file) {
 		this.inputStream = file == null ? null : SMFileUtils.createNewInputStream(file);
 		//noinspection unchecked
-		return (C) this;
+		return (B) this;
 	}
 
 	@NotNull
 	@Contract("_ -> this")
-	public final C fromFile(final @Nullable Path file) {
+	public final B fromFile(final @Nullable Path file) {
 		this.inputStream = file == null ? null : SMFileUtils.createNewInputStream(file.toFile());
 		//noinspection unchecked
-		return (C) this;
+		return (B) this;
 	}
 
 	@NotNull
 	@Contract("_ -> this")
-	public final C fromFile(final @Nullable String file) {
+	public final B fromFile(final @Nullable String file) {
 		this.inputStream = file == null ? null : SMFileUtils.createNewInputStream(new File(file));
 		//noinspection unchecked
-		return (C) this;
+		return (B) this;
 	}
 
 	@NotNull
 	@Contract("_, _ -> this")
-	public final C fromFile(final @Nullable String directory, final @Nullable String name) {
+	public final B fromFile(final @Nullable String directory, final @Nullable String name) {
 		if (name != null) {
 			this.inputStream = SMFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory, name));
 		}
 		//noinspection unchecked
-		return (C) this;
+		return (B) this;
 	}
 
 	@NotNull
 	@Contract("_, _ -> this")
-	public final C fromFile(final @Nullable File directory, final @Nullable String name) {
+	public final B fromFile(final @Nullable File directory, final @Nullable String name) {
 		if (name != null) {
 			this.inputStream = SMFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory, name));
 		}
 		//noinspection unchecked
-		return (C) this;
+		return (B) this;
 	}
 
 	@NotNull
 	@Contract("_, _ -> this")
-	public final C fromFile(final @Nullable Path directory, final @Nullable String name) {
+	public final B fromFile(final @Nullable Path directory, final @Nullable String name) {
 		if (name != null) {
 			this.inputStream = SMFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory.toFile(), name));
 		}
 		//noinspection unchecked
-		return (C) this;
+		return (B) this;
 	}
 
 	@NotNull
 	@Contract("_ -> this")
-	public final C fromResource(final @Nullable String resource) {
+	public final B fromResource(final @Nullable String resource) {
 		this.inputStream = resource == null ? null : SMFileUtils.createNewInputStream(resource);
 		//noinspection unchecked
-		return (C) this;
+		return (B) this;
 	}
 
 

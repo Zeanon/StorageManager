@@ -1,13 +1,14 @@
 package de.zeanon.storage.internal.data.cache;
 
-import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
-import de.zeanon.storage.internal.base.interfaces.FileData;
-import de.zeanon.storage.internal.utils.basic.Objects;
+import de.zeanon.storage.internal.basic.exceptions.ObjectNullException;
+import de.zeanon.storage.internal.basic.interfaces.FileData;
+import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.util.*;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,22 +24,44 @@ import org.jetbrains.annotations.Nullable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StandardFileData implements FileData<Map<String, Object>, Map.Entry<String, Object>>, Comparable<StandardFileData> {
 
+	/**
+	 * internal cache for the contents of the File
+	 */
 	@Getter(onMethod = @__({@Override}))
 	@NotNull
 	private Map<String, Object> dataMap = new HashMap<>();
 
+
+	/**
+	 * Get a List consisting of TripletMap.Entry objects (whereas values being TripletMaps are also parsed to entryLists)
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
 	@Override
 	@NotNull
 	public final List<Map.Entry<String, Object>> entryList() {
 		return this.entryList(this.dataMap);
 	}
 
+	/**
+	 * Get a List consisting of TripletMap.Entry objects (without internal parsing)
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
 	@Override
 	@NotNull
+	@Contract("-> new")
 	public final List<Map.Entry<String, Object>> blockEntryList() {
 		return new ArrayList<>(this.dataMap.entrySet());
 	}
 
+	/**
+	 * Get a List consisting of TripletMap.Entry objects (whereas values being TripletMaps are also parsed to entryLists)
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
 	@Override
 	@NotNull
 	public final List<Map.Entry<String, Object>> entryList(final @NotNull String key) {
@@ -52,6 +75,13 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
+	/**
+	 * Get a List consisting of TripletMap.Entry objects (without internal parsing)
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
 	@Override
 	@NotNull
 	public final List<Map.Entry<String, Object>> blockEntryList(final @NotNull String key) {
