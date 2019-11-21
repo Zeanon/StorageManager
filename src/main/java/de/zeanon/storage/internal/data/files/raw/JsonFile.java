@@ -44,8 +44,8 @@ public class JsonFile extends FlatFile<StandardFileData> {
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 */
-	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSetting reloadSetting) {
-		super(file, JsonFile.FileType.JSON, reloadSetting, new LocalFileData());
+	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting) {
+		super(file, JsonFile.FileType.JSON, new LocalFileData(), reloadSetting);
 
 		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
 			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));

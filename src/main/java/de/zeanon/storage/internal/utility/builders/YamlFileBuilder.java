@@ -4,6 +4,8 @@ import de.zeanon.storage.StorageManager;
 import de.zeanon.storage.internal.basic.interfaces.CommentSetting;
 import de.zeanon.storage.internal.basic.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.data.files.raw.YamlFile;
+import de.zeanon.storage.internal.utility.setting.Comment;
+import de.zeanon.storage.internal.utility.setting.Reload;
 import java.io.File;
 import java.io.InputStream;
 import lombok.EqualsAndHashCode;
@@ -22,8 +24,10 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public final class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile> {
 
-	private ReloadSetting reloadSetting;
-	private CommentSetting commentSetting;
+	@NotNull
+	private ReloadSetting reloadSetting = Reload.INTELLIGENT;
+	@NotNull
+	private CommentSetting commentSetting = Comment.SKIP;
 
 
 	public YamlFileBuilder(final @NotNull File file) {
@@ -41,7 +45,7 @@ public final class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlF
 
 	private static final class LocalYamlFile extends YamlFile {
 
-		private LocalYamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSetting reloadSetting, final @Nullable CommentSetting commentSetting) {
+		private LocalYamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting) {
 			super(file, inputStream, reloadSetting, commentSetting);
 		}
 	}

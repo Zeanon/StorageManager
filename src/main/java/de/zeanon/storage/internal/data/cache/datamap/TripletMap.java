@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.data.cache.datamap;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 public class TripletMap<K, V> {
 
 	@NotNull
-	private LinkedList<TripletMap.Entry<K, V>> localList = new LinkedList<>();
+	private ArrayList<Entry<K, V>> localList = new ArrayList<>();
 
 
 	public int size() {

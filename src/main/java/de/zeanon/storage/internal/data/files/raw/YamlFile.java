@@ -45,8 +45,8 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSetting reloadSetting, final @Nullable CommentSetting commentSetting) {
-		super(file, YamlFile.FileType.YAML, reloadSetting, commentSetting, new LocalFileData());
+	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting) {
+		super(file, YamlFile.FileType.YAML, new LocalFileData(), reloadSetting, commentSetting);
 
 		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
 			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));

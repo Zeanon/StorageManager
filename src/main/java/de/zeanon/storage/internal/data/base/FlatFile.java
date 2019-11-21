@@ -45,17 +45,15 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 */
 	@NotNull
 	@Setter
-	private ReloadSetting reloadSetting = Reload.INTELLIGENT;
+	private ReloadSetting reloadSetting;
 
 
-	protected FlatFile(final @NotNull File file, final @NotNull FileType fileType, final @Nullable ReloadSetting reloadSetting, final @NotNull M fileData) {
+	protected FlatFile(final @NotNull File file, final @NotNull FileType fileType, final @NotNull M fileData, final @NotNull ReloadSetting reloadSetting) {
 		if (fileType.isTypeOf(file)) {
 			this.fileType = fileType;
 			this.file = file;
 			this.fileData = fileData;
-			if (reloadSetting != null) {
-				this.setReloadSetting(reloadSetting);
-			}
+			this.reloadSetting = reloadSetting;
 		} else {
 			throw new FileTypeException("File '" + file.getAbsolutePath() + "' is not of type '" + fileType + "'");
 		}

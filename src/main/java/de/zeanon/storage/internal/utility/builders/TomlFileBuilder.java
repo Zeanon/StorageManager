@@ -3,6 +3,7 @@ package de.zeanon.storage.internal.utility.builders;
 import de.zeanon.storage.StorageManager;
 import de.zeanon.storage.internal.basic.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.data.files.raw.TomlFile;
+import de.zeanon.storage.internal.utility.setting.Reload;
 import java.io.File;
 import java.io.InputStream;
 import lombok.EqualsAndHashCode;
@@ -21,7 +22,8 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public final class TomlFileBuilder extends StorageManager<TomlFileBuilder, TomlFile> {
 
-	private ReloadSetting reloadSetting;
+	@NotNull
+	private ReloadSetting reloadSetting = Reload.INTELLIGENT;
 
 
 	public TomlFileBuilder(final @NotNull File file) {
@@ -39,7 +41,7 @@ public final class TomlFileBuilder extends StorageManager<TomlFileBuilder, TomlF
 
 	private static final class LocalTomlFile extends TomlFile {
 
-		private LocalTomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSetting reloadSetting) {
+		private LocalTomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting) {
 			super(file, inputStream, reloadSetting);
 		}
 	}

@@ -45,8 +45,8 @@ public class YamlConfig extends YamlFile implements Config {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSetting reloadSetting, final @Nullable CommentSetting commentSetting) {
-		super(file, inputStream, reloadSetting, commentSetting == null ? Comment.PRESERVE : commentSetting);
+	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting) {
+		super(file, inputStream, reloadSetting, commentSetting);
 	}
 
 

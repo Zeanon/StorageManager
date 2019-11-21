@@ -37,8 +37,8 @@ public class TomlFile extends FlatFile<StandardFileData> {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSetting reloadSetting) {
-		super(file, TomlFile.FileType.TOML, reloadSetting, new LocalFileData());
+	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting) {
+		super(file, TomlFile.FileType.TOML, new LocalFileData(), reloadSetting);
 
 		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
 			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));

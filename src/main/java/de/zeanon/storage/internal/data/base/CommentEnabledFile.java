@@ -36,14 +36,12 @@ public abstract class CommentEnabledFile<M extends FileData<?, ?>> extends FlatF
 	 */
 	@NotNull
 	@Setter
-	private CommentSetting commentSetting = Comment.SKIP;
+	private CommentSetting commentSetting;
 
 
-	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileType fileType, final @Nullable ReloadSetting reloadSetting, final @Nullable CommentSetting commentSetting, final @NotNull M fileData) {
-		super(file, fileType, reloadSetting, fileData);
-		if (commentSetting != null) {
-			this.setCommentSetting(commentSetting);
-		}
+	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileType fileType, final @NotNull M fileData, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting) {
+		super(file, fileType, fileData, reloadSetting);
+		this.commentSetting = commentSetting;
 	}
 
 	/**

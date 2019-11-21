@@ -42,8 +42,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected ThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSetting reloadSetting, final @Nullable CommentSetting commentSetting) {
-		super(file, ThunderFile.FileType.THUNDER, reloadSetting, commentSetting, new LocalFileData());
+	protected ThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting) {
+		super(file, ThunderFile.FileType.THUNDER, new LocalFileData(), reloadSetting, commentSetting);
 
 		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
 			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
