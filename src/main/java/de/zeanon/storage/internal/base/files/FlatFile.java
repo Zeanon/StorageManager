@@ -150,7 +150,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 */
 	public abstract void reload();
 
-	@Synchronized
 	public abstract void save();
 
 	@Override
