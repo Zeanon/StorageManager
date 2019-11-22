@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -14,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.0.0
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@SuppressWarnings({"WeakerAccess", "unused"})
+@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PRIVATE)
+@SuppressWarnings("unused")
 public class LagCatcher {
 
 	@NotNull

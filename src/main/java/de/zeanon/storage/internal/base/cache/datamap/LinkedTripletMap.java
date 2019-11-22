@@ -1,16 +1,16 @@
 package de.zeanon.storage.internal.base.cache.datamap;
 
-import de.zeanon.storage.internal.base.interfaces.TripletMap;
-import java.util.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import de.zeanon.storage.internal.base.cache.base.TripletMap;
+import java.util.LinkedList;
+import java.util.List;
+import lombok.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 
 /**
  * Custom Map implementation optimized for ThunderFile
+ * internally based on LinkedList for low access times
  *
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
@@ -18,148 +18,16 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.3.0
  */
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(onConstructor_ = @Contract(pure = true))
+@AllArgsConstructor(onConstructor_ = @Contract(pure = true))
+@EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class LinkedTripletMap<K, V> implements TripletMap<K, V> {
+public class LinkedTripletMap<K, V> extends TripletMap<K, V> {
 
+	/**
+	 * Internal List storing the DataNodes
+	 */
 	@NotNull
-	private LinkedList<TripletNode<K, V>> localList = new LinkedList<>();
-
-
-	@Override
-	public int size() {
-		return this.localList.size();
-	}
-
-	@Override
-	@Contract(pure = true)
-	public boolean isEmpty() {
-		return this.localList.isEmpty();
-	}
-
-	@Override
-	@Contract(pure = true)
-	public boolean containsKey(final @NotNull Object key) {
-		for (final TripletNode<K, V> entry : this.localList) {
-			if (entry.getKey().equals(key)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	@Contract(pure = true)
-	public boolean containsValue(Object value) {
-		for (final TripletNode<K, V> entry : this.localList) {
-			if (entry.getValue().equals(value)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public V put(final @NotNull K key, final @NotNull V value) {
-		for (final TripletNode<K, V> entry : this.localList) {
-			if (entry.getKey().equals(key)) {
-				V tempValue = entry.getValue();
-				entry.setValue(value);
-				return tempValue;
-			}
-		}
-		this.localList.add(new TripletNode<>(this.localList.size(), key, value));
-		return null;
-	}
-
-	@Override
-	public void add(final @NotNull K key, final @NotNull V value) {
-		this.localList.add(new TripletNode<>(this.localList.size(), key, value));
-	}
-
-	@Override
-	public void addAll(final @NotNull List<TripletNode<K, V>> nodes) {
-		this.localList.addAll(nodes);
-	}
-
-	@Override
-	public void addAll(final @NotNull Map<K, V> map) {
-		for (final Map.Entry<K, V> node : map.entrySet()) {
-			this.localList.add(new TripletNode<>(this.localList.size(), node.getKey(), node.getValue()));
-		}
-	}
-
-	@Nullable
-	@Override
-	public V remove(final @NotNull Object key) {
-		for (final TripletNode<K, V> entry : this.localList) {
-			if (entry.getKey().equals(key)) {
-				this.localList.remove(entry);
-				return entry.getValue();
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public void putAll(@NotNull Map<? extends K, ? extends V> map) {
-		for (final Map.Entry<? extends K, ? extends V> entry : map.entrySet()) {
-			this.put(entry.getKey(), entry.getValue());
-		}
-	}
-
-	@NotNull
-	@Override
-	public List<TripletNode<K, V>> entryList() {
-		return new ArrayList<>(this.localList);
-	}
-
-	@Nullable
-	@Override
-	public V get(final @NotNull Object key) {
-		for (final TripletNode<K, V> entry : this.localList) {
-			if (entry.getKey().equals(key)) {
-				return entry.getValue();
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public void clear() {
-		this.localList.clear();
-	}
-
-	@NotNull
-	@Override
-	public Set<K> keySet() {
-		final Set<K> tempCollection = new HashSet<>();
-		for (final TripletNode<K, V> entry : this.localList) {
-			tempCollection.add(entry.getKey());
-		}
-		return tempCollection;
-	}
-
-	@NotNull
-	@Override
-	public Collection<V> values() {
-		final Collection<V> tempCollection = new HashSet<>();
-		for (final TripletNode<K, V> entry : this.localList) {
-			tempCollection.add(entry.getValue());
-		}
-		return tempCollection;
-	}
-
-	@NotNull
-	@Override
-	public Set<Map.Entry<K, V>> entrySet() {
-		return new HashSet<>(this.localList);
-	}
-
-	@NotNull
-	@Override
-	public String toString() {
-		return this.localList.toString();
-	}
+	@Getter(onMethod_ = @Override, value = AccessLevel.PROTECTED)
+	private List<TripletNode<K, V>> localList = new LinkedList<>();
 }

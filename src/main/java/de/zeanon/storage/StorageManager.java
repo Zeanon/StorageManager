@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,8 +27,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString
 @EqualsAndHashCode
-@RequiredArgsConstructor
-@Accessors(fluent = true)
+@RequiredArgsConstructor(onConstructor_ = @Contract(pure = true))
 @SuppressWarnings("unused")
 public abstract class StorageManager<B, F> {
 

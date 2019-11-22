@@ -53,7 +53,7 @@ public class JsonFile extends FlatFile<StandardFileData> {
 		}
 
 		try {
-			@NotNull final JSONTokener jsonTokener = new JSONTokener(SMFileUtils.createNewInputStream(this.getFile()));
+			final @NotNull JSONTokener jsonTokener = new JSONTokener(SMFileUtils.createNewInputStream(this.getFile()));
 			this.getFileData().loadData(new JSONObject(jsonTokener).toMap());
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (JSONException e) {
@@ -67,7 +67,7 @@ public class JsonFile extends FlatFile<StandardFileData> {
 	@Override
 	public void reload() {
 		try {
-			@NotNull final JSONTokener jsonTokener = new JSONTokener(SMFileUtils.createNewInputStream(this.getFile()));
+			final @NotNull JSONTokener jsonTokener = new JSONTokener(SMFileUtils.createNewInputStream(this.getFile()));
 			this.getFileData().loadData(new JSONObject(jsonTokener).toMap());
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
@@ -179,7 +179,7 @@ public class JsonFile extends FlatFile<StandardFileData> {
 		}
 	}
 
-	private void write(@NotNull final JSONObject object) throws IOException {
+	private void write(final @NotNull JSONObject object) throws IOException {
 		@NotNull @Cleanup Writer writer = new PrintWriter(new FileWriter(this.getFile().getAbsolutePath()));
 		writer.write(object.toString(3));
 	}

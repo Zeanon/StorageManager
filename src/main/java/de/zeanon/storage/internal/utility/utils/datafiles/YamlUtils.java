@@ -4,6 +4,7 @@ import de.zeanon.storage.internal.utility.utils.editor.YamlEditor;
 import java.util.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -13,16 +14,17 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.2.0
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PRIVATE)
 @SuppressWarnings("unused")
 public class YamlUtils {
 
 
 	@NotNull
+	@Contract("_, _, -> param1")
 	public static List<String> parseComments(final @NotNull List<String> comments, final @NotNull List<String> updated) {
-		@NotNull final Map<String, List<String>> parsed = assignCommentsToKey(comments);
+		final @NotNull Map<String, List<String>> parsed = assignCommentsToKey(comments);
 
-		for (@NotNull final Map.Entry<String, List<String>> entry : parsed.entrySet()) {
+		for (final @NotNull Map.Entry<String, List<String>> entry : parsed.entrySet()) {
 			int i = 0;
 			for (final String line : entry.getValue()) {
 				if (updated.contains(entry.getKey() + " ")) {
@@ -37,12 +39,12 @@ public class YamlUtils {
 
 	@NotNull
 	private static Map<String, List<String>> assignCommentsToKey(final @NotNull List<String> fileLines) {
-		@NotNull final List<String> storage = new ArrayList<>();
-		@NotNull final List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
-		@NotNull final Map<String, List<String>> result = new HashMap<>();
+		final @NotNull List<String> storage = new ArrayList<>();
+		final @NotNull List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
+		final @NotNull Map<String, List<String>> result = new HashMap<>();
 
 		Collections.reverse(lines);
-		for (@NotNull final String line : lines) {
+		for (final @NotNull String line : lines) {
 			if (line.trim().startsWith("#") || line.isEmpty()) {
 				storage.add(line);
 				continue;
@@ -51,8 +53,8 @@ public class YamlUtils {
 			storage.clear();
 		}
 
-		@NotNull final List<String> keysToRemove = new ArrayList<>();
-		for (@NotNull final Map.Entry<String, List<String>> entry : result.entrySet()) {
+		final @NotNull List<String> keysToRemove = new ArrayList<>();
+		for (final @NotNull Map.Entry<String, List<String>> entry : result.entrySet()) {
 			if (entry.getValue().equals(new ArrayList<>())) {
 				keysToRemove.add(entry.getKey());
 			}

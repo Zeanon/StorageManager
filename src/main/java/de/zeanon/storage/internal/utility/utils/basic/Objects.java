@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.2.0
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PRIVATE)
 @SuppressWarnings("unused")
 public class Objects {
 

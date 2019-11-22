@@ -1,10 +1,10 @@
 package de.zeanon.storage.internal.utility.utils.datafiles;
 
+import de.zeanon.storage.internal.base.cache.base.TripletMap;
 import de.zeanon.storage.internal.base.cache.datamap.HashTripletMap;
 import de.zeanon.storage.internal.base.cache.datamap.LinkedTripletMap;
 import de.zeanon.storage.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
-import de.zeanon.storage.internal.base.interfaces.TripletMap;
 import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import de.zeanon.storage.internal.utility.utils.editor.ThunderEditor;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.3.0
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PRIVATE)
 public class ThunderUtils {
 
 
@@ -38,8 +38,8 @@ public class ThunderUtils {
 	 */
 	@NotNull
 	public static List<String> getHeader(final @NotNull ThunderFileData fileData) {
-		@NotNull final List<String> returnList = new ArrayList<>();
-		for (@NotNull final TripletMap.TripletNode<String, Object> entry : fileData.blockEntryList()) {
+		final @NotNull List<String> returnList = new ArrayList<>();
+		for (final @NotNull TripletMap.TripletNode<String, Object> entry : fileData.blockEntryList()) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
 				returnList.add(entry.getKey());
 			} else {
@@ -56,8 +56,8 @@ public class ThunderUtils {
 	 * @param header   the Header to be set
 	 */
 	public static void setHeader(final @NotNull ThunderFileData fileData, final @Nullable String[] header, final boolean fastMap) {
-		@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList();
-		@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
+		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList();
+		final @NotNull TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 		internalSetHeader(header, entryList, returnMap);
 		fileData.loadData(returnMap);
 	}
@@ -73,8 +73,8 @@ public class ThunderUtils {
 	 */
 	public static void setHeader(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable String[] header, final boolean fastMap) {
 		if (fileData.get(key) instanceof TripletMap) {
-			@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList(key);
-			@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
+			final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList(key);
+			final @NotNull TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 			internalSetHeader(header, entryList, returnMap);
 			fileData.insert(key, returnMap);
 		} else {
@@ -84,8 +84,8 @@ public class ThunderUtils {
 
 	public static void setHeaderUseArray(final @NotNull ThunderFileData fileData, final @NotNull String[] key, final @Nullable String[] header, final boolean fastMap) {
 		if (fileData.getUseArray(key) instanceof TripletMap) {
-			@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryListUseArray(key);
-			@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
+			final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryListUseArray(key);
+			final @NotNull TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 			internalSetHeader(header, entryList, returnMap);
 			fileData.insertUseArray(key, returnMap);
 		} else {
@@ -102,8 +102,8 @@ public class ThunderUtils {
 	 */
 	@NotNull
 	public static List<String> getFooter(final @NotNull ThunderFileData fileData) {
-		@NotNull final List<String> returnList = new ArrayList<>();
-		@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList();
+		final @NotNull List<String> returnList = new ArrayList<>();
+		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList();
 		return internalGetFooter(returnList, entryList);
 	}
 
@@ -114,8 +114,8 @@ public class ThunderUtils {
 	 * @param footer   the Footer to be set
 	 */
 	public static void setFooter(final @NotNull ThunderFileData fileData, final @Nullable String[] footer, final boolean fastMap) {
-		@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList();
-		@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
+		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList();
+		final @NotNull TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 		internalSetFooter(footer, entryList, returnMap);
 		fileData.loadData(returnMap);
 	}
@@ -131,8 +131,8 @@ public class ThunderUtils {
 	 */
 	public static void setFooter(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable String[] footer, final boolean fastMap) {
 		if (fileData.get(key) instanceof TripletMap) {
-			@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList(key);
-			@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
+			final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList(key);
+			final @NotNull TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 			internalSetFooter(footer, entryList, returnMap);
 			fileData.insert(key, returnMap);
 		} else {
@@ -142,8 +142,8 @@ public class ThunderUtils {
 
 	public static void setFooterUseArray(final @NotNull ThunderFileData fileData, final @NotNull String[] key, final @Nullable String[] footer, final boolean fastMap) {
 		if (fileData.getUseArray(key) instanceof TripletMap) {
-			@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryListUseArray(key);
-			@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
+			final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryListUseArray(key);
+			final @NotNull TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 			internalSetFooter(footer, entryList, returnMap);
 			fileData.insertUseArray(key, returnMap);
 		} else {
@@ -163,8 +163,8 @@ public class ThunderUtils {
 	 */
 	@NotNull
 	public static List<String> getHeader(final @NotNull ThunderFileData fileData, final @NotNull String key) {
-		@NotNull final List<String> returnList = new ArrayList<>();
-		for (@NotNull final TripletMap.TripletNode<String, Object> entry : Objects.notNull(fileData.blockEntryList(key), "ThunderFile does not contain '" + key + "'")) {
+		final @NotNull List<String> returnList = new ArrayList<>();
+		for (final @NotNull TripletMap.TripletNode<String, Object> entry : Objects.notNull(fileData.blockEntryList(key), "ThunderFile does not contain '" + key + "'")) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
 				returnList.add(entry.getKey());
 			} else {
@@ -176,8 +176,8 @@ public class ThunderUtils {
 
 	@NotNull
 	public static List<String> getHeaderUseArray(final @NotNull ThunderFileData fileData, final @NotNull String... key) {
-		@NotNull final List<String> returnList = new ArrayList<>();
-		for (@NotNull final TripletMap.TripletNode<String, Object> entry : Objects.notNull(fileData.blockEntryListUseArray(key), "ThunderFile does not contain '" + Arrays.toString(key) + "'")) {
+		final @NotNull List<String> returnList = new ArrayList<>();
+		for (final @NotNull TripletMap.TripletNode<String, Object> entry : Objects.notNull(fileData.blockEntryListUseArray(key), "ThunderFile does not contain '" + Arrays.toString(key) + "'")) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
 				returnList.add(entry.getKey());
 			} else {
@@ -199,15 +199,15 @@ public class ThunderUtils {
 	 */
 	@NotNull
 	public static List<String> getFooter(final @NotNull ThunderFileData fileData, final @NotNull String key) {
-		@NotNull final List<String> returnList = new ArrayList<>();
-		@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = Objects.notNull(fileData.entryList(key), "ThunderFile does not contain '" + key + "'");
+		final @NotNull List<String> returnList = new ArrayList<>();
+		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = Objects.notNull(fileData.entryList(key), "ThunderFile does not contain '" + key + "'");
 		return internalGetFooter(returnList, entryList);
 	}
 
 	@NotNull
 	public static List<String> getFooterUseArray(final @NotNull ThunderFileData fileData, final @NotNull String... key) {
-		@NotNull final List<String> returnList = new ArrayList<>();
-		@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = Objects.notNull(fileData.blockEntryListUseArray(key), "ThunderFile does not contain '" + Arrays.toString(key) + "'");
+		final @NotNull List<String> returnList = new ArrayList<>();
+		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = Objects.notNull(fileData.blockEntryListUseArray(key), "ThunderFile does not contain '" + Arrays.toString(key) + "'");
 		return internalGetFooter(returnList, entryList);
 	}
 
@@ -221,7 +221,7 @@ public class ThunderUtils {
 	 */
 	@NotNull
 	public static List<String> getComments(final @NotNull ThunderFileData fileData, final boolean deep) {
-		@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = deep ? fileData.entryList() : fileData.blockEntryList();
+		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = deep ? fileData.entryList() : fileData.blockEntryList();
 		return internalGetComments(entryList);
 	}
 
@@ -238,13 +238,13 @@ public class ThunderUtils {
 	 */
 	@NotNull
 	public static List<String> getComments(final @NotNull ThunderFileData fileData, final @NotNull String key, final boolean deep) {
-		@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = deep ? Objects.notNull(fileData.entryList(key), "ThunderFile does not contain '" + key + "'") : Objects.notNull(fileData.blockEntryList(key), "ThunderFile does not contain '" + key + "'");
+		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = deep ? Objects.notNull(fileData.entryList(key), "ThunderFile does not contain '" + key + "'") : Objects.notNull(fileData.blockEntryList(key), "ThunderFile does not contain '" + key + "'");
 		return internalGetComments(entryList);
 	}
 
 	@NotNull
 	public static List<String> getCommentsUseArray(final @NotNull ThunderFileData fileData, final @NotNull String[] key, final boolean deep) {
-		@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = deep ? Objects.notNull(fileData.entryListUseArray(key), "ThunderFile does not contain '" + Arrays.toString(key) + "'") : Objects.notNull(fileData.blockEntryListUseArray(key), "ThunderFile does not contain '" + Arrays.toString(key) + "'");
+		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = deep ? Objects.notNull(fileData.entryListUseArray(key), "ThunderFile does not contain '" + Arrays.toString(key) + "'") : Objects.notNull(fileData.blockEntryListUseArray(key), "ThunderFile does not contain '" + Arrays.toString(key) + "'");
 		return internalGetComments(entryList);
 	}
 
@@ -253,7 +253,7 @@ public class ThunderUtils {
 	@Contract("_, _ -> param1")
 	private static List<String> internalGetFooter(@NotNull List<String> returnList, @NotNull List<TripletMap.TripletNode<String, Object>> entryList) {
 		Collections.reverse(entryList);
-		for (@NotNull final TripletMap.TripletNode<String, Object> entry : entryList) {
+		for (final @NotNull TripletMap.TripletNode<String, Object> entry : entryList) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
 				returnList.add(entry.getKey());
 			} else {
@@ -267,7 +267,7 @@ public class ThunderUtils {
 
 	@Synchronized
 	private static void internalSetHeader(@Nullable String[] header, @NotNull List<TripletMap.TripletNode<String, Object>> entryList, @NotNull TripletMap<String, Object> returnMap) {
-		for (@NotNull final TripletMap.TripletNode<String, Object> entry : entryList) {
+		for (final @NotNull TripletMap.TripletNode<String, Object> entry : entryList) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
 				entryList.remove(entry);
 			} else {
@@ -287,7 +287,7 @@ public class ThunderUtils {
 	@Synchronized
 	private static void internalSetFooter(@Nullable String[] footer, @NotNull List<TripletMap.TripletNode<String, Object>> entryList, @NotNull TripletMap<String, Object> returnMap) {
 		Collections.reverse(entryList);
-		for (@NotNull final TripletMap.TripletNode<String, Object> entry : entryList) {
+		for (final @NotNull TripletMap.TripletNode<String, Object> entry : entryList) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
 				entryList.remove(entry);
 			} else {
@@ -306,9 +306,9 @@ public class ThunderUtils {
 	}
 
 	@NotNull
-	private static List<String> internalGetComments(@NotNull final List<TripletMap.TripletNode<String, Object>> entryList) {
-		@NotNull final List<String> returnList = new ArrayList<>();
-		for (@NotNull final TripletMap.TripletNode<String, Object> entry : entryList) {
+	private static List<String> internalGetComments(final @NotNull List<TripletMap.TripletNode<String, Object>> entryList) {
+		final @NotNull List<String> returnList = new ArrayList<>();
+		for (final @NotNull TripletMap.TripletNode<String, Object> entry : entryList) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
 				returnList.add(entry.getKey());
 			}

@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
  * @see FlatFile
  */
 @Getter
+@Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "UnusedReturnValue"})
@@ -35,7 +36,6 @@ public abstract class CommentEnabledFile<M extends FileData<?, ?>> extends FlatF
 	 * Default: {@link Comment#SKIP}
 	 */
 	@NotNull
-	@Setter
 	private CommentSetting commentSetting;
 
 

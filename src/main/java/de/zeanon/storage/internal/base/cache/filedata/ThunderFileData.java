@@ -1,10 +1,10 @@
 package de.zeanon.storage.internal.base.cache.filedata;
 
+import de.zeanon.storage.internal.base.cache.base.TripletMap;
 import de.zeanon.storage.internal.base.cache.datamap.HashTripletMap;
 import de.zeanon.storage.internal.base.cache.datamap.LinkedTripletMap;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.FileData;
-import de.zeanon.storage.internal.base.interfaces.TripletMap;
 import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Advanced FileData, storing the Data in a TripletMap({@link TripletMap})
+ * Optimized FileData for ThunderFile, storing the Data in a ({@link TripletMap})
  *
  * @author Zeanon
  * @version 1.5.0
@@ -36,16 +36,22 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	/**
 	 * internal cache for the contents of the File
 	 */
-	@Getter(onMethod = @__({@Override}))
+	@Getter
 	@NotNull
 	private TripletMap<String, Object> dataMap;
 
 
+	@Contract(pure = true)
 	public ThunderFileData(final boolean fastMap) {
 		this.fastMap = fastMap;
 		this.dataMap = this.fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 	}
 
+	/**
+	 * Get a List consisting of TripletMap.TripletNode objects of the top most layer of the internal DataMap
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
 	@Override
 	@NotNull
 	@Contract("-> new")
@@ -53,6 +59,14 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		return this.dataMap.entryList();
 	}
 
+	/**
+	 * Get a List consisting of TripletMap.TripletNode objects whereas values being instances of TripletMap are also getting parsed to
+	 * their entryLists
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
 	@Override
 	@NotNull
 	@Contract("_ -> new")
@@ -67,6 +81,13 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		}
 	}
 
+	/**
+	 * Get a List consisting of TripletMap.TripletNode objects of only the given Block
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
 	@Override
 	@NotNull
 	@Contract("_ -> new")
@@ -81,6 +102,14 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		}
 	}
 
+	/**
+	 * Get a List consisting of TripletMap.TripletNode objects whereas values being instances of TripletMap are also getting parsed to
+	 * their entryLists
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
 	@Override
 	@NotNull
 	@Contract("_ -> new")
@@ -95,6 +124,13 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		}
 	}
 
+	/**
+	 * Get a List consisting of TripletMap.TripletNode objects of only the given Block
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
 	@Override
 	@NotNull
 	@Contract("_ -> new")
@@ -109,6 +145,12 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		}
 	}
 
+	/**
+	 * Get a List consisting of TripletMap.TripletNode objects whereas values being instances of TripletMap are also getting parsed to
+	 * their entryLists
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
 	@Override
 	@NotNull
 	@Contract("-> new")
@@ -116,6 +158,11 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		return this.internalEntryList(this.dataMap);
 	}
 
+	/**
+	 * Reload the internal cache
+	 *
+	 * @param map the values to be loaded
+	 */
 	@Override
 	public void loadData(final @Nullable TripletMap<String, Object> map) {
 		if (map != null) {
@@ -123,6 +170,12 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		}
 	}
 
+	/**
+	 * Map a value to a given key
+	 *
+	 * @param key   the key to be used
+	 * @param value the value to be assigned to the key
+	 */
 	@Override
 	public void insert(final @NotNull String key, @Nullable Object value) {
 		Objects.checkNull(key, "Key must not be null");
@@ -130,12 +183,25 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		this.initialInsert(value, parts);
 	}
 
+	/**
+	 * Map a value to a given key
+	 *
+	 * @param key   the key to be used
+	 * @param value the value to be assigned to the key
+	 */
 	@Override
 	public void insertUseArray(final @NotNull String[] key, final @Nullable Object value) {
 		Objects.checkNull(key, "Key must not be null");
 		this.initialInsert(value, key);
 	}
 
+	/**
+	 * Remove a given key
+	 *
+	 * @param key the key to be used
+	 *
+	 * @throws ObjectNullException if the given key does not exist
+	 */
 	@Override
 	public void remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -143,12 +209,26 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		this.initialRemove(parts);
 	}
 
+	/**
+	 * Remove a given key
+	 *
+	 * @param key the key to be used
+	 *
+	 * @throws ObjectNullException if the given key does not exist
+	 */
 	@Override
 	public void removeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.initialRemove(key);
 	}
 
+	/**
+	 * Checks whether the internal cache contains a given key
+	 *
+	 * @param key the key to be looked for
+	 *
+	 * @return true if the given key exists, false if not
+	 */
 	@Override
 	public boolean containsKey(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -156,12 +236,28 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		return this.internalContainsKey(this.dataMap, parts, 0);
 	}
 
+	/**
+	 * Checks whether the internal cache contains a given key
+	 *
+	 * @param key the key to be looked for
+	 *
+	 * @return true if the given key exists, false if not
+	 */
 	@Override
 	public boolean containsKeyUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		return this.internalContainsKey(this.dataMap, key, 0);
 	}
 
+	/**
+	 * Get the value mapped to a specific key
+	 *
+	 * @param key the key to look for
+	 *
+	 * @return the Value mapped to the given key
+	 *
+	 * @throws ObjectNullException if the given key does not exist
+	 */
 	@Override
 	@NotNull
 	public Object get(final @NotNull String key) {
@@ -170,6 +266,15 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		return this.internalGet(this.dataMap, parts);
 	}
 
+	/**
+	 * Get the value mapped to a specific key
+	 *
+	 * @param key the key to look for
+	 *
+	 * @return the Value mapped to the given key
+	 *
+	 * @throws ObjectNullException if the given key does not exist
+	 */
 	@Override
 	@NotNull
 	public Object getUseArray(final @NotNull String... key) {
@@ -177,11 +282,19 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		return this.internalGet(this.dataMap, key);
 	}
 
+	/**
+	 * @return the size of the top most layer of the internal DataMap
+	 */
 	@Override
 	public int blockSize() {
 		return this.dataMap.size();
 	}
 
+	/**
+	 * @param key the Key to the SubBlock the size should be computed of
+	 *
+	 * @return the size of the given Block of the internal DataMap
+	 */
 	@Override
 	public int blockSize(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -193,6 +306,11 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		}
 	}
 
+	/**
+	 * @param key the Key to the SubBlock the size should be computed of
+	 *
+	 * @return the size of the given Block of the internal DataMap
+	 */
 	@Override
 	public int blockSizeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -204,11 +322,19 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		}
 	}
 
+	/**
+	 * @return the amount of all Entries from the DataMap combined
+	 */
 	@Override
 	public int size() {
 		return this.internalSize(this.dataMap);
 	}
 
+	/**
+	 * @param key the Key to the SubBlock the size should be computed of
+	 *
+	 * @return the amount of all Entries from the given Block combined
+	 */
 	@Override
 	public int size(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -221,6 +347,11 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		}
 	}
 
+	/**
+	 * @param key the Key to the SubBlock the size should be computed of
+	 *
+	 * @return the amount of all Entries from the given Block combined
+	 */
 	@Override
 	public int sizeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -233,11 +364,20 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		}
 	}
 
+	/**
+	 * Removes all of the mappings from this map.
+	 * The map will be empty after this call returns.
+	 */
 	@Override
 	public void clear() {
 		this.dataMap.clear();
 	}
 
+	/**
+	 * Checks whether the internal DataMap is empty
+	 *
+	 * @return true if so
+	 */
 	@Override
 	public boolean isEmpty() {
 		return this.dataMap.isEmpty();
@@ -342,10 +482,10 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 
 	@NotNull
 	private Object internalGet(final @NotNull TripletMap map, final @NotNull String[] key) {
-		Object tempValue = map;
+		@NotNull Object tempValue = map;
 		for (String tempKey : key) {
 			if (tempValue instanceof TripletMap) {
-				tempValue = ((TripletMap) tempValue).get(tempKey);
+				tempValue = Objects.notNull(((TripletMap) tempValue).get(tempKey), "File does not contain '" + Arrays.toString(key) + "' -> could not find '" + tempKey + "'");
 			} else {
 				throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "' -> could not find '" + tempKey + "'");
 			}

@@ -1,7 +1,7 @@
 package de.zeanon.storage.internal.base.exceptions;
 
 /**
- * Indicates that a passed object has been null where it should not have been
+ * Indicates that a passed object has been null where it NotNull is required
  *
  * @author Zeanon
  * @version 1.0.0

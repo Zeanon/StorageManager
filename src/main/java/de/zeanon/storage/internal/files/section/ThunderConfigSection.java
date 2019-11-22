@@ -5,6 +5,7 @@ import de.zeanon.storage.internal.files.config.ThunderConfig;
 import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.util.List;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.1.0
  */
+@Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
@@ -34,6 +36,7 @@ public class ThunderConfigSection extends ThunderFileSection implements Config {
 		super(sectionKey, thunderConfig);
 		this.thunderConfig = thunderConfig;
 	}
+
 
 	@NotNull
 	@Override

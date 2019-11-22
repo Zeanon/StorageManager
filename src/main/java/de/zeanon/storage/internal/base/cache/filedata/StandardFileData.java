@@ -14,26 +14,27 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Default FileData, storing the Data in Maps
+ * Default FileData, storing the Data in Standard maps
  *
  * @author Zeanon
  * @version 2.5.0
  */
 @SuppressWarnings("unused")
 @EqualsAndHashCode
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PROTECTED)
 public class StandardFileData implements FileData<Map<String, Object>, Map.Entry<String, Object>>, Comparable<StandardFileData> {
 
 	/**
 	 * internal cache for the contents of the File
 	 */
-	@Getter(onMethod = @__({@Override}))
+	@Getter
 	@NotNull
 	private Map<String, Object> dataMap = new HashMap<>();
 
 
 	/**
-	 * Get a List consisting of TripletMap.Entry objects (whereas values being TripletMaps are also parsed to entryLists)
+	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
+	 * their entryLists
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
@@ -45,7 +46,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	}
 
 	/**
-	 * Get a List consisting of TripletMap.Entry objects (without internal parsing)
+	 * Get a List consisting of Map.Entry objects of the top most layer of the internal DataMap
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
@@ -57,7 +58,8 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	}
 
 	/**
-	 * Get a List consisting of TripletMap.Entry objects (whereas values being TripletMaps are also parsed to entryLists)
+	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
+	 * their entryLists
 	 *
 	 * @param key the Key to the SubBlock the entryList should be generated from
 	 *
@@ -78,7 +80,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	}
 
 	/**
-	 * Get a List consisting of TripletMap.Entry objects (without internal parsing)
+	 * Get a List consisting of Map.Entry objects of only the given Block
 	 *
 	 * @param key the Key to the SubBlock the entryList should be generated from
 	 *
@@ -98,6 +100,14 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
+	/**
+	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
+	 * their entryLists
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
 	@Override
 	@NotNull
 	@Contract("_ -> new")
@@ -112,6 +122,13 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
+	/**
+	 * Get a List consisting of Map.Entry objects of only the given Block
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
 	@Override
 	@NotNull
 	@Contract("_ -> new")
@@ -126,6 +143,11 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
+	/**
+	 * Reload the internal cache
+	 *
+	 * @param map the values to be loaded
+	 */
 	@Override
 	public void loadData(@Nullable Map<String, Object> map) {
 		if (map != null) {
@@ -133,6 +155,12 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
+	/**
+	 * Map a value to a given key
+	 *
+	 * @param key   the key to be used
+	 * @param value the value to be assigned to the key
+	 */
 	@Override
 	public void insert(final @NotNull String key, @Nullable Object value) {
 		Objects.checkNull(key, "Key must not be null");
@@ -140,12 +168,25 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		this.initialInsert(value, parts);
 	}
 
+	/**
+	 * Map a value to a given key
+	 *
+	 * @param key   the key to be used
+	 * @param value the value to be assigned to the key
+	 */
 	@Override
 	public void insertUseArray(final @NotNull String[] key, @Nullable Object value) {
 		Objects.checkNull(key, "Key must not be null");
 		this.initialInsert(value, key);
 	}
 
+	/**
+	 * Remove a given key
+	 *
+	 * @param key the key to be used
+	 *
+	 * @throws ObjectNullException if the given key does not exist
+	 */
 	@Override
 	public void remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -153,12 +194,26 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		this.initialRemove(parts);
 	}
 
+	/**
+	 * Remove a given key
+	 *
+	 * @param key the key to be used
+	 *
+	 * @throws ObjectNullException if the given key does not exist
+	 */
 	@Override
 	public void removeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.initialRemove(key);
 	}
 
+	/**
+	 * Checks whether the internal cache contains a given key
+	 *
+	 * @param key the key to be looked for
+	 *
+	 * @return true if the given key exists, false if not
+	 */
 	@Override
 	public boolean containsKey(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -166,12 +221,28 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		return this.internalContainsKey(this.dataMap, parts, 0);
 	}
 
+	/**
+	 * Checks whether the internal cache contains a given key
+	 *
+	 * @param key the key to be looked for
+	 *
+	 * @return true if the given key exists, false if not
+	 */
 	@Override
 	public boolean containsKeyUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		return this.internalContainsKey(this.dataMap, key, 0);
 	}
 
+	/**
+	 * Get the value mapped to a specific key
+	 *
+	 * @param key the key to look for
+	 *
+	 * @return the Value mapped to the given key
+	 *
+	 * @throws ObjectNullException if the given key does not exist
+	 */
 	@Override
 	@NotNull
 	public Object get(final @NotNull String key) {
@@ -180,6 +251,15 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		return this.internalGet(this.dataMap, parts);
 	}
 
+	/**
+	 * Get the value mapped to a specific key
+	 *
+	 * @param key the key to look for
+	 *
+	 * @return the Value mapped to the given key
+	 *
+	 * @throws ObjectNullException if the given key does not exist
+	 */
 	@Override
 	@NotNull
 	public Object getUseArray(final @NotNull String... key) {
@@ -187,11 +267,19 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		return this.internalGet(this.dataMap, key);
 	}
 
+	/**
+	 * @return the size of the top most layer of the internal DataMap
+	 */
 	@Override
 	public int blockSize() {
 		return this.dataMap.size();
 	}
 
+	/**
+	 * @param key the Key to the SubBlock the size should be computed of
+	 *
+	 * @return the size of the given Block of the internal DataMap
+	 */
 	@Override
 	public int blockSize(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -203,6 +291,11 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
+	/**
+	 * @param key the Key to the SubBlock the size should be computed of
+	 *
+	 * @return the size of the given Block of the internal DataMap
+	 */
 	@Override
 	public int blockSizeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -214,11 +307,19 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
+	/**
+	 * @return the amount of all Entries from the DataMap combined
+	 */
 	@Override
 	public int size() {
 		return this.internalSize(this.dataMap);
 	}
 
+	/**
+	 * @param key the Key to the SubBlock the size should be computed of
+	 *
+	 * @return the amount of all Entries from the given Block combined
+	 */
 	@Override
 	public int size(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -231,6 +332,11 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
+	/**
+	 * @param key the Key to the SubBlock the size should be computed of
+	 *
+	 * @return the amount of all Entries from the given Block combined
+	 */
 	@Override
 	public int sizeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
@@ -243,11 +349,20 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
+	/**
+	 * Removes all of the mappings from this map.
+	 * The map will be empty after this call returns.
+	 */
 	@Override
 	public void clear() {
 		this.dataMap.clear();
 	}
 
+	/**
+	 * Checks whether the internal DataMap is empty
+	 *
+	 * @return true if so
+	 */
 	@Override
 	public boolean isEmpty() {
 		return this.dataMap.isEmpty();
@@ -357,11 +472,15 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 
 	@NotNull
 	private Object internalGet(final @NotNull Map map, final @NotNull String[] key) {
-		Object tempValue = map;
+		@NotNull Object tempValue = map;
 		for (String tempKey : key) {
-			if (tempValue instanceof Map) {
-				tempValue = ((Map) tempValue).get(tempKey);
-			} else {
+			try {
+				if (tempValue instanceof Map) {
+					tempValue = Objects.notNull(((Map) tempValue).get(tempKey), "File does not contain '" + Arrays.toString(key) + "' -> could not find '" + tempKey + "'");
+				} else {
+					throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "' -> could not find '" + tempKey + "'");
+				}
+			} catch (NullPointerException e) {
 				throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "' -> could not find '" + tempKey + "'");
 			}
 		}

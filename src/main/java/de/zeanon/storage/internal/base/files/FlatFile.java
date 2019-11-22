@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 @EqualsAndHashCode
 @ToString(callSuper = true)
-@SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage, Comparable<FlatFile> {
 
 	@NotNull
@@ -177,7 +177,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(target, "Target  must not be null");
 		Objects.checkNull(replacement, "Replacement  must not be null");
 
-		@NotNull final Iterator<String> lines = Files.readAllLines(this.file.toPath()).iterator();
+		final @NotNull Iterator<String> lines = Files.readAllLines(this.file.toPath()).iterator();
 		@NotNull @Cleanup PrintWriter writer = new PrintWriter(this.file);
 		writer.print((lines.next()).replace(target, replacement));
 		lines.forEachRemaining(line -> {

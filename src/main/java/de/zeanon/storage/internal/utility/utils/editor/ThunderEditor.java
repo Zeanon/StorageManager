@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.utility.utils.editor;
 
+import de.zeanon.storage.internal.base.cache.base.TripletMap;
 import de.zeanon.storage.internal.base.cache.datamap.HashTripletMap;
 import de.zeanon.storage.internal.base.cache.datamap.LinkedTripletMap;
 import de.zeanon.storage.internal.base.cache.filedata.ThunderFileData;
@@ -7,7 +8,6 @@ import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.exceptions.ThunderException;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
-import de.zeanon.storage.internal.base.interfaces.TripletMap;
 import de.zeanon.storage.internal.base.settings.Comment;
 import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.io.File;
@@ -22,6 +22,7 @@ import javafx.util.Pair;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Synchronized;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 2.8.0
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PRIVATE)
 public class ThunderEditor {
 
 	/**
@@ -47,9 +48,9 @@ public class ThunderEditor {
 	 */
 	public static void writeData(final @NotNull File file, final @NotNull ThunderFileData fileData, final @NotNull CommentSetting commentSetting) {
 		if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
-			initialWriteWithComments(Objects.notNull(file, "File must not be null"), Objects.notNull(fileData, "Map must not be null"));
+			ThunderEditor.initialWriteWithComments(Objects.notNull(file, "File must not be null"), Objects.notNull(fileData, "Map must not be null"));
 		} else {
-			initialWriteWithOutComments(Objects.notNull(file, "File must not be null"), Objects.notNull(fileData, "Map must not be null"));
+			ThunderEditor.initialWriteWithOutComments(Objects.notNull(file, "File must not be null"), Objects.notNull(fileData, "Map must not be null"));
 		}
 	}
 
@@ -68,9 +69,9 @@ public class ThunderEditor {
 	@NotNull
 	public static TripletMap<String, Object> readData(final @NotNull File file, final @NotNull CommentSetting commentSetting, final boolean fastMap) throws ThunderException {
 		if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
-			return initialReadWithComments(Objects.notNull(file, "File must not be null"), fastMap);
+			return ThunderEditor.initialReadWithComments(Objects.notNull(file, "File must not be null"), fastMap);
 		} else {
-			return initialReadWithOutComments(Objects.notNull(file, "File must not be null"), fastMap);
+			return ThunderEditor.initialReadWithOutComments(Objects.notNull(file, "File must not be null"), fastMap);
 		}
 	}
 
@@ -80,13 +81,13 @@ public class ThunderEditor {
 	// <Write Data with Comments>
 	@Synchronized
 	private static void initialWriteWithComments(final @NotNull File file, final @NotNull ThunderFileData fileData) {
-		try (@NotNull final PrintWriter writer = new PrintWriter(file)) {
+		try (final @NotNull PrintWriter writer = new PrintWriter(file)) {
 			if (!fileData.isEmpty()) {
-				@NotNull final Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
-				topLayerWriteWithComments(writer, mapIterator.next());
+				final @NotNull Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
+				ThunderEditor.topLayerWriteWithComments(writer, mapIterator.next());
 				mapIterator.forEachRemaining(entry -> {
 					writer.println();
-					topLayerWriteWithComments(writer, entry);
+					ThunderEditor.topLayerWriteWithComments(writer, entry);
 				});
 			}
 			writer.flush();
@@ -95,17 +96,18 @@ public class ThunderEditor {
 		}
 	}
 
-	private static void topLayerWriteWithComments(final @NotNull PrintWriter writer, final @NotNull TripletMap.TripletNode<String, Object> entry) {
+	private static void topLayerWriteWithComments(final @NotNull PrintWriter writer,
+												  final @NotNull TripletMap.TripletNode<String, Object> entry) {
 		if (entry.getValue() == LineType.COMMENT || entry.getValue() == LineType.HEADER || entry.getValue() == LineType.FOOTER) {
 			writer.print((entry.getKey().startsWith("#") ? entry.getKey() : "#" + entry.getKey()));
 		} else if (entry.getValue() instanceof TripletMap) {
 			writer.print(entry.getKey() + " " + "{");
 			//noinspection unchecked
-			internalWriteWithComments((TripletMap<String, Object>) entry.getValue(), "", writer);
+			ThunderEditor.internalWriteWithComments((TripletMap<String, Object>) entry.getValue(), "", writer);
 		} else if (entry.getValue() instanceof List) {
 			writer.println(entry.getKey() + " = [");
 			//noinspection unchecked
-			writeList((List<String>) entry.getValue(), "  ", writer);
+			ThunderEditor.writeList((List<String>) entry.getValue(), "  ", writer);
 		} else if (entry.getValue() instanceof Pair) {
 			writer.print(entry.getKey() + " = [" + ((Pair) entry.getValue()).getKey() + " : " + ((Pair) entry.getValue()).getValue() + "]");
 		} else if (entry.getValue() != LineType.BLANK_LINE) {
@@ -113,19 +115,21 @@ public class ThunderEditor {
 		}
 	}
 
-	private static void internalWriteWithComments(final @NotNull TripletMap<String, Object> map, final String indentationString, final @NotNull PrintWriter writer) {
-		for (@NotNull final TripletMap.TripletNode<String, Object> entry : map.entryList()) {
+	private static void internalWriteWithComments(final @NotNull TripletMap<String, Object> map,
+												  final @NotNull String indentationString,
+												  final @NotNull PrintWriter writer) {
+		for (final @NotNull TripletMap.TripletNode<String, Object> entry : map.entryList()) {
 			writer.println();
 			if (entry.getValue() == LineType.COMMENT || entry.getValue() == LineType.HEADER || entry.getValue() == LineType.FOOTER) {
 				writer.print(indentationString + "  " + (entry.getKey().startsWith("#") ? entry.getKey() : "#" + entry.getKey()));
 			} else if (entry.getValue() instanceof TripletMap) {
 				writer.print(indentationString + "  " + entry.getKey() + " " + "{");
 				//noinspection unchecked
-				internalWriteWithComments((TripletMap<String, Object>) entry.getValue(), indentationString + "  ", writer);
+				ThunderEditor.internalWriteWithComments((TripletMap<String, Object>) entry.getValue(), indentationString + "  ", writer);
 			} else if (entry.getValue() instanceof List) {
 				writer.println(indentationString + "  " + entry.getKey() + " = [");
 				//noinspection unchecked
-				writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
+				ThunderEditor.writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
 			} else if (entry.getValue() instanceof Pair) {
 				writer.print(indentationString + "  " + entry.getKey() + " = [" + ((Pair) entry.getValue()).getKey() + " : " + ((Pair) entry.getValue()).getValue() + "]");
 			} else if (entry.getValue() != LineType.BLANK_LINE) {
@@ -139,19 +143,20 @@ public class ThunderEditor {
 
 	// <Write Data without Comments>
 	@Synchronized
-	private static void initialWriteWithOutComments(final @NotNull File file, final @NotNull ThunderFileData fileData) {
-		try (@NotNull final PrintWriter writer = new PrintWriter(file)) {
+	private static void initialWriteWithOutComments(final @NotNull File file,
+													final @NotNull ThunderFileData fileData) {
+		try (final @NotNull PrintWriter writer = new PrintWriter(file)) {
 			if (!fileData.isEmpty()) {
-				@NotNull Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
-				TripletMap.TripletNode<String, Object> initialEntry = mapIterator.next();
+				final @NotNull Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
+				@NotNull TripletMap.TripletNode<String, Object> initialEntry = mapIterator.next();
 				while (initialEntry.getValue() == LineType.COMMENT || initialEntry.getValue() == LineType.HEADER || initialEntry.getValue() == LineType.FOOTER || initialEntry.getValue() == LineType.BLANK_LINE) {
 					initialEntry = mapIterator.next();
 				}
-				topLayerWriteWithOutComments(writer, initialEntry);
+				ThunderEditor.topLayerWriteWithOutComments(writer, initialEntry);
 				mapIterator.forEachRemaining(entry -> {
 					if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.HEADER && entry.getValue() != LineType.FOOTER && entry.getValue() != LineType.BLANK_LINE) {
 						writer.println();
-						topLayerWriteWithOutComments(writer, entry);
+						ThunderEditor.topLayerWriteWithOutComments(writer, entry);
 					}
 				});
 			}
@@ -161,15 +166,16 @@ public class ThunderEditor {
 		}
 	}
 
-	private static void topLayerWriteWithOutComments(final @NotNull PrintWriter writer, final @NotNull TripletMap.TripletNode<String, Object> entry) {
+	private static void topLayerWriteWithOutComments(final @NotNull PrintWriter writer,
+													 final @NotNull TripletMap.TripletNode<String, Object> entry) {
 		if (entry.getValue() instanceof TripletMap) {
 			writer.print(entry.getKey() + " " + "{");
 			//noinspection unchecked
-			internalWriteWithoutComments((TripletMap<String, Object>) entry.getValue(), "", writer);
+			ThunderEditor.internalWriteWithoutComments((TripletMap<String, Object>) entry.getValue(), "", writer);
 		} else if (entry.getValue() instanceof List) {
 			writer.println(entry.getKey() + " = [");
 			//noinspection unchecked
-			writeList((List<String>) entry.getValue(), "  ", writer);
+			ThunderEditor.writeList((List<String>) entry.getValue(), "  ", writer);
 		} else if (entry.getValue() instanceof Pair) {
 			writer.print(entry.getKey() + " = [" + ((Pair) entry.getValue()).getKey() + " : " + ((Pair) entry.getValue()).getValue() + "]");
 		} else {
@@ -177,18 +183,20 @@ public class ThunderEditor {
 		}
 	}
 
-	private static void internalWriteWithoutComments(final @NotNull TripletMap<String, Object> map, final String indentationString, final @NotNull PrintWriter writer) {
-		for (@NotNull final TripletMap.TripletNode<String, Object> entry : map.entryList()) {
+	private static void internalWriteWithoutComments(final @NotNull TripletMap<String, Object> map,
+													 final @NotNull String indentationString,
+													 final @NotNull PrintWriter writer) {
+		for (final @NotNull TripletMap.TripletNode<String, Object> entry : map.entryList()) {
 			if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.HEADER && entry.getValue() != LineType.FOOTER && entry.getValue() != LineType.BLANK_LINE) {
 				writer.println();
 				if (entry.getValue() instanceof TripletMap) {
 					writer.print(indentationString + "  " + entry.getKey() + " " + "{");
 					//noinspection unchecked
-					internalWriteWithoutComments((TripletMap<String, Object>) entry.getValue(), indentationString + "  ", writer);
+					ThunderEditor.internalWriteWithoutComments((TripletMap<String, Object>) entry.getValue(), indentationString + "  ", writer);
 				} else if (entry.getValue() instanceof List) {
 					writer.println(indentationString + "  " + entry.getKey() + " = [");
 					//noinspection unchecked
-					writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
+					ThunderEditor.writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
 				} else if (entry.getValue() instanceof Pair) {
 					writer.print(indentationString + "  " + entry.getKey() + " = [" + ((Pair) entry.getValue()).getKey() + " : " + ((Pair) entry.getValue()).getValue() + "]");
 				} else {
@@ -201,8 +209,10 @@ public class ThunderEditor {
 	}
 	// </Write Data without Comments>
 
-	private static <E> void writeList(final @NotNull List<E> list, final @NotNull String indentationString, final @NotNull PrintWriter writer) {
-		for (final E line : list) {
+	private static <E> void writeList(final @NotNull List<E> list,
+									  final @NotNull String indentationString,
+									  final @NotNull PrintWriter writer) {
+		for (final @NotNull E line : list) {
 			writer.println(indentationString + "  - " + line);
 		}
 		writer.print(indentationString + "]");
@@ -213,14 +223,16 @@ public class ThunderEditor {
 	// <Read Data>
 	// <Read Data with Comments>
 	@NotNull
-	private static TripletMap<String, Object> initialReadWithComments(final @NotNull File file, final boolean fastMap) throws ThunderException {
+	private static TripletMap<String, Object> initialReadWithComments(final @NotNull File file,
+																	  final boolean fastMap) throws ThunderException {
 		try {
-			List<String> lines = Files.readAllLines(file.toPath());
-			@NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
+			final @NotNull List<String> lines = Files.readAllLines(file.toPath());
+			final @NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 
+			@NotNull String tempLine;
 			@Nullable String tempKey = null;
 			while (!lines.isEmpty()) {
-				@NotNull String tempLine = lines.get(0).trim();
+				tempLine = lines.get(0).trim();
 				lines.remove(0);
 
 				if (tempLine.contains("}")) {
@@ -231,13 +243,13 @@ public class ThunderEditor {
 					tempMap.add(tempLine, LineType.COMMENT);
 				} else if (tempLine.endsWith("{")) {
 					if (!tempLine.equals("{")) {
-						tempKey = tempLine.replace("{", "").trim();
+						tempKey = tempLine.substring(0, tempLine.length() - 1).trim();
 					} else if (tempKey == null) {
 						throw new ThunderException("Error at '" + file.getAbsolutePath() + "' -> '" + tempLine + "' -> Key must not be null");
 					}
-					tempMap.add(tempKey, internalReadWithComments(file.getAbsolutePath(), lines, fastMap));
+					tempMap.add(tempKey, ThunderEditor.internalReadWithComments(file.getAbsolutePath(), lines, fastMap));
 				} else {
-					tempKey = readKey(file.getAbsolutePath(), lines, tempMap, tempKey, tempLine);
+					tempKey = ThunderEditor.readKey(file.getAbsolutePath(), lines, tempMap, tempLine, tempKey);
 				}
 			}
 			return tempMap;
@@ -249,12 +261,15 @@ public class ThunderEditor {
 	}
 
 	@NotNull
-	private static TripletMap<String, Object> internalReadWithComments(final @NotNull String filePath, final @NotNull List<String> lines, final boolean fastMap) throws ThunderException {
-		@NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
+	private static TripletMap<String, Object> internalReadWithComments(final @NotNull String filePath,
+																	   final @NotNull List<String> lines,
+																	   final boolean fastMap) throws ThunderException {
+		final @NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 
+		@NotNull String tempLine;
 		@Nullable String tempKey = null;
 		while (!lines.isEmpty()) {
-			@NotNull String tempLine = lines.get(0).trim();
+			tempLine = lines.get(0).trim();
 			lines.remove(0);
 
 			if (tempLine.equals("}")) {
@@ -268,13 +283,13 @@ public class ThunderEditor {
 				tempMap.add(tempLine, LineType.COMMENT);
 			} else if (tempLine.endsWith("{")) {
 				if (!tempLine.equals("{")) {
-					tempKey = tempLine.replace("{", "").trim();
+					tempKey = tempLine.substring(0, tempLine.length() - 1).trim();
 				} else if (tempKey == null) {
 					throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 				}
-				tempMap.add(tempKey, internalReadWithComments(filePath, lines, fastMap));
+				tempMap.add(tempKey, ThunderEditor.internalReadWithComments(filePath, lines, fastMap));
 			} else {
-				tempKey = readKey(filePath, lines, tempMap, tempKey, tempLine);
+				tempKey = ThunderEditor.readKey(filePath, lines, tempMap, tempLine, tempKey);
 			}
 		}
 		throw new ThunderException("Error at '" + filePath + "' -> Block does not close");
@@ -283,14 +298,16 @@ public class ThunderEditor {
 
 	// <Read Data without Comments>
 	@NotNull
-	private static TripletMap<String, Object> initialReadWithOutComments(final @NotNull File file, final boolean fastMap) throws ThunderException {
+	private static TripletMap<String, Object> initialReadWithOutComments(final @NotNull File file,
+																		 final boolean fastMap) throws ThunderException {
 		try {
-			List<String> lines = Files.readAllLines(file.toPath());
-			@NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
+			final @NotNull List<String> lines = Files.readAllLines(file.toPath());
+			final @NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 
+			@NotNull String tempLine;
 			@Nullable String tempKey = null;
 			while (!lines.isEmpty()) {
-				@NotNull String tempLine = lines.get(0).trim();
+				tempLine = lines.get(0).trim();
 				lines.remove(0);
 
 				if (!tempLine.isEmpty() && !tempLine.startsWith("#")) {
@@ -298,13 +315,13 @@ public class ThunderEditor {
 						throw new ThunderException("Error at '" + file.getAbsolutePath() + "' -> Block closed without being opened");
 					} else if (tempLine.endsWith("{")) {
 						if (!tempLine.equals("{")) {
-							tempKey = tempLine.replace("{", "").trim();
+							tempKey = tempLine.substring(0, tempLine.length() - 1).trim();
 						} else if (tempKey == null) {
 							throw new ThunderException("Error at '" + file.getAbsolutePath() + "' - > '" + tempLine + "' -> Key must not be null");
 						}
-						tempMap.add(tempKey, internalReadWithOutComments(file.getAbsolutePath(), lines, fastMap));
+						tempMap.add(tempKey, ThunderEditor.internalReadWithOutComments(file.getAbsolutePath(), lines, fastMap));
 					} else {
-						tempKey = readKey(file.getAbsolutePath(), lines, tempMap, tempKey, tempLine);
+						tempKey = ThunderEditor.readKey(file.getAbsolutePath(), lines, tempMap, tempLine, tempKey);
 					}
 				}
 			}
@@ -317,12 +334,15 @@ public class ThunderEditor {
 	}
 
 	@NotNull
-	private static TripletMap<String, Object> internalReadWithOutComments(final @NotNull String filePath, final @NotNull List<String> lines, final boolean fastMap) throws ThunderException {
-		@NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
+	private static TripletMap<String, Object> internalReadWithOutComments(final @NotNull String filePath,
+																		  final @NotNull List<String> lines,
+																		  final boolean fastMap) throws ThunderException {
+		final @NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 
+		@NotNull String tempLine;
 		@Nullable String tempKey = null;
 		while (!lines.isEmpty()) {
-			@NotNull String tempLine = lines.get(0).trim();
+			tempLine = lines.get(0).trim();
 			lines.remove(0);
 
 			if (!tempLine.isEmpty() && !tempLine.startsWith("#")) {
@@ -333,13 +353,13 @@ public class ThunderEditor {
 											   "Illegal Character placement: '}' only allowed as a single Character in line to close blocks");
 				} else if (tempLine.endsWith("{")) {
 					if (!tempLine.equals("{")) {
-						tempKey = tempLine.replace("{", "").trim();
+						tempKey = tempLine.substring(0, tempLine.length() - 1).trim();
 					} else if (tempKey == null) {
 						throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 					}
-					tempMap.add(tempKey, internalReadWithOutComments(filePath, lines, fastMap));
+					tempMap.add(tempKey, ThunderEditor.internalReadWithOutComments(filePath, lines, fastMap));
 				} else {
-					tempKey = readKey(filePath, lines, tempMap, tempKey, tempLine);
+					tempKey = ThunderEditor.readKey(filePath, lines, tempMap, tempLine, tempKey);
 				}
 			}
 		}
@@ -351,31 +371,31 @@ public class ThunderEditor {
 	private static String readKey(final @NotNull String filePath,
 								  final @NotNull List<String> lines,
 								  final @NotNull TripletMap<String, Object> tempMap,
-								  @Nullable String tempKey,
-								  final @NotNull String tempLine) throws ThunderException {
+								  final @NotNull String tempLine,
+								  @Nullable String tempKey) throws ThunderException {
 		if (tempLine.contains("=")) {
-			@NotNull String[] line = tempLine.split("=", 2);
+			final @NotNull String[] line = tempLine.split("=", 2);
 			line[0] = line[0].trim();
 			line[1] = line[1].trim();
 			if (line[1].startsWith("[")) {
 				if (line[1].endsWith("]")) {
 					if (line[1].startsWith("[") && line[1].endsWith("]") && line[1].contains(":")) {
-						@NotNull String[] pair = line[1].substring(2, line[1].length() - 2).split(":");
+						final @NotNull String[] pair = line[1].substring(1, line[1].length() - 1).split(":");
 						if (pair.length > 2) {
 							throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' ->  Illegal Object(Pairs may only have two values");
 						} else {
 							tempMap.add(line[0], new Pair<>(pair[0].trim(), pair[1].trim()));
 						}
 					} else {
-						@NotNull String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
-						@NotNull List<String> list = new ArrayList<>();
-						for (@NotNull String value : listArray) {
+						final @NotNull String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
+						final @NotNull List<String> list = new ArrayList<>();
+						for (final @NotNull String value : listArray) {
 							list.add(value.trim());
 						}
 						tempMap.add(line[0], list);
 					}
 				} else {
-					tempMap.add(line[0], readList(filePath, lines));
+					tempMap.add(line[0], ThunderEditor.readList(filePath, lines));
 				}
 			} else {
 				if (line[1].equalsIgnoreCase("true") || line[1].equalsIgnoreCase("false")) {
@@ -395,10 +415,12 @@ public class ThunderEditor {
 	}
 
 	@NotNull
-	private static List<String> readList(final String filePath, final @NotNull List<String> lines) throws ThunderException {
-		@NotNull List<String> tempList = new ArrayList<>();
+	private static List<String> readList(final @NotNull String filePath,
+										 final @NotNull List<String> lines) throws ThunderException {
+		@NotNull String tempLine;
+		final @NotNull List<String> tempList = new ArrayList<>();
 		while (!lines.isEmpty()) {
-			@NotNull String tempLine = lines.get(0).trim();
+			tempLine = lines.get(0).trim();
 			lines.remove(0);
 			if (tempLine.startsWith("-")) {
 				tempList.add(tempLine.substring(1).trim().replace("\"", ""));

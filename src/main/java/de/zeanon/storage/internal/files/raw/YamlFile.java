@@ -86,8 +86,8 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 				this.write(this.getFileData().getDataMap());
 			} else {
 				final List<String> unEdited = YamlEditor.read(this.getFile());
-				@NotNull final List<String> header = YamlEditor.readHeader(this.getFile());
-				@NotNull final List<String> footer = YamlEditor.readFooter(this.getFile());
+				final @NotNull List<String> header = YamlEditor.readHeader(this.getFile());
+				final @NotNull List<String> footer = YamlEditor.readFooter(this.getFile());
 				this.write(this.getFileData().getDataMap());
 				header.addAll(YamlEditor.read(this.getFile()));
 				if (!header.containsAll(footer)) {

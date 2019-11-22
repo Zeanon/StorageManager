@@ -73,7 +73,7 @@ public class YamlConfig extends YamlFile implements Config {
 	public void setHeader(final @Nullable List<String> header) {
 		if (header != null) {
 			@NotNull List<String> tmp = new ArrayList<>();
-			for (@NotNull final String line : header) {
+			for (final @NotNull String line : header) {
 				if (!line.startsWith("#")) {
 					tmp.add("#" + line);
 				} else {
@@ -93,7 +93,7 @@ public class YamlConfig extends YamlFile implements Config {
 			} else {
 				try {
 					final List<String> lines = YamlEditor.read(this.getFile());
-					@NotNull final List<String> oldHeader = YamlEditor.readHeader(this.getFile());
+					final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.getFile());
 
 					List<String> newLines = this.header;
 					lines.removeAll(oldHeader);
@@ -111,7 +111,7 @@ public class YamlConfig extends YamlFile implements Config {
 
 			try {
 				final List<String> lines = YamlEditor.read(this.getFile());
-				@NotNull final List<String> oldHeader = YamlEditor.readHeader(this.getFile());
+				final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.getFile());
 
 				lines.removeAll(oldHeader);
 
@@ -147,7 +147,7 @@ public class YamlConfig extends YamlFile implements Config {
 	public void setFooter(@Nullable List<String> footer) {
 		if (footer != null) {
 			@NotNull List<String> tmp = new ArrayList<>();
-			for (@NotNull final String line : footer) {
+			for (final @NotNull String line : footer) {
 				if (!line.startsWith("#")) {
 					tmp.add("#" + line);
 				} else {
@@ -167,7 +167,7 @@ public class YamlConfig extends YamlFile implements Config {
 			} else {
 				try {
 					final List<String> lines = YamlEditor.read(this.getFile());
-					@NotNull final List<String> oldFooter = YamlEditor.readFooter(this.getFile());
+					final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.getFile());
 
 					lines.removeAll(oldFooter);
 					lines.addAll(this.footer);
@@ -184,7 +184,7 @@ public class YamlConfig extends YamlFile implements Config {
 
 			try {
 				final List<String> lines = YamlEditor.read(this.getFile());
-				@NotNull final List<String> oldFooter = YamlEditor.readFooter(this.getFile());
+				final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.getFile());
 
 				lines.removeAll(oldFooter);
 
