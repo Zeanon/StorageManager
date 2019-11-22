@@ -12,10 +12,7 @@ import de.zeanon.storage.internal.utility.utils.SMFileUtils;
 import de.zeanon.storage.internal.utility.utils.editor.ThunderEditor;
 import java.io.File;
 import java.io.InputStream;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -78,7 +75,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 	}
 
 	@Override
-	public synchronized void save() {
+	@Synchronized
+	public void save() {
 		try {
 			ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
 		} catch (RuntimeIOException e) {
@@ -101,7 +99,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 
 	@NotNull
 	@Override
-	public ThunderFileSection getSectionUseArray(final @NotNull String[] sectionKey) {
+	public ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 

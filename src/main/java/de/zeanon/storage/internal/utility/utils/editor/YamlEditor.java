@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Cleanup;
 import lombok.NoArgsConstructor;
+import lombok.Synchronized;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -60,6 +61,7 @@ public class YamlEditor {
 		return getLinesWithoutFooterAndHeaderFromLines(read(file));
 	}
 
+	@Synchronized
 	public static void write(final @NotNull File file, final @NotNull List<String> lines) throws IOException {
 		@NotNull @Cleanup final PrintWriter writer = new PrintWriter(new FileWriter(file));
 		@NotNull final Iterator<String> linesIterator = lines.iterator();

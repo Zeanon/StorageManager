@@ -42,7 +42,7 @@ public class YamlFileSection extends CommentEnabledSection<YamlFile> {
 
 	@NotNull
 	@Override
-	public YamlFileSection getSectionUseArray(final @NotNull String[] sectionKey) {
+	public YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new YamlFileSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.yamlFile);
 	}
 }

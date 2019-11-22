@@ -274,7 +274,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 			return map;
 		} else {
 			//noinspection unchecked
-			return value instanceof Map && !(value instanceof TripletMap) ? (this.fastMap ? new LinkedTripletMap<>((Map) value) : new HashTripletMap<>((Map) value)) : value;
+			return value instanceof Map && !(value instanceof TripletMap) ? this.parseMap((Map) value, this.fastMap) : value;
 		}
 	}
 
@@ -364,6 +364,22 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 			}
 		}
 		return size;
+	}
+
+	@NotNull
+	@Contract("_, _ -> new")
+	private TripletMap<String, Object> parseMap(final @NotNull Map<String, Object> map, final boolean fastMap) {
+		Objects.checkNull(map, "Map must not be null");
+		final TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			if (entry.getValue() instanceof Map && !(entry.getValue() instanceof TripletMap)) {
+				//noinspection unchecked
+				tempMap.add(entry.getKey(), this.parseMap((Map) entry.getValue(), fastMap));
+			} else {
+				tempMap.add(entry.getKey(), entry.getValue());
+			}
+		}
+		return tempMap;
 	}
 	// </Internal>
 

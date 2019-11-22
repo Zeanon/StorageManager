@@ -12,6 +12,8 @@ import java.util.Collection;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.Synchronized;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +34,8 @@ public class SMFileUtils {
 	 * @param file the File to be created
 	 */
 	@SuppressWarnings("UnusedReturnValue")
-	public static synchronized boolean createFile(final @NotNull File file) {
+	@Synchronized
+	public static boolean createFile(final @NotNull File file) {
 		try {
 			return createFileInternally(Objects.notNull(file, "File must not be null"), false);
 		} catch (IOException e) {
@@ -46,7 +49,8 @@ public class SMFileUtils {
 	 *
 	 * @param file the File to be used
 	 */
-	public static synchronized boolean createParents(final @NotNull File file) {
+	@Synchronized
+	public static boolean createParents(final @NotNull File file) {
 		try {
 			if (Objects.notNull(file, "File must not be null").getParentFile() != null) {
 				return createFileInternally(file.getParentFile(), true);
@@ -222,6 +226,7 @@ public class SMFileUtils {
 	 * @return BufferedInputstream containing the contents of the given File
 	 */
 	@NotNull
+	@Contract("_ -> new")
 	public static BufferedInputStream createNewInputStream(final @NotNull File file) {
 		Objects.checkNull(file, "File must not be null");
 		try {
@@ -239,6 +244,7 @@ public class SMFileUtils {
 	 * @return BufferedInputStream containing the contents of the resource file
 	 */
 	@NotNull
+	@Contract("_ -> new")
 	public static BufferedInputStream createNewInputStream(final @NotNull String resource) {
 		Objects.checkNull(resource, "Resource must not be null");
 		try {
@@ -256,6 +262,7 @@ public class SMFileUtils {
 	 * @return null if {@code inputStream} is null or a BufferedInputStream from the given InputStream
 	 */
 	@Nullable
+	@Contract(value = "null -> null", pure = true)
 	public static BufferedInputStream createNewInputStream(final @Nullable InputStream inputStream) {
 		if (inputStream == null) {
 			return null;
@@ -284,7 +291,8 @@ public class SMFileUtils {
 	 * @param file        the File to be written to
 	 * @param inputStream the InputStream which shall be written
 	 */
-	public static synchronized void writeToFile(final @NotNull File file, final @Nullable BufferedInputStream inputStream) {
+	@Synchronized
+	public static void writeToFile(final @NotNull File file, final @Nullable BufferedInputStream inputStream) {
 		SMFileUtils.createFile(Objects.notNull(file, "File must not be null"));
 		if (inputStream == null) {
 			try (@NotNull final BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
@@ -407,6 +415,7 @@ public class SMFileUtils {
 			return filePath.substring(0, dotInd).toLowerCase();
 		}
 	}
+
 
 	private static boolean createFileInternally(@NotNull File file, final boolean directory) throws IOException {
 		if (file.getParentFile() != null && !file.getParentFile().exists()) {

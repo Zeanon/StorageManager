@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.Cleanup;
 import lombok.EqualsAndHashCode;
+import lombok.Synchronized;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -78,7 +79,8 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 	}
 
 	@Override
-	public synchronized void save() {
+	@Synchronized
+	public void save() {
 		try {
 			if (this.getCommentSetting() != Comment.PRESERVE) {
 				this.write(this.getFileData().getDataMap());
@@ -114,7 +116,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 
 	@NotNull
 	@Override
-	public YamlFileSection getSectionUseArray(final @NotNull String[] sectionKey) {
+	public YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 

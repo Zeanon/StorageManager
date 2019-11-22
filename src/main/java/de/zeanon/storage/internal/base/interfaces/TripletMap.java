@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public interface TripletMap<K, V> extends Map<K, V> {
 
+
 	void add(final @NotNull K key, final @NotNull V value);
 
 	void addAll(final @NotNull List<TripletNode<K, V>> nodes);

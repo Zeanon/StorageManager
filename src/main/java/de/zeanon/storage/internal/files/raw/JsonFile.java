@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.Cleanup;
 import lombok.EqualsAndHashCode;
+import lombok.Synchronized;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -75,7 +76,8 @@ public class JsonFile extends FlatFile<StandardFileData> {
 	}
 
 	@Override
-	public synchronized void save() {
+	@Synchronized
+	public void save() {
 		try {
 			this.write(new JSONObject(this.getFileData().getDataMap()));
 		} catch (IOException e) {
@@ -125,7 +127,7 @@ public class JsonFile extends FlatFile<StandardFileData> {
 
 	@NotNull
 	@Override
-	public JsonFileSection getSectionUseArray(@NotNull String[] sectionKey) {
+	public JsonFileSection getSectionUseArray(@NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 

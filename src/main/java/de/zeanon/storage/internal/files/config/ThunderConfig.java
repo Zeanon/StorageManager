@@ -232,7 +232,6 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-
 	@NotNull
 	@Override
 	public List<String> getComments() {
@@ -323,7 +322,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 
 	@NotNull
 	@Override
-	public ThunderConfigSection getSectionUseArray(final @NotNull String[] sectionKey) {
+	public ThunderConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 

@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.Synchronized;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -54,7 +55,7 @@ public class ThunderUtils {
 	 * @param fileData the FileDataBase to be used
 	 * @param header   the Header to be set
 	 */
-	public static synchronized void setHeader(final @NotNull ThunderFileData fileData, final @Nullable String[] header, final boolean fastMap) {
+	public static void setHeader(final @NotNull ThunderFileData fileData, final @Nullable String[] header, final boolean fastMap) {
 		@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList();
 		@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 		internalSetHeader(header, entryList, returnMap);
@@ -70,7 +71,7 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static synchronized void setHeader(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable String[] header, final boolean fastMap) {
+	public static void setHeader(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable String[] header, final boolean fastMap) {
 		if (fileData.get(key) instanceof TripletMap) {
 			@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList(key);
 			@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
@@ -81,7 +82,7 @@ public class ThunderUtils {
 		}
 	}
 
-	public static synchronized void setHeaderUseArray(final @NotNull ThunderFileData fileData, final @NotNull String[] key, final @Nullable String[] header, final boolean fastMap) {
+	public static void setHeaderUseArray(final @NotNull ThunderFileData fileData, final @NotNull String[] key, final @Nullable String[] header, final boolean fastMap) {
 		if (fileData.getUseArray(key) instanceof TripletMap) {
 			@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryListUseArray(key);
 			@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
@@ -112,7 +113,7 @@ public class ThunderUtils {
 	 * @param fileData the FileDataBase to be used
 	 * @param footer   the Footer to be set
 	 */
-	public static synchronized void setFooter(final @NotNull ThunderFileData fileData, final @Nullable String[] footer, final boolean fastMap) {
+	public static void setFooter(final @NotNull ThunderFileData fileData, final @Nullable String[] footer, final boolean fastMap) {
 		@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList();
 		@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 		internalSetFooter(footer, entryList, returnMap);
@@ -128,7 +129,7 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static synchronized void setFooter(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable String[] footer, final boolean fastMap) {
+	public static void setFooter(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable String[] footer, final boolean fastMap) {
 		if (fileData.get(key) instanceof TripletMap) {
 			@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList(key);
 			@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
@@ -139,7 +140,7 @@ public class ThunderUtils {
 		}
 	}
 
-	public static synchronized void setFooterUseArray(final @NotNull ThunderFileData fileData, final @NotNull String[] key, final @Nullable String[] footer, final boolean fastMap) {
+	public static void setFooterUseArray(final @NotNull ThunderFileData fileData, final @NotNull String[] key, final @Nullable String[] footer, final boolean fastMap) {
 		if (fileData.getUseArray(key) instanceof TripletMap) {
 			@NotNull final List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryListUseArray(key);
 			@NotNull final TripletMap<String, Object> returnMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
@@ -264,6 +265,7 @@ public class ThunderUtils {
 		return returnList;
 	}
 
+	@Synchronized
 	private static void internalSetHeader(@Nullable String[] header, @NotNull List<TripletMap.TripletNode<String, Object>> entryList, @NotNull TripletMap<String, Object> returnMap) {
 		for (@NotNull final TripletMap.TripletNode<String, Object> entry : entryList) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
@@ -282,6 +284,7 @@ public class ThunderUtils {
 		returnMap.addAll(entryList);
 	}
 
+	@Synchronized
 	private static void internalSetFooter(@Nullable String[] footer, @NotNull List<TripletMap.TripletNode<String, Object>> entryList, @NotNull TripletMap<String, Object> returnMap) {
 		Collections.reverse(entryList);
 		for (@NotNull final TripletMap.TripletNode<String, Object> entry : entryList) {

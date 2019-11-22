@@ -20,15 +20,12 @@ import org.jetbrains.annotations.Nullable;
  */
 @NoArgsConstructor
 @AllArgsConstructor
+@SuppressWarnings("unused")
 public class HashTripletMap<K, V> implements TripletMap<K, V> {
 
 	@NotNull
 	private ArrayList<TripletNode<K, V>> localList = new ArrayList<>();
 
-
-	public HashTripletMap(final @NotNull Map<K, V> map) {
-		this.addAll(map);
-	}
 
 	@Override
 	public int size() {

@@ -106,7 +106,7 @@ public class ThunderConfigSection extends ThunderFileSection implements Config {
 
 	@NotNull
 	@Override
-	public ThunderConfigSection getSectionUseArray(final @NotNull String[] sectionKey) {
+	public ThunderConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new ThunderConfigSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.thunderConfig);
 	}
 }

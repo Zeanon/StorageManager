@@ -534,5 +534,5 @@ public interface DataStorage {
 
 	@NotNull FlatSection getSection(final @NotNull String sectionKey);
 
-	@NotNull FlatSection getSectionUseArray(final @NotNull String[] sectionKey);
+	@NotNull FlatSection getSectionUseArray(final @NotNull String... sectionKey);
 }

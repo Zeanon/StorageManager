@@ -21,6 +21,7 @@ import java.util.List;
 import javafx.util.Pair;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.Synchronized;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,6 +78,7 @@ public class ThunderEditor {
 	// <Internal>
 	// <Write Data>
 	// <Write Data with Comments>
+	@Synchronized
 	private static void initialWriteWithComments(final @NotNull File file, final @NotNull ThunderFileData fileData) {
 		try (@NotNull final PrintWriter writer = new PrintWriter(file)) {
 			if (!fileData.isEmpty()) {
@@ -136,6 +138,7 @@ public class ThunderEditor {
 	// </Write Data with Comments>
 
 	// <Write Data without Comments>
+	@Synchronized
 	private static void initialWriteWithOutComments(final @NotNull File file, final @NotNull ThunderFileData fileData) {
 		try (@NotNull final PrintWriter writer = new PrintWriter(file)) {
 			if (!fileData.isEmpty()) {

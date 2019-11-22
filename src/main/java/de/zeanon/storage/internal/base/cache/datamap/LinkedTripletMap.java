@@ -20,14 +20,12 @@ import org.jetbrains.annotations.Nullable;
  */
 @NoArgsConstructor
 @AllArgsConstructor
+@SuppressWarnings("unused")
 public class LinkedTripletMap<K, V> implements TripletMap<K, V> {
 
 	@NotNull
 	private LinkedList<TripletNode<K, V>> localList = new LinkedList<>();
 
-	public LinkedTripletMap(final @NotNull Map<K, V> map) {
-		this.addAll(map);
-	}
 
 	@Override
 	public int size() {

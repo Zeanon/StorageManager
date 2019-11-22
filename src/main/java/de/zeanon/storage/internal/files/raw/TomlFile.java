@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import lombok.EqualsAndHashCode;
+import lombok.Synchronized;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -68,7 +69,8 @@ public class TomlFile extends FlatFile<StandardFileData> {
 	}
 
 	@Override
-	public synchronized void save() {
+	@Synchronized
+	public void save() {
 		try {
 			com.electronwill.toml.Toml.write(this.getFileData().getDataMap(), this.getFile());
 		} catch (IOException e) {
@@ -91,7 +93,7 @@ public class TomlFile extends FlatFile<StandardFileData> {
 
 	@NotNull
 	@Override
-	public TomlFileSection getSectionUseArray(final @NotNull String[] sectionKey) {
+	public TomlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
