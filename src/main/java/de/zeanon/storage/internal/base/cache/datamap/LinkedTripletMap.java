@@ -41,7 +41,7 @@ public class LinkedTripletMap<K, V> implements TripletMap<K, V> {
 	@Override
 	@Contract(pure = true)
 	public boolean containsKey(final @NotNull Object key) {
-		for (TripletNode<K, V> entry : this.localList) {
+		for (final TripletNode<K, V> entry : this.localList) {
 			if (entry.getKey().equals(key)) {
 				return true;
 			}
@@ -52,12 +52,17 @@ public class LinkedTripletMap<K, V> implements TripletMap<K, V> {
 	@Override
 	@Contract(pure = true)
 	public boolean containsValue(Object value) {
+		for (final TripletNode<K, V> entry : this.localList) {
+			if (entry.getValue().equals(value)) {
+				return true;
+			}
+		}
 		return false;
 	}
 
 	@Override
 	public V put(final @NotNull K key, final @NotNull V value) {
-		for (TripletNode<K, V> entry : this.localList) {
+		for (final TripletNode<K, V> entry : this.localList) {
 			if (entry.getKey().equals(key)) {
 				V tempValue = entry.getValue();
 				entry.setValue(value);
@@ -80,7 +85,7 @@ public class LinkedTripletMap<K, V> implements TripletMap<K, V> {
 
 	@Override
 	public void addAll(final @NotNull Map<K, V> map) {
-		for (Map.Entry<K, V> node : map.entrySet()) {
+		for (final Map.Entry<K, V> node : map.entrySet()) {
 			this.localList.add(new TripletNode<>(this.localList.size(), node.getKey(), node.getValue()));
 		}
 	}
@@ -88,7 +93,7 @@ public class LinkedTripletMap<K, V> implements TripletMap<K, V> {
 	@Nullable
 	@Override
 	public V remove(final @NotNull Object key) {
-		for (TripletNode<K, V> entry : this.localList) {
+		for (final TripletNode<K, V> entry : this.localList) {
 			if (entry.getKey().equals(key)) {
 				this.localList.remove(entry);
 				return entry.getValue();
@@ -99,7 +104,7 @@ public class LinkedTripletMap<K, V> implements TripletMap<K, V> {
 
 	@Override
 	public void putAll(@NotNull Map<? extends K, ? extends V> map) {
-		for (Map.Entry<? extends K, ? extends V> entry : map.entrySet()) {
+		for (final Map.Entry<? extends K, ? extends V> entry : map.entrySet()) {
 			this.put(entry.getKey(), entry.getValue());
 		}
 	}
@@ -113,7 +118,7 @@ public class LinkedTripletMap<K, V> implements TripletMap<K, V> {
 	@Nullable
 	@Override
 	public V get(final @NotNull Object key) {
-		for (TripletNode<K, V> entry : this.localList) {
+		for (final TripletNode<K, V> entry : this.localList) {
 			if (entry.getKey().equals(key)) {
 				return entry.getValue();
 			}
@@ -129,8 +134,8 @@ public class LinkedTripletMap<K, V> implements TripletMap<K, V> {
 	@NotNull
 	@Override
 	public Set<K> keySet() {
-		Set<K> tempCollection = new HashSet<>();
-		for (TripletNode<K, V> entry : this.localList) {
+		final Set<K> tempCollection = new HashSet<>();
+		for (final TripletNode<K, V> entry : this.localList) {
 			tempCollection.add(entry.getKey());
 		}
 		return tempCollection;
@@ -139,8 +144,8 @@ public class LinkedTripletMap<K, V> implements TripletMap<K, V> {
 	@NotNull
 	@Override
 	public Collection<V> values() {
-		Collection<V> tempCollection = new HashSet<>();
-		for (TripletNode<K, V> entry : this.localList) {
+		final Collection<V> tempCollection = new HashSet<>();
+		for (final TripletNode<K, V> entry : this.localList) {
 			tempCollection.add(entry.getValue());
 		}
 		return tempCollection;
