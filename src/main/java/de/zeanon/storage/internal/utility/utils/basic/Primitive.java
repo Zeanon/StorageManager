@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.7.0
  */
-@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 @SuppressWarnings("unused")
 public class Primitive {
 
@@ -28,8 +28,7 @@ public class Primitive {
 	 *
 	 * @throws ObjectNullException if a passed value is null
 	 */
-	@NotNull
-	public static <T> T getFromDef(final @NotNull Object object, final @NotNull Class<T> def) {
+	public static <T> @NotNull T getFromDef(final @NotNull Object object, final @NotNull Class<T> def) {
 		Objects.checkNull(def, "Definition must not be null");
 		Object tempObj = Objects.notNull(object, "Object must not be null");
 		if (object instanceof String && def == Integer.class) {
@@ -50,7 +49,7 @@ public class Primitive {
 	}
 
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 	public static class BOOLEAN {
 
 		/**
@@ -71,7 +70,7 @@ public class Primitive {
 	}
 
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 	public static class LONG {
 
 		/**
@@ -94,7 +93,7 @@ public class Primitive {
 	}
 
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 	public static class DOUBLE {
 
 		/**
@@ -117,7 +116,7 @@ public class Primitive {
 	}
 
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 	public static class FLOAT {
 
 		/**
@@ -140,7 +139,7 @@ public class Primitive {
 	}
 
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 	public static class INTEGER {
 
 		/**
@@ -163,7 +162,7 @@ public class Primitive {
 	}
 
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 	public static class SHORT {
 
 		/**
@@ -186,7 +185,7 @@ public class Primitive {
 	}
 
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 	public static class BYTE {
 
 		/**

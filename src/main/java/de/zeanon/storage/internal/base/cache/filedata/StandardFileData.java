@@ -21,15 +21,14 @@ import org.jetbrains.annotations.Nullable;
  */
 @SuppressWarnings("unused")
 @EqualsAndHashCode
-@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED, onConstructor_ = {@Contract(pure = true)})
 public class StandardFileData implements FileData<Map<String, Object>, Map.Entry<String, Object>>, Comparable<StandardFileData> {
 
 	/**
 	 * internal cache for the contents of the File
 	 */
 	@Getter
-	@NotNull
-	private Map<String, Object> dataMap = new HashMap<>();
+	private @NotNull Map<String, Object> dataMap = new HashMap<>();
 
 
 	/**
@@ -39,9 +38,8 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 * @return the entryList of the internal dataMap
 	 */
 	@Override
-	@NotNull
 	@Contract("-> new")
-	public final List<Map.Entry<String, Object>> entryList() {
+	public @NotNull List<Map.Entry<String, Object>> entryList() {
 		return this.internalEntryList(this.dataMap);
 	}
 
@@ -51,9 +49,8 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 * @return the entryList of the internal dataMap
 	 */
 	@Override
-	@NotNull
 	@Contract("-> new")
-	public final List<Map.Entry<String, Object>> blockEntryList() {
+	public @NotNull List<Map.Entry<String, Object>> blockEntryList() {
 		return new ArrayList<>(this.dataMap.entrySet());
 	}
 
@@ -66,9 +63,8 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 * @return the entryList of the internal dataMap
 	 */
 	@Override
-	@NotNull
 	@Contract("_ -> new")
-	public final List<Map.Entry<String, Object>> entryList(final @NotNull String key) {
+	public @NotNull List<Map.Entry<String, Object>> entryList(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		final Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
@@ -87,9 +83,8 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 * @return the entryList of the internal dataMap
 	 */
 	@Override
-	@NotNull
 	@Contract("_ -> new")
-	public final List<Map.Entry<String, Object>> blockEntryList(final @NotNull String key) {
+	public @NotNull List<Map.Entry<String, Object>> blockEntryList(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		final Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
@@ -109,9 +104,8 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 * @return the entryList of the internal dataMap
 	 */
 	@Override
-	@NotNull
 	@Contract("_ -> new")
-	public final List<Map.Entry<String, Object>> entryListUseArray(final @NotNull String... key) {
+	public @NotNull List<Map.Entry<String, Object>> entryListUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		final Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
@@ -130,9 +124,8 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 * @return the entryList of the internal dataMap
 	 */
 	@Override
-	@NotNull
 	@Contract("_ -> new")
-	public final List<Map.Entry<String, Object>> blockEntryListUseArray(final @NotNull String... key) {
+	public @NotNull List<Map.Entry<String, Object>> blockEntryListUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		final Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
@@ -244,8 +237,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 * @throws ObjectNullException if the given key does not exist
 	 */
 	@Override
-	@NotNull
-	public Object get(final @NotNull String key) {
+	public @NotNull Object get(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		final String[] parts = key.split("\\.");
 		return this.internalGet(this.dataMap, parts);
@@ -261,8 +253,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 * @throws ObjectNullException if the given key does not exist
 	 */
 	@Override
-	@NotNull
-	public Object getUseArray(final @NotNull String... key) {
+	public @NotNull Object getUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
 		return this.internalGet(this.dataMap, key);
 	}
@@ -387,8 +378,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
-	@NotNull
-	private Object internalInsert(final @NotNull Map<String, Object> map, final @NotNull String[] key, final @NotNull Object value, final int keyIndex) {
+	private @NotNull Object internalInsert(final @NotNull Map<String, Object> map, final @NotNull String[] key, final @NotNull Object value, final int keyIndex) {
 		if (keyIndex < key.length) {
 			final Object tempValue = map.get(key[keyIndex]);
 			//noinspection unchecked
@@ -423,9 +413,8 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
-	@NotNull
 	@Contract("_, _, _ -> param1")
-	private Map<String, Object> internalRemove(final @NotNull Map<String, Object> map, final @NotNull String[] key, final int keyIndex) {
+	private @NotNull Map<String, Object> internalRemove(final @NotNull Map<String, Object> map, final @NotNull String[] key, final int keyIndex) {
 		if (keyIndex < key.length - 1) {
 			final Object tempValue = map.get(key[keyIndex]);
 			if (tempValue instanceof Map) {
@@ -444,8 +433,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
-	@NotNull
-	private List<Map.Entry<String, Object>> internalEntryList(final @NotNull Map<String, Object> map) {
+	private @NotNull List<Map.Entry<String, Object>> internalEntryList(final @NotNull Map<String, Object> map) {
 		final List<Map.Entry<String, Object>> tempList = new ArrayList<>(map.entrySet());
 		for (Map.Entry<String, Object> entry : tempList) {
 			if (entry.getValue() instanceof Map) {
@@ -470,8 +458,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
-	@NotNull
-	private Object internalGet(final @NotNull Map map, final @NotNull String[] key) {
+	private @NotNull Object internalGet(final @NotNull Map map, final @NotNull String[] key) {
 		@NotNull Object tempValue = map;
 		for (String tempKey : key) {
 			try {
@@ -508,9 +495,8 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	}
 
 
-	@NotNull
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return this.dataMap.toString();
 	}
 }

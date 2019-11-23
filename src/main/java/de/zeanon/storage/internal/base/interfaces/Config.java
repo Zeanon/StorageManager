@@ -36,8 +36,7 @@ public interface Config extends DataStorage {
 
 	@NotNull List<String> getComments();
 
-	@NotNull
-	default List<String> getHeader(final @NotNull CommentSetting commentSetting) {
+	default @NotNull List<String> getHeader(final @NotNull CommentSetting commentSetting) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		return this.getHeader();
 	}
@@ -52,8 +51,7 @@ public interface Config extends DataStorage {
 		this.setHeader(header);
 	}
 
-	@NotNull
-	default List<String> getFooter(final @NotNull CommentSetting commentSetting) {
+	default @NotNull List<String> getFooter(final @NotNull CommentSetting commentSetting) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		return this.getFooter();
 	}
@@ -68,8 +66,7 @@ public interface Config extends DataStorage {
 		this.setFooter(footer);
 	}
 
-	@NotNull
-	default List<String> getComments(final @NotNull CommentSetting commentSetting) {
+	default @NotNull List<String> getComments(final @NotNull CommentSetting commentSetting) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		return this.getComments();
 	}

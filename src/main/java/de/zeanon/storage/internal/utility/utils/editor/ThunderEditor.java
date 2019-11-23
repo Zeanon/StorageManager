@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 2.8.0
  */
-@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 public class ThunderEditor {
 
 	/**
@@ -66,8 +66,7 @@ public class ThunderEditor {
 	 * @throws ThunderException    if the Content of the File can not be parsed properly
 	 * @throws ObjectNullException if a passed value is null
 	 */
-	@NotNull
-	public static TripletMap<String, Object> readData(final @NotNull File file, final @NotNull CommentSetting commentSetting, final boolean fastMap) throws ThunderException {
+	public static @NotNull TripletMap<String, Object> readData(final @NotNull File file, final @NotNull CommentSetting commentSetting, final boolean fastMap) throws ThunderException {
 		if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
 			return ThunderEditor.initialReadWithComments(Objects.notNull(file, "File must not be null"), fastMap);
 		} else {
@@ -222,9 +221,8 @@ public class ThunderEditor {
 
 	// <Read Data>
 	// <Read Data with Comments>
-	@NotNull
-	private static TripletMap<String, Object> initialReadWithComments(final @NotNull File file,
-																	  final boolean fastMap) throws ThunderException {
+	private static @NotNull TripletMap<String, Object> initialReadWithComments(final @NotNull File file,
+																			   final boolean fastMap) throws ThunderException {
 		try {
 			final @NotNull List<String> lines = Files.readAllLines(file.toPath());
 			final @NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
@@ -260,10 +258,9 @@ public class ThunderEditor {
 		}
 	}
 
-	@NotNull
-	private static TripletMap<String, Object> internalReadWithComments(final @NotNull String filePath,
-																	   final @NotNull List<String> lines,
-																	   final boolean fastMap) throws ThunderException {
+	private static @NotNull TripletMap<String, Object> internalReadWithComments(final @NotNull String filePath,
+																				final @NotNull List<String> lines,
+																				final boolean fastMap) throws ThunderException {
 		final @NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 
 		@NotNull String tempLine;
@@ -297,9 +294,8 @@ public class ThunderEditor {
 	// </Read Data with Comments>
 
 	// <Read Data without Comments>
-	@NotNull
-	private static TripletMap<String, Object> initialReadWithOutComments(final @NotNull File file,
-																		 final boolean fastMap) throws ThunderException {
+	private static @NotNull TripletMap<String, Object> initialReadWithOutComments(final @NotNull File file,
+																				  final boolean fastMap) throws ThunderException {
 		try {
 			final @NotNull List<String> lines = Files.readAllLines(file.toPath());
 			final @NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
@@ -333,10 +329,9 @@ public class ThunderEditor {
 		}
 	}
 
-	@NotNull
-	private static TripletMap<String, Object> internalReadWithOutComments(final @NotNull String filePath,
-																		  final @NotNull List<String> lines,
-																		  final boolean fastMap) throws ThunderException {
+	private static @NotNull TripletMap<String, Object> internalReadWithOutComments(final @NotNull String filePath,
+																				   final @NotNull List<String> lines,
+																				   final boolean fastMap) throws ThunderException {
 		final @NotNull TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
 
 		@NotNull String tempLine;
@@ -367,12 +362,11 @@ public class ThunderEditor {
 	}
 	// </Read without Comments>
 
-	@Nullable
-	private static String readKey(final @NotNull String filePath,
-								  final @NotNull List<String> lines,
-								  final @NotNull TripletMap<String, Object> tempMap,
-								  final @NotNull String tempLine,
-								  @Nullable String tempKey) throws ThunderException {
+	private static @Nullable String readKey(final @NotNull String filePath,
+											final @NotNull List<String> lines,
+											final @NotNull TripletMap<String, Object> tempMap,
+											final @NotNull String tempLine,
+											@Nullable String tempKey) throws ThunderException {
 		if (tempLine.contains("=")) {
 			final @NotNull String[] line = tempLine.split("=", 2);
 			line[0] = line[0].trim();
@@ -414,9 +408,8 @@ public class ThunderEditor {
 		return tempKey;
 	}
 
-	@NotNull
-	private static List<String> readList(final @NotNull String filePath,
-										 final @NotNull List<String> lines) throws ThunderException {
+	private static @NotNull List<String> readList(final @NotNull String filePath,
+												  final @NotNull List<String> lines) throws ThunderException {
 		@NotNull String tempLine;
 		final @NotNull List<String> tempList = new ArrayList<>();
 		while (!lines.isEmpty()) {

@@ -24,10 +24,8 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public final class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, ThunderFile> {
 
-	@NotNull
-	private ReloadSetting reloadSetting = Reload.INTELLIGENT;
-	@NotNull
-	private CommentSetting commentSetting = Comment.SKIP;
+	private @NotNull ReloadSetting reloadSetting = Reload.INTELLIGENT;
+	private @NotNull CommentSetting commentSetting = Comment.SKIP;
 	private boolean fastMap = false;
 
 
@@ -36,10 +34,9 @@ public final class ThunderFileBuilder extends StorageManager<ThunderFileBuilder,
 	}
 
 
-	@NotNull
 	@Override
 	@Contract("-> new")
-	public final ThunderFile create() {
+	public final @NotNull ThunderFile create() {
 		return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.fastMap);
 	}
 

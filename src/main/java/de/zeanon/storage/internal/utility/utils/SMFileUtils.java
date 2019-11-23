@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 2.2.0
  */
-@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 @SuppressWarnings("unused")
 public class SMFileUtils {
 
@@ -94,9 +94,8 @@ public class SMFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	@NotNull
-	public static Collection<File> listFolders(final @NotNull File directory,
-											   final boolean deep) {
+	public static @NotNull Collection<File> listFolders(final @NotNull File directory,
+														final boolean deep) {
 		Objects.checkNull(directory, "Directory must not be null");
 		final @NotNull Collection<File> files = new ArrayList<>();
 		if (directory.isDirectory()) {
@@ -122,8 +121,7 @@ public class SMFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	@NotNull
-	public static Collection<File> listFolders(final @NotNull File directory) {
+	public static @NotNull Collection<File> listFolders(final @NotNull File directory) {
 		return SMFileUtils.listFolders(directory, false);
 	}
 
@@ -137,10 +135,9 @@ public class SMFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@NotNull
-	public static Collection<File> listFiles(final @NotNull File directory,
-											 final @NotNull String[] extensions,
-											 final boolean deep) {
+	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
+													  final @NotNull String[] extensions,
+													  final boolean deep) {
 		Objects.checkNull(directory, "Directory must not be null");
 		Objects.checkNull(extensions, "Extensions must not be null");
 		final @NotNull Collection<File> files = new ArrayList<>();
@@ -171,10 +168,9 @@ public class SMFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@NotNull
-	public static Collection<File> listFiles(final @NotNull File directory,
-											 final @NotNull List<String> extensions,
-											 final boolean deep) {
+	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
+													  final @NotNull List<String> extensions,
+													  final boolean deep) {
 		return SMFileUtils.listFiles(directory, extensions.toArray(new String[0]), deep);
 	}
 
@@ -186,9 +182,8 @@ public class SMFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@NotNull
-	public static Collection<File> listFiles(final @NotNull File directory,
-											 final @NotNull String[] extensions) {
+	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
+													  final @NotNull String[] extensions) {
 		return SMFileUtils.listFiles(directory, extensions, false);
 	}
 
@@ -200,9 +195,8 @@ public class SMFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@NotNull
-	public static Collection<File> listFiles(final @NotNull File directory,
-											 final @NotNull List<String> extensions) {
+	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
+													  final @NotNull List<String> extensions) {
 		return SMFileUtils.listFiles(directory, extensions.toArray(new String[0]), false);
 	}
 
@@ -214,9 +208,8 @@ public class SMFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	@NotNull
-	public static Collection<File> listFiles(final @NotNull File directory,
-											 final boolean deep) {
+	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
+													  final boolean deep) {
 		Objects.checkNull(directory, "Directory must not be null");
 		final @NotNull Collection<File> files = new ArrayList<>();
 		if (directory.isDirectory()) {
@@ -242,8 +235,7 @@ public class SMFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	@NotNull
-	public static Collection<File> listFiles(final @NotNull File directory) {
+	public static @NotNull Collection<File> listFiles(final @NotNull File directory) {
 		return SMFileUtils.listFiles(directory, false);
 	}
 
@@ -275,9 +267,8 @@ public class SMFileUtils {
 	 *
 	 * @return BufferedInputStream containing the contents of the resource file
 	 */
-	@NotNull
 	@Contract("_ -> new")
-	public static BufferedInputStream createNewInputStream(final @NotNull String resource) {
+	public static @NotNull BufferedInputStream createNewInputStream(final @NotNull String resource) {
 		Objects.checkNull(resource, "Resource must not be null");
 		try {
 			return new BufferedInputStream(Objects.notNull(
@@ -297,9 +288,8 @@ public class SMFileUtils {
 	 *
 	 * @return null if {@code inputStream} is null or a BufferedInputStream from the given InputStream
 	 */
-	@Nullable
 	@Contract(value = "null -> null", pure = true)
-	public static BufferedInputStream createNewInputStream(final @Nullable InputStream inputStream) {
+	public static @Nullable BufferedInputStream createNewInputStream(final @Nullable InputStream inputStream) {
 		if (inputStream == null) {
 			return null;
 		} else if (inputStream instanceof BufferedInputStream) {
@@ -352,8 +342,7 @@ public class SMFileUtils {
 	 *
 	 * @return the extension of the given File
 	 */
-	@NotNull
-	public static String getExtension(final @NotNull File file) {
+	public static @NotNull String getExtension(final @NotNull File file) {
 		return SMFileUtils.getExtension(
 				Objects.notNull(file, "File must not be null").getName());
 	}
@@ -365,8 +354,7 @@ public class SMFileUtils {
 	 *
 	 * @return the extension of the given File
 	 */
-	@NotNull
-	public static String getExtension(final @NotNull Path filePath) {
+	public static @NotNull String getExtension(final @NotNull Path filePath) {
 		return SMFileUtils.getExtension(filePath.toString());
 	}
 
@@ -377,8 +365,7 @@ public class SMFileUtils {
 	 *
 	 * @return the extension of the given File
 	 */
-	@NotNull
-	public static String getExtension(final @NotNull String filePath) {
+	public static @NotNull String getExtension(final @NotNull String filePath) {
 		Objects.checkNull(filePath, "FilePath must not be null");
 		char ch;
 		int len;
@@ -404,9 +391,8 @@ public class SMFileUtils {
 	 *
 	 * @return the File without it's extension
 	 */
-	@NotNull
 	@Contract("_ -> new")
-	public static File removeExtension(final @NotNull File file) {
+	public static @NotNull File removeExtension(final @NotNull File file) {
 		return new File(SMFileUtils.removeExtension(
 				Objects.notNull(file, "File must not be null").getAbsolutePath()));
 	}
@@ -418,8 +404,7 @@ public class SMFileUtils {
 	 *
 	 * @return the Path without the extension
 	 */
-	@NotNull
-	public static Path removeExtension(final @NotNull Path filePath) {
+	public static @NotNull Path removeExtension(final @NotNull Path filePath) {
 		return Paths.get(SMFileUtils.removeExtension(filePath.toString()));
 	}
 
@@ -430,8 +415,7 @@ public class SMFileUtils {
 	 *
 	 * @return the Path without the extension
 	 */
-	@NotNull
-	public static String removeExtension(final @NotNull String filePath) {
+	public static @NotNull String removeExtension(final @NotNull String filePath) {
 		Objects.checkNull(filePath, "FilePath must not be null");
 		char ch;
 		int len;
@@ -439,12 +423,12 @@ public class SMFileUtils {
 			|| (ch = filePath.charAt(len - 1)) == '/'
 			|| ch == '\\'
 			|| ch == '.') {
-			return "";
+			return filePath;
 		}
 		final int dotInd = filePath.lastIndexOf('.');
 		final int sepInd = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
 		if (dotInd <= sepInd) {
-			return "";
+			return filePath;
 		} else {
 			return filePath.substring(0, dotInd).toLowerCase();
 		}

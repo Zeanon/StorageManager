@@ -32,20 +32,16 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage, Comparable<FlatFile> {
 
-	@NotNull
-	private final File file;
-	@NotNull
-	private final FileType fileType;
-	@NotNull
-	private final M fileData;
+	private final @NotNull File file;
+	private final @NotNull FileType fileType;
+	private final @NotNull M fileData;
 	@Setter(AccessLevel.PROTECTED)
 	private long lastLoaded;
 	/**
 	 * Default: {@link Reload#INTELLIGENT}
 	 */
 	@Setter
-	@NotNull
-	private ReloadSetting reloadSetting;
+	private @NotNull ReloadSetting reloadSetting;
 
 
 	protected FlatFile(final @NotNull File file, final @NotNull FileType fileType, final @NotNull M fileData, final @NotNull ReloadSetting reloadSetting) {
@@ -59,13 +55,11 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		}
 	}
 
-	@NotNull
-	public String getPath() {
+	public @NotNull String getPath() {
 		return this.file.getPath();
 	}
 
-	@NotNull
-	public String getCanonicalPath() {
+	public @NotNull String getCanonicalPath() {
 		try {
 			return this.file.getCanonicalPath();
 		} catch (@NotNull IOException | SecurityException e) {
@@ -73,8 +67,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		}
 	}
 
-	@NotNull
-	public String getName() {
+	public @NotNull String getName() {
 		return this.file.getName();
 	}
 
@@ -131,8 +124,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		this.reload();
 	}
 
-	@NotNull
-	public String getAbsolutePath() {
+	public @NotNull String getAbsolutePath() {
 		return this.file.getAbsolutePath();
 	}
 
@@ -178,7 +170,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(replacement, "Replacement  must not be null");
 
 		final @NotNull Iterator<String> lines = Files.readAllLines(this.file.toPath()).iterator();
-		@NotNull @Cleanup PrintWriter writer = new PrintWriter(this.file);
+		final @NotNull @Cleanup PrintWriter writer = new PrintWriter(this.file);
 		writer.print((lines.next()).replace(target, replacement));
 		lines.forEachRemaining(line -> {
 			writer.println();
@@ -186,97 +178,89 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		});
 	}
 
-	@NotNull
 	@Override
-	public Object get(final @NotNull String key) {
+	public @NotNull Object get(final @NotNull String key) {
 		Objects.checkNull(key, "Key  must not be null");
 		update();
 		return Objects.notNull(this.fileData.get(key), "File does not contain '" + key + "'");
 	}
 
-	@NotNull
 	@Override
-	public Object getUseArray(final @NotNull String... key) {
+	public @NotNull Object getUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key  must not be null");
 		update();
 		return Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'");
 	}
 
-	@NotNull
 	@Override
-	public Map<String, Object> getAll(final @NotNull String... keys) {
+	public @NotNull Map<String, Object> getAll(final @NotNull String... keys) {
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		@NotNull Map<String, Object> tempMap = new HashMap<>();
+		final @NotNull Map<String, Object> tempMap = new HashMap<>();
 		for (@NotNull String key : keys) {
 			tempMap.put(key, Objects.notNull(this.fileData.get(key), "File does not contain '" + key + "'"));
 		}
 		return tempMap;
 	}
 
-	@NotNull
 	@Override
-	public Map<String[], Object> getAllUseArray(final @NotNull String[]... keys) {
+	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[]... keys) {
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		@NotNull Map<String[], Object> tempMap = new HashMap<>();
+		final @NotNull Map<String[], Object> tempMap = new HashMap<>();
 		for (String[] key : keys) {
 			tempMap.put(key, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
 		}
 		return tempMap;
 	}
 
-	@NotNull
 	@Override
-	public Map<String, Object> getAll(final @NotNull Collection<String> keys) {
+	public @NotNull Map<String, Object> getAll(final @NotNull Collection<String> keys) {
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		@NotNull Map<String, Object> tempMap = new HashMap<>();
+		final @NotNull Map<String, Object> tempMap = new HashMap<>();
 		for (@NotNull String key : keys) {
 			tempMap.put(key, Objects.notNull(this.fileData.get(key), "File does not contain '" + key + "'"));
 		}
 		return tempMap;
 	}
 
-	@NotNull
 	@Override
-	public Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys) {
+	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys) {
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		@NotNull Map<String[], Object> tempMap = new HashMap<>();
+		final @NotNull Map<String[], Object> tempMap = new HashMap<>();
 		for (String[] key : keys) {
 			tempMap.put(key, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
 		}
 		return tempMap;
 	}
 
-	@NotNull
 	@Override
-	public Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull String... keys) {
+	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull String... keys) {
 		Objects.checkNull(blockKey, "Key  must not be null");
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		@NotNull Map<String, Object> tempMap = new HashMap<>();
+		final @NotNull Map<String, Object> tempMap = new HashMap<>();
 		for (String tempKey : keys) {
 			tempMap.put(blockKey, Objects.notNull(this.fileData.get(blockKey + "." + tempKey), "File does not contain '" + blockKey + "." + tempKey + "'"));
 		}
 		return tempMap;
 	}
 
-	@NotNull
-	@SuppressWarnings("DuplicatedCode")
 	@Override
-	public Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
+	@SuppressWarnings("DuplicatedCode")
+	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
 		Objects.checkNull(blockKey, "Key  must not be null");
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		@NotNull Map<String[], Object> tempMap = new HashMap<>();
+		final @NotNull Map<String[], Object> tempMap = new HashMap<>();
 		for (@NotNull String[] tempKey : keys) {
 			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
@@ -286,29 +270,27 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		return tempMap;
 	}
 
-	@NotNull
 	@Override
-	public Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
+	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
 		Objects.checkNull(blockKey, "Key  must not be null");
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		@NotNull Map<String, Object> tempMap = new HashMap<>();
+		final @NotNull Map<String, Object> tempMap = new HashMap<>();
 		for (String tempKey : keys) {
 			tempMap.put(blockKey, Objects.notNull(this.fileData.get(blockKey + "." + tempKey), "File does not contain '" + blockKey + "." + tempKey + "'"));
 		}
 		return tempMap;
 	}
 
-	@NotNull
 	@Override
 	@SuppressWarnings("DuplicatedCode")
-	public Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
+	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
 		Objects.checkNull(blockKey, "Key  must not be null");
 		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
-		@NotNull Map<String[], Object> tempMap = new HashMap<>();
+		final @NotNull Map<String[], Object> tempMap = new HashMap<>();
 		for (@NotNull String[] tempKey : keys) {
 			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
@@ -478,7 +460,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		this.fileData.insert(key, value);
 		return !this.fileData.toString().equals(tempData);
 	}
@@ -488,7 +470,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		this.fileData.insertUseArray(key, value);
 		return !this.fileData.toString().equals(tempData);
 	}
@@ -498,7 +480,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			this.fileData.insert(entry.getKey(), entry.getValue());
 		}
@@ -510,7 +492,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		for (@NotNull Map.Entry<String[], Object> entry : map.entrySet()) {
 			this.fileData.insertUseArray(entry.getKey(), entry.getValue());
 		}
@@ -523,7 +505,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			this.fileData.insert(key + "." + entry.getKey(), entry.getValue());
 		}
@@ -535,7 +517,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		for (@NotNull Map.Entry<String[], Object> entry : map.entrySet()) {
 			@NotNull String[] tempKey = new String[key.length + entry.getKey().length];
 			System.arraycopy(key, 0, tempKey, 0, key.length);
@@ -550,7 +532,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		this.fileData.remove(key);
 		return !this.fileData.toString().equals(tempData);
 	}
@@ -570,7 +552,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		for (final String tempKey : keys) {
 			this.fileData.remove(tempKey);
 		}
@@ -582,7 +564,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		for (final String tempKey : keys) {
 			this.fileData.remove(tempKey);
 		}
@@ -594,7 +576,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		for (final String[] tempKey : keys) {
 			this.fileData.removeUseArray(tempKey);
 		}
@@ -606,7 +588,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		for (final String[] tempKey : keys) {
 			this.fileData.removeUseArray(tempKey);
 		}
@@ -619,7 +601,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		for (final String tempKey : keys) {
 			this.fileData.remove(blockKey + "." + tempKey);
 		}
@@ -632,7 +614,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		for (final String tempKey : keys) {
 			this.fileData.remove(blockKey + "." + tempKey);
 		}
@@ -646,7 +628,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		for (final String[] tempKey : keys) {
 			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
@@ -663,7 +645,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		for (final String[] tempKey : keys) {
 			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);

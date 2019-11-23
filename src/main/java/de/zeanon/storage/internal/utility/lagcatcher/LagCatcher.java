@@ -15,14 +15,12 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.0.0
  */
-@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 @SuppressWarnings("unused")
 public class LagCatcher {
 
-	@NotNull
-	private static final Map<String, Long> startTimes = new HashMap<>();
-	@NotNull
-	private static final Map<String, Long> stopTimes = new HashMap<>();
+	private static final @NotNull Map<String, Long> startTimes = new HashMap<>();
+	private static final @NotNull Map<String, Long> stopTimes = new HashMap<>();
 
 
 	public static void runMultipleTimes(final int cycles, final @NotNull Runnable runnable) {

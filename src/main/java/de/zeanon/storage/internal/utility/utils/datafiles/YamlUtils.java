@@ -14,14 +14,13 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.2.0
  */
-@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 @SuppressWarnings("unused")
 public class YamlUtils {
 
 
-	@NotNull
 	@Contract("_, _, -> param1")
-	public static List<String> parseComments(final @NotNull List<String> comments, final @NotNull List<String> updated) {
+	public static @NotNull List<String> parseComments(final @NotNull List<String> comments, final @NotNull List<String> updated) {
 		final @NotNull Map<String, List<String>> parsed = assignCommentsToKey(comments);
 
 		for (final @NotNull Map.Entry<String, List<String>> entry : parsed.entrySet()) {
@@ -37,8 +36,7 @@ public class YamlUtils {
 		return updated;
 	}
 
-	@NotNull
-	private static Map<String, List<String>> assignCommentsToKey(final @NotNull List<String> fileLines) {
+	private static @NotNull Map<String, List<String>> assignCommentsToKey(final @NotNull List<String> fileLines) {
 		final @NotNull List<String> storage = new ArrayList<>();
 		final @NotNull List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
 		final @NotNull Map<String, List<String>> result = new HashMap<>();

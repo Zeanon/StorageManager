@@ -18,12 +18,11 @@ import org.json.JSONObject;
  * @author Zeanon
  * @version 1.1.0
  */
-@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 @SuppressWarnings({"unchecked", "unused"})
 public class JsonUtils {
 
-	@NotNull
-	public static JSONObject getJsonFromMap(final @NotNull Map<String, Object> map) {
+	public static @NotNull JSONObject getJsonFromMap(final @NotNull Map<String, Object> map) {
 		final @NotNull JSONObject jsonData = new JSONObject();
 		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			Object value = entry.getValue();
@@ -35,8 +34,7 @@ public class JsonUtils {
 		return jsonData;
 	}
 
-	@NotNull
-	public static Map<String, Object> jsonToMap(final @NotNull JSONObject json) {
+	public static @NotNull Map<String, Object> jsonToMap(final @NotNull JSONObject json) {
 		final @NotNull Map<String, Object> retMap = new HashMap<>();
 		if (json != JSONObject.NULL) {
 			retMap.putAll(json.toMap());
@@ -44,8 +42,7 @@ public class JsonUtils {
 		return retMap;
 	}
 
-	@NotNull
-	public static List<Object> toList(final @NotNull JSONArray array) {
+	public static @NotNull List<Object> toList(final @NotNull JSONArray array) {
 		final @NotNull List<Object> list = new ArrayList<>();
 		for (int i = 0; i < array.length(); i++) {
 			list.add(getValue(array.get(i)));
@@ -53,8 +50,7 @@ public class JsonUtils {
 		return list;
 	}
 
-	@NotNull
-	private static Object getValue(final @NotNull Object obj) {
+	private static @NotNull Object getValue(final @NotNull Object obj) {
 		if (obj instanceof JSONArray) {
 			return toList((JSONArray) obj);
 		} else if (obj instanceof JSONObject) {

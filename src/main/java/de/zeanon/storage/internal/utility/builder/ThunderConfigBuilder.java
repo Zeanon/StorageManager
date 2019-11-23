@@ -24,10 +24,8 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public final class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, ThunderConfig> {
 
-	@NotNull
-	private ReloadSetting reloadSetting = Reload.INTELLIGENT;
-	@NotNull
-	private CommentSetting commentSetting = Comment.PRESERVE;
+	private @NotNull ReloadSetting reloadSetting = Reload.INTELLIGENT;
+	private @NotNull CommentSetting commentSetting = Comment.PRESERVE;
 	private boolean fastMap = false;
 
 
@@ -36,10 +34,9 @@ public final class ThunderConfigBuilder extends StorageManager<ThunderConfigBuil
 	}
 
 
-	@NotNull
 	@Override
 	@Contract("-> new")
-	public final ThunderConfig create() {
+	public final @NotNull ThunderConfig create() {
 		return new LocalThunderConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.fastMap);
 	}
 

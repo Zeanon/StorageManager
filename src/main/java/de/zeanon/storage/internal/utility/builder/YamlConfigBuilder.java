@@ -24,10 +24,8 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public final class YamlConfigBuilder extends StorageManager<YamlConfigBuilder, YamlConfig> {
 
-	@NotNull
-	private ReloadSetting reloadSetting = Reload.INTELLIGENT;
-	@NotNull
-	private CommentSetting commentSetting = Comment.PRESERVE;
+	private @NotNull ReloadSetting reloadSetting = Reload.INTELLIGENT;
+	private @NotNull CommentSetting commentSetting = Comment.PRESERVE;
 
 
 	public YamlConfigBuilder(final @NotNull File file) {
@@ -35,10 +33,9 @@ public final class YamlConfigBuilder extends StorageManager<YamlConfigBuilder, Y
 	}
 
 
-	@NotNull
 	@Override
 	@Contract("-> new")
-	public final YamlConfig create() {
+	public final @NotNull YamlConfig create() {
 		return new LocalYamlConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting);
 	}
 

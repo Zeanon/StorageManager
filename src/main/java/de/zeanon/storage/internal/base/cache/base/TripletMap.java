@@ -214,8 +214,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		this.getLocalList().clear();
 	}
 
-	@NotNull
-	public List<TripletNode<K, V>> entryList() {
+	public @NotNull List<TripletNode<K, V>> entryList() {
 		return new ArrayList<>(this.getLocalList());
 	}
 
@@ -235,9 +234,8 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 *
 	 * @return a set view of the mappings contained in this map
 	 */
-	@NotNull
 	@Override
-	public Set<Map.Entry<K, V>> entrySet() {
+	public @NotNull Set<Map.Entry<K, V>> entrySet() {
 		return new HashSet<>(this.getLocalList());
 	}
 
@@ -256,9 +254,8 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 *
 	 * @return a set view of the keys contained in this map
 	 */
-	@NotNull
 	@Override
-	public Set<K> keySet() {
+	public @NotNull Set<K> keySet() {
 		final @NotNull Set<K> tempCollection = new HashSet<>();
 		for (final @NotNull TripletNode<K, V> tempNode : this.getLocalList()) {
 			tempCollection.add(tempNode.getKey());
@@ -281,9 +278,8 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 *
 	 * @return a view of the values contained in this map
 	 */
-	@NotNull
 	@Override
-	public Collection<V> values() {
+	public @NotNull Collection<V> values() {
 		final @NotNull Collection<V> tempCollection = new HashSet<>();
 		for (final @NotNull TripletNode<K, V> tempNode : this.getLocalList()) {
 			tempCollection.add(tempNode.getValue());
@@ -291,12 +287,10 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		return tempCollection;
 	}
 
-	@NotNull
-	protected abstract List<TripletMap.TripletNode<K, V>> getLocalList();
+	protected abstract @NotNull List<TripletMap.TripletNode<K, V>> getLocalList();
 
-	@NotNull
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return this.getLocalList().toString();
 	}
 
@@ -311,15 +305,16 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * @version 1.3.0
 	 */
 	@Setter
-	@Getter(onMethod_ = @Override)
 	@EqualsAndHashCode
-	@AllArgsConstructor
+	@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
 	@SuppressWarnings("unused")
 	public static class TripletNode<K, V> implements Map.Entry<K, V>, Comparable<TripletNode> {
 
 		@Getter
 		private int line;
+		@Getter(onMethod_ = {@Override})
 		private @NotNull K key;
+		@Getter(onMethod_ = {@Override})
 		private @Nullable V value;
 
 		public @NotNull K setKey(final @NotNull K key) {
@@ -330,7 +325,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 
 		@Override
 		public @Nullable V setValue(final @NotNull V value) {
-			final V tempValue = this.value;
+			final @Nullable V tempValue = this.value;
 			this.value = value;
 			return tempValue;
 		}
@@ -340,9 +335,8 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 			return Integer.compare(this.line, entry.line);
 		}
 
-		@NotNull
 		@Override
-		public String toString() {
+		public @NotNull String toString() {
 			return "(" + this.line + "," + this.key + "," + this.value + ")";
 		}
 	}

@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.1.0
  */
+@SuppressWarnings("EmptyMethod")
 public interface ReloadSetting {
 
 	boolean shouldReload(final @NotNull FlatFile flatFile);

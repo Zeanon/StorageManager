@@ -18,18 +18,15 @@ import org.jetbrains.annotations.NotNull;
 public interface FileType {
 
 
-	@NotNull
-	default String addExtensionTo(final @NotNull String filePath) {
+	default @NotNull String addExtensionTo(final @NotNull String filePath) {
 		return (Objects.notNull(filePath, "FilePath  must not be null") + "." + this.toString());
 	}
 
-	@NotNull
-	default Path addExtensionTo(final @NotNull Path filePath) {
+	default @NotNull Path addExtensionTo(final @NotNull Path filePath) {
 		return Paths.get(Objects.notNull(filePath, "FilePath  must not be null") + "." + this.toString());
 	}
 
-	@NotNull
-	default File addExtensionTo(final @NotNull File file) {
+	default @NotNull File addExtensionTo(final @NotNull File file) {
 		return new File(Objects.notNull(file, "File  must not be null").getAbsolutePath() + "." + this.toString());
 	}
 
@@ -47,7 +44,6 @@ public interface FileType {
 
 	@NotNull String toLowerCase();
 
-	@NotNull
 	@Override
-	String toString();
+	@NotNull String toString();
 }

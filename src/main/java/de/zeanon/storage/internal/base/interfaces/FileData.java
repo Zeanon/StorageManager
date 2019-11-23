@@ -88,8 +88,7 @@ public interface FileData<M extends Map, E extends Map.Entry> {
 	 *
 	 * @throws ObjectNullException if the given key does not exist
 	 */
-	@Nullable
-	Object get(final @NotNull String key);
+	@Nullable Object get(final @NotNull String key);
 
 	/**
 	 * Get the value mapped to a specific key
@@ -154,8 +153,7 @@ public interface FileData<M extends Map, E extends Map.Entry> {
 	 */
 	boolean isEmpty();
 
-	@NotNull
-	M getDataMap();
+	@NotNull M getDataMap();
 
 	/**
 	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
@@ -163,16 +161,14 @@ public interface FileData<M extends Map, E extends Map.Entry> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@NotNull
-	List<E> entryList();
+	@NotNull List<E> entryList();
 
 	/**
 	 * Get a List consisting of TripletMap.TripletNode objects of the top most layer of the internal DataMap
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@NotNull
-	List<E> blockEntryList();
+	@NotNull List<E> blockEntryList();
 
 	/**
 	 * Get a List consisting of TripletMap.TripletNode objects whereas values being instances of TripletMap are also getting parsed to
@@ -182,8 +178,7 @@ public interface FileData<M extends Map, E extends Map.Entry> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@NotNull
-	List<E> entryList(final @NotNull String key);
+	@NotNull List<E> entryList(final @NotNull String key);
 
 	/**
 	 * Get a List consisting of TripletMap.TripletNode objects of only the given Block
@@ -192,8 +187,7 @@ public interface FileData<M extends Map, E extends Map.Entry> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@NotNull
-	List<E> blockEntryList(final @NotNull String key);
+	@NotNull List<E> blockEntryList(final @NotNull String key);
 
 	/**
 	 * Get a List consisting of TripletMap.TripletNode objects whereas values being instances of TripletMap are also getting parsed to
@@ -203,8 +197,7 @@ public interface FileData<M extends Map, E extends Map.Entry> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@NotNull
-	List<E> entryListUseArray(final @NotNull String... key);
+	@NotNull List<E> entryListUseArray(final @NotNull String... key);
 
 	/**
 	 * Get a List consisting of TripletMap.TripletNode objects of only the given Block
@@ -213,10 +206,8 @@ public interface FileData<M extends Map, E extends Map.Entry> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@NotNull
-	List<E> blockEntryListUseArray(final @NotNull String... key);
+	@NotNull List<E> blockEntryListUseArray(final @NotNull String... key);
 
-	@NotNull
 	@Override
-	String toString();
+	@NotNull String toString();
 }

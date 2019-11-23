@@ -22,8 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public final class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile> {
 
-	@NotNull
-	private ReloadSetting reloadSetting = Reload.INTELLIGENT;
+	private @NotNull ReloadSetting reloadSetting = Reload.INTELLIGENT;
 
 
 	public JsonFileBuilder(final @NotNull File file) {
@@ -31,10 +30,9 @@ public final class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonF
 	}
 
 
-	@NotNull
 	@Override
 	@Contract("-> new")
-	public final JsonFile create() {
+	public final @NotNull JsonFile create() {
 		return new LocalJsonFile(super.file, this.inputStream, this.reloadSetting);
 	}
 

@@ -24,43 +24,36 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.4.0
  */
-@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 @SuppressWarnings("unused")
 public class YamlEditor {
 
-	@NotNull
-	public static List<String> readComments(final @NotNull File file) throws IOException {
+	public static @NotNull List<String> readComments(final @NotNull File file) throws IOException {
 		return getCommentsFromLines(read(file));
 	}
 
-	@NotNull
 	@Contract("_ -> new")
-	public static List<String> read(final @NotNull File file) throws IOException {
+	public static @NotNull List<String> read(final @NotNull File file) throws IOException {
 		return Files.readAllLines(file.toPath());
 	}
 
-	@NotNull
-	public static List<String> readFooter(final @NotNull File file) throws IOException {
+	public static @NotNull List<String> readFooter(final @NotNull File file) throws IOException {
 		return getFooterFromLines(read(file));
 	}
 
-	@NotNull
-	public static List<String> readHeader(final @NotNull File file) throws IOException {
+	public static @NotNull List<String> readHeader(final @NotNull File file) throws IOException {
 		return getHeaderFromLines(read(file));
 	}
 
-	@NotNull
-	public static List<String> readKeys(final @NotNull File file) throws IOException {
+	public static @NotNull List<String> readKeys(final @NotNull File file) throws IOException {
 		return getKeys(read(file));
 	}
 
-	@NotNull
-	public static List<String> readPureComments(final @NotNull File file) throws IOException {
+	public static @NotNull List<String> readPureComments(final @NotNull File file) throws IOException {
 		return getPureCommentsFromLines(read(file));
 	}
 
-	@NotNull
-	public static List<String> readWithoutHeaderAndFooter(final @NotNull File file) throws IOException {
+	public static @NotNull List<String> readWithoutHeaderAndFooter(final @NotNull File file) throws IOException {
 		return getLinesWithoutFooterAndHeaderFromLines(read(file));
 	}
 
@@ -75,9 +68,8 @@ public class YamlEditor {
 		});
 	}
 
-	@NotNull
 	@Contract("_ -> param1")
-	public static List<String> getLinesWithoutFooterAndHeaderFromLines(final @NotNull List<String> lines) {
+	public static @NotNull List<String> getLinesWithoutFooterAndHeaderFromLines(final @NotNull List<String> lines) {
 		final @NotNull List<String> header = getHeaderFromLines(lines);
 		final @NotNull List<String> footer = getFooterFromLines(lines);
 
@@ -87,8 +79,7 @@ public class YamlEditor {
 		return lines;
 	}
 
-	@NotNull
-	private static List<String> getCommentsFromLines(final @NotNull List<String> lines) {
+	private static @NotNull List<String> getCommentsFromLines(final @NotNull List<String> lines) {
 		final @NotNull List<String> result = new ArrayList<>();
 		for (final @NotNull String line : Objects.notNull(lines, "Lines must not be null")) {
 			if (line.startsWith("#")) {
@@ -98,8 +89,7 @@ public class YamlEditor {
 		return result;
 	}
 
-	@NotNull
-	private static List<String> getFooterFromLines(final @NotNull List<String> lines) {
+	private static @NotNull List<String> getFooterFromLines(final @NotNull List<String> lines) {
 		Objects.checkNull(lines, "Lines must not be null");
 
 		final @NotNull List<String> result = new ArrayList<>();
@@ -116,8 +106,7 @@ public class YamlEditor {
 		return result;
 	}
 
-	@NotNull
-	private static List<String> getHeaderFromLines(final @NotNull List<String> lines) {
+	private static @NotNull List<String> getHeaderFromLines(final @NotNull List<String> lines) {
 		final @NotNull List<String> result = new ArrayList<>();
 		for (final @NotNull String line : Objects.notNull(lines, "Lines must not be null")) {
 			if (!line.startsWith("#")) {
@@ -129,8 +118,7 @@ public class YamlEditor {
 		return result;
 	}
 
-	@NotNull
-	private static List<String> getKeys(final @NotNull List<String> lines) {
+	private static @NotNull List<String> getKeys(final @NotNull List<String> lines) {
 		final @NotNull List<String> result = new ArrayList<>();
 		for (final @NotNull String line : Objects.notNull(lines, "Lines must not be null")) {
 			if (!line.replaceAll("\\s+", "").startsWith("#")) {
@@ -143,8 +131,7 @@ public class YamlEditor {
 	/**
 	 * @return List of comments that don't belong to header or footer
 	 */
-	@NotNull
-	private static List<String> getPureCommentsFromLines(final @NotNull List<String> lines) {
+	private static @NotNull List<String> getPureCommentsFromLines(final @NotNull List<String> lines) {
 		final @NotNull List<String> comments = getCommentsFromLines(lines);
 		final @NotNull List<String> header = getHeaderFromLines(lines);
 		final @NotNull List<String> footer = getFooterFromLines(lines);

@@ -27,14 +27,11 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public abstract class FlatSection<M extends FlatFile<? extends FileData<?, ?>>> implements DataStorage, Comparable<FlatSection> {
 
-	@NotNull
-	private final M flatFile;
-	@NotNull
+	private final @NotNull M flatFile;
 	@Setter
-	protected String sectionKey = "";
-	@NotNull
+	protected @NotNull String sectionKey = "";
 	@Setter
-	protected String[] arraySectionKey = new String[0];
+	protected @NotNull String[] arraySectionKey = new String[0];
 
 
 	protected FlatSection(final @NotNull String sectionKey, final @NotNull M flatFile) {
@@ -58,21 +55,18 @@ public abstract class FlatSection<M extends FlatFile<? extends FileData<?, ?>>> 
 		this.flatFile.setReloadSetting(reloadSetting);
 	}
 
-	@NotNull
 	@Override
-	public Object get(final @NotNull String key) {
+	public @NotNull Object get(final @NotNull String key) {
 		return this.flatFile.get(this.getFinalKey(key));
 	}
 
-	@NotNull
 	@Override
-	public Map<String, Object> getAll(final @NotNull String... keys) {
+	public @NotNull Map<String, Object> getAll(final @NotNull String... keys) {
 		return this.flatFile.getAll(keys);
 	}
 
-	@NotNull
 	@Override
-	public Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull String... keys) {
+	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull String... keys) {
 		return this.flatFile.getAll(this.getFinalKey(blockKey), keys);
 	}
 
@@ -119,45 +113,38 @@ public abstract class FlatSection<M extends FlatFile<? extends FileData<?, ?>>> 
 		return this.flatFile.hasKey(this.getFinalKey(key));
 	}
 
-	@NotNull
 	@Override
-	public Object getUseArray(final @NotNull String... key) {
+	public @NotNull Object getUseArray(final @NotNull String... key) {
 		return this.flatFile.getUseArray(this.getFinalArrayKey(key));
 	}
 
-	@NotNull
 	@Override
-	public Map<String[], Object> getAllUseArray(final @NotNull String[]... keys) {
+	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[]... keys) {
 		return this.flatFile.getAllUseArray(this.getArraySectionKey(), keys);
 	}
 
-	@NotNull
 	@Override
-	public Map<String, Object> getAll(final @NotNull Collection<String> keys) {
+	public @NotNull Map<String, Object> getAll(final @NotNull Collection<String> keys) {
 		return this.flatFile.getAll(keys);
 	}
 
-	@NotNull
 	@Override
-	public Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys) {
+	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys) {
 		return this.flatFile.getAllUseArray(this.getArraySectionKey(), keys);
 	}
 
-	@NotNull
 	@Override
-	public Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
+	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
 		return this.flatFile.getAllUseArray(this.getFinalArrayKey(blockKey), keys);
 	}
 
-	@NotNull
 	@Override
-	public Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
+	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
 		return this.flatFile.getAll(this.getFinalKey(blockKey), keys);
 	}
 
-	@NotNull
 	@Override
-	public Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
+	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
 		return this.flatFile.getAllUseArray(this.getFinalArrayKey(blockKey), keys);
 	}
 
@@ -216,13 +203,11 @@ public abstract class FlatSection<M extends FlatFile<? extends FileData<?, ?>>> 
 		this.flatFile.removeAllUseArray(this.getFinalArrayKey(blockKey), keys);
 	}
 
-	@NotNull
-	protected String getFinalKey(final @NotNull String key) {
+	protected @NotNull String getFinalKey(final @NotNull String key) {
 		return this.getSectionKey() + "." + Objects.notNull(key, "Key  must not be null");
 	}
 
-	@NotNull
-	protected String[] getFinalArrayKey(final @NotNull String... key) {
+	protected @NotNull String[] getFinalArrayKey(final @NotNull String... key) {
 		@NotNull String[] tempKey = new String[this.getArraySectionKey().length + key.length];
 		System.arraycopy(this.getArraySectionKey(), 0, tempKey, 0, this.getArraySectionKey().length);
 		System.arraycopy(key, 0, tempKey, this.getArraySectionKey().length, key.length);

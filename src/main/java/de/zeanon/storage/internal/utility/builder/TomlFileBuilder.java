@@ -22,8 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public final class TomlFileBuilder extends StorageManager<TomlFileBuilder, TomlFile> {
 
-	@NotNull
-	private ReloadSetting reloadSetting = Reload.INTELLIGENT;
+	private @NotNull ReloadSetting reloadSetting = Reload.INTELLIGENT;
 
 
 	public TomlFileBuilder(final @NotNull File file) {
@@ -31,10 +30,9 @@ public final class TomlFileBuilder extends StorageManager<TomlFileBuilder, TomlF
 	}
 
 
-	@NotNull
 	@Override
 	@Contract("-> new")
-	public final TomlFile create() {
+	public final @NotNull TomlFile create() {
 		return new LocalTomlFile(super.file, this.inputStream, this.reloadSetting);
 	}
 

@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.2.0
  */
-@NoArgsConstructor(onConstructor_ = @Contract(pure = true), access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 @SuppressWarnings("unused")
 public class Objects {
 
@@ -46,9 +46,8 @@ public class Objects {
 	}
 
 
-	@NotNull
 	@Contract("null, _ -> fail; !null, _ -> param1")
-	public static <O> O notNull(final @Nullable O object, final @NotNull String message) {
+	public static @NotNull <O> O notNull(final @Nullable O object, final @NotNull String message) {
 		if (object == null) {
 			throw new ObjectNullException(message);
 		} else {

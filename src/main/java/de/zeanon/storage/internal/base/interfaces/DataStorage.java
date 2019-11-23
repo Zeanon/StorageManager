@@ -40,13 +40,11 @@ public interface DataStorage {
 	 *
 	 * @return returns the value of the key casted to def
 	 */
-	@NotNull
-	default <O> O get(final @NotNull String key, final @NotNull Class<O> def) {
+	default @NotNull <O> O get(final @NotNull String key, final @NotNull Class<O> def) {
 		return Primitive.getFromDef(this.get(key), def);
 	}
 
-	@NotNull
-	default <O> O getUseArray(final @NotNull String[] key, final @NotNull Class<O> def) {
+	default @NotNull <O> O getUseArray(final @NotNull String[] key, final @NotNull Class<O> def) {
 		return Primitive.getFromDef(this.getUseArray(key), def);
 	}
 
@@ -57,13 +55,11 @@ public interface DataStorage {
 	 *
 	 * @return Returns the value
 	 */
-	@NotNull
-	default String getString(final @NotNull String key) {
+	default @NotNull String getString(final @NotNull String key) {
 		return this.get(key) instanceof String ? (String) this.get(key) : this.get(key).toString();
 	}
 
-	@NotNull
-	default String getStringUseArray(final @NotNull String... key) {
+	default @NotNull String getStringUseArray(final @NotNull String... key) {
 		return this.getUseArray(key) instanceof String ? (String) this.getUseArray(key) : this.getUseArray(key).toString();
 	}
 
@@ -74,13 +70,11 @@ public interface DataStorage {
 	 *
 	 * @return List
 	 */
-	@NotNull
-	default List<String> getStringList(final @NotNull String key) {
+	default @NotNull List<String> getStringList(final @NotNull String key) {
 		return (List<String>) this.get(key);
 	}
 
-	@NotNull
-	default List<String> getStringListUseArray(final @NotNull String... key) {
+	default @NotNull List<String> getStringListUseArray(final @NotNull String... key) {
 		return (List<String>) this.getUseArray(key);
 	}
 
@@ -121,13 +115,11 @@ public interface DataStorage {
 	 *
 	 * @return Byte-List
 	 */
-	@NotNull
-	default List<Byte> getByteList(final @NotNull String key) {
+	default @NotNull List<Byte> getByteList(final @NotNull String key) {
 		return (List<Byte>) this.get(key);
 	}
 
-	@NotNull
-	default List<Byte> getByteListUseArray(final @NotNull String... key) {
+	default @NotNull List<Byte> getByteListUseArray(final @NotNull String... key) {
 		return (List<Byte>) this.getUseArray(key);
 	}
 
@@ -153,13 +145,11 @@ public interface DataStorage {
 	 *
 	 * @return Double-List
 	 */
-	@NotNull
-	default List<Double> getDoubleList(final @NotNull String key) {
+	default @NotNull List<Double> getDoubleList(final @NotNull String key) {
 		return (List<Double>) this.get(key);
 	}
 
-	@NotNull
-	default List<Double> getDoubleListUseArray(final @NotNull String... key) {
+	default @NotNull List<Double> getDoubleListUseArray(final @NotNull String... key) {
 		return (List<Double>) this.getUseArray(key);
 	}
 
@@ -185,13 +175,11 @@ public interface DataStorage {
 	 *
 	 * @return Float-List
 	 */
-	@NotNull
-	default List<Float> getFloatList(final @NotNull String key) {
+	default @NotNull List<Float> getFloatList(final @NotNull String key) {
 		return (List<Float>) this.get(key);
 	}
 
-	@NotNull
-	default List<Float> getFloatListUseArray(final @NotNull String... key) {
+	default @NotNull List<Float> getFloatListUseArray(final @NotNull String... key) {
 		return (List<Float>) this.getUseArray(key);
 	}
 
@@ -217,13 +205,11 @@ public interface DataStorage {
 	 *
 	 * @return Integer-List
 	 */
-	@NotNull
-	default List<Integer> getIntegerList(final @NotNull String key) {
+	default @NotNull List<Integer> getIntegerList(final @NotNull String key) {
 		return (List<Integer>) this.get(key);
 	}
 
-	@NotNull
-	default List<Integer> getIntegerListUseArray(final @NotNull String... key) {
+	default @NotNull List<Integer> getIntegerListUseArray(final @NotNull String... key) {
 		return (List<Integer>) this.getUseArray(key);
 	}
 
@@ -249,13 +235,11 @@ public interface DataStorage {
 	 *
 	 * @return Short-List
 	 */
-	@NotNull
-	default List<Short> getShortList(final @NotNull String key) {
+	default @NotNull List<Short> getShortList(final @NotNull String key) {
 		return (List<Short>) this.get(key);
 	}
 
-	@NotNull
-	default List<Short> getShortListUseArray(final @NotNull String... key) {
+	default @NotNull List<Short> getShortListUseArray(final @NotNull String... key) {
 		return (List<Short>) this.getUseArray(key);
 	}
 
@@ -281,13 +265,11 @@ public interface DataStorage {
 	 *
 	 * @return Long-List
 	 */
-	@NotNull
-	default List<Long> getLongList(final @NotNull String key) {
+	default @NotNull List<Long> getLongList(final @NotNull String key) {
 		return (List<Long>) this.get(key);
 	}
 
-	@NotNull
-	default List<Long> getLongListUseArray(final @NotNull String... key) {
+	default @NotNull List<Long> getLongListUseArray(final @NotNull String... key) {
 		return (List<Long>) this.getUseArray(key);
 	}
 
@@ -298,13 +280,11 @@ public interface DataStorage {
 	 *
 	 * @return List
 	 */
-	@NotNull
-	default List getList(final @NotNull String key) {
+	default @NotNull List getList(final @NotNull String key) {
 		return (List) this.get(key);
 	}
 
-	@NotNull
-	default List getListUseArray(final @NotNull String... key) {
+	default @NotNull List getListUseArray(final @NotNull String... key) {
 		return (List) this.getUseArray(key);
 	}
 
@@ -315,13 +295,11 @@ public interface DataStorage {
 	 *
 	 * @return Map
 	 */
-	@NotNull
-	default Map getMap(final @NotNull String key) {
+	default @NotNull Map getMap(final @NotNull String key) {
 		return (Map) this.get(key);
 	}
 
-	@NotNull
-	default Map getMapUseArray(final @NotNull String... key) {
+	default @NotNull Map getMapUseArray(final @NotNull String... key) {
 		return (Map) this.getUseArray(key);
 	}
 
@@ -334,13 +312,11 @@ public interface DataStorage {
 	 *
 	 * @return a Pair with a key of type K and a value of type V
 	 */
-	@NotNull
-	default <K, V> Pair<K, V> getPair(final @NotNull String key) {
+	default @NotNull <K, V> Pair<K, V> getPair(final @NotNull String key) {
 		return (Pair<K, V>) this.get(key);
 	}
 
-	@NotNull
-	default <K, V> Pair<K, V> getPairUseArray(final @NotNull String... key) {
+	default @NotNull <K, V> Pair<K, V> getPairUseArray(final @NotNull String... key) {
 		return (Pair<K, V>) this.getUseArray(key);
 	}
 
@@ -383,54 +359,41 @@ public interface DataStorage {
 	 *
 	 * @return the value set in the File
 	 */
-	@NotNull
-	@SuppressWarnings("DuplicatedCode")
-	default <O> O getOrSetDefault(final @NotNull String key, final @NotNull O value) {
+	default @NotNull <O> O getOrSetDefault(final @NotNull String key, final @NotNull O value) {
 		if (!this.hasKey(key)) {
 			this.set(key, value);
 			return value;
 		} else {
 			Object tempObj = this.get(key);
-			if (tempObj instanceof String && value instanceof Integer) {
-				tempObj = Integer.parseInt((String) tempObj);
-			} else if (tempObj instanceof String && value instanceof Long) {
-				tempObj = Long.parseLong((String) tempObj);
-			} else if (tempObj instanceof String && value instanceof Double) {
-				tempObj = Double.parseDouble((String) tempObj);
-			} else if (tempObj instanceof String && value instanceof Float) {
-				tempObj = Double.parseDouble((String) tempObj);
-			} else if (tempObj instanceof String && value instanceof Short) {
-				tempObj = Short.parseShort((String) tempObj);
-			} else if (tempObj instanceof String && value instanceof Primitive.BOOLEAN) {
-				tempObj = ((String) tempObj).equalsIgnoreCase("true");
-			}
-			return (O) tempObj;
+			return parseObject(value, tempObj);
 		}
 	}
 
-	@NotNull
-	@SuppressWarnings("DuplicatedCode")
-	default <O> O getOrSetDefaultUseArray(final @NotNull String[] key, final @NotNull O value) {
+	default @NotNull <O> O getOrSetDefaultUseArray(final @NotNull String[] key, final @NotNull O value) {
 		if (!this.hasKeyUseArray(key)) {
 			this.setUseArray(key, value);
 			return value;
 		} else {
 			Object tempObj = this.getUseArray(key);
-			if (tempObj instanceof String && value instanceof Integer) {
-				tempObj = Integer.parseInt((String) tempObj);
-			} else if (tempObj instanceof String && value instanceof Long) {
-				tempObj = Long.parseLong((String) tempObj);
-			} else if (tempObj instanceof String && value instanceof Double) {
-				tempObj = Double.parseDouble((String) tempObj);
-			} else if (tempObj instanceof String && value instanceof Float) {
-				tempObj = Double.parseDouble((String) tempObj);
-			} else if (tempObj instanceof String && value instanceof Short) {
-				tempObj = Short.parseShort((String) tempObj);
-			} else if (tempObj instanceof String && value instanceof Primitive.BOOLEAN) {
-				tempObj = ((String) tempObj).equalsIgnoreCase("true");
-			}
-			return (O) tempObj;
+			return parseObject(value, tempObj);
 		}
+	}
+
+	default @NotNull <O> O parseObject(@NotNull O value, Object tempObj) {
+		if (tempObj instanceof String && value instanceof Integer) {
+			tempObj = Integer.parseInt((String) tempObj);
+		} else if (tempObj instanceof String && value instanceof Long) {
+			tempObj = Long.parseLong((String) tempObj);
+		} else if (tempObj instanceof String && value instanceof Double) {
+			tempObj = Double.parseDouble((String) tempObj);
+		} else if (tempObj instanceof String && value instanceof Float) {
+			tempObj = Double.parseDouble((String) tempObj);
+		} else if (tempObj instanceof String && value instanceof Short) {
+			tempObj = Short.parseShort((String) tempObj);
+		} else if (tempObj instanceof String && value instanceof Primitive.BOOLEAN) {
+			tempObj = ((String) tempObj).equalsIgnoreCase("true");
+		}
+		return (O) tempObj;
 	}
 
 
