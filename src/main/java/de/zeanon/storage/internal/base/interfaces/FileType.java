@@ -1,7 +1,7 @@
 package de.zeanon.storage.internal.base.interfaces;
 
-import de.zeanon.storage.internal.utility.utils.SMFileUtils;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
+import de.zeanon.utils.basic.BaseFileUtils;
+import de.zeanon.utils.basic.Objects;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,15 +31,15 @@ public interface FileType {
 	}
 
 	default boolean isTypeOf(final @NotNull String filePath) {
-		return SMFileUtils.getExtension(Objects.notNull(filePath, "FilePath  must not be null")).equalsIgnoreCase(this.toString());
+		return BaseFileUtils.getExtension(Objects.notNull(filePath, "FilePath  must not be null")).equalsIgnoreCase(this.toString());
 	}
 
 	default boolean isTypeOf(final @NotNull Path filePath) {
-		return SMFileUtils.getExtension(Objects.notNull(filePath, "FilePath  must not be null")).equalsIgnoreCase(this.toString());
+		return BaseFileUtils.getExtension(Objects.notNull(filePath, "FilePath  must not be null")).equalsIgnoreCase(this.toString());
 	}
 
 	default boolean isTypeOf(final @NotNull File file) {
-		return SMFileUtils.getExtension(Objects.notNull(file, "File  must not be null")).equalsIgnoreCase(this.toString());
+		return BaseFileUtils.getExtension(Objects.notNull(file, "File  must not be null")).equalsIgnoreCase(this.toString());
 	}
 
 	@NotNull String toLowerCase();

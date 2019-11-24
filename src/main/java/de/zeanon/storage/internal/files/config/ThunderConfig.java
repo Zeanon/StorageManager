@@ -1,16 +1,16 @@
 package de.zeanon.storage.internal.files.config;
 
-import de.zeanon.storage.internal.base.exceptions.FileParseException;
-import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.interfaces.Config;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.base.settings.Comment;
 import de.zeanon.storage.internal.files.raw.ThunderFile;
 import de.zeanon.storage.internal.files.section.ThunderConfigSection;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import de.zeanon.storage.internal.utility.utils.datafiles.ThunderUtils;
 import de.zeanon.storage.internal.utility.utils.editor.ThunderEditor;
+import de.zeanon.utils.basic.Objects;
+import de.zeanon.utils.exceptions.FileParseException;
+import de.zeanon.utils.exceptions.RuntimeIOException;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -42,8 +42,8 @@ public class ThunderConfig extends ThunderFile implements Config {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected ThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final boolean fastMap) {
-		super(file, inputStream, reloadSetting, commentSetting, fastMap);
+	protected ThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final boolean bigMap) {
+		super(file, inputStream, reloadSetting, commentSetting, bigMap);
 	}
 
 

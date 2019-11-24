@@ -26,7 +26,7 @@ public final class ThunderConfigBuilder extends StorageManager<ThunderConfigBuil
 
 	private @NotNull ReloadSetting reloadSetting = Reload.INTELLIGENT;
 	private @NotNull CommentSetting commentSetting = Comment.PRESERVE;
-	private boolean fastMap = false;
+	private boolean bigMap = false;
 
 
 	public ThunderConfigBuilder(final @NotNull File file) {
@@ -37,14 +37,14 @@ public final class ThunderConfigBuilder extends StorageManager<ThunderConfigBuil
 	@Override
 	@Contract("-> new")
 	public final @NotNull ThunderConfig create() {
-		return new LocalThunderConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.fastMap);
+		return new LocalThunderConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bigMap);
 	}
 
 
 	private static final class LocalThunderConfig extends ThunderConfig {
 
-		private LocalThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final boolean fastMap) {
-			super(file, inputStream, reloadSetting, commentSetting, fastMap);
+		private LocalThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final boolean bigMap) {
+			super(file, inputStream, reloadSetting, commentSetting, bigMap);
 		}
 	}
 }

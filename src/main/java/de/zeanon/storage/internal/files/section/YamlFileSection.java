@@ -3,7 +3,7 @@ package de.zeanon.storage.internal.files.section;
 import de.zeanon.storage.internal.base.sections.CommentEnabledSection;
 import de.zeanon.storage.internal.files.config.YamlConfig;
 import de.zeanon.storage.internal.files.raw.YamlFile;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
+import de.zeanon.utils.basic.Objects;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

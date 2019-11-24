@@ -1,14 +1,14 @@
 package de.zeanon.storage.internal.base.files;
 
-import de.zeanon.storage.internal.base.exceptions.FileTypeException;
-import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.DataStorage;
 import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.base.interfaces.FileType;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.base.settings.Reload;
-import de.zeanon.storage.internal.utility.utils.SMFileUtils;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
+import de.zeanon.utils.basic.BaseFileUtils;
+import de.zeanon.utils.basic.Objects;
+import de.zeanon.utils.exceptions.FileTypeException;
+import de.zeanon.utils.exceptions.RuntimeIOException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,7 +75,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 * Set the Contents of the FileData and File from a given InputStream
 	 */
 	public void setDataFromStream(final @Nullable InputStream inputStream) {
-		SMFileUtils.writeToFile(this.file, SMFileUtils.createNewInputStream(inputStream));
+		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStream(inputStream));
 		this.reload();
 	}
 
@@ -83,7 +83,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 * Delete all Contents of the FileData and File
 	 */
 	public void clear() {
-		SMFileUtils.writeToFile(this.file, null);
+		BaseFileUtils.writeToFile(this.file, null);
 		this.reload();
 	}
 
@@ -112,7 +112,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 * Set the Contents of the FileData and File from a given File
 	 */
 	public void setDataFromFile(final @Nullable File file) {
-		SMFileUtils.writeToFile(this.file, file == null ? null : SMFileUtils.createNewInputStream(file));
+		BaseFileUtils.writeToFile(this.file, file == null ? null : BaseFileUtils.createNewInputStream(file));
 		this.reload();
 	}
 
@@ -120,7 +120,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 * Set the Contents of the FileData and File from a given Resource
 	 */
 	public void setDataFromResource(final @Nullable String resource) {
-		SMFileUtils.writeToFile(this.file, resource == null ? null : SMFileUtils.createNewInputStream(resource));
+		BaseFileUtils.writeToFile(this.file, resource == null ? null : BaseFileUtils.createNewInputStream(resource));
 		this.reload();
 	}
 
@@ -134,7 +134,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 * @return true if it has changed.
 	 */
 	public boolean hasChanged() {
-		return SMFileUtils.hasChanged(this.file, this.lastLoaded);
+		return BaseFileUtils.hasChanged(this.file, this.lastLoaded);
 	}
 
 	/**
@@ -553,7 +553,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
-		for (final String tempKey : keys) {
+		for (@NotNull final String tempKey : keys) {
 			this.fileData.remove(tempKey);
 		}
 		return !this.fileData.toString().equals(tempData);
@@ -565,7 +565,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
-		for (final String tempKey : keys) {
+		for (@NotNull final String tempKey : keys) {
 			this.fileData.remove(tempKey);
 		}
 		return !this.fileData.toString().equals(tempData);
@@ -629,7 +629,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
-		for (final String[] tempKey : keys) {
+		for (@NotNull final String[] tempKey : keys) {
 			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
@@ -646,7 +646,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
-		for (final String[] tempKey : keys) {
+		for (@NotNull final String[] tempKey : keys) {
 			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);

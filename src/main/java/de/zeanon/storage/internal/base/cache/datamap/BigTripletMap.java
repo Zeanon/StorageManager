@@ -1,9 +1,10 @@
 package de.zeanon.storage.internal.base.cache.datamap;
 
 import de.zeanon.storage.internal.base.cache.base.TripletMap;
+import de.zeanon.utils.lists.BigList;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.*;
+import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,15 +19,18 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.3.0
  */
-@NoArgsConstructor(onConstructor_ = {@Contract(pure = true)})
-@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class LinkedTripletMap<K, V> extends TripletMap<K, V> {
+public class BigTripletMap<K, V> extends TripletMap<K, V> {
 
-	/**
-	 * Internal List storing the DataNodes
-	 */
-	@Getter(onMethod_ = {@Override}, value = AccessLevel.PROTECTED)
-	private @NotNull List<TripletNode<K, V>> localList = new LinkedList<>();
+	public BigTripletMap() {
+		super(new BigList<>());
+	}
+
+
+	@Override
+	@Contract("-> new")
+	public @NotNull List<TripletNode<K, V>> entryList() {
+		return new LinkedList<>(this.localList);
+	}
 }

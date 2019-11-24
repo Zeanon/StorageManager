@@ -4,16 +4,16 @@ import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.zeanon.storage.internal.base.cache.filedata.StandardFileData;
-import de.zeanon.storage.internal.base.exceptions.FileParseException;
-import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.files.CommentEnabledFile;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.base.settings.Comment;
 import de.zeanon.storage.internal.files.section.YamlFileSection;
-import de.zeanon.storage.internal.utility.utils.SMFileUtils;
 import de.zeanon.storage.internal.utility.utils.datafiles.YamlUtils;
 import de.zeanon.storage.internal.utility.utils.editor.YamlEditor;
+import de.zeanon.utils.basic.BaseFileUtils;
+import de.zeanon.utils.exceptions.FileParseException;
+import de.zeanon.utils.exceptions.RuntimeIOException;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
@@ -49,8 +49,8 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting) {
 		super(file, YamlFile.FileType.YAML, new LocalFileData(), reloadSetting, commentSetting);
 
-		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
-			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
+		if (BaseFileUtils.createFile(this.getFile()) && inputStream != null) {
+			BaseFileUtils.writeToFile(this.getFile(), BaseFileUtils.createNewInputStream(inputStream));
 		}
 
 		try {
@@ -85,7 +85,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 			if (this.getCommentSetting() != Comment.PRESERVE) {
 				this.write(this.getFileData().getDataMap());
 			} else {
-				final List<String> unEdited = YamlEditor.read(this.getFile());
+				@NotNull final List<String> unEdited = YamlEditor.read(this.getFile());
 				final @NotNull List<String> header = YamlEditor.readHeader(this.getFile());
 				final @NotNull List<String> footer = YamlEditor.readFooter(this.getFile());
 				this.write(this.getFileData().getDataMap());

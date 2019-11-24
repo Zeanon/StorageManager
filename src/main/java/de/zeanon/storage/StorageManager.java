@@ -5,8 +5,8 @@ import de.zeanon.storage.internal.files.raw.ThunderFile;
 import de.zeanon.storage.internal.files.raw.TomlFile;
 import de.zeanon.storage.internal.files.raw.YamlFile;
 import de.zeanon.storage.internal.utility.builder.*;
-import de.zeanon.storage.internal.utility.utils.SMFileUtils;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
+import de.zeanon.utils.basic.BaseFileUtils;
+import de.zeanon.utils.basic.Objects;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -223,28 +223,28 @@ public abstract class StorageManager<B, F> {
 
 	@Contract("_ -> this")
 	public final @NotNull B fromInputStream(final @Nullable InputStream inputStream) {
-		this.inputStream = SMFileUtils.createNewInputStream(inputStream);
+		this.inputStream = BaseFileUtils.createNewInputStream(inputStream);
 		//noinspection unchecked
 		return (B) this;
 	}
 
 	@Contract("_ -> this")
 	public final @NotNull B fromFile(final @Nullable File file) {
-		this.inputStream = file == null ? null : SMFileUtils.createNewInputStream(file);
+		this.inputStream = file == null ? null : BaseFileUtils.createNewInputStream(file);
 		//noinspection unchecked
 		return (B) this;
 	}
 
 	@Contract("_ -> this")
 	public final @NotNull B fromFile(final @Nullable Path file) {
-		this.inputStream = file == null ? null : SMFileUtils.createNewInputStream(file.toFile());
+		this.inputStream = file == null ? null : BaseFileUtils.createNewInputStream(file.toFile());
 		//noinspection unchecked
 		return (B) this;
 	}
 
 	@Contract("_ -> this")
 	public final @NotNull B fromFile(final @Nullable String file) {
-		this.inputStream = file == null ? null : SMFileUtils.createNewInputStream(new File(file));
+		this.inputStream = file == null ? null : BaseFileUtils.createNewInputStream(new File(file));
 		//noinspection unchecked
 		return (B) this;
 	}
@@ -252,7 +252,7 @@ public abstract class StorageManager<B, F> {
 	@Contract("_, _ -> this")
 	public final @NotNull B fromFile(final @Nullable String directory, final @Nullable String name) {
 		if (name != null) {
-			this.inputStream = SMFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory, name));
+			this.inputStream = BaseFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory, name));
 		}
 		//noinspection unchecked
 		return (B) this;
@@ -261,7 +261,7 @@ public abstract class StorageManager<B, F> {
 	@Contract("_, _ -> this")
 	public final @NotNull B fromFile(final @Nullable File directory, final @Nullable String name) {
 		if (name != null) {
-			this.inputStream = SMFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory, name));
+			this.inputStream = BaseFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory, name));
 		}
 		//noinspection unchecked
 		return (B) this;
@@ -270,7 +270,7 @@ public abstract class StorageManager<B, F> {
 	@Contract("_, _ -> this")
 	public final @NotNull B fromFile(final @Nullable Path directory, final @Nullable String name) {
 		if (name != null) {
-			this.inputStream = SMFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory.toFile(), name));
+			this.inputStream = BaseFileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory.toFile(), name));
 		}
 		//noinspection unchecked
 		return (B) this;
@@ -278,7 +278,7 @@ public abstract class StorageManager<B, F> {
 
 	@Contract("_ -> this")
 	public final @NotNull B fromResource(final @Nullable String resource) {
-		this.inputStream = resource == null ? null : SMFileUtils.createNewInputStream(resource);
+		this.inputStream = resource == null ? null : BaseFileUtils.createNewInputStream(resource);
 		//noinspection unchecked
 		return (B) this;
 	}

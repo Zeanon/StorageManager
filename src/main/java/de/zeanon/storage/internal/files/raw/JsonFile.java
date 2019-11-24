@@ -1,15 +1,15 @@
 package de.zeanon.storage.internal.files.raw;
 
 import de.zeanon.storage.internal.base.cache.filedata.StandardFileData;
-import de.zeanon.storage.internal.base.exceptions.FileParseException;
-import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
-import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.files.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.files.section.JsonFileSection;
-import de.zeanon.storage.internal.utility.utils.SMFileUtils;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import de.zeanon.storage.internal.utility.utils.datafiles.JsonUtils;
+import de.zeanon.utils.basic.BaseFileUtils;
+import de.zeanon.utils.basic.Objects;
+import de.zeanon.utils.exceptions.FileParseException;
+import de.zeanon.utils.exceptions.ObjectNullException;
+import de.zeanon.utils.exceptions.RuntimeIOException;
 import java.io.*;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -48,12 +48,12 @@ public class JsonFile extends FlatFile<StandardFileData> {
 	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting) {
 		super(file, JsonFile.FileType.JSON, new LocalFileData(), reloadSetting);
 
-		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
-			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
+		if (BaseFileUtils.createFile(this.getFile()) && inputStream != null) {
+			BaseFileUtils.writeToFile(this.getFile(), BaseFileUtils.createNewInputStream(inputStream));
 		}
 
 		try {
-			final @NotNull JSONTokener jsonTokener = new JSONTokener(SMFileUtils.createNewInputStream(this.getFile()));
+			final @NotNull JSONTokener jsonTokener = new JSONTokener(BaseFileUtils.createNewInputStream(this.getFile()));
 			this.getFileData().loadData(new JSONObject(jsonTokener).toMap());
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (JSONException e) {
@@ -67,7 +67,7 @@ public class JsonFile extends FlatFile<StandardFileData> {
 	@Override
 	public void reload() {
 		try {
-			final @NotNull JSONTokener jsonTokener = new JSONTokener(SMFileUtils.createNewInputStream(this.getFile()));
+			final @NotNull JSONTokener jsonTokener = new JSONTokener(BaseFileUtils.createNewInputStream(this.getFile()));
 			this.getFileData().loadData(new JSONObject(jsonTokener).toMap());
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {

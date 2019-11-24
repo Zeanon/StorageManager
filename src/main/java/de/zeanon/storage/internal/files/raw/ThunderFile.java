@@ -1,15 +1,15 @@
 package de.zeanon.storage.internal.files.raw;
 
 import de.zeanon.storage.internal.base.cache.filedata.ThunderFileData;
-import de.zeanon.storage.internal.base.exceptions.FileParseException;
-import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
-import de.zeanon.storage.internal.base.exceptions.ThunderException;
 import de.zeanon.storage.internal.base.files.CommentEnabledFile;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.files.section.ThunderFileSection;
-import de.zeanon.storage.internal.utility.utils.SMFileUtils;
 import de.zeanon.storage.internal.utility.utils.editor.ThunderEditor;
+import de.zeanon.utils.basic.BaseFileUtils;
+import de.zeanon.utils.exceptions.FileParseException;
+import de.zeanon.utils.exceptions.RuntimeIOException;
+import de.zeanon.utils.exceptions.ThunderException;
 import java.io.File;
 import java.io.InputStream;
 import lombok.*;
@@ -42,13 +42,13 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected ThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final boolean fastMap) {
-		super(file, ThunderFile.FileType.THUNDER, new LocalFileData(fastMap), reloadSetting, commentSetting);
+	protected ThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final boolean bigMap) {
+		super(file, ThunderFile.FileType.THUNDER, new LocalFileData(bigMap), reloadSetting, commentSetting);
 
-		this.fastMap = fastMap;
+		this.fastMap = bigMap;
 
-		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
-			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
+		if (BaseFileUtils.createFile(this.getFile()) && inputStream != null) {
+			BaseFileUtils.writeToFile(this.getFile(), BaseFileUtils.createNewInputStream(inputStream));
 		}
 
 		try {

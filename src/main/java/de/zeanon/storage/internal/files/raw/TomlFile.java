@@ -2,12 +2,12 @@ package de.zeanon.storage.internal.files.raw;
 
 import com.electronwill.toml.TomlException;
 import de.zeanon.storage.internal.base.cache.filedata.StandardFileData;
-import de.zeanon.storage.internal.base.exceptions.FileParseException;
-import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.files.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.files.section.TomlFileSection;
-import de.zeanon.storage.internal.utility.utils.SMFileUtils;
+import de.zeanon.utils.basic.BaseFileUtils;
+import de.zeanon.utils.exceptions.FileParseException;
+import de.zeanon.utils.exceptions.RuntimeIOException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,8 +41,8 @@ public class TomlFile extends FlatFile<StandardFileData> {
 	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting) {
 		super(file, TomlFile.FileType.TOML, new LocalFileData(), reloadSetting);
 
-		if (SMFileUtils.createFile(this.getFile()) && inputStream != null) {
-			SMFileUtils.writeToFile(this.getFile(), SMFileUtils.createNewInputStream(inputStream));
+		if (BaseFileUtils.createFile(this.getFile()) && inputStream != null) {
+			BaseFileUtils.writeToFile(this.getFile(), BaseFileUtils.createNewInputStream(inputStream));
 		}
 
 		try {

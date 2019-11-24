@@ -1,11 +1,11 @@
 package de.zeanon.storage.internal.base.cache.filedata;
 
 import de.zeanon.storage.internal.base.cache.base.TripletMap;
-import de.zeanon.storage.internal.base.cache.datamap.HashTripletMap;
-import de.zeanon.storage.internal.base.cache.datamap.LinkedTripletMap;
-import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
+import de.zeanon.storage.internal.base.cache.datamap.BigTripletMap;
+import de.zeanon.storage.internal.base.cache.datamap.GapTripletMap;
 import de.zeanon.storage.internal.base.interfaces.FileData;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
+import de.zeanon.utils.basic.Objects;
+import de.zeanon.utils.exceptions.ObjectNullException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -24,26 +24,25 @@ import org.jetbrains.annotations.Nullable;
  * @version 1.5.0
  */
 @SuppressWarnings("unused")
+@Getter
 @EqualsAndHashCode
 public class ThunderFileData implements FileData<TripletMap<String, Object>, TripletMap.TripletNode<String, Object>>, Comparable<ThunderFileData> {
 
 	/**
 	 * Defines whether a faster TripleMap implementation shall be used, which in turn requires more memory
 	 */
-	@Getter
 	@Setter
-	private boolean fastMap;
+	private boolean bigMap;
 	/**
 	 * internal cache for the contents of the File
 	 */
-	@Getter
 	private @NotNull TripletMap<String, Object> dataMap;
 
 
 	@Contract(pure = true)
-	public ThunderFileData(final boolean fastMap) {
-		this.fastMap = fastMap;
-		this.dataMap = this.fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
+	public ThunderFileData(final boolean bigMap) {
+		this.bigMap = bigMap;
+		this.dataMap = this.newDataMap();
 	}
 
 	/**
@@ -69,7 +68,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Contract("_ -> new")
 	public @NotNull List<TripletMap.TripletNode<String, Object>> entryList(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		final Object tempObject = this.get(key);
+		@NotNull final Object tempObject = this.get(key);
 		if (tempObject instanceof TripletMap) {
 			//noinspection unchecked
 			return this.internalEntryList((TripletMap) tempObject);
@@ -89,7 +88,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Contract("_ -> new")
 	public @NotNull List<TripletMap.TripletNode<String, Object>> blockEntryList(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		final Object tempObject = this.get(key);
+		@NotNull final Object tempObject = this.get(key);
 		if (tempObject instanceof TripletMap) {
 			//noinspection unchecked
 			return ((TripletMap) tempObject).entryList();
@@ -110,7 +109,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Contract("_ -> new")
 	public @NotNull List<TripletMap.TripletNode<String, Object>> entryListUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		final Object tempObject = this.getUseArray(key);
+		@NotNull final Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof TripletMap) {
 			//noinspection unchecked
 			return this.internalEntryList((TripletMap) tempObject);
@@ -130,7 +129,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Contract("_ -> new")
 	public @NotNull List<TripletMap.TripletNode<String, Object>> blockEntryListUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		final Object tempObject = this.getUseArray(key);
+		@NotNull final Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof TripletMap) {
 			//noinspection unchecked
 			return ((TripletMap) tempObject).entryList();
@@ -172,7 +171,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Override
 	public void insert(final @NotNull String key, @Nullable Object value) {
 		Objects.checkNull(key, "Key must not be null");
-		final String[] parts = key.split("\\.");
+		@NotNull final String[] parts = key.split("\\.");
 		this.initialInsert(value, parts);
 	}
 
@@ -198,7 +197,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Override
 	public void remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		final String[] parts = key.split("\\.");
+		@NotNull final String[] parts = key.split("\\.");
 		this.initialRemove(parts);
 	}
 
@@ -225,7 +224,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Override
 	public boolean containsKey(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		final String[] parts = key.split("\\.");
+		@NotNull final String[] parts = key.split("\\.");
 		return this.internalContainsKey(this.dataMap, parts, 0);
 	}
 
@@ -254,7 +253,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Override
 	public @NotNull Object get(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		final String[] parts = key.split("\\.");
+		@NotNull final String[] parts = key.split("\\.");
 		return this.internalGet(this.dataMap, parts);
 	}
 
@@ -289,7 +288,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Override
 	public int blockSize(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		final Object tempObject = this.get(key);
+		@NotNull final Object tempObject = this.get(key);
 		if (tempObject instanceof TripletMap) {
 			return ((TripletMap) tempObject).size();
 		} else {
@@ -305,7 +304,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Override
 	public int blockSizeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		final Object tempObject = this.getUseArray(key);
+		@NotNull final Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof TripletMap) {
 			return ((TripletMap) tempObject).size();
 		} else {
@@ -329,7 +328,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Override
 	public int size(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		final Object tempObject = this.get(key);
+		@NotNull final Object tempObject = this.get(key);
 		if (tempObject instanceof TripletMap) {
 			//noinspection unchecked
 			return this.internalSize((TripletMap) tempObject);
@@ -346,7 +345,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Override
 	public int sizeUseArray(final @NotNull String... key) {
 		Objects.checkNull(key, "Key must not be null");
-		final Object tempObject = this.getUseArray(key);
+		@NotNull final Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof TripletMap) {
 			//noinspection unchecked
 			return this.internalSize((TripletMap) tempObject);
@@ -380,31 +379,31 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		if (value == null) {
 			this.removeUseArray(parts);
 		} else {
-			final Object tempValue = this.dataMap.get(parts[0]);
+			final @Nullable Object tempValue = this.dataMap.get(parts[0]);
 			//noinspection unchecked
-			final TripletMap<String, Object> childMap =
+			@NotNull final TripletMap<String, Object> childMap =
 					this.dataMap.containsKey(parts[0])
 					&& tempValue instanceof TripletMap
 					? (TripletMap) tempValue
-					: (this.fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>());
+					: (this.bigMap ? new BigTripletMap<>() : new GapTripletMap<>());
 			this.dataMap.put(parts[0], this.internalInsert(childMap, parts, value, 1));
 		}
 	}
 
 	private @NotNull Object internalInsert(final @NotNull TripletMap<String, Object> map, final @NotNull String[] key, final @NotNull Object value, final int keyIndex) {
 		if (keyIndex < key.length) {
-			final Object tempValue = map.get(key[keyIndex]);
+			final @Nullable Object tempValue = map.get(key[keyIndex]);
 			//noinspection unchecked
-			final TripletMap<String, Object> childMap =
+			final @Nullable TripletMap<String, Object> childMap =
 					map.containsKey(key[keyIndex])
 					&& tempValue instanceof TripletMap
 					? (TripletMap) tempValue
-					: (this.fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>());
+					: (this.bigMap ? new BigTripletMap<>() : new GapTripletMap<>());
 			map.put(key[keyIndex], this.internalInsert(childMap, key, value, keyIndex + 1));
 			return map;
 		} else {
 			//noinspection unchecked
-			return value instanceof Map && !(value instanceof TripletMap) ? this.parseMap((Map) value, this.fastMap) : value;
+			return value instanceof Map && !(value instanceof TripletMap) ? this.parseMap((Map) value) : value;
 		}
 	}
 
@@ -412,7 +411,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		if (parts.length == 1) {
 			this.dataMap.remove(parts[0]);
 		} else {
-			final Object tempValue = this.dataMap.get(parts[0]);
+			final @Nullable Object tempValue = this.dataMap.get(parts[0]);
 			if (tempValue instanceof TripletMap) {
 				this.dataMap.put(parts[0], this.internalRemove((TripletMap) tempValue, parts, 1));
 				if (((TripletMap) tempValue).isEmpty()) {
@@ -427,7 +426,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Contract("_, _, _ -> param1")
 	private @NotNull TripletMap internalRemove(final @NotNull TripletMap map, final @NotNull String[] key, final int keyIndex) {
 		if (keyIndex < key.length - 1) {
-			final Object tempValue = map.get(key[keyIndex]);
+			final @Nullable Object tempValue = map.get(key[keyIndex]);
 			if (tempValue instanceof TripletMap) {
 				//noinspection unchecked
 				map.put(key[keyIndex], this.internalRemove((TripletMap) tempValue, key, keyIndex + 1));
@@ -445,8 +444,8 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	}
 
 	private @NotNull List<TripletMap.TripletNode<String, Object>> internalEntryList(final @NotNull TripletMap<String, Object> map) {
-		final List<TripletMap.TripletNode<String, Object>> tempList = map.entryList();
-		for (TripletMap.TripletNode<String, Object> entry : tempList) {
+		@NotNull final List<TripletMap.TripletNode<String, Object>> tempList = map.entryList();
+		for (@NotNull TripletMap.TripletNode<String, Object> entry : tempList) {
 			if (entry.getValue() instanceof TripletMap) {
 				//noinspection unchecked
 				entry.setValue(this.internalEntryList((TripletMap) entry.getValue()));
@@ -457,7 +456,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 
 	private boolean internalContainsKey(final @NotNull TripletMap map, final @NotNull String[] key, final int keyIndex) {
 		if (keyIndex < key.length - 1) {
-			final Object tempValue = map.get(key[keyIndex]);
+			final @Nullable Object tempValue = map.get(key[keyIndex]);
 			if (tempValue instanceof TripletMap) {
 				return this.internalContainsKey((TripletMap) tempValue, key, keyIndex + 1);
 			} else {
@@ -470,7 +469,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 
 	private @NotNull Object internalGet(final @NotNull TripletMap map, final @NotNull String[] key) {
 		@NotNull Object tempValue = map;
-		for (String tempKey : key) {
+		for (final @NotNull String tempKey : key) {
 			if (tempValue instanceof TripletMap) {
 				tempValue = Objects.notNull(((TripletMap) tempValue).get(tempKey), "File does not contain '" + Arrays.toString(key) + "' -> could not find '" + tempKey + "'");
 			} else {
@@ -482,7 +481,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 
 	private int internalSize(final @NotNull TripletMap<String, Object> map) {
 		int size = 0;
-		for (TripletMap.TripletNode entry : map.entryList()) {
+		for (@NotNull TripletMap.TripletNode entry : map.entryList()) {
 			if (entry.getValue() instanceof TripletMap) {
 				//noinspection unchecked
 				size += this.internalSize((TripletMap) entry.getValue());
@@ -493,26 +492,31 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		return size;
 	}
 
-	@Contract("_, _ -> new")
-	private @NotNull TripletMap<String, Object> parseMap(final @NotNull Map<String, Object> map, final boolean fastMap) {
+	@Contract("_ -> new")
+	private @NotNull TripletMap<String, Object> parseMap(final @NotNull Map<String, Object> map) {
 		Objects.checkNull(map, "Map must not be null");
-		final TripletMap<String, Object> tempMap = fastMap ? new LinkedTripletMap<>() : new HashTripletMap<>();
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
+		final @NotNull TripletMap<String, Object> tempMap = this.newDataMap();
+		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map && !(entry.getValue() instanceof TripletMap)) {
 				//noinspection unchecked
-				tempMap.add(entry.getKey(), this.parseMap((Map) entry.getValue(), fastMap));
+				tempMap.add(entry.getKey(), this.parseMap((Map) entry.getValue()));
 			} else {
 				tempMap.add(entry.getKey(), entry.getValue());
 			}
 		}
 		return tempMap;
 	}
+
+	@Contract("-> new")
+	private @NotNull TripletMap<String, Object> newDataMap() {
+		return this.bigMap ? new BigTripletMap<>() : new GapTripletMap<>();
+	}
 	// </Internal>
 
 
 	@Override
 	public int compareTo(final @NotNull ThunderFileData fileData) {
-		return Integer.compare(this.dataMap.size(), Objects.notNull(fileData.dataMap).size());
+		return Integer.compare(this.dataMap.size(), Objects.notNull(fileData.dataMap, "FileData must not be null").size());
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package de.zeanon.storage.internal.files.section;
 
 import de.zeanon.storage.internal.base.sections.FlatSection;
 import de.zeanon.storage.internal.files.raw.TomlFile;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
+import de.zeanon.utils.basic.Objects;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

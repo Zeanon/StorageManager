@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.base.interfaces;
 
-import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
+import de.zeanon.utils.exceptions.ObjectNullException;
 import java.util.List;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;

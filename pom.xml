@@ -101,6 +101,10 @@
                             <pattern>com.electronwill</pattern>
                             <shadedPattern>de.zeanon.storage.shaded.electronwill</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>de.zeanon.utils</pattern>
+                            <shadedPattern>de.zeanon.storage.shaded.baseutils</shadedPattern>
+                        </relocation>
                     </relocations>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                 </configuration>
@@ -220,6 +224,14 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20190722</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Zeanon BaseUtils -->
+        <dependency>
+            <groupId>de.zeanon</groupId>
+            <artifactId>baseutils</artifactId>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
 

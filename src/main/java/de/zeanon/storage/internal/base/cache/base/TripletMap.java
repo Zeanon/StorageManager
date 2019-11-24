@@ -1,12 +1,10 @@
 package de.zeanon.storage.internal.base.cache.base;
 
-import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
+import de.zeanon.utils.basic.Objects;
+import de.zeanon.utils.exceptions.ObjectNullException;
+import de.zeanon.utils.lists.IList;
 import java.util.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,8 +19,12 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.3.0
  */
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
 @SuppressWarnings("unused")
 public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
+
+	protected @NotNull IList<TripletNode<K, V>> localList;
 
 
 	/**
@@ -32,7 +34,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 */
 	@Override
 	public int size() {
-		return this.getLocalList().size();
+		return this.localList.size();
 	}
 
 	/**
@@ -47,7 +49,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	@Override
 	@Contract(pure = true)
 	public boolean containsKey(final @NotNull Object key) {
-		for (final @NotNull TripletNode<K, V> TempNode : this.getLocalList()) {
+		for (final @NotNull TripletNode<K, V> TempNode : this.localList) {
 			if (TempNode.getKey().equals(key)) {
 				return true;
 			}
@@ -67,7 +69,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	@Override
 	@Contract(pure = true)
 	public boolean containsValue(final @NotNull Object value) {
-		for (final @NotNull TripletNode<K, V> tempNode : this.getLocalList()) {
+		for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
 			if (value.equals(tempNode.getValue())) {
 				return true;
 			}
@@ -89,15 +91,13 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * previously associated <tt>null</tt> with <tt>key</tt>.)
 	 */
 	@Override
-	public V put(final @NotNull K key, final @NotNull V value) {
-		for (final @NotNull TripletNode<K, V> TempNode : this.getLocalList()) {
-			if (TempNode.getKey().equals(key)) {
-				final V tempValue = TempNode.getValue();
-				TempNode.setValue(value);
-				return tempValue;
+	public @Nullable V put(final @NotNull K key, final @NotNull V value) {
+		for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+			if (tempNode.getKey().equals(key)) {
+				return tempNode.setValue(value);
 			}
 		}
-		this.getLocalList().add(new TripletNode<>(this.getLocalList().size(), key, value));
+		this.localList.add(new TripletNode<>(this.localList.size(), key, value));
 		return null;
 	}
 
@@ -125,7 +125,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	@Override
 	@Contract(pure = true)
 	public boolean isEmpty() {
-		return this.getLocalList().isEmpty();
+		return this.localList.isEmpty();
 	}
 
 	/**
@@ -135,23 +135,39 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * @param value value to be associated with the specified key
 	 */
 	public void add(final @NotNull K key, final @NotNull V value) {
-		this.getLocalList().add(new TripletNode<>(this.size(), key, value));
+		this.localList.add(new TripletNode<>(this.size(), key, value));
+	}
+
+	/**
+	 * Associates the specified value with the specified key in this map.
+	 *
+	 * @param node mapping to be added to the map
+	 */
+	public void add(final @NotNull TripletMap.TripletNode<K, V> node) {
+		this.localList.add(node);
 	}
 
 	/**
 	 * Copies all of the mappings from the specified map to this map.
 	 *
-	 * @param nodes mappings to be stored in this map
+	 * @param nodes mappings to be added to the map
+	 *
+	 * @throws ObjectNullException if the specified node is null
+	 */
+	public void addAll(final @NotNull List<TripletNode<K, V>> nodes) {
+		this.localList.addAll(nodes);
+	}
+
+	/**
+	 * Copies all of the mappings from the specified map to this map.
+	 *
+	 * @param nodeMap mappings to be stored in this map
 	 *
 	 * @throws ObjectNullException if the specified map is null
 	 */
-	public void addAll(final @NotNull List<TripletNode<K, V>> nodes) {
-		this.getLocalList().addAll(nodes);
-	}
-
-	public void addAll(final @NotNull Map<? extends K, ? extends V> map) {
-		for (final @NotNull Map.Entry<? extends K, ? extends V> entry : map.entrySet()) {
-			this.getLocalList().add(new TripletNode<>(this.size(), entry.getKey(), entry.getValue()));
+	public void addAll(final @NotNull Map<? extends K, ? extends V> nodeMap) {
+		for (final @NotNull Map.Entry<? extends K, ? extends V> entry : nodeMap.entrySet()) {
+			this.localList.add(new TripletNode<>(this.size(), entry.getKey(), entry.getValue()));
 		}
 	}
 
@@ -172,10 +188,9 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 *
 	 * @see #put(Object, Object)
 	 */
-	@Nullable
 	@Override
-	public V get(final @NotNull Object key) {
-		for (final @NotNull TripletNode<K, V> tempNode : this.getLocalList()) {
+	public @Nullable V get(final @NotNull Object key) {
+		for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
 			if (tempNode.getKey().equals(key)) {
 				return tempNode.getValue();
 			}
@@ -193,13 +208,17 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * (A <tt>null</tt> return can also indicate that the map
 	 * previously associated <tt>null</tt> with <tt>key</tt>.)
 	 */
-	@Nullable
 	@Override
-	public V remove(final @NotNull Object key) {
-		for (final @NotNull TripletNode<K, V> tempNode : this.getLocalList()) {
+	public @Nullable V remove(final @NotNull Object key) {
+		final @NotNull Iterator<TripletNode<K, V>> tempIterator = this.localList.iterator();
+		TripletNode<K, V> tempNode;
+		while ((tempNode = tempIterator.next()) != null) {
 			if (tempNode.getKey().equals(key)) {
-				this.getLocalList().remove(tempNode);
-				return tempNode.getValue();
+				try {
+					return tempNode.getValue();
+				} finally {
+					tempIterator.remove();
+				}
 			}
 		}
 		return null;
@@ -211,12 +230,15 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 */
 	@Override
 	public void clear() {
-		this.getLocalList().clear();
+		this.localList.clear();
 	}
 
-	public @NotNull List<TripletNode<K, V>> entryList() {
-		return new ArrayList<>(this.getLocalList());
+	public void trimToSize() {
+		this.localList.trimToSize();
 	}
+
+	@Contract("-> new")
+	public abstract @NotNull List<TripletNode<K, V>> entryList();
 
 	/**
 	 * Returns a {@link Set} view of the mappings contained in this map.
@@ -235,63 +257,14 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * @return a set view of the mappings contained in this map
 	 */
 	@Override
+	@Contract("-> new")
 	public @NotNull Set<Map.Entry<K, V>> entrySet() {
-		return new HashSet<>(this.getLocalList());
+		return new LinkedHashSet<>(this.localList);
 	}
-
-	/**
-	 * Returns a {@link Set} view of the keys contained in this map.
-	 * The set is backed by the map, so changes to the map are
-	 * reflected in the set, and vice-versa.  If the map is modified
-	 * while an iteration over the set is in progress (except through
-	 * the iterator's own <tt>remove</tt> operation), the results of
-	 * the iteration are undefined.  The set supports element removal,
-	 * which removes the corresponding mapping from the map, via the
-	 * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>,
-	 * <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
-	 * operations.  It does not support the <tt>add</tt> or <tt>addAll</tt>
-	 * operations.
-	 *
-	 * @return a set view of the keys contained in this map
-	 */
-	@Override
-	public @NotNull Set<K> keySet() {
-		final @NotNull Set<K> tempCollection = new HashSet<>();
-		for (final @NotNull TripletNode<K, V> tempNode : this.getLocalList()) {
-			tempCollection.add(tempNode.getKey());
-		}
-		return tempCollection;
-	}
-
-	/**
-	 * Returns a {@link Collection} view of the values contained in this map.
-	 * The collection is backed by the map, so changes to the map are
-	 * reflected in the collection, and vice-versa.  If the map is
-	 * modified while an iteration over the collection is in progress
-	 * (except through the iterator's own <tt>remove</tt> operation),
-	 * the results of the iteration are undefined.  The collection
-	 * supports element removal, which removes the corresponding
-	 * mapping from the map, via the <tt>Iterator.remove</tt>,
-	 * <tt>Collection.remove</tt>, <tt>removeAll</tt>,
-	 * <tt>retainAll</tt> and <tt>clear</tt> operations.  It does not
-	 * support the <tt>add</tt> or <tt>addAll</tt> operations.
-	 *
-	 * @return a view of the values contained in this map
-	 */
-	@Override
-	public @NotNull Collection<V> values() {
-		final @NotNull Collection<V> tempCollection = new HashSet<>();
-		for (final @NotNull TripletNode<K, V> tempNode : this.getLocalList()) {
-			tempCollection.add(tempNode.getValue());
-		}
-		return tempCollection;
-	}
-
-	protected abstract @NotNull List<TripletMap.TripletNode<K, V>> getLocalList();
 
 	@Override
 	public @NotNull String toString() {
-		return this.getLocalList().toString();
+		return this.localList.toString();
 	}
 
 
@@ -318,16 +291,20 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		private @Nullable V value;
 
 		public @NotNull K setKey(final @NotNull K key) {
-			final @NotNull K tempKey = this.key;
-			this.key = key;
-			return tempKey;
+			try {
+				return this.key;
+			} finally {
+				this.key = key;
+			}
 		}
 
 		@Override
 		public @Nullable V setValue(final @NotNull V value) {
-			final @Nullable V tempValue = this.value;
-			this.value = value;
-			return tempValue;
+			try {
+				return this.value;
+			} finally {
+				this.value = value;
+			}
 		}
 
 		@Override

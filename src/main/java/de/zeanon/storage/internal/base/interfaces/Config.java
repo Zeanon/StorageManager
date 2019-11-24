@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.base.interfaces;
 
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
+import de.zeanon.utils.basic.Objects;
 import java.util.Arrays;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;

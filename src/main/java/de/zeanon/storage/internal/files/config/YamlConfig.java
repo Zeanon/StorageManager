@@ -1,14 +1,14 @@
 package de.zeanon.storage.internal.files.config;
 
 import com.esotericsoftware.yamlbeans.YamlException;
-import de.zeanon.storage.internal.base.exceptions.FileParseException;
-import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.interfaces.Config;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.base.settings.Comment;
 import de.zeanon.storage.internal.files.raw.YamlFile;
 import de.zeanon.storage.internal.utility.utils.editor.YamlEditor;
+import de.zeanon.utils.exceptions.FileParseException;
+import de.zeanon.utils.exceptions.RuntimeIOException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -92,7 +92,7 @@ public class YamlConfig extends YamlFile implements Config {
 				}
 			} else {
 				try {
-					final List<String> lines = YamlEditor.read(this.getFile());
+					@NotNull final List<String> lines = YamlEditor.read(this.getFile());
 					final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.getFile());
 
 					List<String> newLines = this.header;
@@ -110,7 +110,7 @@ public class YamlConfig extends YamlFile implements Config {
 			this.header = new ArrayList<>();
 
 			try {
-				final List<String> lines = YamlEditor.read(this.getFile());
+				@NotNull final List<String> lines = YamlEditor.read(this.getFile());
 				final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.getFile());
 
 				lines.removeAll(oldHeader);
@@ -166,7 +166,7 @@ public class YamlConfig extends YamlFile implements Config {
 				}
 			} else {
 				try {
-					final List<String> lines = YamlEditor.read(this.getFile());
+					@NotNull final List<String> lines = YamlEditor.read(this.getFile());
 					final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.getFile());
 
 					lines.removeAll(oldFooter);
@@ -183,7 +183,7 @@ public class YamlConfig extends YamlFile implements Config {
 			this.footer = new ArrayList<>();
 
 			try {
-				final List<String> lines = YamlEditor.read(this.getFile());
+				@NotNull final List<String> lines = YamlEditor.read(this.getFile());
 				final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.getFile());
 
 				lines.removeAll(oldFooter);

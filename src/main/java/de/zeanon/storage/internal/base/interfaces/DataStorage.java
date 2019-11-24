@@ -1,7 +1,7 @@
 package de.zeanon.storage.internal.base.interfaces;
 
 import de.zeanon.storage.internal.base.sections.FlatSection;
-import de.zeanon.storage.internal.utility.utils.basic.Primitive;
+import de.zeanon.utils.basic.Primitive;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -364,7 +364,7 @@ public interface DataStorage {
 			this.set(key, value);
 			return value;
 		} else {
-			Object tempObj = this.get(key);
+			@NotNull Object tempObj = this.get(key);
 			return parseObject(value, tempObj);
 		}
 	}
@@ -374,7 +374,7 @@ public interface DataStorage {
 			this.setUseArray(key, value);
 			return value;
 		} else {
-			Object tempObj = this.getUseArray(key);
+			@NotNull Object tempObj = this.getUseArray(key);
 			return parseObject(value, tempObj);
 		}
 	}
