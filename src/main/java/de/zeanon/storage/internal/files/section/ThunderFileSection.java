@@ -2,7 +2,6 @@ package de.zeanon.storage.internal.files.section;
 
 import de.zeanon.storage.internal.base.sections.CommentEnabledSection;
 import de.zeanon.storage.internal.files.raw.ThunderFile;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -39,12 +38,12 @@ public class ThunderFileSection extends CommentEnabledSection<ThunderFile> {
 	@NotNull
 	@Override
 	public ThunderFileSection getSection(final @NotNull String sectionKey) {
-		return new ThunderFileSection(this.getFinalKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.thunderFile);
+		return new ThunderFileSection(this.getFinalKey(sectionKey), this.thunderFile);
 	}
 
 	@NotNull
 	@Override
 	public ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new ThunderFileSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.thunderFile);
+		return new ThunderFileSection(this.getFinalArrayKey(sectionKey), this.thunderFile);
 	}
 }

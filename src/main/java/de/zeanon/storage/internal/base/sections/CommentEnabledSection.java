@@ -3,7 +3,6 @@ package de.zeanon.storage.internal.base.sections;
 import de.zeanon.storage.internal.base.files.CommentEnabledFile;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.interfaces.FileData;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
@@ -48,17 +47,17 @@ public abstract class CommentEnabledSection<F extends CommentEnabledFile<? exten
 	 * @see FlatSection#set(String, Object)
 	 */
 	public void set(final @NotNull CommentSetting commentSetting, final @NotNull String key, final @Nullable Object value) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		this.set(key, value);
 	}
 
 	public void setAll(final @NotNull CommentSetting commentSetting, final @NotNull Map<String, Object> dataMap) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		this.setAll(dataMap);
 	}
 
 	public void setAll(final @NotNull CommentSetting commentSetting, final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		this.setAll(key, dataMap);
 	}
 
@@ -69,27 +68,27 @@ public abstract class CommentEnabledSection<F extends CommentEnabledFile<? exten
 	 * @see FlatSection#remove(String)
 	 */
 	public void remove(final @NotNull CommentSetting commentSetting, final @NotNull String key) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		this.remove(key);
 	}
 
 	public void removeAll(final @NotNull CommentSetting commentSetting, final @NotNull String... keys) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		this.removeAll(keys);
 	}
 
 	public void removeAll(final @NotNull CommentSetting commentSetting, final @NotNull List<String> keys) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		this.removeAll(keys);
 	}
 
 	public void removeAll(final @NotNull CommentSetting commentSetting, final @NotNull String key, final @NotNull String... keys) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		this.removeAll(key, keys);
 	}
 
 	public void removeAll(final @NotNull CommentSetting commentSetting, final @NotNull String key, final @NotNull List<String> keys) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		this.removeAll(key, keys);
 	}
 }

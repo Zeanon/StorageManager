@@ -7,7 +7,7 @@ package de.zeanon.storage.internal.base.exceptions;
  * @version 1.0.0
  */
 @SuppressWarnings("unused")
-public class FileParseException extends RuntimeException {
+public class FileParseException extends StorageManagerException {
 
 	public FileParseException() {
 		super();

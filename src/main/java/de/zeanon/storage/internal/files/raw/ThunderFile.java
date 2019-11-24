@@ -30,7 +30,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 
 	@Getter
 	@Setter
-	private boolean fastMap;
+	private boolean bigMap;
 
 
 	/**
@@ -45,14 +45,14 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 	protected ThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final boolean bigMap) {
 		super(file, ThunderFile.FileType.THUNDER, new LocalFileData(bigMap), reloadSetting, commentSetting);
 
-		this.fastMap = bigMap;
+		this.bigMap = bigMap;
 
 		if (BaseFileUtils.createFile(this.getFile()) && inputStream != null) {
 			BaseFileUtils.writeToFile(this.getFile(), BaseFileUtils.createNewInputStream(inputStream));
 		}
 
 		try {
-			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getCommentSetting(), this.fastMap));
+			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getCommentSetting(), this.bigMap));
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
@@ -65,7 +65,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 	@Override
 	public void reload() {
 		try {
-			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getCommentSetting(), this.fastMap));
+			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getCommentSetting(), this.bigMap));
 			this.setLastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
@@ -143,8 +143,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 
 	private static class LocalFileData extends ThunderFileData {
 
-		private LocalFileData(final boolean fastMap) {
-			super(fastMap);
+		private LocalFileData(final boolean bigMap) {
+			super(bigMap);
 		}
 	}
 }

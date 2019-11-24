@@ -1,9 +1,7 @@
 package de.zeanon.storage.internal.base.settings;
 
-import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.files.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,12 +29,9 @@ public enum Reload implements ReloadSetting {
 	 * reloads only if the File has changed
 	 */
 	INTELLIGENT {
-		/**
-		 * @throws ObjectNullException if the passed FlatFile is null
-		 */
 		@Override
 		public boolean shouldReload(final @NotNull FlatFile flatFile) {
-			return Objects.notNull(flatFile, "FlatFile must not be null").hasChanged();
+			return flatFile.hasChanged();
 		}
 	},
 

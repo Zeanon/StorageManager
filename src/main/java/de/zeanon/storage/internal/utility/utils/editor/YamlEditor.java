@@ -1,6 +1,5 @@
 package de.zeanon.storage.internal.utility.utils.editor;
 
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -81,7 +80,7 @@ public class YamlEditor {
 
 	private static @NotNull List<String> getCommentsFromLines(final @NotNull List<String> lines) {
 		final @NotNull List<String> result = new ArrayList<>();
-		for (final @NotNull String line : Objects.notNull(lines, "Lines must not be null")) {
+		for (final @NotNull String line : lines) {
 			if (line.startsWith("#")) {
 				result.add(line);
 			}
@@ -90,8 +89,6 @@ public class YamlEditor {
 	}
 
 	private static @NotNull List<String> getFooterFromLines(final @NotNull List<String> lines) {
-		Objects.checkNull(lines, "Lines must not be null");
-
 		final @NotNull List<String> result = new ArrayList<>();
 		Collections.reverse(lines);
 		for (final @NotNull String line : lines) {
@@ -108,7 +105,7 @@ public class YamlEditor {
 
 	private static @NotNull List<String> getHeaderFromLines(final @NotNull List<String> lines) {
 		final @NotNull List<String> result = new ArrayList<>();
-		for (final @NotNull String line : Objects.notNull(lines, "Lines must not be null")) {
+		for (final @NotNull String line : lines) {
 			if (!line.startsWith("#")) {
 				return result;
 			} else {
@@ -120,7 +117,7 @@ public class YamlEditor {
 
 	private static @NotNull List<String> getKeys(final @NotNull List<String> lines) {
 		final @NotNull List<String> result = new ArrayList<>();
-		for (final @NotNull String line : Objects.notNull(lines, "Lines must not be null")) {
+		for (final @NotNull String line : lines) {
 			if (!line.replaceAll("\\s+", "").startsWith("#")) {
 				result.add(line);
 			}

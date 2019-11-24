@@ -65,7 +65,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	@Override
 	@Contract("_ -> new")
 	public @NotNull List<Map.Entry<String, Object>> entryList(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
 		@NotNull final Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -85,7 +84,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	@Override
 	@Contract("_ -> new")
 	public @NotNull List<Map.Entry<String, Object>> blockEntryList(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
 		@NotNull final Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -106,7 +104,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	@Override
 	@Contract("_ -> new")
 	public @NotNull List<Map.Entry<String, Object>> entryListUseArray(final @NotNull String... key) {
-		Objects.checkNull(key, "Key must not be null");
 		@NotNull final Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -126,7 +123,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	@Override
 	@Contract("_ -> new")
 	public @NotNull List<Map.Entry<String, Object>> blockEntryListUseArray(final @NotNull String... key) {
-		Objects.checkNull(key, "Key must not be null");
 		@NotNull final Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -156,7 +152,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public void insert(final @NotNull String key, @Nullable Object value) {
-		Objects.checkNull(key, "Key must not be null");
 		@NotNull final String[] parts = key.split("\\.");
 		this.initialInsert(value, parts);
 	}
@@ -169,7 +164,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public void insertUseArray(final @NotNull String[] key, @Nullable Object value) {
-		Objects.checkNull(key, "Key must not be null");
 		this.initialInsert(value, key);
 	}
 
@@ -182,7 +176,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public void remove(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
 		@NotNull final String[] parts = key.split("\\.");
 		this.initialRemove(parts);
 	}
@@ -196,7 +189,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public void removeUseArray(final @NotNull String... key) {
-		Objects.checkNull(key, "Key must not be null");
 		this.initialRemove(key);
 	}
 
@@ -209,7 +201,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public boolean containsKey(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
 		@NotNull final String[] parts = key.split("\\.");
 		return this.internalContainsKey(this.dataMap, parts, 0);
 	}
@@ -223,7 +214,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public boolean containsKeyUseArray(final @NotNull String... key) {
-		Objects.checkNull(key, "Key must not be null");
 		return this.internalContainsKey(this.dataMap, key, 0);
 	}
 
@@ -238,7 +228,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public @NotNull Object get(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
 		@NotNull final String[] parts = key.split("\\.");
 		return this.internalGet(this.dataMap, parts);
 	}
@@ -254,7 +243,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public @NotNull Object getUseArray(final @NotNull String... key) {
-		Objects.checkNull(key, "Key must not be null");
 		return this.internalGet(this.dataMap, key);
 	}
 
@@ -273,7 +261,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public int blockSize(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
 		@NotNull final Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			return ((Map) tempObject).size();
@@ -289,7 +276,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public int blockSizeUseArray(final @NotNull String... key) {
-		Objects.checkNull(key, "Key must not be null");
 		@NotNull final Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			return ((Map) tempObject).size();
@@ -313,7 +299,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public int size(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
 		@NotNull final Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -330,7 +315,6 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public int sizeUseArray(final @NotNull String... key) {
-		Objects.checkNull(key, "Key must not be null");
 		@NotNull final Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked

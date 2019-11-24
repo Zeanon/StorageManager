@@ -18,21 +18,6 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class Objects {
 
-	/**
-	 * Checks if given Object is null
-	 */
-	@Contract("null -> fail")
-	public static <O> void checkNull(final @Nullable O object) {
-		checkNull(object, "Checked Object  must not be null");
-	}
-
-	@Contract("null, _ -> fail")
-	public static <O> void checkNull(final @Nullable O object, final @NotNull String message) {
-		if (object == null) {
-			throw new ObjectNullException(message);
-		}
-	}
-
 
 	/**
 	 * Checks if given Object is null

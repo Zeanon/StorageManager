@@ -133,7 +133,6 @@ public class JsonFile extends FlatFile<StandardFileData> {
 
 	@NotNull
 	private Map getMapWithoutPath(final @NotNull String key) {
-		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
 		if (!this.hasKey(key)) {
@@ -157,7 +156,6 @@ public class JsonFile extends FlatFile<StandardFileData> {
 
 	@NotNull
 	private Map getMapWithoutPath(final @NotNull String... key) {
-		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
 		if (!this.hasKeyUseArray(key)) {

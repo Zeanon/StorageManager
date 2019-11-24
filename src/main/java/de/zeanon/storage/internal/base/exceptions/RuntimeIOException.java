@@ -7,7 +7,7 @@ package de.zeanon.storage.internal.base.exceptions;
  * @version 1.0.0
  */
 @SuppressWarnings("unused")
-public class RuntimeIOException extends RuntimeException {
+public class RuntimeIOException extends StorageManagerException {
 
 	public RuntimeIOException() {
 		super();

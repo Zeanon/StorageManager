@@ -2,7 +2,6 @@ package de.zeanon.storage.internal.files.section;
 
 import de.zeanon.storage.internal.base.interfaces.Config;
 import de.zeanon.storage.internal.files.config.ThunderConfig;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -104,12 +103,12 @@ public class ThunderConfigSection extends ThunderFileSection implements Config {
 	@NotNull
 	@Override
 	public ThunderConfigSection getSection(final @NotNull String sectionKey) {
-		return new ThunderConfigSection(this.getFinalKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.thunderConfig);
+		return new ThunderConfigSection(this.getFinalKey(sectionKey), this.thunderConfig);
 	}
 
 	@NotNull
 	@Override
 	public ThunderConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new ThunderConfigSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.thunderConfig);
+		return new ThunderConfigSection(this.getFinalArrayKey(sectionKey), this.thunderConfig);
 	}
 }

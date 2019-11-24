@@ -5,7 +5,7 @@
 
     <groupId>de.zeanon</groupId>
     <artifactId>storagemanager</artifactId>
-    <version>1.1.39</version>
+    <version>1.1.40</version>
     <name>StorageManager</name>
     <description>Store data in a better way</description>
     <url>https://github.com/Zeanon/StorageManager</url>
@@ -221,6 +221,14 @@
             <artifactId>json</artifactId>
             <version>20190722</version>
             <scope>compile</scope>
+        </dependency>
+
+        <!-- Brownies-Collections -->
+        <dependency>
+            <groupId>org.magicwerk</groupId>
+            <artifactId>brownies-collections</artifactId>
+            <version>0.9.14</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Lombok -->

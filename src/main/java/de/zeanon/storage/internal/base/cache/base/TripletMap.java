@@ -1,8 +1,6 @@
 package de.zeanon.storage.internal.base.cache.base;
 
 import de.zeanon.storage.external.lists.IList;
-import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.util.*;
 import lombok.*;
 import org.jetbrains.annotations.Contract;
@@ -107,12 +105,10 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * any of the keys currently in the specified map.
 	 *
 	 * @param map mappings to be stored in this map
-	 *
-	 * @throws ObjectNullException if the specified map is null
 	 */
 	@Override
 	public void putAll(final @NotNull Map<? extends K, ? extends V> map) {
-		for (final @NotNull Map.Entry<? extends K, ? extends V> entry : Objects.notNull(map.entrySet(), "Map must not be null")) {
+		for (final @NotNull Map.Entry<? extends K, ? extends V> entry : map.entrySet()) {
 			this.put(entry.getKey(), entry.getValue());
 		}
 	}
@@ -151,8 +147,6 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * Copies all of the mappings from the specified map to this map.
 	 *
 	 * @param nodes mappings to be added to the map
-	 *
-	 * @throws ObjectNullException if the specified node is null
 	 */
 	public void addAll(final @NotNull List<TripletNode<K, V>> nodes) {
 		this.localList.addAll(nodes);
@@ -162,8 +156,6 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * Copies all of the mappings from the specified map to this map.
 	 *
 	 * @param nodeMap mappings to be stored in this map
-	 *
-	 * @throws ObjectNullException if the specified map is null
 	 */
 	public void addAll(final @NotNull Map<? extends K, ? extends V> nodeMap) {
 		for (final @NotNull Map.Entry<? extends K, ? extends V> entry : nodeMap.entrySet()) {

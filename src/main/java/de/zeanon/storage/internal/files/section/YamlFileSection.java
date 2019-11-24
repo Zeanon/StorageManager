@@ -3,7 +3,6 @@ package de.zeanon.storage.internal.files.section;
 import de.zeanon.storage.internal.base.sections.CommentEnabledSection;
 import de.zeanon.storage.internal.files.config.YamlConfig;
 import de.zeanon.storage.internal.files.raw.YamlFile;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -40,12 +39,12 @@ public class YamlFileSection extends CommentEnabledSection<YamlFile> {
 	@NotNull
 	@Override
 	public YamlFileSection getSection(final @NotNull String sectionKey) {
-		return new YamlFileSection(this.getFinalKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.yamlFile);
+		return new YamlFileSection(this.getFinalKey(sectionKey), this.yamlFile);
 	}
 
 	@NotNull
 	@Override
 	public YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new YamlFileSection(this.getFinalArrayKey(Objects.notNull(sectionKey, "SectionKey  must not be null")), this.yamlFile);
+		return new YamlFileSection(this.getFinalArrayKey(sectionKey), this.yamlFile);
 	}
 }

@@ -39,7 +39,7 @@ public class BaseFileUtils {
 	 */
 	public static boolean hasChanged(final @NotNull File file,
 									 final long timeStamp) {
-		return timeStamp < Objects.notNull(file, "File must not be null").lastModified();
+		return timeStamp < file.lastModified();
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class BaseFileUtils {
 	@Synchronized
 	public static boolean createFile(final @NotNull File file) {
 		try {
-			return BaseFileUtils.createFileInternally(Objects.notNull(file, "File must not be null"), false);
+			return BaseFileUtils.createFileInternally(file, false);
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while creating '"
 										 + file.getAbsolutePath()
@@ -69,7 +69,7 @@ public class BaseFileUtils {
 	@Synchronized
 	public static boolean createParents(final @NotNull File file) {
 		try {
-			if (Objects.notNull(file, "File must not be null").getParentFile() != null) {
+			if (file.getParentFile() != null) {
 				return BaseFileUtils.createFileInternally(file.getParentFile(), true);
 			} else {
 				return false;
@@ -94,7 +94,6 @@ public class BaseFileUtils {
 	 */
 	public static @NotNull Collection<File> listFolders(final @NotNull File directory,
 														final boolean deep) {
-		Objects.checkNull(directory, "Directory must not be null");
 		final @NotNull Collection<File> files = new ArrayList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
@@ -136,8 +135,6 @@ public class BaseFileUtils {
 	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
 													  final @NotNull String[] extensions,
 													  final boolean deep) {
-		Objects.checkNull(directory, "Directory must not be null");
-		Objects.checkNull(extensions, "Extensions must not be null");
 		final @NotNull Collection<File> files = new ArrayList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
@@ -208,7 +205,6 @@ public class BaseFileUtils {
 	 */
 	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
 													  final boolean deep) {
-		Objects.checkNull(directory, "Directory must not be null");
 		final @NotNull Collection<File> files = new ArrayList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
@@ -248,7 +244,6 @@ public class BaseFileUtils {
 	@NotNull
 	@Contract("_ -> new")
 	public static BufferedInputStream createNewInputStream(final @NotNull File file) {
-		Objects.checkNull(file, "File must not be null");
 		try {
 			return new BufferedInputStream(new FileInputStream(file));
 		} catch (IOException e) {
@@ -267,7 +262,6 @@ public class BaseFileUtils {
 	 */
 	@Contract("_ -> new")
 	public static @NotNull BufferedInputStream createNewInputStream(final @NotNull String resource) {
-		Objects.checkNull(resource, "Resource must not be null");
 		try {
 			return new BufferedInputStream(Objects.notNull(
 					BaseFileUtils.class.getClassLoader()
@@ -306,7 +300,7 @@ public class BaseFileUtils {
 	@Synchronized
 	public static void writeToFile(final @NotNull File file,
 								   final @Nullable BufferedInputStream inputStream) {
-		BaseFileUtils.createFile(Objects.notNull(file, "File must not be null"));
+		BaseFileUtils.createFile(file);
 		if (inputStream == null) {
 			try (final @NotNull BufferedOutputStream outputStream =
 						 new BufferedOutputStream(new FileOutputStream(file))) {
@@ -342,7 +336,7 @@ public class BaseFileUtils {
 	 */
 	public static @NotNull String getExtension(final @NotNull File file) {
 		return BaseFileUtils.getExtension(
-				Objects.notNull(file, "File must not be null").getName());
+				file.getName());
 	}
 
 	/**
@@ -364,7 +358,6 @@ public class BaseFileUtils {
 	 * @return the extension of the given File
 	 */
 	public static @NotNull String getExtension(final @NotNull String filePath) {
-		Objects.checkNull(filePath, "FilePath must not be null");
 		char ch;
 		int len;
 		if ((len = filePath.length()) == 0
@@ -392,7 +385,7 @@ public class BaseFileUtils {
 	@Contract("_ -> new")
 	public static @NotNull File removeExtension(final @NotNull File file) {
 		return new File(BaseFileUtils.removeExtension(
-				Objects.notNull(file, "File must not be null").getAbsolutePath()));
+				file.getAbsolutePath()));
 	}
 
 	/**
@@ -414,7 +407,6 @@ public class BaseFileUtils {
 	 * @return the Path without the extension
 	 */
 	public static @NotNull String removeExtension(final @NotNull String filePath) {
-		Objects.checkNull(filePath, "FilePath must not be null");
 		char ch;
 		int len;
 		if ((len = filePath.length()) == 0

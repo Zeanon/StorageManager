@@ -9,7 +9,6 @@ import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.exceptions.ThunderException;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.settings.Comment;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -48,10 +47,10 @@ public class ThunderEditor {
 	 * @throws ObjectNullException if a passed value is null
 	 */
 	public static void writeData(final @NotNull File file, final @NotNull ThunderFileData fileData, final @NotNull CommentSetting commentSetting) {
-		if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
-			ThunderEditor.initialWriteWithComments(Objects.notNull(file, "File must not be null"), Objects.notNull(fileData, "Map must not be null"));
+		if (commentSetting == Comment.PRESERVE) {
+			ThunderEditor.initialWriteWithComments(file, fileData);
 		} else {
-			ThunderEditor.initialWriteWithOutComments(Objects.notNull(file, "File must not be null"), Objects.notNull(fileData, "Map must not be null"));
+			ThunderEditor.initialWriteWithOutComments(file, fileData);
 		}
 	}
 
@@ -68,10 +67,10 @@ public class ThunderEditor {
 	 * @throws ObjectNullException if a passed value is null
 	 */
 	public static @NotNull TripletMap<String, Object> readData(final @NotNull File file, final @NotNull CommentSetting commentSetting, final boolean bigMap) throws ThunderException {
-		if (Objects.notNull(commentSetting, "CommentSetting must not be null") == Comment.PRESERVE) {
-			return ThunderEditor.initialReadWithComments(Objects.notNull(file, "File must not be null"), bigMap);
+		if (commentSetting == Comment.PRESERVE) {
+			return ThunderEditor.initialReadWithComments(file, bigMap);
 		} else {
-			return ThunderEditor.initialReadWithOutComments(Objects.notNull(file, "File must not be null"), bigMap);
+			return ThunderEditor.initialReadWithOutComments(file, bigMap);
 		}
 	}
 

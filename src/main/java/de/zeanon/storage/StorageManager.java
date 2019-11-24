@@ -6,7 +6,6 @@ import de.zeanon.storage.internal.files.raw.TomlFile;
 import de.zeanon.storage.internal.files.raw.YamlFile;
 import de.zeanon.storage.internal.utility.builder.*;
 import de.zeanon.storage.internal.utility.utils.basic.BaseFileUtils;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -37,187 +36,187 @@ public abstract class StorageManager<B, F> {
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull File file) {
-		return new JsonFileBuilder(Objects.notNull(file, "File must not be null"));
+		return new JsonFileBuilder(file);
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull Path file) {
-		return new JsonFileBuilder(Objects.notNull(file, "Path must not be null").toFile());
+		return new JsonFileBuilder(file.toFile());
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull String name) {
-		return new JsonFileBuilder(new File(Objects.notNull(name, "Name must not be null") + "." + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(name + "." + JsonFile.FileType.JSON));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull String directory, final @NotNull String name) {
-		return new JsonFileBuilder(new File(Objects.notNull(directory, "Directory must not be null"), Objects.notNull(name, "Name must not be null") + "." + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(directory, name + "." + JsonFile.FileType.JSON));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull File directory, final @NotNull String name) {
-		return new JsonFileBuilder(new File(Objects.notNull(directory, "Directory must not be null"), Objects.notNull(name, "Name must not be null") + "." + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(directory, name + "." + JsonFile.FileType.JSON));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull Path directory, final @NotNull String name) {
-		return new JsonFileBuilder(new File(Objects.notNull(directory, "Directory must not be null").toFile(), Objects.notNull(name, "Name must not be null") + "." + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(directory.toFile(), name + "." + JsonFile.FileType.JSON));
 	}
 
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull File file) {
-		return new ThunderFileBuilder(Objects.notNull(file, "File must not be null"));
+		return new ThunderFileBuilder(file);
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull Path file) {
-		return new ThunderFileBuilder(Objects.notNull(file, "Path must not be null").toFile());
+		return new ThunderFileBuilder(file.toFile());
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull String name) {
-		return new ThunderFileBuilder(new File(Objects.notNull(name, "Name must not be null") + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderFileBuilder(new File(name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull String directory, final @NotNull String name) {
-		return new ThunderFileBuilder(new File(Objects.notNull(directory, "Directory must not be null"), Objects.notNull(name, "Name must not be null") + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderFileBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull File directory, final @NotNull String name) {
-		return new ThunderFileBuilder(new File(Objects.notNull(directory, "Directory must not be null"), Objects.notNull(name, "Name must not be null") + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderFileBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull Path directory, final @NotNull String name) {
-		return new ThunderFileBuilder(new File(Objects.notNull(directory, "Directory must not be null").toFile(), Objects.notNull(name, "Name must not be null") + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderFileBuilder(new File(directory.toFile(), name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull File file) {
-		return new ThunderConfigBuilder(Objects.notNull(file, "File must not be null"));
+		return new ThunderConfigBuilder(file);
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull Path file) {
-		return new ThunderConfigBuilder(Objects.notNull(file, "Path must not be null").toFile());
+		return new ThunderConfigBuilder(file.toFile());
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull String name) {
-		return new ThunderConfigBuilder(new File(Objects.notNull(name, "Name must not be null") + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderConfigBuilder(new File(name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull String directory, final @NotNull String name) {
-		return new ThunderConfigBuilder(new File(Objects.notNull(directory, "Directory must not be null"), Objects.notNull(name, "Name must not be null") + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderConfigBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull File directory, final @NotNull String name) {
-		return new ThunderConfigBuilder(new File(Objects.notNull(directory, "Directory must not be null"), Objects.notNull(name, "Name must not be null") + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderConfigBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull Path directory, final @NotNull String name) {
-		return new ThunderConfigBuilder(new File(Objects.notNull(directory, "Directory must not be null").toFile(), Objects.notNull(name, "Name must not be null") + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderConfigBuilder(new File(directory.toFile(), name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull File file) {
-		return new TomlFileBuilder(Objects.notNull(file, "File must not be null"));
+		return new TomlFileBuilder(file);
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull Path file) {
-		return new TomlFileBuilder(Objects.notNull(file, "Path must not be null").toFile());
+		return new TomlFileBuilder(file.toFile());
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull String name) {
-		return new TomlFileBuilder(new File(Objects.notNull(name, "Name must not be null") + "." + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(name + "." + TomlFile.FileType.TOML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull String directory, final @NotNull String name) {
-		return new TomlFileBuilder(new File(Objects.notNull(directory, "Directory must not be null"), Objects.notNull(name, "Name must not be null") + "." + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(directory, name + "." + TomlFile.FileType.TOML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull File directory, final @NotNull String name) {
-		return new TomlFileBuilder(new File(Objects.notNull(directory, "Directory must not be null"), Objects.notNull(name, "Name must not be null") + "." + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(directory, name + "." + TomlFile.FileType.TOML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull Path directory, final @NotNull String name) {
-		return new TomlFileBuilder(new File(Objects.notNull(directory, "Directory must not be null").toFile(), Objects.notNull(name, "Name must not be null") + "." + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(directory.toFile(), name + "." + TomlFile.FileType.TOML));
 	}
 
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull YamlFileBuilder yamlFile(final @NotNull File file) {
-		return new YamlFileBuilder(Objects.notNull(file, "File must not be null"));
+		return new YamlFileBuilder(file);
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull YamlFileBuilder yamlFile(final @NotNull Path file) {
-		return new YamlFileBuilder(Objects.notNull(file, "Path must not be null").toFile());
+		return new YamlFileBuilder(file.toFile());
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull YamlFileBuilder yamlFile(final @NotNull String name) {
-		return new YamlFileBuilder(new File(Objects.notNull(name, "Name must not be null") + "." + YamlFile.FileType.YAML));
+		return new YamlFileBuilder(new File(name + "." + YamlFile.FileType.YAML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull YamlFileBuilder yamlFile(final @NotNull String directory, final @NotNull String name) {
-		return new YamlFileBuilder(new File(Objects.notNull(directory, "Directory must not be null"), Objects.notNull(name, "Name must not be null") + "." + YamlFile.FileType.YAML));
+		return new YamlFileBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull YamlFileBuilder yamlFile(final @NotNull File directory, final @NotNull String name) {
-		return new YamlFileBuilder(new File(Objects.notNull(directory, "Directory must not be null"), Objects.notNull(name, "Name must not be null") + "." + YamlFile.FileType.YAML));
+		return new YamlFileBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull YamlFileBuilder yamlFile(final @NotNull Path directory, final @NotNull String name) {
-		return new YamlFileBuilder(new File(Objects.notNull(directory, "Directory must not be null").toFile(), Objects.notNull(name, "Name must not be null") + "." + YamlFile.FileType.YAML));
+		return new YamlFileBuilder(new File(directory.toFile(), name + "." + YamlFile.FileType.YAML));
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull YamlConfigBuilder yamlConfig(final @NotNull File file) {
-		return new YamlConfigBuilder(Objects.notNull(file, "File must not be null"));
+		return new YamlConfigBuilder(file);
 	}
 
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull YamlConfigBuilder yamlConfig(final @NotNull Path file) {
-		return new YamlConfigBuilder(Objects.notNull(file, "Path must not be null").toFile());
+		return new YamlConfigBuilder(file.toFile());
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull YamlConfigBuilder yamlConfig(final @NotNull String name) {
-		return new YamlConfigBuilder(new File(Objects.notNull(name, "Name must not be null") + "." + YamlFile.FileType.YAML));
+		return new YamlConfigBuilder(new File(name + "." + YamlFile.FileType.YAML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull YamlConfigBuilder yamlConfig(final @NotNull String directory, final @NotNull String name) {
-		return new YamlConfigBuilder(new File(Objects.notNull(directory, "Directory must not be null"), Objects.notNull(name, "Name must not be null") + "." + YamlFile.FileType.YAML));
+		return new YamlConfigBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull YamlConfigBuilder yamlConfig(final @NotNull File directory, final @NotNull String name) {
-		return new YamlConfigBuilder(new File(Objects.notNull(directory, "Directory must not be null"), Objects.notNull(name, "Name must not be null") + "." + YamlFile.FileType.YAML));
+		return new YamlConfigBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull YamlConfigBuilder yamlConfig(final @NotNull Path directory, final @NotNull String name) {
-		return new YamlConfigBuilder(new File(Objects.notNull(directory, "Directory must not be null").toFile(), Objects.notNull(name, "Name must not be null") + "." + YamlFile.FileType.YAML));
+		return new YamlConfigBuilder(new File(directory.toFile(), name + "." + YamlFile.FileType.YAML));
 	}
 
 

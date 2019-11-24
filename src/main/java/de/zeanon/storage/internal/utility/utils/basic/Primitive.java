@@ -29,7 +29,6 @@ public class Primitive {
 	 * @throws ObjectNullException if a passed value is null
 	 */
 	public static <T> @NotNull T getFromDef(final @NotNull Object object, final @NotNull Class<T> def) {
-		Objects.checkNull(def, "Definition must not be null");
 		Object tempObj = Objects.notNull(object, "Object must not be null");
 		if (object instanceof String && def == Integer.class) {
 			tempObj = Integer.parseInt((String) object);
@@ -58,7 +57,6 @@ public class Primitive {
 		 * @throws ObjectNullException if the passed value is null
 		 */
 		public static boolean getBoolean(final @NotNull Object object) {
-			Objects.checkNull(object, "Object must not be null");
 			if (object instanceof Boolean) {
 				return (boolean) object;
 			} else if (object instanceof String) {
@@ -79,7 +77,6 @@ public class Primitive {
 		 * @throws ObjectNullException if the passed value is null
 		 */
 		public static long getLong(final @NotNull Object object) {
-			Objects.checkNull(object, "Object must not be null");
 			if (object instanceof Long) {
 				return (long) object;
 			} else if (object instanceof Number) {
@@ -102,7 +99,6 @@ public class Primitive {
 		 * @throws ObjectNullException if the passed value is null
 		 */
 		public static double getDouble(final @NotNull Object object) {
-			Objects.checkNull(object, "Object must not be null");
 			if (object instanceof Double) {
 				return (double) object;
 			} else if (object instanceof Number) {
@@ -125,7 +121,6 @@ public class Primitive {
 		 * @throws ObjectNullException if the passed value is null
 		 */
 		public static float getFloat(final @NotNull Object object) {
-			Objects.checkNull(object, "Object must not be null");
 			if (object instanceof Float) {
 				return (float) object;
 			} else if (object instanceof Number) {
@@ -148,7 +143,6 @@ public class Primitive {
 		 * @throws ObjectNullException if the passed value is null
 		 */
 		public static int getInt(final @NotNull Object object) {
-			Objects.checkNull(object, "Object must not be null");
 			if (object instanceof Integer) {
 				return (int) object;
 			} else if (object instanceof Number) {
@@ -171,7 +165,6 @@ public class Primitive {
 		 * @throws ObjectNullException if the passed value is null
 		 */
 		public static short getShort(final @NotNull Object object) {
-			Objects.checkNull(object, "Object must not be null");
 			if (object instanceof Short) {
 				return (short) object;
 			} else if (object instanceof Number) {
@@ -194,7 +187,6 @@ public class Primitive {
 		 * @throws ObjectNullException if the passed value is null
 		 */
 		public static byte getByte(final @NotNull Object object) {
-			Objects.checkNull(object, "Object must not be null");
 			if (object instanceof Byte) {
 				return (byte) object;
 			} else if (object instanceof Number) {

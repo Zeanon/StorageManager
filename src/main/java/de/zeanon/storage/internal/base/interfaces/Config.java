@@ -1,6 +1,5 @@
 package de.zeanon.storage.internal.base.interfaces;
 
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.util.Arrays;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -37,37 +36,37 @@ public interface Config extends DataStorage {
 	@NotNull List<String> getComments();
 
 	default @NotNull List<String> getHeader(final @NotNull CommentSetting commentSetting) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		return this.getHeader();
 	}
 
 	default void setHeader(final @NotNull CommentSetting commentSetting, final @Nullable String... header) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		this.setHeader(header);
 	}
 
 	default void setHeader(final @NotNull CommentSetting commentSetting, final @Nullable List<String> header) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		this.setHeader(header);
 	}
 
 	default @NotNull List<String> getFooter(final @NotNull CommentSetting commentSetting) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		return this.getFooter();
 	}
 
 	default void setFooter(final @NotNull CommentSetting commentSetting, final @Nullable String... footer) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		this.setFooter(footer);
 	}
 
 	default void setFooter(final @NotNull CommentSetting commentSetting, final @Nullable List<String> footer) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		this.setFooter(footer);
 	}
 
 	default @NotNull List<String> getComments(final @NotNull CommentSetting commentSetting) {
-		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
+		this.setCommentSetting(commentSetting);
 		return this.getComments();
 	}
 }

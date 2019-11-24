@@ -146,14 +146,12 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Override
 	public boolean hasKey(final @NotNull String key) {
-		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 		return fileData.containsKey(key);
 	}
 
 	@Override
 	public boolean hasKeyUseArray(final @NotNull String... key) {
-		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 		return fileData.containsKeyUseArray(key);
 	}
@@ -166,9 +164,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 */
 	@Synchronized
 	public void replaceInFile(final @NotNull CharSequence target, final @NotNull CharSequence replacement) throws IOException {
-		Objects.checkNull(target, "Target  must not be null");
-		Objects.checkNull(replacement, "Replacement  must not be null");
-
 		final @NotNull Iterator<String> lines = Files.readAllLines(this.file.toPath()).iterator();
 		final @NotNull @Cleanup PrintWriter writer = new PrintWriter(this.file);
 		writer.print((lines.next()).replace(target, replacement));
@@ -180,21 +175,18 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Override
 	public @NotNull Object get(final @NotNull String key) {
-		Objects.checkNull(key, "Key  must not be null");
-		update();
+		this.update();
 		return Objects.notNull(this.fileData.get(key), "File does not contain '" + key + "'");
 	}
 
 	@Override
 	public @NotNull Object getUseArray(final @NotNull String... key) {
-		Objects.checkNull(key, "Key  must not be null");
-		update();
+		this.update();
 		return Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'");
 	}
 
 	@Override
 	public @NotNull Map<String, Object> getAll(final @NotNull String... keys) {
-		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		final @NotNull Map<String, Object> tempMap = new HashMap<>();
@@ -206,7 +198,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Override
 	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[]... keys) {
-		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		final @NotNull Map<String[], Object> tempMap = new HashMap<>();
@@ -218,7 +209,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Override
 	public @NotNull Map<String, Object> getAll(final @NotNull Collection<String> keys) {
-		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		final @NotNull Map<String, Object> tempMap = new HashMap<>();
@@ -230,7 +220,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Override
 	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys) {
-		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		final @NotNull Map<String[], Object> tempMap = new HashMap<>();
@@ -242,8 +231,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Override
 	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull String... keys) {
-		Objects.checkNull(blockKey, "Key  must not be null");
-		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		final @NotNull Map<String, Object> tempMap = new HashMap<>();
@@ -256,8 +243,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	@Override
 	@SuppressWarnings("DuplicatedCode")
 	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
-		Objects.checkNull(blockKey, "Key  must not be null");
-		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		final @NotNull Map<String[], Object> tempMap = new HashMap<>();
@@ -272,8 +257,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Override
 	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
-		Objects.checkNull(blockKey, "Key  must not be null");
-		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		final @NotNull Map<String, Object> tempMap = new HashMap<>();
@@ -286,8 +269,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	@Override
 	@SuppressWarnings("DuplicatedCode")
 	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
-		Objects.checkNull(blockKey, "Key  must not be null");
-		Objects.checkNull(keys, "KeyList  must not be null");
 		this.update();
 
 		final @NotNull Map<String[], Object> tempMap = new HashMap<>();
@@ -457,7 +438,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 */
 	@Synchronized
 	private boolean insert(final @NotNull String key, final @Nullable Object value) {
-		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -467,7 +447,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Synchronized
 	private boolean insertUseArray(final @NotNull String[] key, final @Nullable Object value) {
-		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -477,7 +456,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Synchronized
 	private boolean insertAll(final @NotNull Map<String, Object> map) {
-		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -489,7 +467,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Synchronized
 	private boolean insertAllUseArray(final @NotNull Map<String[], Object> map) {
-		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -501,8 +478,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Synchronized
 	private boolean insertAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
-		Objects.checkNull(key, "Key  must not be null");
-		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -514,7 +489,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Synchronized
 	private boolean insertAllUseArray(final @NotNull String[] key, final @NotNull Map<String[], Object> map) {
-		Objects.checkNull(map, "Map  must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -529,7 +503,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Synchronized
 	private boolean internalRemove(final @NotNull String key) {
-		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -539,7 +512,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Synchronized
 	private boolean internalRemoveUseArray(final @NotNull String... key) {
-		Objects.checkNull(key, "Key  must not be null");
 		this.update();
 
 		@NotNull String tempData = this.fileData.toString();
@@ -549,7 +521,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Synchronized
 	private boolean internalRemoveAll(final @NotNull String... keys) {
-		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -561,7 +532,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Synchronized
 	private boolean internalRemoveAll(final @NotNull Collection<String> keys) {
-		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -573,7 +543,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Synchronized
 	private boolean internalRemoveAllUseArray(final @NotNull String[]... keys) {
-		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -585,7 +554,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Synchronized
 	private boolean internalRemoveAllUseArray(final @NotNull Collection<String[]> keys) {
-		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -597,8 +565,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Synchronized
 	private boolean internalRemoveAll(final @NotNull String blockKey, final @NotNull String... keys) {
-		Objects.checkNull(blockKey, "BlockKey  must not be null");
-		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -610,8 +576,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 
 	@Synchronized
 	private boolean internalRemoveAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
-		Objects.checkNull(blockKey, "BlockKey  must not be null");
-		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -624,8 +588,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	@Synchronized
 	@SuppressWarnings("DuplicatedCode")
 	private boolean internalRemoveAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
-		Objects.checkNull(blockKey, "BlockKey  must not be null");
-		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -641,8 +603,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	@Synchronized
 	@SuppressWarnings("DuplicatedCode")
 	private boolean internalRemoveAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
-		Objects.checkNull(blockKey, "BlockKey  must not be null");
-		Objects.checkNull(keys, "Keys must not be null");
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();

@@ -4,7 +4,6 @@ import de.zeanon.storage.internal.base.files.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.DataStorage;
 import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.util.Collection;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
@@ -35,8 +34,8 @@ public abstract class FlatSection<M extends FlatFile<? extends FileData<?, ?>>> 
 
 
 	protected FlatSection(final @NotNull String sectionKey, final @NotNull M flatFile) {
-		this.setSectionKey(Objects.notNull(sectionKey, "SectionKey  must not be null"));
-		this.setArraySectionKey(Objects.notNull(sectionKey, "SectionKey  must not be null").split("\\."));
+		this.setSectionKey(sectionKey);
+		this.setArraySectionKey(sectionKey.split("\\."));
 		this.flatFile = flatFile;
 	}
 
@@ -46,7 +45,7 @@ public abstract class FlatSection<M extends FlatFile<? extends FileData<?, ?>>> 
 			tempKey.append(".").append(sectionKey[i]);
 		}
 		this.setSectionKey(tempKey.toString());
-		this.setArraySectionKey(Objects.notNull(sectionKey, "SectionKey  must not be null"));
+		this.setArraySectionKey(sectionKey);
 		this.flatFile = flatFile;
 	}
 
@@ -204,7 +203,7 @@ public abstract class FlatSection<M extends FlatFile<? extends FileData<?, ?>>> 
 	}
 
 	protected @NotNull String getFinalKey(final @NotNull String key) {
-		return this.getSectionKey() + "." + Objects.notNull(key, "Key  must not be null");
+		return this.getSectionKey() + "." + key;
 	}
 
 	protected @NotNull String[] getFinalArrayKey(final @NotNull String... key) {
