@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.utility.utils.editor;
 
-import de.zeanon.utils.basic.Objects;
+import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

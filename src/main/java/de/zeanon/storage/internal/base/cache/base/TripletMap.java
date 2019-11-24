@@ -1,8 +1,8 @@
 package de.zeanon.storage.internal.base.cache.base;
 
-import de.zeanon.utils.basic.Objects;
-import de.zeanon.utils.exceptions.ObjectNullException;
-import de.zeanon.utils.lists.IList;
+import de.zeanon.storage.external.lists.IList;
+import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
+import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.util.*;
 import lombok.*;
 import org.jetbrains.annotations.Contract;

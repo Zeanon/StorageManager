@@ -1,9 +1,9 @@
 package de.zeanon.storage.internal.base.settings;
 
+import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.files.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
-import de.zeanon.utils.basic.Objects;
-import de.zeanon.utils.exceptions.ObjectNullException;
+import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

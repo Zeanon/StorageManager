@@ -1,7 +1,7 @@
 package de.zeanon.storage.internal.base.interfaces;
 
 import de.zeanon.storage.internal.base.sections.FlatSection;
-import de.zeanon.utils.basic.Primitive;
+import de.zeanon.storage.internal.utility.utils.basic.Primitive;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;

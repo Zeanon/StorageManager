@@ -1,14 +1,14 @@
 package de.zeanon.storage.internal.base.files;
 
+import de.zeanon.storage.internal.base.exceptions.FileTypeException;
+import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.DataStorage;
 import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.base.interfaces.FileType;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.base.settings.Reload;
-import de.zeanon.utils.basic.BaseFileUtils;
-import de.zeanon.utils.basic.Objects;
-import de.zeanon.utils.exceptions.FileTypeException;
-import de.zeanon.utils.exceptions.RuntimeIOException;
+import de.zeanon.storage.internal.utility.utils.basic.BaseFileUtils;
+import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

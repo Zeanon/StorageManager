@@ -2,7 +2,7 @@ package de.zeanon.storage.internal.files.section;
 
 import de.zeanon.storage.internal.base.interfaces.Config;
 import de.zeanon.storage.internal.files.config.ThunderConfig;
-import de.zeanon.utils.basic.Objects;
+import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package de.zeanon.storage.internal.base.cache.datamap;
 
+import de.zeanon.storage.external.lists.BigList;
 import de.zeanon.storage.internal.base.cache.base.TripletMap;
-import de.zeanon.utils.lists.BigList;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.EqualsAndHashCode;

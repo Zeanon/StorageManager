@@ -1,8 +1,8 @@
 package de.zeanon.storage.internal.base.cache.filedata;
 
+import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.FileData;
-import de.zeanon.utils.basic.Objects;
-import de.zeanon.utils.exceptions.ObjectNullException;
+import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.util.*;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;

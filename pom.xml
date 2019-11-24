@@ -91,19 +91,15 @@
                     <relocations>
                         <relocation>
                             <pattern>org.json</pattern>
-                            <shadedPattern>de.zeanon.storage.shaded.json</shadedPattern>
+                            <shadedPattern>de.zeanon.storage.external.json</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.esotericsoftware</pattern>
-                            <shadedPattern>de.zeanon.storage.shaded.esotericsoftware</shadedPattern>
+                            <shadedPattern>de.zeanon.storage.external.esotericsoftware</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.electronwill</pattern>
-                            <shadedPattern>de.zeanon.storage.shaded.electronwill</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>de.zeanon.utils</pattern>
-                            <shadedPattern>de.zeanon.storage.shaded.baseutils</shadedPattern>
+                            <shadedPattern>de.zeanon.storage.external.electronwill</shadedPattern>
                         </relocation>
                     </relocations>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -224,14 +220,6 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20190722</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Zeanon BaseUtils -->
-        <dependency>
-            <groupId>de.zeanon</groupId>
-            <artifactId>baseutils</artifactId>
-            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
 

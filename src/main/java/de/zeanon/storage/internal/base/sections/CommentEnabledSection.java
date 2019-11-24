@@ -3,7 +3,7 @@ package de.zeanon.storage.internal.base.sections;
 import de.zeanon.storage.internal.base.files.CommentEnabledFile;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.interfaces.FileData;
-import de.zeanon.utils.basic.Objects;
+import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
