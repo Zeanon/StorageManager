@@ -422,7 +422,12 @@ public class ThunderEditor {
 			tempLine = lines.get(0).trim();
 			lines.remove(0);
 			if (tempLine.startsWith("-")) {
-				tempList.add(tempLine.substring(1).trim().replace("\"", ""));
+				if (tempLine.endsWith("]")) {
+					tempList.add(tempLine.substring(1, tempLine.length() - 1).trim().replace("\"", ""));
+					return tempList;
+				} else {
+					tempList.add(tempLine.substring(1).trim().replace("\"", ""));
+				}
 			} else if (tempLine.endsWith("]")) {
 				return tempList;
 			} else {

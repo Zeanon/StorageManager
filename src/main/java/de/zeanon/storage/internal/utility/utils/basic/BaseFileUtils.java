@@ -1,7 +1,9 @@
 package de.zeanon.storage.internal.utility.utils.basic;
 
+import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -24,8 +26,8 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class BaseFileUtils {
 
-	@Setter
 	@Getter
+	@Setter
 	private static int bufferSize = 8192;
 
 
@@ -241,15 +243,18 @@ public class BaseFileUtils {
 	 *
 	 * @return BufferedInputstream containing the contents of the given File
 	 */
-	@NotNull
-	@Contract("_ -> new")
-	public static BufferedInputStream createNewInputStream(final @NotNull File file) {
-		try {
-			return new BufferedInputStream(new FileInputStream(file));
-		} catch (IOException e) {
-			throw new RuntimeIOException("Error while creating InputStream from '"
-										 + file.getAbsolutePath()
-										 + "'", e.getCause());
+	@Contract("null -> null; !null -> new")
+	public static @Nullable BufferedInputStream createNewInputStream(final @Nullable File file) {
+		if (file == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedInputStream(new FileInputStream(file));
+			} catch (IOException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + file.getAbsolutePath()
+											 + "'", e.getCause());
+			}
 		}
 	}
 
@@ -260,16 +265,41 @@ public class BaseFileUtils {
 	 *
 	 * @return BufferedInputStream containing the contents of the resource file
 	 */
-	@Contract("_ -> new")
-	public static @NotNull BufferedInputStream createNewInputStream(final @NotNull String resource) {
-		try {
-			return new BufferedInputStream(Objects.notNull(
-					BaseFileUtils.class.getClassLoader()
-									   .getResourceAsStream(resource),
-					"Resource does not exist"));
-		} catch (NullPointerException e) {
-			throw new RuntimeIOException("Error while creating InputStream from '"
-										 + resource + "'", e.getCause());
+	@Contract("null -> null; !null -> new")
+	public static @Nullable BufferedInputStream createNewInputStream(final @Nullable String resource) {
+		if (resource == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedInputStream(Objects.notNull(
+						BaseFileUtils.class.getClassLoader()
+										   .getResourceAsStream(resource),
+						"Resource does not exist"));
+			} catch (ObjectNullException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + resource + "'", e.getCause());
+			}
+		}
+	}
+
+	/**
+	 * Create a BufferedInputStream from a given internal resource
+	 *
+	 * @param url the URL to be read from
+	 *
+	 * @return BufferedInputStream containing the contents of the resource file
+	 */
+	@Contract("null -> null; !null -> new")
+	public static @Nullable BufferedInputStream createNewInputStream(final @Nullable URL url) {
+		if (url == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedInputStream(url.openStream());
+			} catch (IOException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + url + "'", e.getCause());
+			}
 		}
 	}
 

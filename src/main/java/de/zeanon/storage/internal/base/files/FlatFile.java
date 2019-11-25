@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 import lombok.*;
@@ -112,7 +114,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 * Set the Contents of the FileData and File from a given File
 	 */
 	public void setDataFromFile(final @Nullable File file) {
-		BaseFileUtils.writeToFile(this.file, file == null ? null : BaseFileUtils.createNewInputStream(file));
+		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStream(file)); //NOSONAR
 		this.reload();
 	}
 
@@ -120,7 +122,27 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 * Set the Contents of the FileData and File from a given Resource
 	 */
 	public void setDataFromResource(final @Nullable String resource) {
-		BaseFileUtils.writeToFile(this.file, resource == null ? null : BaseFileUtils.createNewInputStream(resource));
+		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStream(resource)); //NOSONAR
+		this.reload();
+	}
+
+	/**
+	 * Set the Contents of the FileData and File from a given URL
+	 */
+	public void setDataFromUrl(final @Nullable String url) {
+		try {
+			BaseFileUtils.writeToFile(this.file, url == null ? null : BaseFileUtils.createNewInputStream(new URL(url)));
+			this.reload();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Set the Contents of the FileData and File from a given URL
+	 */
+	public void setDataFromUrl(final @Nullable URL url) {
+		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStream(url));
 		this.reload();
 	}
 
