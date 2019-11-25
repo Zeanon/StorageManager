@@ -159,12 +159,13 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	}
 
 	/**
-	 * Reread the content of our flat file
+	 * Reread the content of the File into the cache
 	 */
-	@Synchronized
 	public abstract void reload();
 
-	@Synchronized
+	/**
+	 * Save the cached Data to the File
+	 */
 	public abstract void save();
 
 	@Override
