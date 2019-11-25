@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 @EqualsAndHashCode
 @ToString(callSuper = true)
-@SuppressWarnings({"unused", "UnusedReturnValue"})
+@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
 public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage, Comparable<FlatFile> {
 
 	private final @NotNull File file;
@@ -85,8 +85,12 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 * Delete all Contents of the FileData and File
 	 */
 	public void clear() {
+		this.clearFile();
+		this.clearData();
+	}
+
+	public void clearFile() {
 		BaseFileUtils.writeToFile(this.file, null);
-		this.reload();
 	}
 
 	/**
