@@ -114,7 +114,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 * Set the Contents of the FileData and File from a given File
 	 */
 	public void setDataFromFile(final @Nullable File file) {
-		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStream(file)); //NOSONAR
+		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStream(file));
 		this.reload();
 	}
 
@@ -122,7 +122,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 * Set the Contents of the FileData and File from a given Resource
 	 */
 	public void setDataFromResource(final @Nullable String resource) {
-		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStream(resource)); //NOSONAR
+		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStream(resource));
 		this.reload();
 	}
 
