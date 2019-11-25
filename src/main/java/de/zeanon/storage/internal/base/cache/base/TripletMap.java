@@ -206,11 +206,8 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		TripletNode<K, V> tempNode;
 		while ((tempNode = tempIterator.next()) != null) {
 			if (tempNode.getKey().equals(key)) {
-				try {
-					return tempNode.getValue();
-				} finally {
-					tempIterator.remove();
-				}
+				tempIterator.remove();
+				return tempNode.getValue();
 			}
 		}
 		return null;
