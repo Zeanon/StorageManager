@@ -65,6 +65,7 @@ public class JsonFile extends FlatFile<StandardFileData> {
 
 
 	@Override
+	@Synchronized
 	public void reload() {
 		try {
 			final @NotNull JSONTokener jsonTokener = new JSONTokener(BaseFileUtils.createNewInputStream(this.getFile()));

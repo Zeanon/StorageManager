@@ -50,9 +50,8 @@ public class YamlConfig extends YamlFile implements Config {
 	}
 
 
-	@NotNull
 	@Override
-	public List<String> getHeader() {
+	public @NotNull List<String> getHeader() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			return new ArrayList<>();
 		} else if (!this.shouldReload()) {
@@ -92,7 +91,7 @@ public class YamlConfig extends YamlFile implements Config {
 				}
 			} else {
 				try {
-					@NotNull final List<String> lines = YamlEditor.read(this.getFile());
+					final @NotNull List<String> lines = YamlEditor.read(this.getFile());
 					final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.getFile());
 
 					List<String> newLines = this.header;
@@ -110,7 +109,7 @@ public class YamlConfig extends YamlFile implements Config {
 			this.header = new ArrayList<>();
 
 			try {
-				@NotNull final List<String> lines = YamlEditor.read(this.getFile());
+				final @NotNull List<String> lines = YamlEditor.read(this.getFile());
 				final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.getFile());
 
 				lines.removeAll(oldHeader);
@@ -124,9 +123,8 @@ public class YamlConfig extends YamlFile implements Config {
 		}
 	}
 
-	@NotNull
 	@Override
-	public List<String> getFooter() {
+	public @NotNull List<String> getFooter() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			return new ArrayList<>();
 		} else if (!this.shouldReload()) {
@@ -144,7 +142,7 @@ public class YamlConfig extends YamlFile implements Config {
 	}
 
 	@Override
-	public void setFooter(@Nullable List<String> footer) {
+	public void setFooter(final @Nullable List<String> footer) {
 		if (footer != null) {
 			@NotNull List<String> tmp = new ArrayList<>();
 			for (final @NotNull String line : footer) {
@@ -166,7 +164,7 @@ public class YamlConfig extends YamlFile implements Config {
 				}
 			} else {
 				try {
-					@NotNull final List<String> lines = YamlEditor.read(this.getFile());
+					final @NotNull List<String> lines = YamlEditor.read(this.getFile());
 					final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.getFile());
 
 					lines.removeAll(oldFooter);
@@ -183,7 +181,7 @@ public class YamlConfig extends YamlFile implements Config {
 			this.footer = new ArrayList<>();
 
 			try {
-				@NotNull final List<String> lines = YamlEditor.read(this.getFile());
+				final @NotNull List<String> lines = YamlEditor.read(this.getFile());
 				final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.getFile());
 
 				lines.removeAll(oldFooter);
@@ -197,9 +195,8 @@ public class YamlConfig extends YamlFile implements Config {
 		}
 	}
 
-	@NotNull
 	@Override
-	public List<String> getComments() {
+	public @NotNull List<String> getComments() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			return new ArrayList<>();
 		} else if (!this.shouldReload()) {

@@ -50,7 +50,6 @@ public class BaseFileUtils {
 	 * @param file the File to be created
 	 */
 	@SuppressWarnings("UnusedReturnValue")
-	@Synchronized
 	public static boolean createFile(final @NotNull File file) {
 		try {
 			return BaseFileUtils.createFileInternally(file, false);
@@ -68,7 +67,6 @@ public class BaseFileUtils {
 	 *
 	 * @param file the File to be used
 	 */
-	@Synchronized
 	public static boolean createParents(final @NotNull File file) {
 		try {
 			if (file.getParentFile() != null) {
@@ -455,6 +453,7 @@ public class BaseFileUtils {
 	}
 
 
+	@Synchronized
 	private static boolean createFileInternally(final @NotNull File file,
 												final boolean isDirectory) throws IOException {
 		if (file.getParentFile() != null && !file.getParentFile().exists()) {

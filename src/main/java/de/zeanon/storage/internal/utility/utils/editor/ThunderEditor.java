@@ -221,6 +221,7 @@ public class ThunderEditor {
 
 	// <Read Data>
 	// <Read Data with Comments>
+	@Synchronized
 	private static @NotNull TripletMap<String, Object> initialReadWithComments(final @NotNull File file,
 																			   final boolean bigMap) throws ThunderException {
 		try {
@@ -296,6 +297,7 @@ public class ThunderEditor {
 	// </Read Data with Comments>
 
 	// <Read Data without Comments>
+	@Synchronized
 	private static @NotNull TripletMap<String, Object> initialReadWithOutComments(final @NotNull File file,
 																				  final boolean bigMap) throws ThunderException {
 		try {

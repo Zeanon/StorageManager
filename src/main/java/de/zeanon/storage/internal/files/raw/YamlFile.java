@@ -66,6 +66,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 
 
 	@Override
+	@Synchronized
 	public void reload() {
 		try {
 			//noinspection unchecked
@@ -85,7 +86,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 			if (this.getCommentSetting() != Comment.PRESERVE) {
 				this.write(this.getFileData().getDataMap());
 			} else {
-				@NotNull final List<String> unEdited = YamlEditor.read(this.getFile());
+				final @NotNull List<String> unEdited = YamlEditor.read(this.getFile());
 				final @NotNull List<String> header = YamlEditor.readHeader(this.getFile());
 				final @NotNull List<String> footer = YamlEditor.readFooter(this.getFile());
 				this.write(this.getFileData().getDataMap());
@@ -108,15 +109,13 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 	 *
 	 * @return the Section using the given sectionKey
 	 */
-	@NotNull
 	@Override
-	public YamlFileSection getSection(final @NotNull String sectionKey) {
+	public @NotNull YamlFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
-	@NotNull
 	@Override
-	public YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 

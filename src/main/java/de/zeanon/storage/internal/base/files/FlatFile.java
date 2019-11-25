@@ -105,7 +105,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 * Clears the contents of the internal FileData.
 	 * To get any data, you simply need to reload.
 	 */
-	@Synchronized
 	public void clearData() {
 		this.fileData.clear();
 	}
@@ -162,20 +161,22 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	/**
 	 * Reread the content of our flat file
 	 */
+	@Synchronized
 	public abstract void reload();
 
+	@Synchronized
 	public abstract void save();
 
 	@Override
 	public boolean hasKey(final @NotNull String key) {
 		this.update();
-		return fileData.containsKey(key);
+		return this.fileData.containsKey(key);
 	}
 
 	@Override
 	public boolean hasKeyUseArray(final @NotNull String... key) {
 		this.update();
-		return fileData.containsKeyUseArray(key);
+		return this.fileData.containsKeyUseArray(key);
 	}
 
 	/**
@@ -458,7 +459,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	 *
 	 * @return true if the Data contained by FileData contained after adding the key-value-pair.
 	 */
-	@Synchronized
 	private boolean insert(final @NotNull String key, final @Nullable Object value) {
 		this.update();
 
@@ -467,7 +467,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	private boolean insertUseArray(final @NotNull String[] key, final @Nullable Object value) {
 		this.update();
 
@@ -476,7 +475,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	private boolean insertAll(final @NotNull Map<String, Object> map) {
 		this.update();
 
@@ -487,7 +485,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	private boolean insertAllUseArray(final @NotNull Map<String[], Object> map) {
 		this.update();
 
@@ -498,7 +495,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	private boolean insertAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
 		this.update();
 
@@ -509,7 +505,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	private boolean insertAllUseArray(final @NotNull String[] key, final @NotNull Map<String[], Object> map) {
 		this.update();
 
@@ -523,7 +518,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	private boolean internalRemove(final @NotNull String key) {
 		this.update();
 
@@ -532,7 +526,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	private boolean internalRemoveUseArray(final @NotNull String... key) {
 		this.update();
 
@@ -541,29 +534,26 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	private boolean internalRemoveAll(final @NotNull String... keys) {
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
-		for (@NotNull final String tempKey : keys) {
+		for (final @NotNull String tempKey : keys) {
 			this.fileData.remove(tempKey);
 		}
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	private boolean internalRemoveAll(final @NotNull Collection<String> keys) {
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
-		for (@NotNull final String tempKey : keys) {
+		for (final @NotNull String tempKey : keys) {
 			this.fileData.remove(tempKey);
 		}
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	private boolean internalRemoveAllUseArray(final @NotNull String[]... keys) {
 		this.update();
 
@@ -574,7 +564,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	private boolean internalRemoveAllUseArray(final @NotNull Collection<String[]> keys) {
 		this.update();
 
@@ -585,7 +574,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	private boolean internalRemoveAll(final @NotNull String blockKey, final @NotNull String... keys) {
 		this.update();
 
@@ -596,7 +584,6 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	private boolean internalRemoveAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
 		this.update();
 
@@ -607,13 +594,12 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	@SuppressWarnings("DuplicatedCode")
 	private boolean internalRemoveAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
-		for (@NotNull final String[] tempKey : keys) {
+		for (final @NotNull String[] tempKey : keys) {
 			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
@@ -622,13 +608,12 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@Synchronized
 	@SuppressWarnings("DuplicatedCode")
 	private boolean internalRemoveAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
-		for (@NotNull final String[] tempKey : keys) {
+		for (final @NotNull String[] tempKey : keys) {
 			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);

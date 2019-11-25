@@ -63,6 +63,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 
 
 	@Override
+	@Synchronized
 	public void reload() {
 		try {
 			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getCommentSetting(), this.bigMap));

@@ -4,10 +4,7 @@ import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.util.*;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -65,7 +62,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	@Override
 	@Contract("_ -> new")
 	public @NotNull List<Map.Entry<String, Object>> entryList(final @NotNull String key) {
-		@NotNull final Object tempObject = this.get(key);
+		final @NotNull Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
 			return this.internalEntryList((Map) tempObject);
@@ -84,7 +81,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	@Override
 	@Contract("_ -> new")
 	public @NotNull List<Map.Entry<String, Object>> blockEntryList(final @NotNull String key) {
-		@NotNull final Object tempObject = this.get(key);
+		final @NotNull Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
 			return new ArrayList<>(((Map) tempObject).entrySet());
@@ -104,7 +101,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	@Override
 	@Contract("_ -> new")
 	public @NotNull List<Map.Entry<String, Object>> entryListUseArray(final @NotNull String... key) {
-		@NotNull final Object tempObject = this.getUseArray(key);
+		final @NotNull Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
 			return this.internalEntryList((Map) tempObject);
@@ -123,7 +120,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	@Override
 	@Contract("_ -> new")
 	public @NotNull List<Map.Entry<String, Object>> blockEntryListUseArray(final @NotNull String... key) {
-		@NotNull final Object tempObject = this.getUseArray(key);
+		final @NotNull Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
 			return new ArrayList<>(((Map) tempObject).entrySet());
@@ -152,7 +149,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public void insert(final @NotNull String key, @Nullable Object value) {
-		@NotNull final String[] parts = key.split("\\.");
+		final @NotNull String[] parts = key.split("\\.");
 		this.initialInsert(value, parts);
 	}
 
@@ -176,7 +173,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public void remove(final @NotNull String key) {
-		@NotNull final String[] parts = key.split("\\.");
+		final @NotNull String[] parts = key.split("\\.");
 		this.initialRemove(parts);
 	}
 
@@ -201,7 +198,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public boolean containsKey(final @NotNull String key) {
-		@NotNull final String[] parts = key.split("\\.");
+		final @NotNull String[] parts = key.split("\\.");
 		return this.internalContainsKey(this.dataMap, parts, 0);
 	}
 
@@ -228,7 +225,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public @NotNull Object get(final @NotNull String key) {
-		@NotNull final String[] parts = key.split("\\.");
+		final @NotNull String[] parts = key.split("\\.");
 		return this.internalGet(this.dataMap, parts);
 	}
 
@@ -261,7 +258,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public int blockSize(final @NotNull String key) {
-		@NotNull final Object tempObject = this.get(key);
+		final @NotNull Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			return ((Map) tempObject).size();
 		} else {
@@ -276,7 +273,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public int blockSizeUseArray(final @NotNull String... key) {
-		@NotNull final Object tempObject = this.getUseArray(key);
+		final @NotNull Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			return ((Map) tempObject).size();
 		} else {
@@ -299,7 +296,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public int size(final @NotNull String key) {
-		@NotNull final Object tempObject = this.get(key);
+		final @NotNull Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
 			return this.internalSize((Map) tempObject);
@@ -315,7 +312,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public int sizeUseArray(final @NotNull String... key) {
-		@NotNull final Object tempObject = this.getUseArray(key);
+		final @NotNull Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
 			return this.internalSize((Map) tempObject);
@@ -345,13 +342,14 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 
 
 	// <Internal>
+	@Synchronized
 	private void initialInsert(@Nullable Object value, @NotNull String[] parts) {
 		if (value == null) {
 			this.removeUseArray(parts);
 		} else {
 			final Object tempValue = this.dataMap.get(parts[0]);
 			//noinspection unchecked
-			@NotNull final Map<String, Object> childMap =
+			final @NotNull Map<String, Object> childMap =
 					this.dataMap.containsKey(parts[0])
 					&& tempValue instanceof Map
 					? (Map) tempValue
@@ -366,7 +364,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		if (keyIndex < key.length) {
 			final Object tempValue = map.get(key[keyIndex]);
 			//noinspection unchecked
-			@NotNull final Map<String, Object> childMap =
+			final @NotNull Map<String, Object> childMap =
 					map.containsKey(key[keyIndex])
 					&& tempValue instanceof Map
 					? (Map) tempValue
@@ -380,6 +378,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
+	@Synchronized
 	private void initialRemove(@NotNull String[] parts) {
 		if (parts.length == 1) {
 			this.dataMap.remove(parts[0]);
@@ -418,7 +417,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	}
 
 	private @NotNull List<Map.Entry<String, Object>> internalEntryList(final @NotNull Map<String, Object> map) {
-		@NotNull final List<Map.Entry<String, Object>> tempList = new ArrayList<>(map.entrySet());
+		final @NotNull List<Map.Entry<String, Object>> tempList = new ArrayList<>(map.entrySet());
 		for (@NotNull Map.Entry<String, Object> entry : tempList) {
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
@@ -442,6 +441,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		}
 	}
 
+	@Synchronized
 	private @NotNull Object internalGet(final @NotNull Map map, final @NotNull String[] key) {
 		@NotNull Object tempValue = map;
 		for (String tempKey : key) {

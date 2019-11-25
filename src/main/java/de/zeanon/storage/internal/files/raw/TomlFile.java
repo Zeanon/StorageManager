@@ -57,6 +57,7 @@ public class TomlFile extends FlatFile<StandardFileData> {
 
 
 	@Override
+	@Synchronized
 	public void reload() {
 		try {
 			this.getFileData().loadData(com.electronwill.toml.Toml.read(this.getFile()));

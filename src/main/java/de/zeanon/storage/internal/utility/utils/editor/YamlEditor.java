@@ -31,6 +31,7 @@ public class YamlEditor {
 		return getCommentsFromLines(read(file));
 	}
 
+	@Synchronized
 	@Contract("_ -> new")
 	public static @NotNull List<String> read(final @NotNull File file) throws IOException {
 		return Files.readAllLines(file.toPath());
