@@ -15,7 +15,7 @@
  *
  * $Id: SingletonComparator.java 4520 2019-09-21 00:41:58Z origo $
  *
- * Copied by Zeanon to reduce size of compiled jar
+ * Copied by Zeanon to reduce final jar size
  */
 package de.zeanon.storage.external.lists.helpers;
 
@@ -39,9 +39,9 @@ abstract class SingletonComparator<T> implements Comparator<T>, Serializable {
 
 	@Override
 	public boolean equals(Object that) {
-		if (this == null || that == null) { //NOSONAR
+		if (this == null || that == null) {
 			return this == that;
 		}
-		return this.getClass().getName().equals(that.getClass().getName()); //NOSONAR
+		return this.getClass().getName().equals(that.getClass().getName());
 	}
 }

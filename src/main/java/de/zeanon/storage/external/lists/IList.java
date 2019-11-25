@@ -15,7 +15,7 @@
  *
  * $Id: IList.java 4522 2019-09-23 22:48:08Z origo $
  *
- * Copied by Zeanon to reduce size of compiled jar
+ * Copied by Zeanon to reduce final jar size
  */
 package de.zeanon.storage.external.lists;
 
@@ -179,7 +179,7 @@ public abstract class IList<E>
 	 *
 	 * @return an unmodifiable view of the specified list
 	 */
-	abstract public IList<E> unmodifiableList(); //NOSONAR
+	abstract public IList<E> unmodifiableList();
 
 	/**
 	 * Returns a shallow copy of this list instance.
@@ -189,7 +189,7 @@ public abstract class IList<E>
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object clone() { //NOSONAR
+	public Object clone() {
 		try {
 			IList<E> list = (IList<E>) super.clone();
 			list.doClone(this);
@@ -229,8 +229,8 @@ public abstract class IList<E>
 		assert (size() == len);
 	}
 
-	@Override //NOSONAR
-	abstract public int size(); //NOSONAR
+	@Override
+	abstract public int size();
 
 	/**
 	 * Returns capacity of this list.
@@ -239,7 +239,7 @@ public abstract class IList<E>
 	 *
 	 * @return capacity of this list
 	 */
-	abstract public int capacity(); //NOSONAR
+	abstract public int capacity();
 
 	@Override
 	public E get(int index) {
@@ -310,7 +310,7 @@ public abstract class IList<E>
 	 */
 	// Note: Provide this method to make transition from ArrayList as
 	//       smooth as possible
-	abstract public void trimToSize(); //NOSONAR
+	abstract public void trimToSize();
 
 	@Override
 	public boolean isEmpty() {
@@ -419,7 +419,7 @@ public abstract class IList<E>
 			if (predicate.test(e)) {
 				doRemove(i);
 				size--;
-				i--; //NOSONAR
+				i--;
 				removed = true;
 			}
 		}
@@ -441,7 +441,7 @@ public abstract class IList<E>
 			if (!predicate.test(e)) {
 				doRemove(i);
 				size--;
-				i--; //NOSONAR
+				i--;
 				modified = true;
 			}
 		}
@@ -464,7 +464,7 @@ public abstract class IList<E>
 				list.add(e);
 				doRemove(i);
 				size--;
-				i--; //NOSONAR
+				i--;
 			}
 		}
 		return list;
@@ -707,8 +707,8 @@ public abstract class IList<E>
 	 */
 	public boolean containsAny(Collection<?> coll) {
 		// Note that the signature has been chosen as in List:
-		// - boolean addAll(Collection<? extends E> c); //NOSONAR
-		// - boolean containsAll(Collection<?> c); //NOSONAR
+		// - boolean addAll(Collection<? extends E> c);
+		// - boolean containsAll(Collection<?> c);
 		for (Object elem : coll) {
 			if (contains(elem)) {
 				return true;
@@ -745,7 +745,7 @@ public abstract class IList<E>
 				list.add(e);
 				doRemove(i);
 				size--;
-				i--; //NOSONAR
+				i--;
 			}
 		}
 		return list;
@@ -762,7 +762,7 @@ public abstract class IList<E>
 			if (coll.contains(doGet(i))) {
 				doRemove(i);
 				size--;
-				i--; //NOSONAR
+				i--;
 				modified = true;
 			}
 		}
@@ -782,7 +782,7 @@ public abstract class IList<E>
 			if (coll.contains(doGet(i))) {
 				doRemove(i);
 				size--;
-				i--; //NOSONAR
+				i--;
 				modified = true;
 			}
 		}
@@ -800,7 +800,7 @@ public abstract class IList<E>
 			if (!coll.contains(doGet(i))) {
 				doRemove(i);
 				size--;
-				i--; //NOSONAR
+				i--;
 				modified = true;
 			}
 		}
@@ -820,7 +820,7 @@ public abstract class IList<E>
 			if (!coll.contains(doGet(i))) {
 				doRemove(i);
 				size--;
-				i--; //NOSONAR
+				i--;
 				modified = true;
 			}
 		}
@@ -963,7 +963,7 @@ public abstract class IList<E>
 	}
 
 	@Override
-	public E getFirst() { //NOSONAR
+	public E getFirst() {
 		if (size() == 0) {
 			throw new NoSuchElementException();
 		}
@@ -993,7 +993,7 @@ public abstract class IList<E>
 	}
 
 	@Override
-	public E removeFirst() { //NOSONAR
+	public E removeFirst() {
 		if (size() == 0) {
 			throw new NoSuchElementException();
 		}
@@ -1043,7 +1043,7 @@ public abstract class IList<E>
 	}
 
 	@Override
-	public E pollFirst() { //NOSONAR
+	public E pollFirst() {
 		if (size() == 0) {
 			return null;
 		}
@@ -1062,7 +1062,7 @@ public abstract class IList<E>
 	// Deque operations
 
 	@Override
-	public E pop() { //NOSONAR
+	public E pop() {
 		// inline version of removeFirst():
 		if (size() == 0) {
 			throw new NoSuchElementException();
@@ -1072,12 +1072,12 @@ public abstract class IList<E>
 
 	@Override
 	public void push(E elem) {
-		// inline version of addFirst(); //NOSONAR
+		// inline version of addFirst();
 		doAdd(0, elem);
 	}
 
 	@Override
-	public boolean removeFirstOccurrence(Object elem) { //NOSONAR
+	public boolean removeFirstOccurrence(Object elem) {
 		int index = indexOf(elem);
 		if (index == -1) {
 			return false;
@@ -1378,7 +1378,7 @@ public abstract class IList<E>
 
 		int len = size() - index;
 		if (list != null) {
-			if (list.size() < len) { //NOSONAR
+			if (list.size() < len) {
 				len = list.size();
 			}
 		}
@@ -1589,7 +1589,7 @@ public abstract class IList<E>
 		if (len == -1) {
 			len = size() - index;
 			if (list != null) {
-				if (list.size() < len) { //NOSONAR
+				if (list.size() < len) {
 					len = list.size();
 				}
 			}
@@ -1808,7 +1808,7 @@ public abstract class IList<E>
 	 * @throws IndexOutOfBoundsException if the range is invalid
 	 * @see Arrays#sort
 	 */
-	abstract public void sort(int index, int len, Comparator<? super E> comparator); //NOSONAR
+	abstract public void sort(int index, int len, Comparator<? super E> comparator);
 
 	/**
 	 * Searches the specified range for an object using the binary
@@ -1859,7 +1859,7 @@ public abstract class IList<E>
 	 * @throws IndexOutOfBoundsException if the range is invalid
 	 * @see Arrays#binarySearch
 	 */
-	abstract public <K> int binarySearch(int index, int len, K key, Comparator<? super K> comparator); //NOSONAR
+	abstract public <K> int binarySearch(int index, int len, K key, Comparator<? super K> comparator);
 
 	/**
 	 * Copies the collection values into an array.
@@ -1978,7 +1978,7 @@ public abstract class IList<E>
 	 *
 	 * @param that source object
 	 */
-	abstract protected void doClone(IList<E> that); //NOSONAR
+	abstract protected void doClone(IList<E> that);
 
 	protected void doClear() {
 		doRemoveAll(0, size());
@@ -1995,7 +1995,7 @@ public abstract class IList<E>
 	 *
 	 * @return the element at the specified position in this list
 	 */
-	abstract protected E doGet(int index); //NOSONAR
+	abstract protected E doGet(int index);
 
 	/**
 	 * Helper method for setting an element in the list.
@@ -2007,7 +2007,7 @@ public abstract class IList<E>
 	 *
 	 * @return old element which was at the position
 	 */
-	abstract protected E doSet(int index, E elem); //NOSONAR
+	abstract protected E doSet(int index, E elem);
 
 	/**
 	 * Sets an element at specified position.
@@ -2019,9 +2019,9 @@ public abstract class IList<E>
 	 *
 	 * @return old element which was at the position
 	 */
-	abstract protected E doReSet(int index, E elem); //NOSONAR
+	abstract protected E doReSet(int index, E elem);
 
-	abstract protected E getDefaultElem(); //NOSONAR
+	abstract protected E getDefaultElem();
 
 	// -- doReplaceAll()
 
@@ -2045,7 +2045,7 @@ public abstract class IList<E>
 	 *
 	 * @return true if element has been added, false otherwise
 	 */
-	abstract protected boolean doAdd(int index, E elem); //NOSONAR
+	abstract protected boolean doAdd(int index, E elem);
 
 	/**
 	 * Helper method to remove an element.
@@ -2056,7 +2056,7 @@ public abstract class IList<E>
 	 *
 	 * @return removed element
 	 */
-	abstract protected E doRemove(int index); //NOSONAR
+	abstract protected E doRemove(int index);
 
 	/**
 	 * Increases the capacity of this list instance, if
@@ -2065,7 +2065,7 @@ public abstract class IList<E>
 	 *
 	 * @param minCapacity the desired minimum capacity
 	 */
-	abstract protected void doEnsureCapacity(int minCapacity); //NOSONAR
+	abstract protected void doEnsureCapacity(int minCapacity);
 
 	/**
 	 * Create array.
@@ -2120,7 +2120,7 @@ public abstract class IList<E>
 			if (doAdd(index, elem)) {
 				changed = true;
 				if (index != -1) {
-					if (prevSize != size()) { //NOSONAR
+					if (prevSize != size()) {
 						prevSize = size();
 						index++;
 					}
@@ -2137,7 +2137,7 @@ public abstract class IList<E>
 	 *
 	 * @return created list
 	 */
-	abstract protected IList<E> doCreate(int capacity); //NOSONAR
+	abstract protected IList<E> doCreate(int capacity);
 
 	/**
 	 * Assign this list the content of the that list.
@@ -2145,7 +2145,7 @@ public abstract class IList<E>
 	 *
 	 * @param that list to copy content from
 	 */
-	abstract protected void doAssign(IList<E> that); //NOSONAR
+	abstract protected void doAssign(IList<E> that);
 
 	/**
 	 * Remove specified range of elements from list.
@@ -2231,6 +2231,58 @@ public abstract class IList<E>
 			throw new IndexOutOfBoundsException("Invalid index: " + index + " (size: " + size() + ")");
 		}
 	}
+
+	/*
+	Question:
+	   Why is the signature of method binarySearch
+	       public <K> int binarySearch(K key, Comparator<? super K> comparator)
+	   and not
+	       public int binarySearch(E key, Comparator<? super E> comparator)
+	   as you could expect?
+
+	Answer:
+	   This allows to use the binarySearch method not only with keys of
+	   the type stored in the GapList, but also with any other type you
+	   are prepared to handle in you Comparator.
+	   So if we have a class Name and its comparator as defined in the
+	   following code snippets, both method calls are possible:
+
+	   new GapList<Name>().binarySearch(new Name("a"), new NameComparator());
+	   new GapList<Name>().binarySearch("a", new NameComparator());
+
+	   class Name {
+	       String name;
+
+	       public Name(String name) {
+	           this.name = name;
+	       }
+	       public String getName() {
+	           return name;
+	       }
+	       public String toString() {
+	           return name;
+	       }
+	   }
+
+	   static class NameComparator implements Comparator<Object> {
+	       @Override
+	       public int compare(Object o1, Object o2) {
+	           String s1;
+	           if (o1 instanceof String) {
+	               s1 = (String) o1;
+	           } else {
+	               s1 = ((Name) o1).getName();
+	           }
+	           String s2;
+	           if (o2 instanceof String) {
+	               s2 = (String) o2;
+	           } else {
+	               s2 = ((Name) o2).getName();
+	           }
+	           return s1.compareTo(s2);
+	       }
+	    }
+	*/
 
 	/**
 	 * Check that specified index is valid for adding elements.
@@ -2534,7 +2586,7 @@ public abstract class IList<E>
 
 	// --- End class ListIter ---
 
-	protected static abstract class IReadOnlyList<E> extends IList<E> { //NOSONAR
+	protected static abstract class IReadOnlyList<E> extends IList<E> {
 
 		@Override
 		public IList<E> unmodifiableList() {
@@ -2576,13 +2628,13 @@ public abstract class IList<E>
 		}
 
 		@Override
-		protected E doReSet(int index, E elem) { //NOSONAR
+		protected E doReSet(int index, E elem) {
 			error();
 			return null;
 		}
 
 		@Override
-		protected E getDefaultElem() { //NOSONAR
+		protected E getDefaultElem() {
 			error();
 			return null;
 		}
@@ -2623,9 +2675,9 @@ public abstract class IList<E>
 		}
 	}
 
-	protected static class IReadOnlyListFromArray<E> extends IReadOnlyList<E> { //NOSONAR
+	protected static class IReadOnlyListFromArray<E> extends IReadOnlyList<E> {
 
-		E[] array; //NOSONAR
+		E[] array;
 		int offset;
 		int length;
 
@@ -2652,13 +2704,13 @@ public abstract class IList<E>
 		}
 	}
 
-	protected static class IReadOnlyListFromMult<E> extends IReadOnlyList<E> { //NOSONAR
+	protected static class IReadOnlyListFromMult<E> extends IReadOnlyList<E> {
 
 		int len;
-		E elem; //NOSONAR
+		E elem;
 
 		IReadOnlyListFromMult(int len, E elem) {
-			checkLength(len); //NOSONAR
+			checkLength(len);
 
 			this.len = len;
 			this.elem = elem;
@@ -2675,9 +2727,9 @@ public abstract class IList<E>
 		}
 	}
 
-	protected static class IReadOnlyListFromCollection<E> extends IReadOnlyList<E> { //NOSONAR
+	protected static class IReadOnlyListFromCollection<E> extends IReadOnlyList<E> {
 
-		Object[] array; //NOSONAR
+		Object[] array;
 
 		IReadOnlyListFromCollection(Collection<? extends E> coll) {
 			array = coll.toArray();
@@ -2695,9 +2747,9 @@ public abstract class IList<E>
 		}
 	}
 
-	protected static class IReadOnlyListFromList<E> extends IReadOnlyList<E> { //NOSONAR
+	protected static class IReadOnlyListFromList<E> extends IReadOnlyList<E> {
 
-		List<E> list2; //NOSONAR
+		List<E> list2;
 
 		@SuppressWarnings("unchecked")
 		IReadOnlyListFromList(List<? extends E> list) {

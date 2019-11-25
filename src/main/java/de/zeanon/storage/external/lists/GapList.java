@@ -15,7 +15,7 @@
  *
  * $Id: GapList.java 4092 2018-07-20 00:38:43Z origo $
  *
- * Copied by Zeanon to reduce size of compiled jar
+ * Copied by Zeanon to reduce final jar size
  */
 package de.zeanon.storage.external.lists;
 
@@ -49,7 +49,6 @@ import java.util.function.Function;
  * @see java.util.ArrayList
  * @see java.util.LinkedList
  */
-@SuppressWarnings("ALL")
 public class GapList<E> extends IList<E> {
 
 	/*
@@ -78,9 +77,9 @@ public class GapList<E> extends IList<E> {
 	// -- EMPTY --
 
 	// Cannot make a static reference to the non-static type E:
-	// public static GapList<E> EMPTY = GapList.create().unmodifiableList(); //NOSONAR
+	// public static GapList<E> EMPTY = GapList.create().unmodifiableList();
 	// Syntax error:
-	// public static <EE> GapList<EE> EMPTY = GapList.create().unmodifiableList(); //NOSONAR
+	// public static <EE> GapList<EE> EMPTY = GapList.create().unmodifiableList();
 	/**
 	 * Unmodifiable empty instance
 	 */
@@ -93,7 +92,7 @@ public class GapList<E> extends IList<E> {
 	/**
 	 * Empty array used for default initialization
 	 */
-	private static Object[] EMPTY_VALUES = new Object[0]; //NOSONAR
+	private static Object[] EMPTY_VALUES = new Object[0];
 	/**
 	 * Array holding raw data
 	 */
@@ -208,7 +207,7 @@ public class GapList<E> extends IList<E> {
 	public static <E> GapList<E> create(E... elems) {
 		GapList<E> list = new GapList<E>();
 		if (elems != null) {
-			if (elems != null) { //NOSONAR
+			if (elems != null) {
 				list.init(elems);
 			}
 		}
@@ -255,7 +254,7 @@ public class GapList<E> extends IList<E> {
 	 */
 	// Only overridden to change Javadoc
 	@Override
-	public Object clone() { //NOSONAR
+	public Object clone() {
 		return super.clone();
 	}
 
@@ -284,7 +283,7 @@ public class GapList<E> extends IList<E> {
 		// Also -XX:+AggressiveOpts seems not to help.
 		// We therefore do inlining manually.
 
-		// INLINE: checkIndex(index); //NOSONAR
+		// INLINE: checkIndex(index);
 		if (index < 0 || index >= size()) {
 			throw new IndexOutOfBoundsException("Invalid index: " + index + " (size: " + size() + ")");
 		}
@@ -382,7 +381,7 @@ public class GapList<E> extends IList<E> {
 		checkRange(index, len);
 
 		normalize();
-		return Arrays.binarySearch((Object[]) values, index, index + len, key, (Comparator<Object>) comparator);
+		return Arrays.binarySearch(values, index, index + len, key, (Comparator<Object>) comparator);
 	}
 
 	/**
@@ -469,7 +468,7 @@ public class GapList<E> extends IList<E> {
 	protected E doGet(int index) {
 		assert (index >= 0 && index < size);
 
-		// INLINE: return values[physIndex(index)]; //NOSONAR
+		// INLINE: return values[physIndex(index)];
 		int physIdx = index + start;
 		if (index >= gapIndex) {
 			physIdx += gapSize;
@@ -491,7 +490,7 @@ public class GapList<E> extends IList<E> {
 	}
 
 	@Override
-	protected E doReSet(int index, E elem) { //NOSONAR
+	protected E doReSet(int index, E elem) {
 		assert (index >= 0 && index < size);
 
 		int physIdx = physIndex(index);
@@ -673,7 +672,7 @@ public class GapList<E> extends IList<E> {
 						start = physIdx;
 						end = physIdx;
 					} else if (index == size) {
-						if ((gapStart + gapSize) % values.length == start) { //NOSONAR
+						if ((gapStart + gapSize) % values.length == start) {
 							end = gapStart;
 							gapSize = 0;
 						}
@@ -713,7 +712,7 @@ public class GapList<E> extends IList<E> {
 
 			// Remove gap if it is followed by only one element
 			if (gapSize > 0) {
-				if (gapIndex == index) { //NOSONAR
+				if (gapIndex == index) {
 					// R0-1
 					end = gapStart;
 					gapSize = 0;
@@ -865,7 +864,6 @@ public class GapList<E> extends IList<E> {
 
 		E[] newValues = (E[]) new Object[newCapacity];
 		if (size == 0) {
-			; //NOSONAR
 		} else if (start == 0) {
 			System.arraycopy(values, 0, newValues, 0, values.length);
 		} else if (start > 0) {
@@ -1127,7 +1125,7 @@ public class GapList<E> extends IList<E> {
 		}
 
 		if (DEBUG_TRACE) {
-			if (DEBUG_DUMP) { //NOSONAR
+			if (DEBUG_DUMP) {
 				debugLog(debugPrint(values));
 			}
 		}
@@ -1263,7 +1261,7 @@ public class GapList<E> extends IList<E> {
 						return 9;
 					}
 				}
-			} else if (start != end) { //NOSONAR
+			} else if (start != end) {
 				if (start == 0) {
 					return 10;
 				} else if (gapStart < start) {
@@ -1277,7 +1275,7 @@ public class GapList<E> extends IList<E> {
 							return 11;
 						} else if (end > start) {
 							return 13;
-						} else if (end < start) { //NOSONAR
+						} else if (end < start) {
 							return 15;
 						}
 					}
@@ -1326,7 +1324,7 @@ public class GapList<E> extends IList<E> {
 	 *
 	 * @param msg message to write out
 	 */
-	private void debugLog(String msg) { //NOSONAR
+	private void debugLog(String msg) {
 	}
 
 	// --- ImmutableGapList ---
@@ -1365,7 +1363,7 @@ public class GapList<E> extends IList<E> {
 		}
 
 		@Override
-		protected E doReSet(int index, E elem) { //NOSONAR
+		protected E doReSet(int index, E elem) {
 			error();
 			return null;
 		}

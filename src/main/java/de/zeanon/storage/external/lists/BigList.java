@@ -15,11 +15,10 @@
  *
  * $Id: BigList.java 3408 2016-12-06 00:20:45Z origo $
  *
- * Copied by Zeanon to reduce size of compiled jar
+ * Copied by Zeanon to reduce final jar size
  */
 package de.zeanon.storage.external.lists;
 
-import de.zeanon.storage.external.lists.helpers.MergeSort;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -28,6 +27,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.magicwerk.brownies.collections.helper.MergeSort;
 
 
 /**
@@ -77,9 +77,9 @@ public class BigList<E> extends IList<E> {
 	// -- EMPTY --
 
 	// Cannot make a static reference to the non-static type E:
-	// public static BigList<E> EMPTY = BigList.create().unmodifiableList(); //NOSONAR
+	// public static BigList<E> EMPTY = BigList.create().unmodifiableList();
 	// Syntax error:
-	// public static <EE> BigList<EE> EMPTY = BigList.create().unmodifiableList(); //NOSONAR
+	// public static <EE> BigList<EE> EMPTY = BigList.create().unmodifiableList();
 
 	/**
 	 * Unmodifiable empty instance
@@ -267,7 +267,7 @@ public class BigList<E> extends IList<E> {
 	 */
 	// Only overridden to change Javadoc
 	@Override
-	public Object clone() { //NOSONAR
+	public Object clone() {
 		return super.clone();
 	}
 
@@ -365,7 +365,7 @@ public class BigList<E> extends IList<E> {
 	}
 
 	@Override
-	protected void finalize() { //NOSONAR
+	protected void finalize() {
 		// This list will be garbage collected, so unref all referenced blocks.
 		// As it is not reachable by any live objects, if is safe to access it from
 		// the GC thread without synchronization
@@ -391,7 +391,7 @@ public class BigList<E> extends IList<E> {
 	}
 
 	@Override
-	protected E doReSet(int index, E elem) { //NOSONAR
+	protected E doReSet(int index, E elem) {
 		int pos = getBlockIndex(index, true, 0);
 		E oldElem = currNode.block.doGet(pos);
 		currNode.block.doSet(pos, elem);
@@ -551,7 +551,7 @@ public class BigList<E> extends IList<E> {
 				// Add elements in the middle
 
 				// Split first block to remove tail elements if necessary
-				GapList<E> list2 = GapList.create();    // TODO avoid unnecessary copy //NOSONAR
+				GapList<E> list2 = GapList.create();    // TODO avoid unnecessary copy
 				list2.addAll(list);
 				int remove = currNode.block.size() - addPos;
 				if (remove > 0) {
@@ -656,7 +656,7 @@ public class BigList<E> extends IList<E> {
 
 	@Override
 	protected void doClear() {
-		finalize(); //NOSONAR
+		finalize();
 
 		rootNode = null;
 		currBlockStart = 0;
@@ -687,7 +687,7 @@ public class BigList<E> extends IList<E> {
 		int startPos = getBlockIndex(index, true, 0);
 		BlockNode<E> startNode = currNode;
 		@SuppressWarnings("unused")
-		int endPos = getBlockIndex(index + len - 1, true, 0); //NOSONAR
+		int endPos = getBlockIndex(index + len - 1, true, 0);
 		BlockNode<E> endNode = currNode;
 
 		if (startNode == endNode) {
@@ -716,7 +716,7 @@ public class BigList<E> extends IList<E> {
 			if (currNode.block.isEmpty()) {
 				releaseBlock();
 				doRemove(startNode);
-				startNode = null; //NOSONAR
+				startNode = null;
 			}
 			len -= startLen;
 			size -= startLen;
@@ -873,7 +873,7 @@ public class BigList<E> extends IList<E> {
 			if (index >= currBlockStart && (index < currBlockEnd || index == currBlockEnd && size == index)) {
 				// currBlock is already set correctly
 				if (write) {
-					if (currNode.block.isShared()) { //NOSONAR
+					if (currNode.block.isShared()) {
 						currNode.block.unref();
 						currNode.setBlock(new Block<E>(currNode.block));
 					}
@@ -915,7 +915,7 @@ public class BigList<E> extends IList<E> {
 		assert (index >= currBlockStart && index <= currBlockEnd);
 
 		if (write) {
-			if (currNode.block.isShared()) { //NOSONAR
+			if (currNode.block.isShared()) {
 				currNode.block.unref();
 				currNode.setBlock(new Block<E>(currNode.block));
 			}
@@ -951,7 +951,7 @@ public class BigList<E> extends IList<E> {
 		} else {
 			// Traverse non-empty tree until right node has been found
 			boolean wasLeft = false;
-			while (true) { //NOSONAR
+			while (true) {
 				assert (index >= 0);
 
 				int leftIndex = currBlockEnd - currNode.block.size();
@@ -980,7 +980,7 @@ public class BigList<E> extends IList<E> {
 					// Traverse the left node
 					nextNode = currNode.getLeftSubTree();
 					if (modify != 0) {
-						if (nextNode == null || !wasLeft) { //NOSONAR
+						if (nextNode == null || !wasLeft) {
 							if (currNode.relPos > 0) {
 								currNode.relPos += modify;
 							} else {
@@ -996,7 +996,7 @@ public class BigList<E> extends IList<E> {
 					// Traverse the right node
 					nextNode = currNode.getRightSubTree();
 					if (modify != 0) {
-						if (nextNode == null || wasLeft) { //NOSONAR
+						if (nextNode == null || wasLeft) {
 							if (currNode.relPos > 0) {
 								currNode.relPos += modify;
 								BlockNode<E> left = currNode.getLeftSubTree();
@@ -1296,7 +1296,7 @@ public class BigList<E> extends IList<E> {
 			node = rootNode;
 			index = node.relPos;
 			int searchIndex = lastIndex + 1;
-			while (true) { //NOSONAR
+			while (true) {
 				checkNode(node);
 				block = node.getBlock();
 				assert (block.size() > 0);
@@ -1699,7 +1699,7 @@ public class BigList<E> extends IList<E> {
 					}
 					return rotateLeft();
 				default:
-					throw new RuntimeException("tree inconsistent!"); //NOSONAR
+					throw new RuntimeException("tree inconsistent!");
 			}
 		}
 
@@ -1900,7 +1900,7 @@ public class BigList<E> extends IList<E> {
 		}
 
 		@Override
-		protected E doReSet(int index, E elem) { //NOSONAR
+		protected E doReSet(int index, E elem) {
 			error();
 			return null;
 		}

@@ -2,7 +2,8 @@
 // This file has been copied from
 // http://thomas.baudel.name/Visualisation/VisuTri/inplacestablesort.html
 //
-// Copied by Zeanon to reduce size of compiled jar
+// Copied by Zeanon to reduce final jar size
+//
 package de.zeanon.storage.external.lists.helpers;
 
 import java.util.Comparator;
@@ -65,7 +66,7 @@ public class MergeSort<E> {
 	}
 
 	private int lower(int from, int to, int val) {
-		int len = to - from, half; //NOSONAR
+		int len = to - from, half;
 		while (len > 0) {
 			half = len / 2;
 			int mid = from + half;
@@ -80,7 +81,7 @@ public class MergeSort<E> {
 	}
 
 	private int upper(int from, int to, int val) {
-		int len = to - from, half; //NOSONAR
+		int len = to - from, half;
 		while (len > 0) {
 			half = len / 2;
 			int mid = from + half;
@@ -120,11 +121,11 @@ public class MergeSort<E> {
 	private void rotate(int from, int mid, int to) {
 		/*
 		 * a less sophisticated but costlier version:
-		 * reverse(from, mid-1); reverse(mid, to-1); reverse(from, to-1); //NOSONAR
+		 * reverse(from, mid-1); reverse(mid, to-1); reverse(from, to-1);
 		 *
-		 * 	private void reverse(int from, int to) { //NOSONAR
-		 *    while (from < to) { //NOSONAR
-		 *	    swap(from++, to--); //NOSONAR
+		 * 	private void reverse(int from, int to) {
+		 *    while (from < to) {
+		 *	    swap(from++, to--);
 		 *    }
 		 *  }
 		 */
@@ -135,7 +136,7 @@ public class MergeSort<E> {
 		while (n-- != 0) {
 			E val = list.get(from + n);
 			int shift = mid - from;
-			int p1 = from + n, p2 = from + n + shift; //NOSONAR
+			int p1 = from + n, p2 = from + n + shift;
 			while (p2 != from + n) {
 				list.set(p1, list.get(p2));
 				p1 = p2;
@@ -159,8 +160,8 @@ public class MergeSort<E> {
 			}
 			return;
 		}
-		int first_cut, second_cut; //NOSONAR
-		int len11, len22; //NOSONAR
+		int first_cut, second_cut;
+		int len11, len22;
 		if (len1 > len2) {
 			len11 = len1 / 2;
 			first_cut = from + len11;

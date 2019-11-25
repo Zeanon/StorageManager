@@ -16,7 +16,6 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import javafx.util.Pair;
 import lombok.AccessLevel;
@@ -25,6 +24,8 @@ import lombok.Synchronized;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.magicwerk.brownies.collections.BigList;
+import org.magicwerk.brownies.collections.GapList;
 
 
 /**
@@ -372,7 +373,7 @@ public class ThunderEditor {
 											final @NotNull List<String> lines,
 											final @NotNull TripletMap<String, Object> tempMap,
 											final @NotNull String tempLine,
-											final boolean bigMap,
+											final boolean bigList,
 											@Nullable String tempKey) throws ThunderException {
 		if (tempLine.contains("=")) {
 			final @NotNull String[] line = tempLine.split("=", 2);
@@ -396,7 +397,7 @@ public class ThunderEditor {
 						tempMap.add(line[0], list);
 					}
 				} else {
-					tempMap.add(line[0], ThunderEditor.readList(filePath, lines, bigMap));
+					tempMap.add(line[0], ThunderEditor.readList(filePath, lines, bigList));
 				}
 			} else {
 				if (line[1].equalsIgnoreCase("true") || line[1].equalsIgnoreCase("false")) {
@@ -417,18 +418,18 @@ public class ThunderEditor {
 
 	private static @NotNull List<String> readList(final @NotNull String filePath,
 												  final @NotNull List<String> lines,
-												  final boolean bigMap) throws ThunderException {
+												  final boolean bigList) throws ThunderException {
 		@NotNull String tempLine;
-		final @NotNull List<String> tempList = bigMap ? new LinkedList<>() : new ArrayList<>();
+		final @NotNull List<String> tempList = bigList ? new BigList<>() : new GapList<>();
 		while (!lines.isEmpty()) {
 			tempLine = lines.get(0).trim();
 			lines.remove(0);
 			if (tempLine.startsWith("-")) {
 				if (tempLine.endsWith("]")) {
-					tempList.add(tempLine.substring(1, tempLine.length() - 1).trim().replace("\"", ""));
+					tempList.add(tempLine.substring(1, tempLine.length() - 1).trim());
 					return tempList;
 				} else {
-					tempList.add(tempLine.substring(1).trim().replace("\"", ""));
+					tempList.add(tempLine.substring(1).trim());
 				}
 			} else if (tempLine.endsWith("]")) {
 				return tempList;

@@ -15,7 +15,7 @@
  *
  * $Id: NaturalComparator.java 2923 2015-09-02 23:01:46Z origo $
  *
- * Copied by Zeanon to reduce size of compiled jar
+ * Copied by Zeanon to reduce final jar size
  */
 package de.zeanon.storage.external.lists.helpers;
 
@@ -52,7 +52,7 @@ public class NaturalComparator<T> extends SingletonComparator<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> NaturalComparator<T> INSTANCE(Class<T> c) {//NOSONAR
+	public static <T> NaturalComparator<T> INSTANCE(Class<T> c) {
 		return INSTANCE;
 	}
 
