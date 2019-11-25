@@ -24,8 +24,8 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class BaseFileUtils {
 
-	@Setter
 	@Getter
+	@Setter
 	private static int bufferSize = 8192;
 
 
