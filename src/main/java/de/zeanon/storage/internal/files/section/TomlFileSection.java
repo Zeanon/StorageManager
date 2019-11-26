@@ -2,6 +2,8 @@ package de.zeanon.storage.internal.files.section;
 
 import de.zeanon.storage.internal.base.sections.FlatSection;
 import de.zeanon.storage.internal.files.raw.TomlFile;
+import java.util.List;
+import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class TomlFileSection extends FlatSection<TomlFile> {
+public class TomlFileSection extends FlatSection<TomlFile, Map, List> {
 
 	@NotNull
 	private final TomlFile tomlFile;
@@ -33,7 +35,6 @@ public class TomlFileSection extends FlatSection<TomlFile> {
 		super(sectionKey, tomlFile);
 		this.tomlFile = tomlFile;
 	}
-
 
 	@NotNull
 	@Override

@@ -248,7 +248,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	@Override
 	@Contract("-> new")
 	public @NotNull Set<Map.Entry<K, V>> entrySet() {
-		return new LinkedHashSet<>(this.localList);
+		return new HashSet<>(this.localList);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.base.interfaces;
 
+import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  * @version 2.1.0
  */
 @SuppressWarnings("unused")
-public interface FileData<M extends Map, E extends Map.Entry> {
+public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 
 
 	/**
@@ -26,6 +27,11 @@ public interface FileData<M extends Map, E extends Map.Entry> {
 	 * @param map the values to be loaded
 	 */
 	void loadData(final @Nullable M map);
+
+	/**
+	 *
+	 */
+	@NotNull Provider<M, L> provider();
 
 	/**
 	 * Map a value to a given key

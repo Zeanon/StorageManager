@@ -12,8 +12,8 @@ import de.zeanon.storage.internal.utility.utils.editor.YamlEditor;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class YamlConfig extends YamlFile implements Config {
+public class YamlConfig extends YamlFile implements Config<Map, List> {
 
 	private List<String> header;
 	private List<String> footer;
@@ -45,25 +45,26 @@ public class YamlConfig extends YamlFile implements Config {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting) {
-		super(file, inputStream, reloadSetting, commentSetting);
+	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
+		super(file, inputStream, reloadSetting, commentSetting, map, list);
 	}
 
 
 	@Override
 	public @NotNull List<String> getHeader() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		} else if (!this.shouldReload()) {
 			return this.header;
 		} else {
 			try {
-				this.header = YamlEditor.readHeader(this.getFile());
+				this.header = YamlEditor.readHeader(this.file(), this.provider());
 				return this.header;
 			} catch (YamlException e) {
-				throw new FileParseException("Error while getting header of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+				throw new FileParseException("Error while getting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while getting header of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+				throw new RuntimeIOException("Error while getting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -71,7 +72,8 @@ public class YamlConfig extends YamlFile implements Config {
 	@Override
 	public void setHeader(final @Nullable List<String> header) {
 		if (header != null) {
-			@NotNull List<String> tmp = new ArrayList<>();
+			//noinspection unchecked
+			@NotNull List<String> tmp = this.provider().newList();
 			for (final @NotNull String line : header) {
 				if (!line.startsWith("#")) {
 					tmp.add("#" + line);
@@ -81,44 +83,45 @@ public class YamlConfig extends YamlFile implements Config {
 			}
 			this.header = tmp;
 
-			if (this.getFile().length() == 0) {
+			if (this.file().length() == 0) {
 				try {
-					YamlEditor.write(this.getFile(), this.header);
+					YamlEditor.write(this.file(), this.header);
 				} catch (YamlException e) {
-					throw new FileParseException("Error while setting header of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+					throw new FileParseException("Error while setting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
 				} catch (IOException e) {
-					throw new RuntimeIOException("Error while setting header of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+					throw new RuntimeIOException("Error while setting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
 				}
 			} else {
 				try {
-					final @NotNull List<String> lines = YamlEditor.read(this.getFile());
-					final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.getFile());
+					final @NotNull List<String> lines = YamlEditor.read(this.file());
+					final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.file(), this.provider());
 
 					List<String> newLines = this.header;
 					lines.removeAll(oldHeader);
 					newLines.addAll(lines);
 
-					YamlEditor.write(this.getFile(), newLines);
+					YamlEditor.write(this.file(), newLines);
 				} catch (YamlException e) {
-					throw new FileParseException("Error while setting header of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+					throw new FileParseException("Error while setting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
 				} catch (IOException e) {
-					throw new RuntimeIOException("Error while setting header of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+					throw new RuntimeIOException("Error while setting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
 				}
 			}
 		} else {
-			this.header = new ArrayList<>();
+			//noinspection unchecked
+			this.header = this.provider().newList();
 
 			try {
-				final @NotNull List<String> lines = YamlEditor.read(this.getFile());
-				final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.getFile());
+				final @NotNull List<String> lines = YamlEditor.read(this.file());
+				final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.file(), provider());
 
 				lines.removeAll(oldHeader);
 
-				YamlEditor.write(this.getFile(), lines);
+				YamlEditor.write(this.file(), lines);
 			} catch (YamlException e) {
-				throw new FileParseException("Error while setting header of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+				throw new FileParseException("Error while setting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while setting header of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+				throw new RuntimeIOException("Error while setting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -126,17 +129,18 @@ public class YamlConfig extends YamlFile implements Config {
 	@Override
 	public @NotNull List<String> getFooter() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		} else if (!this.shouldReload()) {
 			return this.footer;
 		} else {
 			try {
-				this.footer = YamlEditor.readFooter(this.getFile());
+				this.footer = YamlEditor.readFooter(this.file(), provider());
 				return this.footer;
 			} catch (YamlException e) {
-				throw new FileParseException("Error while getting footer of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+				throw new FileParseException("Error while getting footer of '" + this.file().getAbsolutePath() + "'", e.getCause());
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while getting footer of '" + this.getFile().getAbsolutePath() + "'.", e.getCause());
+				throw new RuntimeIOException("Error while getting footer of '" + this.file().getAbsolutePath() + "'.", e.getCause());
 			}
 		}
 	}
@@ -144,7 +148,8 @@ public class YamlConfig extends YamlFile implements Config {
 	@Override
 	public void setFooter(final @Nullable List<String> footer) {
 		if (footer != null) {
-			@NotNull List<String> tmp = new ArrayList<>();
+			//noinspection unchecked
+			@NotNull List<String> tmp = this.provider().newList();
 			for (final @NotNull String line : footer) {
 				if (!line.startsWith("#")) {
 					tmp.add("#" + line);
@@ -154,43 +159,44 @@ public class YamlConfig extends YamlFile implements Config {
 			}
 			this.footer = tmp;
 
-			if (this.getFile().length() == 0) {
+			if (this.file().length() == 0) {
 				try {
-					YamlEditor.write(this.getFile(), this.footer);
+					YamlEditor.write(this.file(), this.footer);
 				} catch (YamlException e) {
-					throw new FileParseException("Error while setting footer of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+					throw new FileParseException("Error while setting footer of '" + this.file().getAbsolutePath() + "'", e.getCause());
 				} catch (IOException e) {
-					throw new RuntimeIOException("Error while setting footer of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+					throw new RuntimeIOException("Error while setting footer of '" + this.file().getAbsolutePath() + "'", e.getCause());
 				}
 			} else {
 				try {
-					final @NotNull List<String> lines = YamlEditor.read(this.getFile());
-					final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.getFile());
+					final @NotNull List<String> lines = YamlEditor.read(this.file());
+					final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.file(), provider());
 
 					lines.removeAll(oldFooter);
 					lines.addAll(this.footer);
 
-					YamlEditor.write(this.getFile(), lines);
+					YamlEditor.write(this.file(), lines);
 				} catch (YamlException e) {
-					throw new FileParseException("Error while setting footer of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+					throw new FileParseException("Error while setting footer of '" + this.file().getAbsolutePath() + "'", e.getCause());
 				} catch (IOException e) {
-					throw new RuntimeIOException("Error while setting footer of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+					throw new RuntimeIOException("Error while setting footer of '" + this.file().getAbsolutePath() + "'", e.getCause());
 				}
 			}
 		} else {
-			this.footer = new ArrayList<>();
+			//noinspection unchecked
+			this.footer = this.provider().newList();
 
 			try {
-				final @NotNull List<String> lines = YamlEditor.read(this.getFile());
-				final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.getFile());
+				final @NotNull List<String> lines = YamlEditor.read(this.file());
+				final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.file(), provider());
 
 				lines.removeAll(oldFooter);
 
-				YamlEditor.write(this.getFile(), lines);
+				YamlEditor.write(this.file(), lines);
 			} catch (YamlException e) {
-				throw new FileParseException("Error while setting footer of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+				throw new FileParseException("Error while setting footer of '" + this.file().getAbsolutePath() + "'", e.getCause());
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while setting footer of '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+				throw new RuntimeIOException("Error while setting footer of '" + this.file().getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -198,17 +204,18 @@ public class YamlConfig extends YamlFile implements Config {
 	@Override
 	public @NotNull List<String> getComments() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		} else if (!this.shouldReload()) {
 			return this.comments;
 		} else {
 			try {
-				this.comments = YamlEditor.readComments(this.getFile());
+				this.comments = YamlEditor.readComments(this.file(), provider());
 				return this.comments;
 			} catch (YamlException e) {
-				throw new FileParseException("Error while getting comments from '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+				throw new FileParseException("Error while getting comments from '" + this.file().getAbsolutePath() + "'", e.getCause());
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while getting comments from '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+				throw new RuntimeIOException("Error while getting comments from '" + this.file().getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}

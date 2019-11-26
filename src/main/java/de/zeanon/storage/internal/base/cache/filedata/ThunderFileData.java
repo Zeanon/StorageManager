@@ -1,8 +1,7 @@
 package de.zeanon.storage.internal.base.cache.filedata;
 
+import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.cache.base.TripletMap;
-import de.zeanon.storage.internal.base.cache.datamap.BigTripletMap;
-import de.zeanon.storage.internal.base.cache.datamap.GapTripletMap;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.utility.utils.basic.Objects;
@@ -11,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.Synchronized;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,26 +23,23 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.5.0
  */
-@SuppressWarnings("unused")
 @Getter
 @EqualsAndHashCode
-public class ThunderFileData implements FileData<TripletMap<String, Object>, TripletMap.TripletNode<String, Object>>, Comparable<ThunderFileData> {
+@SuppressWarnings("unused")
+public class ThunderFileData<M extends TripletMap, L extends List> implements FileData<M, TripletMap.TripletNode<String, Object>, L>, Comparable<ThunderFileData> {
 
-	/**
-	 * Defines whether a faster TripleMap implementation shall be used, which in turn requires more memory
-	 */
-	@Setter
-	private boolean bigMap;
+	@Accessors(fluent = true)
+	private final @NotNull Provider<M, L> provider;
 	/**
 	 * internal cache for the contents of the File
 	 */
-	private @NotNull TripletMap<String, Object> dataMap;
+	private @NotNull M dataMap;
 
 
 	@Contract(pure = true)
-	public ThunderFileData(final boolean bigMap) {
-		this.bigMap = bigMap;
-		this.dataMap = this.newDataMap();
+	public ThunderFileData(final @NotNull Provider<M, L> provider) {
+		this.provider = provider;
+		this.dataMap = this.provider.newMap();
 	}
 
 	/**
@@ -54,6 +50,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Override
 	@Contract("-> new")
 	public @NotNull List<TripletMap.TripletNode<String, Object>> blockEntryList() {
+		//noinspection unchecked
 		return this.dataMap.entryList();
 	}
 
@@ -144,6 +141,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	@Override
 	@Contract("-> new")
 	public @NotNull List<TripletMap.TripletNode<String, Object>> entryList() {
+		//noinspection unchecked
 		return this.internalEntryList(this.dataMap);
 	}
 
@@ -153,9 +151,11 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	 * @param map the values to be loaded
 	 */
 	@Override
-	public void loadData(final @Nullable TripletMap<String, Object> map) {
+	public void loadData(final @Nullable M map) {
 		if (map != null) {
 			this.dataMap = map;
+		} else {
+			this.dataMap = provider.newMap();
 		}
 	}
 
@@ -304,6 +304,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 	 */
 	@Override
 	public int size() {
+		//noinspection unchecked
 		return this.internalSize(this.dataMap);
 	}
 
@@ -371,7 +372,8 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 					this.dataMap.containsKey(parts[0])
 					&& tempValue instanceof TripletMap
 					? (TripletMap) tempValue
-					: (this.bigMap ? new BigTripletMap<>() : new GapTripletMap<>());
+					: this.provider.newMap();
+			//noinspection unchecked
 			this.dataMap.put(parts[0], this.internalInsert(childMap, parts, value, 1));
 		}
 	}
@@ -380,11 +382,11 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		if (keyIndex < key.length) {
 			final @Nullable Object tempValue = map.get(key[keyIndex]);
 			//noinspection unchecked
-			final @Nullable TripletMap<String, Object> childMap =
+			final @NotNull TripletMap<String, Object> childMap =
 					map.containsKey(key[keyIndex])
 					&& tempValue instanceof TripletMap
 					? (TripletMap) tempValue
-					: (this.bigMap ? new BigTripletMap<>() : new GapTripletMap<>());
+					: this.provider.newMap();
 			map.put(key[keyIndex], this.internalInsert(childMap, key, value, keyIndex + 1));
 			return map;
 		} else {
@@ -400,6 +402,7 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 		} else {
 			final @Nullable Object tempValue = this.dataMap.get(parts[0]);
 			if (tempValue instanceof TripletMap) {
+				//noinspection unchecked
 				this.dataMap.put(parts[0], this.internalRemove((TripletMap) tempValue, parts, 1));
 				if (((TripletMap) tempValue).isEmpty()) {
 					this.dataMap.remove(parts[0]);
@@ -482,7 +485,8 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 
 	@Contract("_ -> new")
 	private @NotNull TripletMap<String, Object> parseMap(final @NotNull Map<String, Object> map) {
-		final @NotNull TripletMap<String, Object> tempMap = this.newDataMap();
+		//noinspection unchecked
+		final @NotNull TripletMap<String, Object> tempMap = this.provider.newMap();
 		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map && !(entry.getValue() instanceof TripletMap)) {
 				//noinspection unchecked
@@ -492,11 +496,6 @@ public class ThunderFileData implements FileData<TripletMap<String, Object>, Tri
 			}
 		}
 		return tempMap;
-	}
-
-	@Contract("-> new")
-	private @NotNull TripletMap<String, Object> newDataMap() {
-		return this.bigMap ? new BigTripletMap<>() : new GapTripletMap<>();
 	}
 	// </Internal>
 

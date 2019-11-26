@@ -1,13 +1,11 @@
 package de.zeanon.storage.internal.utility.utils.datafiles;
 
+import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.cache.base.TripletMap;
-import de.zeanon.storage.internal.base.cache.datamap.BigTripletMap;
-import de.zeanon.storage.internal.base.cache.datamap.GapTripletMap;
 import de.zeanon.storage.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import de.zeanon.storage.internal.utility.utils.editor.ThunderEditor;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.3.0
  */
+@SuppressWarnings("unused")
 @NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 public class ThunderUtils {
 
@@ -35,8 +34,9 @@ public class ThunderUtils {
 	 *
 	 * @return a List containing the Header of the FileData
 	 */
-	public static @NotNull List<String> getHeader(final @NotNull ThunderFileData fileData) {
-		final @NotNull List<String> returnList = new ArrayList<>();
+	public static @NotNull List<String> getHeader(final @NotNull ThunderFileData<TripletMap, List> fileData) {
+		//noinspection unchecked
+		final @NotNull List<String> returnList = fileData.provider().newList();
 		for (final @NotNull TripletMap.TripletNode<String, Object> entry : fileData.blockEntryList()) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
 				returnList.add(entry.getKey());
@@ -53,9 +53,10 @@ public class ThunderUtils {
 	 * @param fileData the FileDataBase to be used
 	 * @param header   the Header to be set
 	 */
-	public static void setHeader(final @NotNull ThunderFileData fileData, final @Nullable String[] header, final boolean bigMap) {
+	public static void setHeader(final @NotNull ThunderFileData<TripletMap, List> fileData, final @Nullable String[] header) {
 		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList();
-		final @NotNull TripletMap<String, Object> returnMap = bigMap ? new BigTripletMap<>() : new GapTripletMap<>();
+		//noinspection unchecked
+		final @NotNull TripletMap<String, Object> returnMap = fileData.provider().newMap();
 		ThunderUtils.internalSetHeader(header, entryList, returnMap);
 		fileData.loadData(returnMap);
 	}
@@ -69,10 +70,11 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static void setHeader(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable String[] header, final boolean bigMap) {
+	public static void setHeader(final @NotNull ThunderFileData<TripletMap, List> fileData, final @NotNull String key, final @Nullable String[] header) {
 		if (fileData.get(key) instanceof TripletMap) {
 			final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList(key);
-			final @NotNull TripletMap<String, Object> returnMap = bigMap ? new BigTripletMap<>() : new GapTripletMap<>();
+			//noinspection unchecked
+			final @NotNull TripletMap<String, Object> returnMap = fileData.provider().newMap();
 			ThunderUtils.internalSetHeader(header, entryList, returnMap);
 			fileData.insert(key, returnMap);
 		} else {
@@ -80,10 +82,11 @@ public class ThunderUtils {
 		}
 	}
 
-	public static void setHeaderUseArray(final @NotNull ThunderFileData fileData, final @NotNull String[] key, final @Nullable String[] header, final boolean bigMap) {
+	public static void setHeaderUseArray(final @NotNull ThunderFileData<TripletMap, List> fileData, final @NotNull String[] key, final @Nullable String[] header) {
 		if (fileData.getUseArray(key) instanceof TripletMap) {
 			final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryListUseArray(key);
-			final @NotNull TripletMap<String, Object> returnMap = bigMap ? new BigTripletMap<>() : new GapTripletMap<>();
+			//noinspection unchecked
+			final @NotNull TripletMap<String, Object> returnMap = fileData.provider().newMap();
 			ThunderUtils.internalSetHeader(header, entryList, returnMap);
 			fileData.insertUseArray(key, returnMap);
 		} else {
@@ -98,8 +101,9 @@ public class ThunderUtils {
 	 *
 	 * @return a List containing the Footer of the FileData
 	 */
-	public static @NotNull List<String> getFooter(final @NotNull ThunderFileData fileData) {
-		final @NotNull List<String> returnList = new ArrayList<>();
+	public static @NotNull List<String> getFooter(final @NotNull ThunderFileData<TripletMap, List> fileData) {
+		//noinspection unchecked
+		final @NotNull List<String> returnList = fileData.provider().newList();
 		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList();
 		return ThunderUtils.internalGetFooter(returnList, entryList);
 	}
@@ -110,9 +114,10 @@ public class ThunderUtils {
 	 * @param fileData the FileDataBase to be used
 	 * @param footer   the Footer to be set
 	 */
-	public static void setFooter(final @NotNull ThunderFileData fileData, final @Nullable String[] footer, final boolean bigMap) {
+	public static void setFooter(final @NotNull ThunderFileData<TripletMap, List> fileData, final @Nullable String[] footer) {
 		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList();
-		final @NotNull TripletMap<String, Object> returnMap = bigMap ? new BigTripletMap<>() : new GapTripletMap<>();
+		//noinspection unchecked
+		final @NotNull TripletMap<String, Object> returnMap = fileData.provider().newMap();
 		ThunderUtils.internalSetFooter(footer, entryList, returnMap);
 		fileData.loadData(returnMap);
 	}
@@ -126,10 +131,11 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static void setFooter(final @NotNull ThunderFileData fileData, final @NotNull String key, final @Nullable String[] footer, final boolean bigMap) {
+	public static void setFooter(final @NotNull ThunderFileData<TripletMap, List> fileData, final @NotNull String key, final @Nullable String[] footer) {
 		if (fileData.get(key) instanceof TripletMap) {
 			final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryList(key);
-			final @NotNull TripletMap<String, Object> returnMap = bigMap ? new BigTripletMap<>() : new GapTripletMap<>();
+			//noinspection unchecked
+			final @NotNull TripletMap<String, Object> returnMap = fileData.provider().newMap();
 			ThunderUtils.internalSetFooter(footer, entryList, returnMap);
 			fileData.insert(key, returnMap);
 		} else {
@@ -137,10 +143,11 @@ public class ThunderUtils {
 		}
 	}
 
-	public static void setFooterUseArray(final @NotNull ThunderFileData fileData, final @NotNull String[] key, final @Nullable String[] footer, final boolean bigMap) {
+	public static void setFooterUseArray(final @NotNull ThunderFileData<TripletMap, List> fileData, final @NotNull String[] key, final @Nullable String[] footer) {
 		if (fileData.getUseArray(key) instanceof TripletMap) {
 			final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = fileData.blockEntryListUseArray(key);
-			final @NotNull TripletMap<String, Object> returnMap = bigMap ? new BigTripletMap<>() : new GapTripletMap<>();
+			//noinspection unchecked
+			final @NotNull TripletMap<String, Object> returnMap = fileData.provider().newMap();
 			ThunderUtils.internalSetFooter(footer, entryList, returnMap);
 			fileData.insertUseArray(key, returnMap);
 		} else {
@@ -158,8 +165,9 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static @NotNull List<String> getHeader(final @NotNull ThunderFileData fileData, final @NotNull String key) {
-		final @NotNull List<String> returnList = new ArrayList<>();
+	public static @NotNull List<String> getHeader(final @NotNull ThunderFileData<TripletMap, List> fileData, final @NotNull String key) {
+		//noinspection unchecked
+		final @NotNull List<String> returnList = fileData.provider().newList();
 		for (final @NotNull TripletMap.TripletNode<String, Object> entry : Objects.notNull(fileData.blockEntryList(key), "ThunderFile does not contain '" + key + "'")) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
 				returnList.add(entry.getKey());
@@ -170,8 +178,9 @@ public class ThunderUtils {
 		return returnList;
 	}
 
-	public static @NotNull List<String> getHeaderUseArray(final @NotNull ThunderFileData fileData, final @NotNull String... key) {
-		final @NotNull List<String> returnList = new ArrayList<>();
+	public static @NotNull List<String> getHeaderUseArray(final @NotNull ThunderFileData<TripletMap, List> fileData, final @NotNull String... key) {
+		//noinspection unchecked
+		final @NotNull List<String> returnList = fileData.provider().newList();
 		for (final @NotNull TripletMap.TripletNode<String, Object> entry : Objects.notNull(fileData.blockEntryListUseArray(key), "ThunderFile does not contain '" + Arrays.toString(key) + "'")) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
 				returnList.add(entry.getKey());
@@ -192,14 +201,16 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static @NotNull List<String> getFooter(final @NotNull ThunderFileData fileData, final @NotNull String key) {
-		final @NotNull List<String> returnList = new ArrayList<>();
+	public static @NotNull List<String> getFooter(final @NotNull ThunderFileData<TripletMap, List> fileData, final @NotNull String key) {
+		//noinspection unchecked
+		final @NotNull List<String> returnList = fileData.provider().newList();
 		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = Objects.notNull(fileData.entryList(key), "ThunderFile does not contain '" + key + "'");
 		return ThunderUtils.internalGetFooter(returnList, entryList);
 	}
 
-	public static @NotNull List<String> getFooterUseArray(final @NotNull ThunderFileData fileData, final @NotNull String... key) {
-		final @NotNull List<String> returnList = new ArrayList<>();
+	public static @NotNull List<String> getFooterUseArray(final @NotNull ThunderFileData<TripletMap, List> fileData, final @NotNull String... key) {
+		//noinspection unchecked
+		final @NotNull List<String> returnList = fileData.provider().newList();
 		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = Objects.notNull(fileData.blockEntryListUseArray(key), "ThunderFile does not contain '" + Arrays.toString(key) + "'");
 		return ThunderUtils.internalGetFooter(returnList, entryList);
 	}
@@ -212,9 +223,9 @@ public class ThunderUtils {
 	 *
 	 * @return a List containing the Comments of the FileData
 	 */
-	public static @NotNull List<String> getComments(final @NotNull ThunderFileData fileData, final boolean deep) {
+	public static @NotNull List<String> getComments(final @NotNull ThunderFileData<TripletMap, List> fileData, final boolean deep) {
 		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = deep ? fileData.entryList() : fileData.blockEntryList();
-		return ThunderUtils.internalGetComments(entryList);
+		return ThunderUtils.internalGetComments(entryList, fileData.provider());
 	}
 
 	/**
@@ -228,14 +239,14 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static @NotNull List<String> getComments(final @NotNull ThunderFileData fileData, final @NotNull String key, final boolean deep) {
+	public static @NotNull List<String> getComments(final @NotNull ThunderFileData<TripletMap, List> fileData, final @NotNull String key, final boolean deep) {
 		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = deep ? Objects.notNull(fileData.entryList(key), "ThunderFile does not contain '" + key + "'") : Objects.notNull(fileData.blockEntryList(key), "ThunderFile does not contain '" + key + "'");
-		return ThunderUtils.internalGetComments(entryList);
+		return ThunderUtils.internalGetComments(entryList, fileData.provider());
 	}
 
-	public static @NotNull List<String> getCommentsUseArray(final @NotNull ThunderFileData fileData, final @NotNull String[] key, final boolean deep) {
+	public static @NotNull List<String> getCommentsUseArray(final @NotNull ThunderFileData<TripletMap, List> fileData, final @NotNull String[] key, final boolean deep) {
 		final @NotNull List<TripletMap.TripletNode<String, Object>> entryList = deep ? Objects.notNull(fileData.entryListUseArray(key), "ThunderFile does not contain '" + Arrays.toString(key) + "'") : Objects.notNull(fileData.blockEntryListUseArray(key), "ThunderFile does not contain '" + Arrays.toString(key) + "'");
-		return ThunderUtils.internalGetComments(entryList);
+		return ThunderUtils.internalGetComments(entryList, fileData.provider());
 	}
 
 
@@ -293,8 +304,9 @@ public class ThunderUtils {
 		}
 	}
 
-	private static @NotNull List<String> internalGetComments(final @NotNull List<TripletMap.TripletNode<String, Object>> entryList) {
-		final @NotNull List<String> returnList = new ArrayList<>();
+	private static @NotNull List<String> internalGetComments(final @NotNull List<TripletMap.TripletNode<String, Object>> entryList, final @NotNull Provider<? extends TripletMap, ? extends List> provider) {
+		//noinspection unchecked
+		final @NotNull List<String> returnList = provider.newList();
 		for (final @NotNull TripletMap.TripletNode<String, Object> entry : entryList) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
 				returnList.add(entry.getKey());

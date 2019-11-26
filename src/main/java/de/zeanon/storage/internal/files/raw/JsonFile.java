@@ -1,5 +1,8 @@
 package de.zeanon.storage.internal.files.raw;
 
+import de.zeanon.storage.external.lists.BigList;
+import de.zeanon.storage.external.lists.GapList;
+import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.cache.filedata.StandardFileData;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
@@ -12,12 +15,11 @@ import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import de.zeanon.storage.internal.utility.utils.datafiles.JsonUtils;
 import java.io.*;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import lombok.Cleanup;
-import lombok.EqualsAndHashCode;
-import lombok.Synchronized;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
@@ -31,10 +33,12 @@ import org.json.JSONTokener;
  * @author Zeanon
  * @version 2.0.0
  */
+@Getter
+@Accessors(fluent = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class JsonFile extends FlatFile<StandardFileData> {
+public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 
 
 	/**
@@ -45,17 +49,17 @@ public class JsonFile extends FlatFile<StandardFileData> {
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 */
-	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting) {
-		super(file, JsonFile.FileType.JSON, new LocalFileData(), reloadSetting);
+	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
+		super(file, ThunderFile.FileType.THUNDER, new LocalFileData(new Collections(map, list)), reloadSetting);
 
-		if (BaseFileUtils.createFile(this.getFile()) && inputStream != null) {
-			BaseFileUtils.writeToFile(this.getFile(), BaseFileUtils.createNewInputStream(inputStream));
+		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
+			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 		}
 
 		try {
-			final @NotNull JSONTokener jsonTokener = new JSONTokener(BaseFileUtils.createNewInputStream(this.getFile()));
-			this.getFileData().loadData(new JSONObject(jsonTokener).toMap());
-			this.setLastLoaded(System.currentTimeMillis());
+			final @NotNull JSONTokener jsonTokener = new JSONTokener(BaseFileUtils.createNewInputStream(this.file()));
+			this.fileData().loadData(new JSONObject(jsonTokener).toMap());
+			this.lastLoaded(System.currentTimeMillis());
 		} catch (JSONException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
 		} catch (RuntimeIOException e) {
@@ -68,9 +72,9 @@ public class JsonFile extends FlatFile<StandardFileData> {
 	@Synchronized
 	public void reload() {
 		try {
-			final @NotNull JSONTokener jsonTokener = new JSONTokener(BaseFileUtils.createNewInputStream(this.getFile()));
-			this.getFileData().loadData(new JSONObject(jsonTokener).toMap());
-			this.setLastLoaded(System.currentTimeMillis());
+			final @NotNull JSONTokener jsonTokener = new JSONTokener(BaseFileUtils.createNewInputStream(this.file()));
+			this.fileData().loadData(new JSONObject(jsonTokener).toMap());
+			this.lastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
 			throw new FileParseException("Error while reloading '" + this.getAbsolutePath() + "'", e.getCause());
 		}
@@ -80,10 +84,15 @@ public class JsonFile extends FlatFile<StandardFileData> {
 	@Synchronized
 	public void save() {
 		try {
-			this.write(new JSONObject(this.getFileData().getDataMap()));
+			this.write(new JSONObject(this.fileData().getDataMap()));
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e.getCause());
 		}
+	}
+
+	@Override
+	public void bigList(final boolean bigList) {
+		this.provider().setListType(bigList ? BigList.class : GapList.class);
 	}
 
 	/**
@@ -97,7 +106,7 @@ public class JsonFile extends FlatFile<StandardFileData> {
 	@Override
 	public Map getMap(final @NotNull String key) {
 		if (!this.hasKey(key)) {
-			return new HashMap();
+			return this.provider().newMap();
 		} else {
 			return this.getMapWithoutPath(key);
 		}
@@ -107,7 +116,7 @@ public class JsonFile extends FlatFile<StandardFileData> {
 	@Override
 	public Map getMapUseArray(final @NotNull String... key) {
 		if (!this.hasKeyUseArray(key)) {
-			return new HashMap();
+			return this.provider().newMap();
 		} else {
 			return this.getMapWithoutPath(key);
 		}
@@ -133,23 +142,23 @@ public class JsonFile extends FlatFile<StandardFileData> {
 	}
 
 	@NotNull
-	private Map getMapWithoutPath(final @NotNull String key) {
+	private Map getMapWithoutPath(final @NotNull String key, final @NotNull Provider<? extends Map, ? extends List> provider) {
 		this.update();
 
 		if (!this.hasKey(key)) {
-			return new HashMap<>();
+			return this.provider().newMap();
 		}
 
 		Object map;
 		try {
 			map = this.get(key);
 		} catch (JSONException e) {
-			return new HashMap<>();
+			return this.provider().newMap();
 		}
 		if (map instanceof Map) {
-			return (Map<?, ?>) Objects.notNull(this.getFileData().get(key), "The File does not contain '" + key + "'");
+			return (Map<?, ?>) Objects.notNull(this.fileData().get(key), "The File does not contain '" + key + "'");
 		} else if (map instanceof JSONObject) {
-			return JsonUtils.jsonToMap((JSONObject) map);
+			return JsonUtils.jsonToMap((JSONObject) map, provider);
 		} else {
 			throw new ObjectNullException("The File does not contain: '" + key + "'");
 		}
@@ -160,26 +169,26 @@ public class JsonFile extends FlatFile<StandardFileData> {
 		this.update();
 
 		if (!this.hasKeyUseArray(key)) {
-			return new HashMap<>();
+			return this.provider().newMap();
 		}
 
 		Object map;
 		try {
 			map = this.getUseArray(key);
 		} catch (JSONException e) {
-			return new HashMap<>();
+			return this.provider().newMap();
 		}
 		if (map instanceof Map) {
-			return (Map<?, ?>) Objects.notNull(this.getFileData().getUseArray(key), "The File does not contain '" + Arrays.toString(key) + "'");
+			return (Map<?, ?>) Objects.notNull(this.fileData().getUseArray(key), "The File does not contain '" + Arrays.toString(key) + "'");
 		} else if (map instanceof JSONObject) {
-			return JsonUtils.jsonToMap((JSONObject) map);
+			return JsonUtils.jsonToMap((JSONObject) map, this.provider());
 		} else {
 			throw new ObjectNullException("The File does not contain: '" + Arrays.toString(key) + "'");
 		}
 	}
 
 	private void write(final @NotNull JSONObject object) throws IOException {
-		@NotNull @Cleanup Writer writer = new PrintWriter(new FileWriter(this.getFile().getAbsolutePath()));
+		@NotNull @Cleanup Writer writer = new PrintWriter(new FileWriter(this.file().getAbsolutePath()));
 		writer.write(object.toString(3));
 	}
 
@@ -189,26 +198,56 @@ public class JsonFile extends FlatFile<StandardFileData> {
 		JSON("json");
 
 
-		@NotNull
-		private final String extension;
+		private final @NotNull String extension;
 
+		@Contract(pure = true)
 		FileType(final @NotNull String extension) {
 			this.extension = extension;
 		}
 
-		@NotNull
+		@Contract(pure = true)
 		@Override
-		public String toLowerCase() {
+		public @NotNull String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
-		@NotNull
+		@Contract(pure = true)
 		@Override
-		public String toString() {
+		public @NotNull String toString() {
 			return this.extension;
 		}
 	}
 
+	public static class Collections extends Provider<Map, List> {
+
+		private Collections(Class<? extends Map> map, Class<? extends List> list) {
+			super(map, list);
+		}
+
+		@Override
+		public @NotNull Map<String, Object> newMap() {
+			//noinspection unchecked
+			return (Map<String, Object>) super.newMap();
+		}
+
+		@Override
+		public @NotNull List<String> newList() {
+			//noinspection unchecked
+			return (List<String>) super.newList();
+		}
+
+		@Override
+		public @NotNull Map<String, Object> newMap(Class<?>[] parameterTypes, Object... parameters) {
+			//noinspection unchecked
+			return (Map<String, Object>) super.newMap(parameterTypes, parameters);
+		}
+
+		@Override
+		public @NotNull List<String> newList(Class<?>[] parameterTypes, Object... parameters) {
+			//noinspection unchecked
+			return (List<String>) super.newList(parameterTypes, parameters);
+		}
+	}
 
 	private static class LocalSection extends JsonFileSection {
 
@@ -221,10 +260,10 @@ public class JsonFile extends FlatFile<StandardFileData> {
 		}
 	}
 
-	private static class LocalFileData extends StandardFileData {
+	private static class LocalFileData extends StandardFileData<Map, List> {
 
-		private LocalFileData() {
-			super();
+		private LocalFileData(final @NotNull Provider<Map, List> provider) {
+			super(provider);
 		}
 	}
 }

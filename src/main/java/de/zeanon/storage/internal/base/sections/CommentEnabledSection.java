@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public abstract class CommentEnabledSection<F extends CommentEnabledFile<? extends FileData<?, ?>>> extends FlatSection<F> {
+public abstract class CommentEnabledSection<F extends CommentEnabledFile<? extends FileData<M, ?, L>, M, L>, M extends Map, L extends List> extends FlatSection<F, M, L> {
 
 	@NotNull
 	private final F commentEnabledFile;

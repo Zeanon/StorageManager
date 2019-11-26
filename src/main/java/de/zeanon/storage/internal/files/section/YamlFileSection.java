@@ -3,6 +3,8 @@ package de.zeanon.storage.internal.files.section;
 import de.zeanon.storage.internal.base.sections.CommentEnabledSection;
 import de.zeanon.storage.internal.files.config.YamlConfig;
 import de.zeanon.storage.internal.files.raw.YamlFile;
+import java.util.List;
+import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -19,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class YamlFileSection extends CommentEnabledSection<YamlFile> {
+public class YamlFileSection extends CommentEnabledSection<YamlFile, Map, List> {
 
 	@NotNull
 	private final YamlFile yamlFile;

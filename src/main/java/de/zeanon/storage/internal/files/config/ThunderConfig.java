@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.files.config;
 
+import de.zeanon.storage.internal.base.cache.base.TripletMap;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
@@ -12,7 +13,6 @@ import de.zeanon.storage.internal.utility.utils.datafiles.ThunderUtils;
 import de.zeanon.storage.internal.utility.utils.editor.ThunderEditor;
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public class ThunderConfig extends ThunderFile implements Config {
+public class ThunderConfig extends ThunderFile implements Config<TripletMap, List> {
 
 
 	/**
@@ -41,8 +41,8 @@ public class ThunderConfig extends ThunderFile implements Config {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected ThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final boolean bigMap) {
-		super(file, inputStream, reloadSetting, commentSetting, bigMap);
+	protected ThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final @NotNull Class<? extends TripletMap> map, final @NotNull Class<? extends List> list) {
+		super(file, inputStream, reloadSetting, commentSetting, map, list);
 	}
 
 
@@ -52,9 +52,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getHeader(this.getFileData());
+			return ThunderUtils.getHeader(this.fileData());
 		} else {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		}
 	}
 
@@ -68,33 +69,33 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			@NotNull String tempData = this.getFileData().toString();
-			ThunderUtils.setHeader(this.getFileData(), header, this.getBigMap());
-			if (!this.getFileData().toString().equals(tempData)) {
-				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
+			@NotNull String tempData = this.fileData().toString();
+			ThunderUtils.setHeader(this.fileData(), header);
+			if (!this.fileData().toString().equals(tempData)) {
+				ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
 			}
 		}
 	}
 
-	@NotNull
-	public List<String> getHeader(final @NotNull String key) {
+	public @NotNull List<String> getHeader(final @NotNull String key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getHeader(this.getFileData(), key);
+			return ThunderUtils.getHeader(this.fileData(), key);
 		} else {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		}
 	}
 
-	@NotNull
-	public List<String> getHeaderUseArray(final @NotNull String... key) {
+	public @NotNull List<String> getHeaderUseArray(final @NotNull String... key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getHeaderUseArray(this.getFileData(), key);
+			return ThunderUtils.getHeaderUseArray(this.fileData(), key);
 		} else {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		}
 	}
 
@@ -106,10 +107,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			@NotNull String tempData = this.getFileData().toString();
-			ThunderUtils.setHeader(this.getFileData(), key, header, this.getBigMap());
-			if (!this.getFileData().toString().equals(tempData)) {
-				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
+			@NotNull String tempData = this.fileData().toString();
+			ThunderUtils.setHeader(this.fileData(), key, header);
+			if (!this.fileData().toString().equals(tempData)) {
+				ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
 			}
 		}
 	}
@@ -122,10 +123,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			@NotNull String tempData = this.getFileData().toString();
-			ThunderUtils.setHeaderUseArray(this.getFileData(), key, header, this.getBigMap());
-			if (!this.getFileData().toString().equals(tempData)) {
-				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
+			@NotNull String tempData = this.fileData().toString();
+			ThunderUtils.setHeaderUseArray(this.fileData(), key, header);
+			if (!this.fileData().toString().equals(tempData)) {
+				ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
 			}
 		}
 	}
@@ -137,9 +138,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getFooter(this.getFileData());
+			return ThunderUtils.getFooter(this.fileData());
 		} else {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		}
 	}
 
@@ -153,10 +155,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			@NotNull String tempData = this.getFileData().toString();
-			ThunderUtils.setFooter(this.getFileData(), footer, this.getBigMap());
-			if (!this.getFileData().toString().equals(tempData)) {
-				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
+			@NotNull String tempData = this.fileData().toString();
+			ThunderUtils.setFooter(this.fileData(), footer);
+			if (!this.fileData().toString().equals(tempData)) {
+				ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
 			}
 		}
 	}
@@ -166,9 +168,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getFooter(this.getFileData(), key);
+			return ThunderUtils.getFooter(this.fileData(), key);
 		} else {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		}
 	}
 
@@ -177,9 +180,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getFooterUseArray(this.getFileData(), key);
+			return ThunderUtils.getFooterUseArray(this.fileData(), key);
 		} else {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		}
 	}
 
@@ -191,10 +195,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			@NotNull String tempData = this.getFileData().toString();
-			ThunderUtils.setFooter(this.getFileData(), key, footer, this.getBigMap());
-			if (!this.getFileData().toString().equals(tempData)) {
-				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
+			@NotNull String tempData = this.fileData().toString();
+			ThunderUtils.setFooter(this.fileData(), key, footer);
+			if (!this.fileData().toString().equals(tempData)) {
+				ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
 			}
 		}
 	}
@@ -207,10 +211,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			@NotNull String tempData = this.getFileData().toString();
-			ThunderUtils.setFooterUseArray(this.getFileData(), key, footer, getBigMap());
-			if (!this.getFileData().toString().equals(tempData)) {
-				ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
+			@NotNull String tempData = this.fileData().toString();
+			ThunderUtils.setFooterUseArray(this.fileData(), key, footer);
+			if (!this.fileData().toString().equals(tempData)) {
+				ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
 			}
 		}
 	}
@@ -221,9 +225,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.getFileData(), true);
+			return ThunderUtils.getComments(this.fileData(), true);
 		} else {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		}
 	}
 
@@ -232,9 +237,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.getFileData(), key, true);
+			return ThunderUtils.getComments(this.fileData(), key, true);
 		} else {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		}
 	}
 
@@ -243,9 +249,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getCommentsUseArray(this.getFileData(), key, true);
+			return ThunderUtils.getCommentsUseArray(this.fileData(), key, true);
 		} else {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		}
 	}
 
@@ -254,9 +261,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.getFileData(), false);
+			return ThunderUtils.getComments(this.fileData(), false);
 		} else {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		}
 	}
 
@@ -265,9 +273,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.getFileData(), key, false);
+			return ThunderUtils.getComments(this.fileData(), key, false);
 		} else {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		}
 	}
 
@@ -276,9 +285,10 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getCommentsUseArray(this.getFileData(), key, false);
+			return ThunderUtils.getCommentsUseArray(this.fileData(), key, false);
 		} else {
-			return new ArrayList<>();
+			//noinspection unchecked
+			return this.provider().newList();
 		}
 	}
 

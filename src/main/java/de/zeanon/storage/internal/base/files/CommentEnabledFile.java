@@ -7,6 +7,7 @@ import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.base.settings.Comment;
 import java.io.File;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public abstract class CommentEnabledFile<M extends FileData<?, ?>> extends FlatFile<M> {
+public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends Map, L extends List> extends FlatFile<D, M, L> {
 
 
 	/**
@@ -38,7 +39,7 @@ public abstract class CommentEnabledFile<M extends FileData<?, ?>> extends FlatF
 	private CommentSetting commentSetting;
 
 
-	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileType fileType, final @NotNull M fileData, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting) {
+	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileType fileType, final @NotNull D fileData, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting) {
 		super(file, fileType, fileData, reloadSetting);
 		this.commentSetting = commentSetting;
 	}

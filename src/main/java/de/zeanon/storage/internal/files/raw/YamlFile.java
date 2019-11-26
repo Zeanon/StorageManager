@@ -3,6 +3,9 @@ package de.zeanon.storage.internal.files.raw;
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
+import de.zeanon.storage.external.lists.BigList;
+import de.zeanon.storage.external.lists.GapList;
+import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.cache.filedata.StandardFileData;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
@@ -17,10 +20,9 @@ import de.zeanon.storage.internal.utility.utils.editor.YamlEditor;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
-import lombok.Cleanup;
-import lombok.EqualsAndHashCode;
-import lombok.Synchronized;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,10 +33,12 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.3.0
  */
+@Getter
+@Accessors(fluent = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class YamlFile extends CommentEnabledFile<StandardFileData> {
+public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Map, List> {
 
 
 	/**
@@ -46,21 +50,21 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting) {
-		super(file, YamlFile.FileType.YAML, new LocalFileData(), reloadSetting, commentSetting);
+	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
+		super(file, YamlFile.FileType.YAML, new LocalFileData(new Collections(map, list)), reloadSetting, commentSetting);
 
-		if (BaseFileUtils.createFile(this.getFile()) && inputStream != null) {
-			BaseFileUtils.writeToFile(this.getFile(), BaseFileUtils.createNewInputStream(inputStream));
+		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
+			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 		}
 
 		try {
 			//noinspection unchecked
-			this.getFileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.getFile())).read());
-			this.setLastLoaded(System.currentTimeMillis());
+			this.fileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.file())).read());
+			this.lastLoaded(System.currentTimeMillis());
 		} catch (FileNotFoundException e) {
-			throw new RuntimeIOException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
 		} catch (YamlException e) {
-			throw new FileParseException("Error while parsing '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -70,12 +74,12 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 	public void reload() {
 		try {
 			//noinspection unchecked
-			this.getFileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.getFile())).read());
-			this.setLastLoaded(System.currentTimeMillis());
+			this.fileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.file())).read());
+			this.lastLoaded(System.currentTimeMillis());
 		} catch (YamlException e) {
-			throw new FileParseException("Error while parsing '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e.getCause());
 		} catch (FileNotFoundException e) {
-			throw new RuntimeIOException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -84,22 +88,27 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 	public void save() {
 		try {
 			if (this.getCommentSetting() != Comment.PRESERVE) {
-				this.write(this.getFileData().getDataMap());
+				this.write(this.fileData().getDataMap());
 			} else {
-				final @NotNull List<String> unEdited = YamlEditor.read(this.getFile());
-				final @NotNull List<String> header = YamlEditor.readHeader(this.getFile());
-				final @NotNull List<String> footer = YamlEditor.readFooter(this.getFile());
-				this.write(this.getFileData().getDataMap());
-				header.addAll(YamlEditor.read(this.getFile()));
+				final @NotNull List<String> unEdited = YamlEditor.read(this.file());
+				final @NotNull List<String> header = YamlEditor.readHeader(this.file(), this.provider());
+				final @NotNull List<String> footer = YamlEditor.readFooter(this.file(), this.provider());
+				this.write(this.fileData().getDataMap());
+				header.addAll(YamlEditor.read(this.file()));
 				if (!header.containsAll(footer)) {
 					header.addAll(footer);
 				}
-				YamlEditor.write(this.getFile(), YamlUtils.parseComments(unEdited, header));
-				this.write(this.getFileData().getDataMap());
+				YamlEditor.write(this.file(), YamlUtils.parseComments(unEdited, header, this.provider()));
+				this.write(this.fileData().getDataMap());
 			}
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e.getCause());
 		}
+	}
+
+	@Override
+	public void bigList(final boolean bigList) {
+		this.provider().setListType(bigList ? BigList.class : GapList.class);
 	}
 
 	/**
@@ -120,7 +129,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 	}
 
 	private void write(final @NotNull Map fileData) throws IOException {
-		@NotNull @Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.getFile()));
+		@NotNull @Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.file()));
 		writer.write(fileData);
 	}
 
@@ -130,26 +139,56 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 		YAML("yml");
 
 
-		@NotNull
-		private final String extension;
+		private final @NotNull String extension;
 
+		@Contract(pure = true)
 		FileType(final @NotNull String extension) {
 			this.extension = extension;
 		}
 
-		@NotNull
+		@Contract(pure = true)
 		@Override
-		public String toLowerCase() {
+		public @NotNull String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
-		@NotNull
+		@Contract(pure = true)
 		@Override
-		public String toString() {
+		public @NotNull String toString() {
 			return this.extension;
 		}
 	}
 
+	public static class Collections extends Provider<Map, List> {
+
+		private Collections(Class<? extends Map> map, Class<? extends List> list) {
+			super(map, list);
+		}
+
+		@Override
+		public @NotNull Map<String, Object> newMap() {
+			//noinspection unchecked
+			return (Map<String, Object>) super.newMap();
+		}
+
+		@Override
+		public @NotNull List<String> newList() {
+			//noinspection unchecked
+			return (List<String>) super.newList();
+		}
+
+		@Override
+		public @NotNull Map<String, Object> newMap(Class<?>[] parameterTypes, Object... parameters) {
+			//noinspection unchecked
+			return (Map<String, Object>) super.newMap(parameterTypes, parameters);
+		}
+
+		@Override
+		public @NotNull List<String> newList(Class<?>[] parameterTypes, Object... parameters) {
+			//noinspection unchecked
+			return (List<String>) super.newList(parameterTypes, parameters);
+		}
+	}
 
 	private static class LocalSection extends YamlFileSection {
 
@@ -162,10 +201,10 @@ public class YamlFile extends CommentEnabledFile<StandardFileData> {
 		}
 	}
 
-	private static class LocalFileData extends StandardFileData {
+	private static class LocalFileData extends StandardFileData<Map, List> {
 
-		private LocalFileData() {
-			super();
+		private LocalFileData(final @NotNull Provider<Map, List> provider) {
+			super(provider);
 		}
 	}
 }

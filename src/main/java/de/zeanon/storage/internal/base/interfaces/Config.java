@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
  * @version 1.1.0
  */
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public interface Config extends DataStorage {
+public interface Config<M, L> extends DataStorage<M, L> {
 
 	void setCommentSetting(final CommentSetting commentSetting);
 

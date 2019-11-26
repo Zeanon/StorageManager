@@ -1,7 +1,9 @@
 package de.zeanon.storage.internal.files.section;
 
+import de.zeanon.storage.internal.base.cache.base.TripletMap;
 import de.zeanon.storage.internal.base.sections.CommentEnabledSection;
 import de.zeanon.storage.internal.files.raw.ThunderFile;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ThunderFileSection extends CommentEnabledSection<ThunderFile> {
+public class ThunderFileSection extends CommentEnabledSection<ThunderFile, TripletMap, List> {
 
 	@NotNull
 	private final ThunderFile thunderFile;
@@ -34,6 +36,10 @@ public class ThunderFileSection extends CommentEnabledSection<ThunderFile> {
 		this.thunderFile = thunderFile;
 	}
 
+
+	public void setBigMap(final boolean bigMap) {
+		this.thunderFile.bigMap(bigMap);
+	}
 
 	@NotNull
 	@Override

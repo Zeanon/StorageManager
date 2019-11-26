@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.base.files;
 
+import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.exceptions.FileTypeException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.DataStorage;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,31 +33,37 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 @EqualsAndHashCode
 @ToString(callSuper = true)
-@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
-public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage, Comparable<FlatFile> {
+@Accessors(fluent = true, chain = false)
+@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess", "DefaultAnnotationParam"})
+public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L extends List> implements DataStorage<M, L>, Comparable<FlatFile> {
 
 	private final @NotNull File file;
 	private final @NotNull FileType fileType;
-	private final @NotNull M fileData;
+	private final @NotNull D fileData;
+	@Getter(onMethod_ = {@Override})
+	private final @NotNull Provider<M, L> provider;
 	@Setter(AccessLevel.PROTECTED)
 	private long lastLoaded;
 	/**
 	 * Default: {@link Reload#INTELLIGENT}
 	 */
 	@Setter
+	@Accessors(fluent = true, chain = false)
 	private @NotNull ReloadSetting reloadSetting;
 
 
-	protected FlatFile(final @NotNull File file, final @NotNull FileType fileType, final @NotNull M fileData, final @NotNull ReloadSetting reloadSetting) {
+	protected FlatFile(final @NotNull File file, final @NotNull FileType fileType, final @NotNull D fileData, final @NotNull ReloadSetting reloadSetting) {
 		if (fileType.isTypeOf(file)) {
 			this.fileType = fileType;
 			this.file = file;
 			this.fileData = fileData;
 			this.reloadSetting = reloadSetting;
+			this.provider = this.fileData.provider();
 		} else {
 			throw new FileTypeException("File '" + file.getAbsolutePath() + "' is not of type '" + fileType + "'");
 		}
 	}
+
 
 	public @NotNull String getPath() {
 		return this.file.getPath();
@@ -217,7 +225,8 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	public @NotNull Map<String, Object> getAll(final @NotNull String... keys) {
 		this.update();
 
-		final @NotNull Map<String, Object> tempMap = new HashMap<>();
+		//noinspection unchecked
+		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
 		for (@NotNull String key : keys) {
 			tempMap.put(key, Objects.notNull(this.fileData.get(key), "File does not contain '" + key + "'"));
 		}
@@ -228,7 +237,8 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[]... keys) {
 		this.update();
 
-		final @NotNull Map<String[], Object> tempMap = new HashMap<>();
+		//noinspection unchecked
+		final @NotNull Map<String[], Object> tempMap = this.provider.newMap();
 		for (String[] key : keys) {
 			tempMap.put(key, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
 		}
@@ -239,7 +249,8 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	public @NotNull Map<String, Object> getAll(final @NotNull Collection<String> keys) {
 		this.update();
 
-		final @NotNull Map<String, Object> tempMap = new HashMap<>();
+		//noinspection unchecked
+		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
 		for (@NotNull String key : keys) {
 			tempMap.put(key, Objects.notNull(this.fileData.get(key), "File does not contain '" + key + "'"));
 		}
@@ -250,7 +261,8 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys) {
 		this.update();
 
-		final @NotNull Map<String[], Object> tempMap = new HashMap<>();
+		//noinspection unchecked
+		final @NotNull Map<String[], Object> tempMap = this.provider.newMap();
 		for (String[] key : keys) {
 			tempMap.put(key, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
 		}
@@ -261,7 +273,8 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull String... keys) {
 		this.update();
 
-		final @NotNull Map<String, Object> tempMap = new HashMap<>();
+		//noinspection unchecked
+		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
 		for (String tempKey : keys) {
 			tempMap.put(blockKey, Objects.notNull(this.fileData.get(blockKey + "." + tempKey), "File does not contain '" + blockKey + "." + tempKey + "'"));
 		}
@@ -273,7 +286,8 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
 		this.update();
 
-		final @NotNull Map<String[], Object> tempMap = new HashMap<>();
+		//noinspection unchecked
+		final @NotNull Map<String[], Object> tempMap = this.provider.newMap();
 		for (@NotNull String[] tempKey : keys) {
 			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
@@ -287,7 +301,8 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
 		this.update();
 
-		final @NotNull Map<String, Object> tempMap = new HashMap<>();
+		//noinspection unchecked
+		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
 		for (String tempKey : keys) {
 			tempMap.put(blockKey, Objects.notNull(this.fileData.get(blockKey + "." + tempKey), "File does not contain '" + blockKey + "." + tempKey + "'"));
 		}
@@ -299,7 +314,8 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
 		this.update();
 
-		final @NotNull Map<String[], Object> tempMap = new HashMap<>();
+		//noinspection unchecked
+		final @NotNull Map<String[], Object> tempMap = this.provider.newMap();
 		for (@NotNull String[] tempKey : keys) {
 			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
@@ -314,7 +330,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.insert(key, value)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -322,7 +338,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.insertUseArray(key, value)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -330,7 +346,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.insertAll(dataMap)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -338,7 +354,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.insertAllUseArray(dataMap)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -346,7 +362,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.insertAll(blockKey, dataMap)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -354,7 +370,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.insertAllUseArray(blockKey, dataMap)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -362,7 +378,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.internalRemove(key)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -370,7 +386,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.internalRemoveUseArray(key)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -378,7 +394,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.internalRemoveAll(keys)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -386,7 +402,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.internalRemoveAll(keys)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -394,7 +410,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.internalRemoveAllUseArray(keys)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -402,7 +418,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.internalRemoveAllUseArray(keys)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -410,7 +426,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.internalRemoveAll(blockKey, keys)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -418,7 +434,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.internalRemoveAll(blockKey, keys)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 
@@ -427,7 +443,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.internalRemoveAllUseArray(blockKey, keys)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -435,7 +451,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 		if (this.internalRemoveAllUseArray(blockKey, keys)) {
 			this.save();
 		}
-		this.setLastLoaded(System.currentTimeMillis());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	/**
@@ -608,7 +624,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
-			this.getFileData().removeUseArray(key);
+			this.fileData().removeUseArray(key);
 		}
 		return !this.fileData.toString().equals(tempData);
 	}
@@ -622,7 +638,7 @@ public abstract class FlatFile<M extends FileData<?, ?>> implements DataStorage,
 			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
-			this.getFileData().removeUseArray(key);
+			this.fileData().removeUseArray(key);
 		}
 		return !this.fileData.toString().equals(tempData);
 	}

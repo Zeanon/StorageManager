@@ -1,7 +1,10 @@
 package de.zeanon.storage.internal.utility.utils.datafiles;
 
+import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.utility.utils.editor.YamlEditor;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.Contract;
@@ -19,9 +22,9 @@ import org.jetbrains.annotations.NotNull;
 public class YamlUtils {
 
 
-	@Contract("_, _, -> param1")
-	public static @NotNull List<String> parseComments(final @NotNull List<String> comments, final @NotNull List<String> updated) {
-		final @NotNull Map<String, List<String>> parsed = assignCommentsToKey(comments);
+	@Contract("_, _, _ -> param1")
+	public static @NotNull List<String> parseComments(final @NotNull List<String> comments, final @NotNull List<String> updated, final @NotNull Provider<? extends Map, ? extends List> provider) {
+		final @NotNull Map<String, List<String>> parsed = assignCommentsToKey(comments, provider);
 
 		for (final @NotNull Map.Entry<String, List<String>> entry : parsed.entrySet()) {
 			int i = 0;
@@ -36,10 +39,12 @@ public class YamlUtils {
 		return updated;
 	}
 
-	private static @NotNull Map<String, List<String>> assignCommentsToKey(final @NotNull List<String> fileLines) {
-		final @NotNull List<String> storage = new ArrayList<>();
-		final @NotNull List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
-		final @NotNull Map<String, List<String>> result = new HashMap<>();
+	private static @NotNull Map<String, List<String>> assignCommentsToKey(final @NotNull List<String> fileLines, final @NotNull Provider<? extends Map, ? extends List> provider) {
+		//noinspection unchecked
+		final @NotNull List<String> storage = provider.newList();
+		final @NotNull List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines, provider);
+		//noinspection unchecked
+		final @NotNull Map<String, List<String>> result = provider.newMap();
 
 		Collections.reverse(lines);
 		for (final @NotNull String line : lines) {
@@ -51,9 +56,10 @@ public class YamlUtils {
 			storage.clear();
 		}
 
-		final @NotNull List<String> keysToRemove = new ArrayList<>();
+		//noinspection unchecked
+		final @NotNull List<String> keysToRemove = provider.newList();
 		for (final @NotNull Map.Entry<String, List<String>> entry : result.entrySet()) {
-			if (entry.getValue().equals(new ArrayList<>())) {
+			if (entry.getValue().equals(provider.newList())) {
 				keysToRemove.add(entry.getKey());
 			}
 		}

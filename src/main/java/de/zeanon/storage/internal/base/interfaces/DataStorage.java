@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.base.interfaces;
 
+import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.sections.FlatSection;
 import de.zeanon.storage.internal.utility.utils.basic.Primitive;
 import java.util.Collection;
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  * @version 2.4.0
  */
 @SuppressWarnings({"unused", "unchecked", "UnusedReturnValue"})
-public interface DataStorage {
+public interface DataStorage<M, L> {
 
 
 	/**
@@ -30,6 +31,10 @@ public interface DataStorage {
 	@NotNull Object get(final @NotNull String key);
 
 	@NotNull Object getUseArray(final @NotNull String... key);
+
+	void bigList(final boolean bigList);
+
+	@NotNull Provider<M, L> provider();
 
 	/**
 	 * Get an Object from the File casted to a certain type

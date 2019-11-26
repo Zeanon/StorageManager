@@ -2,7 +2,6 @@ package de.zeanon.storage.internal.base.cache.datamap;
 
 import de.zeanon.storage.external.lists.BigList;
 import de.zeanon.storage.internal.base.cache.base.TripletMap;
-import java.util.LinkedList;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Contract;
@@ -31,6 +30,6 @@ public class BigTripletMap<K, V> extends TripletMap<K, V> {
 	@Override
 	@Contract("-> new")
 	public @NotNull List<TripletNode<K, V>> entryList() {
-		return new LinkedList<>(this.localList);
+		return new BigList<>(this.localList);
 	}
 }

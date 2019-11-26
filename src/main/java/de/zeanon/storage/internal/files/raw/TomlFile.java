@@ -1,6 +1,9 @@
 package de.zeanon.storage.internal.files.raw;
 
 import com.electronwill.toml.TomlException;
+import de.zeanon.storage.external.lists.BigList;
+import de.zeanon.storage.external.lists.GapList;
+import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.cache.filedata.StandardFileData;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
@@ -11,9 +14,14 @@ import de.zeanon.storage.internal.utility.utils.basic.BaseFileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Synchronized;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,10 +32,12 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.2.0
  */
+@Getter
+@Accessors(fluent = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class TomlFile extends FlatFile<StandardFileData> {
+public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 
 
 	/**
@@ -38,18 +48,18 @@ public class TomlFile extends FlatFile<StandardFileData> {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting) {
-		super(file, TomlFile.FileType.TOML, new LocalFileData(), reloadSetting);
+	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
+		super(file, TomlFile.FileType.TOML, new LocalFileData(new Collections(map, list)), reloadSetting);
 
-		if (BaseFileUtils.createFile(this.getFile()) && inputStream != null) {
-			BaseFileUtils.writeToFile(this.getFile(), BaseFileUtils.createNewInputStream(inputStream));
+		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
+			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 		}
 
 		try {
-			this.getFileData().loadData(com.electronwill.toml.Toml.read(this.getFile()));
-			this.setLastLoaded(System.currentTimeMillis());
+			this.fileData().loadData(com.electronwill.toml.Toml.read(this.file()));
+			this.lastLoaded(System.currentTimeMillis());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
 		} catch (TomlException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
 		}
@@ -60,10 +70,10 @@ public class TomlFile extends FlatFile<StandardFileData> {
 	@Synchronized
 	public void reload() {
 		try {
-			this.getFileData().loadData(com.electronwill.toml.Toml.read(this.getFile()));
-			this.setLastLoaded(System.currentTimeMillis());
+			this.fileData().loadData(com.electronwill.toml.Toml.read(this.file()));
+			this.lastLoaded(System.currentTimeMillis());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.getFile().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
 		} catch (TomlException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
 		}
@@ -73,10 +83,16 @@ public class TomlFile extends FlatFile<StandardFileData> {
 	@Synchronized
 	public void save() {
 		try {
-			com.electronwill.toml.Toml.write(this.getFileData().getDataMap(), this.getFile());
+			//noinspection unchecked
+			com.electronwill.toml.Toml.write(this.fileData().getDataMap(), this.file());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getFile().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e.getCause());
 		}
+	}
+
+	@Override
+	public void bigList(final boolean bigList) {
+		this.provider().setListType(bigList ? BigList.class : GapList.class);
 	}
 
 	/**
@@ -104,26 +120,56 @@ public class TomlFile extends FlatFile<StandardFileData> {
 		TOML("toml");
 
 
-		@NotNull
-		private final String extension;
+		private final @NotNull String extension;
 
+		@Contract(pure = true)
 		FileType(final @NotNull String extension) {
 			this.extension = extension;
 		}
 
-		@NotNull
+		@Contract(pure = true)
 		@Override
-		public String toLowerCase() {
+		public @NotNull String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
-		@NotNull
+		@Contract(pure = true)
 		@Override
-		public String toString() {
+		public @NotNull String toString() {
 			return this.extension;
 		}
 	}
 
+	public static class Collections extends Provider<Map, List> {
+
+		private Collections(Class<? extends Map> map, Class<? extends List> list) {
+			super(map, list);
+		}
+
+		@Override
+		public @NotNull Map<String, Object> newMap() {
+			//noinspection unchecked
+			return (Map<String, Object>) super.newMap();
+		}
+
+		@Override
+		public @NotNull List<String> newList() {
+			//noinspection unchecked
+			return (List<String>) super.newList();
+		}
+
+		@Override
+		public @NotNull Map<String, Object> newMap(Class<?>[] parameterTypes, Object... parameters) {
+			//noinspection unchecked
+			return (Map<String, Object>) super.newMap(parameterTypes, parameters);
+		}
+
+		@Override
+		public @NotNull List<String> newList(Class<?>[] parameterTypes, Object... parameters) {
+			//noinspection unchecked
+			return (List<String>) super.newList(parameterTypes, parameters);
+		}
+	}
 
 	private static class LocalSection extends TomlFileSection {
 
@@ -136,10 +182,10 @@ public class TomlFile extends FlatFile<StandardFileData> {
 		}
 	}
 
-	private static class LocalFileData extends StandardFileData {
+	private static class LocalFileData extends StandardFileData<Map, List> {
 
-		private LocalFileData() {
-			super();
+		private LocalFileData(final @NotNull Provider<Map, List> provider) {
+			super(provider);
 		}
 	}
 }

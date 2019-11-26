@@ -1,10 +1,17 @@
 package de.zeanon.storage.internal.base.cache.filedata;
 
+import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.utility.utils.basic.Objects;
-import java.util.*;
-import lombok.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Synchronized;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,17 +23,24 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 2.5.0
  */
-@SuppressWarnings("unused")
+@Getter
 @EqualsAndHashCode
-@NoArgsConstructor(access = AccessLevel.PROTECTED, onConstructor_ = {@Contract(pure = true)})
-public class StandardFileData implements FileData<Map<String, Object>, Map.Entry<String, Object>>, Comparable<StandardFileData> {
+@SuppressWarnings("unused")
+public class StandardFileData<M extends Map, L extends List> implements FileData<M, Map.Entry<String, Object>, L>, Comparable<StandardFileData> {
 
+	@Accessors(fluent = true)
+	private final @NotNull Provider<M, L> provider;
 	/**
 	 * internal cache for the contents of the File
 	 */
-	@Getter
-	private @NotNull Map<String, Object> dataMap = new HashMap<>();
+	private @NotNull M dataMap;
 
+
+	@Contract(pure = true)
+	public StandardFileData(final @NotNull Provider<M, L> provider) {
+		this.provider = provider;
+		this.dataMap = this.provider.newMap();
+	}
 
 	/**
 	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
@@ -37,6 +51,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	@Override
 	@Contract("-> new")
 	public @NotNull List<Map.Entry<String, Object>> entryList() {
+		//noinspection unchecked
 		return this.internalEntryList(this.dataMap);
 	}
 
@@ -48,7 +63,8 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	@Override
 	@Contract("-> new")
 	public @NotNull List<Map.Entry<String, Object>> blockEntryList() {
-		return new ArrayList<>(this.dataMap.entrySet());
+		//noinspection unchecked
+		return provider.newList(new Class[]{Set.class}, this.dataMap.entrySet());
 	}
 
 	/**
@@ -84,7 +100,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		final @NotNull Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
-			return new ArrayList<>(((Map) tempObject).entrySet());
+			return provider.newList(new Class[]{Set.class}, ((Map) tempObject).entrySet());
 		} else {
 			throw new ObjectNullException("File does not contain '" + key + "'");
 		}
@@ -123,7 +139,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 		final @NotNull Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
-			return new ArrayList<>(((Map) tempObject).entrySet());
+			return provider.newList(new Class[]{Set.class}, ((Map) tempObject).entrySet());
 		} else {
 			throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "'");
 		}
@@ -135,7 +151,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 * @param map the values to be loaded
 	 */
 	@Override
-	public void loadData(@Nullable Map<String, Object> map) {
+	public void loadData(@Nullable M map) {
 		if (map != null) {
 			this.dataMap = map;
 		}
@@ -199,6 +215,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	@Override
 	public boolean containsKey(final @NotNull String key) {
 		final @NotNull String[] parts = key.split("\\.");
+		//noinspection unchecked
 		return this.internalContainsKey(this.dataMap, parts, 0);
 	}
 
@@ -211,6 +228,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public boolean containsKeyUseArray(final @NotNull String... key) {
+		//noinspection unchecked
 		return this.internalContainsKey(this.dataMap, key, 0);
 	}
 
@@ -286,6 +304,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	 */
 	@Override
 	public int size() {
+		//noinspection unchecked
 		return this.internalSize(this.dataMap);
 	}
 
@@ -353,9 +372,8 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 					this.dataMap.containsKey(parts[0])
 					&& tempValue instanceof Map
 					? (Map) tempValue
-					: (this.dataMap instanceof LinkedHashMap
-					   ? new LinkedHashMap<>()
-					   : new HashMap<>());
+					: provider.newMap();
+			//noinspection unchecked
 			this.dataMap.put(parts[0], this.internalInsert(childMap, parts, value, 1));
 		}
 	}
@@ -368,9 +386,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 					map.containsKey(key[keyIndex])
 					&& tempValue instanceof Map
 					? (Map) tempValue
-					: (map instanceof LinkedHashMap
-					   ? new LinkedHashMap<>()
-					   : new HashMap<>());
+					: this.provider.newMap();
 			map.put(key[keyIndex], this.internalInsert(childMap, key, value, keyIndex + 1));
 			return map;
 		} else {
@@ -417,7 +433,8 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 	}
 
 	private @NotNull List<Map.Entry<String, Object>> internalEntryList(final @NotNull Map<String, Object> map) {
-		final @NotNull List<Map.Entry<String, Object>> tempList = new ArrayList<>(map.entrySet());
+		//noinspection unchecked
+		final @NotNull List<Map.Entry<String, Object>> tempList = provider.newList();
 		for (@NotNull Map.Entry<String, Object> entry : tempList) {
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
@@ -460,7 +477,7 @@ public class StandardFileData implements FileData<Map<String, Object>, Map.Entry
 
 	private int internalSize(final @NotNull Map<String, Object> map) {
 		int size = 0;
-		for (@NotNull Map.Entry entry : new ArrayList<>(map.entrySet())) {
+		for (@NotNull Map.Entry entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
 				size += this.internalSize((Map) entry.getValue());

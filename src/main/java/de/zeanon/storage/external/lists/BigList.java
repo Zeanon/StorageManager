@@ -19,6 +19,7 @@
  */
 package de.zeanon.storage.external.lists;
 
+import de.zeanon.storage.external.lists.helpers.MergeSort;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -27,7 +28,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.magicwerk.brownies.collections.helper.MergeSort;
 
 
 /**

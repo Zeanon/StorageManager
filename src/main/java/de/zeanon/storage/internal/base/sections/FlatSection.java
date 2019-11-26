@@ -1,10 +1,12 @@
 package de.zeanon.storage.internal.base.sections;
 
+import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.files.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.DataStorage;
 import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,22 +26,22 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 @ToString(callSuper = true)
 @SuppressWarnings("unused")
-public abstract class FlatSection<M extends FlatFile<? extends FileData<?, ?>>> implements DataStorage, Comparable<FlatSection> {
+public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>, M, L>, M extends Map, L extends List> implements DataStorage<M, L>, Comparable<FlatSection> {
 
-	private final @NotNull M flatFile;
+	private final @NotNull F flatFile;
 	@Setter
 	protected @NotNull String sectionKey = "";
 	@Setter
 	protected @NotNull String[] arraySectionKey = new String[0];
 
 
-	protected FlatSection(final @NotNull String sectionKey, final @NotNull M flatFile) {
+	protected FlatSection(final @NotNull String sectionKey, final @NotNull F flatFile) {
 		this.setSectionKey(sectionKey);
 		this.setArraySectionKey(sectionKey.split("\\."));
 		this.flatFile = flatFile;
 	}
 
-	protected FlatSection(final @NotNull String[] sectionKey, final @NotNull M flatFile) {
+	protected FlatSection(final @NotNull String[] sectionKey, final @NotNull F flatFile) {
 		@NotNull StringBuilder tempKey = new StringBuilder(sectionKey[0]);
 		for (int i = 1; i < sectionKey.length; i++) {
 			tempKey.append(".").append(sectionKey[i]);
@@ -50,8 +52,19 @@ public abstract class FlatSection<M extends FlatFile<? extends FileData<?, ?>>> 
 	}
 
 
-	public void setReloadSetting(final @NotNull ReloadSetting reloadSetting) {
-		this.flatFile.setReloadSetting(reloadSetting);
+	public void reloadSetting(final @NotNull ReloadSetting reloadSetting) {
+		this.flatFile.reloadSetting(reloadSetting);
+	}
+
+	@NotNull
+	@Override
+	public Provider<M, L> provider() {
+		return this.flatFile.provider();
+	}
+
+	@Override
+	public void bigList(final boolean bigList) {
+		this.flatFile.bigList(bigList);
 	}
 
 	@Override

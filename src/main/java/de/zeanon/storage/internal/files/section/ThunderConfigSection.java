@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.files.section;
 
+import de.zeanon.storage.internal.base.cache.base.TripletMap;
 import de.zeanon.storage.internal.base.interfaces.Config;
 import de.zeanon.storage.internal.files.config.ThunderConfig;
 import java.util.List;
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ThunderConfigSection extends ThunderFileSection implements Config {
+public class ThunderConfigSection extends ThunderFileSection implements Config<TripletMap, List> {
 
 	@NotNull
 	private final ThunderConfig thunderConfig;
@@ -35,7 +36,6 @@ public class ThunderConfigSection extends ThunderFileSection implements Config {
 		super(sectionKey, thunderConfig);
 		this.thunderConfig = thunderConfig;
 	}
-
 
 	@NotNull
 	@Override

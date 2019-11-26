@@ -1,5 +1,11 @@
 package de.zeanon.storage.internal.files.raw;
 
+import de.zeanon.storage.external.lists.BigList;
+import de.zeanon.storage.external.lists.GapList;
+import de.zeanon.storage.internal.base.cache.base.Provider;
+import de.zeanon.storage.internal.base.cache.base.TripletMap;
+import de.zeanon.storage.internal.base.cache.datamap.BigTripletMap;
+import de.zeanon.storage.internal.base.cache.datamap.GapTripletMap;
 import de.zeanon.storage.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
@@ -12,7 +18,13 @@ import de.zeanon.storage.internal.utility.utils.basic.BaseFileUtils;
 import de.zeanon.storage.internal.utility.utils.editor.ThunderEditor;
 import java.io.File;
 import java.io.InputStream;
-import lombok.*;
+import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Synchronized;
+import lombok.ToString;
+import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,14 +35,12 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 2.5.0
  */
+@Getter
+@Accessors(fluent = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
-
-	@Getter
-	@Setter
-	private boolean bigMap;
+public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, List>, TripletMap, List> {
 
 
 	/**
@@ -42,18 +52,16 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected ThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final boolean bigMap) {
-		super(file, ThunderFile.FileType.THUNDER, new LocalFileData(bigMap), reloadSetting, commentSetting);
+	protected ThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final @NotNull Class<? extends TripletMap> map, final @NotNull Class<? extends List> list) {
+		super(file, ThunderFile.FileType.THUNDER, new LocalFileData(new Collections(map, list)), reloadSetting, commentSetting);
 
-		this.bigMap = bigMap;
-
-		if (BaseFileUtils.createFile(this.getFile()) && inputStream != null) {
-			BaseFileUtils.writeToFile(this.getFile(), BaseFileUtils.createNewInputStream(inputStream));
+		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
+			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 		}
 
 		try {
-			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getCommentSetting(), this.bigMap));
-			this.setLastLoaded(System.currentTimeMillis());
+			this.fileData().loadData(ThunderEditor.readData(this.file(), this.getCommentSetting(), this.provider()));
+			this.lastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
 		} catch (ThunderException e) {
@@ -66,8 +74,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 	@Synchronized
 	public void reload() {
 		try {
-			this.getFileData().loadData(ThunderEditor.readData(this.getFile(), this.getCommentSetting(), this.bigMap));
-			this.setLastLoaded(System.currentTimeMillis());
+			this.fileData().loadData(ThunderEditor.readData(this.file(), this.getCommentSetting(), this.provider()));
+			this.lastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
 		} catch (ThunderException e) {
@@ -79,10 +87,19 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 	@Synchronized
 	public void save() {
 		try {
-			ThunderEditor.writeData(this.getFile(), this.getFileData(), this.getCommentSetting());
+			ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
 		} catch (RuntimeIOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
 		}
+	}
+
+	public void bigMap(final boolean bigMap) {
+		this.provider().setMapType(bigMap ? BigTripletMap.class : GapTripletMap.class);
+	}
+
+	@Override
+	public void bigList(final boolean bigList) {
+		this.provider().setListType(bigList ? BigList.class : GapList.class);
 	}
 
 	/**
@@ -110,26 +127,56 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 		THUNDER("tf");
 
 
-		@NotNull
-		private final String extension;
+		private final @NotNull String extension;
 
+		@Contract(pure = true)
 		FileType(final @NotNull String extension) {
 			this.extension = extension;
 		}
 
-		@NotNull
+		@Contract(pure = true)
 		@Override
-		public String toLowerCase() {
+		public @NotNull String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
-		@NotNull
+		@Contract(pure = true)
 		@Override
-		public String toString() {
+		public @NotNull String toString() {
 			return this.extension;
 		}
 	}
 
+	public static class Collections extends Provider<TripletMap, List> {
+
+		private Collections(Class<? extends TripletMap> map, Class<? extends List> list) {
+			super(map, list);
+		}
+
+		@Override
+		public @NotNull TripletMap<String, Object> newMap() {
+			//noinspection unchecked
+			return (TripletMap<String, Object>) super.newMap();
+		}
+
+		@Override
+		public @NotNull List<String> newList() {
+			//noinspection unchecked
+			return (List<String>) super.newList();
+		}
+
+		@Override
+		public @NotNull TripletMap<String, Object> newMap(Class<?>[] parameterTypes, Object... parameters) {
+			//noinspection unchecked
+			return (TripletMap<String, Object>) super.newMap(parameterTypes, parameters);
+		}
+
+		@Override
+		public @NotNull List<String> newList(Class<?>[] parameterTypes, Object... parameters) {
+			//noinspection unchecked
+			return (List<String>) super.newList(parameterTypes, parameters);
+		}
+	}
 
 	private static class LocalSection extends ThunderFileSection {
 
@@ -142,10 +189,10 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData> {
 		}
 	}
 
-	private static class LocalFileData extends ThunderFileData {
+	private static class LocalFileData extends ThunderFileData<TripletMap, List> {
 
-		private LocalFileData(final boolean bigMap) {
-			super(bigMap);
+		private LocalFileData(final @NotNull Provider<TripletMap, List> provider) {
+			super(provider);
 		}
 	}
 }
