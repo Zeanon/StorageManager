@@ -28,27 +28,24 @@ import org.jetbrains.annotations.Nullable;
 public final class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, Map, List> {
 
 
-	@Setter
+	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private @NotNull CommentSetting commentSetting = Comment.SKIP;
-	@Setter(onMethod_ = {@Override})
-	private @NotNull Class<? extends Map> map = HashMap.class;
-	@Setter(onMethod_ = {@Override})
-	private @NotNull Class<? extends List> list = GapList.class;
 
 
 	public YamlFileBuilder(final @NotNull File file) {
-		super(file);
+		super(file, HashMap.class, GapList.class);
 	}
 
 	@Override
 	@Contract("-> new")
 	public final @NotNull YamlFile create() {
-		return new LocalYamlFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.map, this.list);
+		return new LocalYamlFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.mapType, this.listType);
 	}
 
 	@Override
-	public void bigList(final boolean bigList) {
-		this.list = bigList ? BigList.class : GapList.class;
+	@Contract("_ -> this")
+	public final @NotNull YamlFileBuilder bigList(final boolean bigList) {
+		return this.listType(bigList ? BigList.class : GapList.class);
 	}
 
 	private static final class LocalYamlFile extends YamlFile {

@@ -50,7 +50,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 */
 	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
-		super(file, ThunderFile.FileType.THUNDER, new LocalFileData(new Collections(map, list)), reloadSetting);
+		super(file, FileType.JSON, new LocalFileData(new Collections(map, list)), reloadSetting);
 
 		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
 			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
@@ -218,34 +218,10 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		}
 	}
 
-	public static class Collections extends Provider<Map, List> {
+	private static class Collections extends Provider<Map, List> {
 
 		private Collections(Class<? extends Map> map, Class<? extends List> list) {
 			super(map, list);
-		}
-
-		@Override
-		public @NotNull Map<String, Object> newMap() {
-			//noinspection unchecked
-			return (Map<String, Object>) super.newMap();
-		}
-
-		@Override
-		public @NotNull List<String> newList() {
-			//noinspection unchecked
-			return (List<String>) super.newList();
-		}
-
-		@Override
-		public @NotNull Map<String, Object> newMap(Class<?>[] parameterTypes, Object... parameters) {
-			//noinspection unchecked
-			return (Map<String, Object>) super.newMap(parameterTypes, parameters);
-		}
-
-		@Override
-		public @NotNull List<String> newList(Class<?>[] parameterTypes, Object... parameters) {
-			//noinspection unchecked
-			return (List<String>) super.newList(parameterTypes, parameters);
 		}
 	}
 

@@ -29,31 +29,29 @@ import org.jetbrains.annotations.Nullable;
 public final class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, ThunderFile, TripletMap, List> {
 
 
-	@Setter
+	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private @NotNull CommentSetting commentSetting = Comment.SKIP;
-	@Setter(onMethod_ = {@Override})
-	private @NotNull Class<? extends TripletMap> map = GapTripletMap.class;
-	@Setter(onMethod_ = {@Override})
-	private @NotNull Class<? extends List> list = GapList.class;
 
 
 	public ThunderFileBuilder(final @NotNull File file) {
-		super(file);
+		super(file, GapTripletMap.class, GapList.class);
 	}
 
 	@Override
 	@Contract("-> new")
 	public final @NotNull ThunderFile create() {
-		return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.map, this.list);
+		return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.mapType, this.listType);
 	}
 
-	public void bigMap(final boolean bigMap) {
-		this.map = bigMap ? BigTripletMap.class : GapTripletMap.class;
+	@Contract("_ -> this")
+	public final @NotNull ThunderFileBuilder bigMap(final boolean bigMap) {
+		return this.mapType(bigMap ? BigTripletMap.class : GapTripletMap.class);
 	}
 
 	@Override
-	public void bigList(final boolean bigList) {
-		this.list = bigList ? BigList.class : GapList.class;
+	@Contract("_ -> this")
+	public final @NotNull ThunderFileBuilder bigList(final boolean bigList) {
+		return this.listType(bigList ? BigList.class : GapList.class);
 	}
 
 

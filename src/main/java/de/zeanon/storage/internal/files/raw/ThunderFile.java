@@ -53,7 +53,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
 	protected ThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final @NotNull Class<? extends TripletMap> map, final @NotNull Class<? extends List> list) {
-		super(file, ThunderFile.FileType.THUNDER, new LocalFileData(new Collections(map, list)), reloadSetting, commentSetting);
+		super(file, FileType.THUNDER, new LocalFileData(new Collections(map, list)), reloadSetting, commentSetting);
 
 		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
 			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
@@ -147,34 +147,10 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 		}
 	}
 
-	public static class Collections extends Provider<TripletMap, List> {
+	private static class Collections extends Provider<TripletMap, List> {
 
 		private Collections(Class<? extends TripletMap> map, Class<? extends List> list) {
 			super(map, list);
-		}
-
-		@Override
-		public @NotNull TripletMap<String, Object> newMap() {
-			//noinspection unchecked
-			return (TripletMap<String, Object>) super.newMap();
-		}
-
-		@Override
-		public @NotNull List<String> newList() {
-			//noinspection unchecked
-			return (List<String>) super.newList();
-		}
-
-		@Override
-		public @NotNull TripletMap<String, Object> newMap(Class<?>[] parameterTypes, Object... parameters) {
-			//noinspection unchecked
-			return (TripletMap<String, Object>) super.newMap(parameterTypes, parameters);
-		}
-
-		@Override
-		public @NotNull List<String> newList(Class<?>[] parameterTypes, Object... parameters) {
-			//noinspection unchecked
-			return (List<String>) super.newList(parameterTypes, parameters);
 		}
 	}
 

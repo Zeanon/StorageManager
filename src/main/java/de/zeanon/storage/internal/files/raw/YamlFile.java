@@ -51,7 +51,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
 	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
-		super(file, YamlFile.FileType.YAML, new LocalFileData(new Collections(map, list)), reloadSetting, commentSetting);
+		super(file, FileType.YAML, new LocalFileData(new Collections(map, list)), reloadSetting, commentSetting);
 
 		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
 			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
@@ -159,34 +159,10 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 		}
 	}
 
-	public static class Collections extends Provider<Map, List> {
+	private static class Collections extends Provider<Map, List> {
 
 		private Collections(Class<? extends Map> map, Class<? extends List> list) {
 			super(map, list);
-		}
-
-		@Override
-		public @NotNull Map<String, Object> newMap() {
-			//noinspection unchecked
-			return (Map<String, Object>) super.newMap();
-		}
-
-		@Override
-		public @NotNull List<String> newList() {
-			//noinspection unchecked
-			return (List<String>) super.newList();
-		}
-
-		@Override
-		public @NotNull Map<String, Object> newMap(Class<?>[] parameterTypes, Object... parameters) {
-			//noinspection unchecked
-			return (Map<String, Object>) super.newMap(parameterTypes, parameters);
-		}
-
-		@Override
-		public @NotNull List<String> newList(Class<?>[] parameterTypes, Object... parameters) {
-			//noinspection unchecked
-			return (List<String>) super.newList(parameterTypes, parameters);
 		}
 	}
 

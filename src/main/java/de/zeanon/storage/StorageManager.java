@@ -16,7 +16,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -31,14 +30,23 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString
 @EqualsAndHashCode
-@RequiredArgsConstructor(onConstructor_ = {@Contract(pure = true)})
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
 public abstract class StorageManager<B extends StorageManager, F extends FlatFile, M extends Map, L extends List> {
 
 
 	protected final @NotNull File file;
 	protected @NotNull ReloadSetting reloadSetting = Reload.INTELLIGENT;
 	protected @Nullable BufferedInputStream inputStream;
+	protected @NotNull Class<? extends M> mapType;
+	protected @NotNull Class<? extends L> listType;
+
+
+	@Contract(pure = true)
+	protected StorageManager(final @NotNull File file, final @NotNull Class<? extends M> mapType, final @NotNull Class<? extends L> listType) {
+		this.file = file;
+		this.mapType = mapType;
+		this.listType = listType;
+	}
 
 
 	@Contract("null -> fail; !null -> new")
@@ -290,12 +298,21 @@ public abstract class StorageManager<B extends StorageManager, F extends FlatFil
 		return (B) this;
 	}
 
-	public abstract @NotNull B map(Class<? extends M> map);
+	@Contract("_ -> this")
+	public final @NotNull B mapType(final @NotNull Class<? extends M> mapType) {
+		this.mapType = mapType;
+		//noinspection unchecked
+		return (B) this;
+	}
 
-	public abstract @NotNull B list(Class<? extends L> list);
+	@Contract("_ -> this")
+	public final @NotNull B listType(final @NotNull Class<? extends L> listType) {
+		this.listType = listType;
+		//noinspection unchecked
+		return (B) this;
+	}
 
-	public abstract void bigList(final boolean bigList);
-
+	public abstract @NotNull B bigList(final boolean bigList);
 
 	/**
 	 * Create the defined File
