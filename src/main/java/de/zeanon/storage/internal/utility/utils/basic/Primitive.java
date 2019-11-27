@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class Primitive {
 
+
 	/**
 	 * Get an Object of the given Class Type
 	 *

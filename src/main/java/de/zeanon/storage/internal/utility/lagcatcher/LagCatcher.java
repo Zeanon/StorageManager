@@ -16,8 +16,9 @@ import org.jetbrains.annotations.NotNull;
  * @version 1.0.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class LagCatcher {
+
 
 	private static final @NotNull Map<String, Long> startTimes = new HashMap<>();
 	private static final @NotNull Map<String, Long> stopTimes = new HashMap<>();

@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public final class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, Map, List> {
 
+
 	@Setter
 	private @NotNull CommentSetting commentSetting = Comment.SKIP;
 	@Setter(onMethod_ = {@Override})
@@ -45,6 +46,7 @@ public final class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlF
 		return new LocalYamlFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.map, this.list);
 	}
 
+	@Override
 	public void bigList(final boolean bigList) {
 		this.list = bigList ? BigList.class : GapList.class;
 	}

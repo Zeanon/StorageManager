@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class StandardFileData<M extends Map, L extends List> implements FileData<M, Map.Entry<String, Object>, L>, Comparable<StandardFileData> {
 
+
 	@Accessors(fluent = true)
 	private final @NotNull Provider<M, L> provider;
 	/**

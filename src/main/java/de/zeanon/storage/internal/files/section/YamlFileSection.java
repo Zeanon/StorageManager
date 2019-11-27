@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class YamlFileSection extends CommentEnabledSection<YamlFile, Map, List> {
 
+
 	@NotNull
 	private final YamlFile yamlFile;
 

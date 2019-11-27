@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public final class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, Map, List> {
 
+
 	private @NotNull Class<? extends Map> map = HashMap.class;
 	private @NotNull Class<? extends List> list = GapList.class;
 
@@ -40,6 +41,7 @@ public final class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonF
 		return new LocalJsonFile(super.file, this.inputStream, this.reloadSetting, this.map, this.list);
 	}
 
+	@Override
 	public void bigList(final boolean bigList) {
 		this.list = bigList ? BigList.class : GapList.class;
 	}

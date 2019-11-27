@@ -22,7 +22,8 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 
-	protected @NotNull IList<TripletNode<K, V>> localList;
+
+	protected @NotNull IList<TripletMap.TripletNode<K, V>> localList;
 
 
 	/**

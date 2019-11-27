@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class ThunderFileData<M extends TripletMap, L extends List> implements FileData<M, TripletMap.TripletNode<String, Object>, L>, Comparable<ThunderFileData> {
 
+
 	@Accessors(fluent = true)
 	private final @NotNull Provider<M, L> provider;
 	/**

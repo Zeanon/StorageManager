@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 @AllArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
 public abstract class Provider<M, L> {
 
+
 	private Class<? extends M> mapType;
 	private Class<? extends L> listType;
 

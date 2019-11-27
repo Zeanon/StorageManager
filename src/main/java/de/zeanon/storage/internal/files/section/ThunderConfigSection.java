@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class ThunderConfigSection extends ThunderFileSection implements Config<TripletMap, List> {
 
+
 	@NotNull
 	private final ThunderConfig thunderConfig;
 

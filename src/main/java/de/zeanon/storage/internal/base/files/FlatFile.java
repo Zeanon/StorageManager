@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
@@ -36,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 @Accessors(fluent = true, chain = false)
 @SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess", "DefaultAnnotationParam"})
 public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L extends List> implements DataStorage<M, L>, Comparable<FlatFile> {
+
 
 	private final @NotNull File file;
 	private final @NotNull FileType fileType;
@@ -125,7 +125,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * Set the Contents of the FileData and File from a given File
 	 */
 	public void setDataFromFile(final @Nullable File file) {
-		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStream(file));
+		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStreamFromFile(file));
 		this.reload();
 	}
 
@@ -133,7 +133,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * Set the Contents of the FileData and File from a given Resource
 	 */
 	public void setDataFromResource(final @Nullable String resource) {
-		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStream(resource));
+		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStreamFromResource(resource));
 		this.reload();
 	}
 
@@ -141,19 +141,15 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * Set the Contents of the FileData and File from a given URL
 	 */
 	public void setDataFromUrl(final @Nullable String url) {
-		try {
-			BaseFileUtils.writeToFile(this.file, url == null ? null : BaseFileUtils.createNewInputStream(new URL(url)));
-			this.reload();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStreamFromUrl(url));
+		this.reload();
 	}
 
 	/**
 	 * Set the Contents of the FileData and File from a given URL
 	 */
 	public void setDataFromUrl(final @Nullable URL url) {
-		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStream(url));
+		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStreamFromUrl(url));
 		this.reload();
 	}
 

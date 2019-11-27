@@ -11,6 +11,7 @@ import de.zeanon.storage.internal.base.interfaces.CommentSetting;
  */
 public enum Comment implements CommentSetting {
 
+
 	SKIP,
 	PRESERVE
 }

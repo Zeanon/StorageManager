@@ -18,8 +18,9 @@ import org.json.JSONObject;
  * @version 1.1.0
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
-@SuppressWarnings({"unchecked", "unused"})
+@SuppressWarnings({"unchecked", "unused", "WeakerAccess"})
 public class JsonUtils {
+
 
 	public static @NotNull JSONObject getJsonFromMap(final @NotNull Map<String, Object> map) {
 		final @NotNull JSONObject jsonData = new JSONObject();

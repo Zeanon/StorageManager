@@ -35,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public abstract class StorageManager<B extends StorageManager, F extends FlatFile, M extends Map, L extends List> {
 
+
 	protected final @NotNull File file;
 	protected @NotNull ReloadSetting reloadSetting = Reload.INTELLIGENT;
 	protected @Nullable BufferedInputStream inputStream;
@@ -235,49 +236,49 @@ public abstract class StorageManager<B extends StorageManager, F extends FlatFil
 
 	@Contract("_ -> this")
 	public final @NotNull B fromFile(final @NotNull File file) {
-		this.inputStream = BaseFileUtils.createNewInputStream(file);
+		this.inputStream = BaseFileUtils.createNewInputStreamFromFile(file);
 		//noinspection unchecked
 		return (B) this;
 	}
 
 	@Contract("_ -> this")
 	public final @NotNull B fromFile(final @NotNull Path file) {
-		this.inputStream = BaseFileUtils.createNewInputStream(file.toFile());
+		this.inputStream = BaseFileUtils.createNewInputStreamFromFile(file);
 		//noinspection unchecked
 		return (B) this;
 	}
 
 	@Contract("_ -> this")
 	public final @NotNull B fromFile(final @NotNull String file) {
-		this.inputStream = BaseFileUtils.createNewInputStream(new File(file));
+		this.inputStream = BaseFileUtils.createNewInputStreamFromFile(file);
 		//noinspection unchecked
 		return (B) this;
 	}
 
 	@Contract("_, _ -> this")
 	public final @NotNull B fromFile(final @NotNull String directory, final @NotNull String name) {
-		this.inputStream = BaseFileUtils.createNewInputStream(new File(directory, name));
+		this.inputStream = BaseFileUtils.createNewInputStreamFromFile(directory, name);
 		//noinspection unchecked
 		return (B) this;
 	}
 
 	@Contract("_, _ -> this")
 	public final @NotNull B fromFile(final @NotNull File directory, final @NotNull String name) {
-		this.inputStream = BaseFileUtils.createNewInputStream(new File(directory, name));
+		this.inputStream = BaseFileUtils.createNewInputStreamFromFile(directory, name);
 		//noinspection unchecked
 		return (B) this;
 	}
 
 	@Contract("_, _ -> this")
 	public final @NotNull B fromFile(final @NotNull Path directory, final @NotNull String name) {
-		this.inputStream = BaseFileUtils.createNewInputStream(new File(directory.toFile(), name));
+		this.inputStream = BaseFileUtils.createNewInputStreamFromFile(directory, name);
 		//noinspection unchecked
 		return (B) this;
 	}
 
 	@Contract("_ -> this")
 	public final @NotNull B fromResource(final @NotNull String resource) {
-		this.inputStream = BaseFileUtils.createNewInputStream(resource);
+		this.inputStream = BaseFileUtils.createNewInputStreamFromResource(resource);
 		//noinspection unchecked
 		return (B) this;
 	}

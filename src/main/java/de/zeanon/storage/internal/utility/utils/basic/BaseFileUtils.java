@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class BaseFileUtils {
 
+
 	@Getter
 	@Setter
 	private static int bufferSize = 8192;
@@ -49,7 +50,6 @@ public class BaseFileUtils {
 	 *
 	 * @param file the File to be created
 	 */
-	@SuppressWarnings("UnusedReturnValue")
 	public static boolean createFile(final @NotNull File file) {
 		try {
 			return BaseFileUtils.createFileInternally(file, false);
@@ -233,7 +233,6 @@ public class BaseFileUtils {
 		return BaseFileUtils.listFiles(directory, false);
 	}
 
-
 	/**
 	 * Create a BufferedInputStream from a File
 	 *
@@ -242,7 +241,7 @@ public class BaseFileUtils {
 	 * @return BufferedInputstream containing the contents of the given File
 	 */
 	@Contract("null -> null; !null -> new")
-	public static @Nullable BufferedInputStream createNewInputStream(final @Nullable File file) {
+	public static @Nullable BufferedInputStream createNewInputStreamFromFile(final @Nullable File file) {
 		if (file == null) {
 			return null;
 		} else {
@@ -257,6 +256,119 @@ public class BaseFileUtils {
 	}
 
 	/**
+	 * Create a BufferedInputStream from a File
+	 *
+	 * @param name the File to be read
+	 *
+	 * @return BufferedInputstream containing the contents of the given File
+	 */
+	@Contract("null -> null; !null -> new")
+	public static @Nullable BufferedInputStream createNewInputStreamFromFile(final @Nullable String name) {
+		if (name == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedInputStream(new FileInputStream(new File(name)));
+			} catch (IOException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + name
+											 + "'", e.getCause());
+			}
+		}
+	}
+
+	/**
+	 * Create a BufferedInputStream from a File
+	 *
+	 * @param file the File to be read
+	 *
+	 * @return BufferedInputstream containing the contents of the given File
+	 */
+	@Contract("null -> null; !null -> new")
+	public static @Nullable BufferedInputStream createNewInputStreamFromFile(final @Nullable Path file) {
+		if (file == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedInputStream(new FileInputStream(file.toFile()));
+			} catch (IOException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + file.toAbsolutePath()
+											 + "'", e.getCause());
+			}
+		}
+	}
+
+	/**
+	 * Create a BufferedInputStream from a File
+	 *
+	 * @param name      the File to be read
+	 * @param directory the directory of the file
+	 *
+	 * @return BufferedInputstream containing the contents of the given File
+	 */
+	@Contract("_, null -> null; _, !null -> new")
+	public static @Nullable BufferedInputStream createNewInputStreamFromFile(final @Nullable String directory, final @Nullable String name) {
+		if (name == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedInputStream(directory == null ? new FileInputStream(new File(name)) : new FileInputStream(new File(directory, name)));
+			} catch (IOException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + (directory == null ? name : directory + "/" + name)
+											 + "'", e.getCause());
+			}
+		}
+	}
+
+	/**
+	 * Create a BufferedInputStream from a File
+	 *
+	 * @param name      the File to be read
+	 * @param directory the directory of the file
+	 *
+	 * @return BufferedInputstream containing the contents of the given File
+	 */
+	@Contract("_, null -> null; _, !null -> new")
+	public static @Nullable BufferedInputStream createNewInputStreamFromFile(final @Nullable File directory, final @Nullable String name) {
+		if (name == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedInputStream(directory == null ? new FileInputStream(new File(name)) : new FileInputStream(new File(directory, name)));
+			} catch (IOException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + (directory == null ? name : directory.getAbsolutePath() + "/" + name)
+											 + "'", e.getCause());
+			}
+		}
+	}
+
+	/**
+	 * Create a BufferedInputStream from a File
+	 *
+	 * @param name      the File to be read
+	 * @param directory the directory of the file
+	 *
+	 * @return BufferedInputstream containing the contents of the given File
+	 */
+	@Contract("_, null -> null; _, !null -> new")
+	public static @Nullable BufferedInputStream createNewInputStreamFromFile(final @Nullable Path directory, final @Nullable String name) {
+		if (name == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedInputStream(directory == null ? new FileInputStream(new File(name)) : new FileInputStream(new File(directory.toFile(), name)));
+			} catch (IOException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + (directory == null ? name : directory.toAbsolutePath() + "/" + name)
+											 + "'", e.getCause());
+			}
+		}
+	}
+
+	/**
 	 * Create a BufferedInputStream from a given internal resource
 	 *
 	 * @param resource the Path to the resource
@@ -264,7 +376,7 @@ public class BaseFileUtils {
 	 * @return BufferedInputStream containing the contents of the resource file
 	 */
 	@Contract("null -> null; !null -> new")
-	public static @Nullable BufferedInputStream createNewInputStream(final @Nullable String resource) {
+	public static @Nullable BufferedInputStream createNewInputStreamFromResource(final @Nullable String resource) {
 		if (resource == null) {
 			return null;
 		} else {
@@ -281,19 +393,40 @@ public class BaseFileUtils {
 	}
 
 	/**
-	 * Create a BufferedInputStream from a given internal resource
+	 * Create a BufferedInputStream from a given internal URL
 	 *
 	 * @param url the URL to be read from
 	 *
 	 * @return BufferedInputStream containing the contents of the resource file
 	 */
 	@Contract("null -> null; !null -> new")
-	public static @Nullable BufferedInputStream createNewInputStream(final @Nullable URL url) {
+	public static @Nullable BufferedInputStream createNewInputStreamFromUrl(final @Nullable URL url) {
 		if (url == null) {
 			return null;
 		} else {
 			try {
 				return new BufferedInputStream(url.openStream());
+			} catch (IOException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + url + "'", e.getCause());
+			}
+		}
+	}
+
+	/**
+	 * Create a BufferedInputStream from a given internal URL
+	 *
+	 * @param url the URL to be read from
+	 *
+	 * @return BufferedInputStream containing the contents of the resource file
+	 */
+	@Contract("null -> null; !null -> new")
+	public static @Nullable BufferedInputStream createNewInputStreamFromUrl(final @Nullable String url) {
+		if (url == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedInputStream(new URL(url).openStream());
 			} catch (IOException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + url + "'", e.getCause());

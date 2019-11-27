@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings({"unused", "EmptyMethod", "SameReturnValue"})
 public enum Reload implements ReloadSetting {
 
+
 	/**
 	 * reloads every time you try to get something from the config
 	 */

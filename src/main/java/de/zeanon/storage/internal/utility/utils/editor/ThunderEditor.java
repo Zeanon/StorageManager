@@ -33,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 @NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 public class ThunderEditor {
 
+
 	/**
 	 * Write the given Data to a File
 	 *

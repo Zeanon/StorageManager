@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class YamlEditor {
 
+
 	public static @NotNull List<String> readComments(final @NotNull File file, final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
 		return getCommentsFromLines(read(file), provider);
 	}

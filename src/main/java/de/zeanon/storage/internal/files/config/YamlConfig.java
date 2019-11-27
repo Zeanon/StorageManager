@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class YamlConfig extends YamlFile implements Config<Map, List> {
 
+
 	private List<String> header;
 	private List<String> footer;
 	private List<String> comments;

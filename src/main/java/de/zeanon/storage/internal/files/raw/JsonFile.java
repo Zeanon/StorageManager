@@ -57,7 +57,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		}
 
 		try {
-			final @NotNull JSONTokener jsonTokener = new JSONTokener(BaseFileUtils.createNewInputStream(this.file()));
+			final @NotNull JSONTokener jsonTokener = new JSONTokener(BaseFileUtils.createNewInputStreamFromFile(this.file()));
 			this.fileData().loadData(new JSONObject(jsonTokener).toMap());
 			this.lastLoaded(System.currentTimeMillis());
 		} catch (JSONException e) {
@@ -72,7 +72,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	@Synchronized
 	public void reload() {
 		try {
-			final @NotNull JSONTokener jsonTokener = new JSONTokener(BaseFileUtils.createNewInputStream(this.file()));
+			final @NotNull JSONTokener jsonTokener = new JSONTokener(BaseFileUtils.createNewInputStreamFromFile(this.file()));
 			this.fileData().loadData(new JSONObject(jsonTokener).toMap());
 			this.lastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {

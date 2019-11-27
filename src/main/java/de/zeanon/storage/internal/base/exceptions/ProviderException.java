@@ -1,5 +1,11 @@
 package de.zeanon.storage.internal.base.exceptions;
 
+/**
+ * Exception indicating that there is something wrong with the Classes saved in the provider
+ *
+ * @author Zeanon
+ * @version 1.0.0
+ */
 @SuppressWarnings("unused")
 public class ProviderException extends StorageManagerException {
 

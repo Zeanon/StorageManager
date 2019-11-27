@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public final class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, ThunderFile, TripletMap, List> {
 
+
 	@Setter
 	private @NotNull CommentSetting commentSetting = Comment.SKIP;
 	@Setter(onMethod_ = {@Override})

@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>, M, L>, M extends Map, L extends List> implements DataStorage<M, L>, Comparable<FlatSection> {
 
+
 	private final @NotNull F flatFile;
 	@Setter
 	protected @NotNull String sectionKey = "";

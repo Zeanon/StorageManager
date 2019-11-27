@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class JsonFileSection extends FlatSection<JsonFile, Map, List> {
 
+
 	@NotNull
 	private final JsonFile jsonFile;
 

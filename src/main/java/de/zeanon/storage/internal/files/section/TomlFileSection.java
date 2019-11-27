@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class TomlFileSection extends FlatSection<TomlFile, Map, List> {
 
+
 	@NotNull
 	private final TomlFile tomlFile;
 

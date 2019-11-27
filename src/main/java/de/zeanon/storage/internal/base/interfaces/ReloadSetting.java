@@ -13,5 +13,6 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("EmptyMethod")
 public interface ReloadSetting {
 
+
 	boolean shouldReload(final @NotNull FlatFile flatFile);
 }

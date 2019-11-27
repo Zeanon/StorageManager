@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class GapTripletMap<K, V> extends TripletMap<K, V> {
 
+
 	public GapTripletMap() {
 		super(new GapList<>());
 	}

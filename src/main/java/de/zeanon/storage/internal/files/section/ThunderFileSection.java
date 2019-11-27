@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class ThunderFileSection extends CommentEnabledSection<ThunderFile, TripletMap, List> {
 
+
 	@NotNull
 	private final ThunderFile thunderFile;
 

@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public final class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, ThunderConfig, TripletMap, List> {
 
+
 	@Setter
 	private @NotNull CommentSetting commentSetting = Comment.PRESERVE;
 	@Setter(onMethod_ = {@Override})
