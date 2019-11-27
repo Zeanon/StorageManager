@@ -16,10 +16,8 @@ import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.List;
 import javafx.util.Pair;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.Synchronized;
-import org.jetbrains.annotations.Contract;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 2.8.0
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+@UtilityClass
 public class ThunderEditor {
 
 
@@ -47,8 +45,10 @@ public class ThunderEditor {
 	public static void writeData(final @NotNull File file, final @NotNull ThunderFileData<TripletMap, List> fileData, final @NotNull CommentSetting commentSetting) {
 		if (commentSetting == Comment.PRESERVE) {
 			ThunderEditor.initialWriteWithComments(file, fileData);
-		} else {
+		} else if (commentSetting == Comment.SKIP) {
 			ThunderEditor.initialWriteWithOutComments(file, fileData);
+		} else {
+			throw new IllegalArgumentException("Illegal CommentSetting");
 		}
 	}
 
@@ -68,8 +68,10 @@ public class ThunderEditor {
 	public static @NotNull TripletMap<String, Object> readData(final @NotNull File file, final @NotNull CommentSetting commentSetting, @NotNull final Provider<? extends TripletMap, ? extends List> provider) throws ThunderException {
 		if (commentSetting == Comment.PRESERVE) {
 			return ThunderEditor.initialReadWithComments(file, provider);
-		} else {
+		} else if (commentSetting == Comment.SKIP) {
 			return ThunderEditor.initialReadWithOutComments(file, provider);
+		} else {
+			throw new IllegalArgumentException("Illegal CommentSetting");
 		}
 	}
 

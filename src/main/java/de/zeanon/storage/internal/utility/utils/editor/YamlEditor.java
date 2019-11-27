@@ -10,10 +10,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import lombok.AccessLevel;
 import lombok.Cleanup;
-import lombok.NoArgsConstructor;
 import lombok.Synchronized;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.4.0
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+@UtilityClass
 @SuppressWarnings("unused")
 public class YamlEditor {
 

@@ -5,8 +5,7 @@ import de.zeanon.storage.internal.utility.utils.editor.YamlEditor;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.2.0
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+@UtilityClass
 @SuppressWarnings("unused")
 public class YamlUtils {
 

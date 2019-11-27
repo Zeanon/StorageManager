@@ -1,8 +1,7 @@
 package de.zeanon.storage.internal.utility.utils.basic;
 
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.2.0
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+@UtilityClass
 @SuppressWarnings("unused")
 public class Objects {
 

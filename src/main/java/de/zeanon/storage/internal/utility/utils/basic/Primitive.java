@@ -1,9 +1,7 @@
 package de.zeanon.storage.internal.utility.utils.basic;
 
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import org.jetbrains.annotations.Contract;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -13,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.7.0
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+@UtilityClass
 @SuppressWarnings("unused")
 public class Primitive {
 
@@ -49,7 +47,7 @@ public class Primitive {
 	}
 
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+	@UtilityClass
 	public static class BOOLEAN {
 
 		/**
@@ -69,7 +67,7 @@ public class Primitive {
 	}
 
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+	@UtilityClass
 	public static class LONG {
 
 		/**
@@ -91,7 +89,7 @@ public class Primitive {
 	}
 
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+	@UtilityClass
 	public static class DOUBLE {
 
 		/**
@@ -113,7 +111,7 @@ public class Primitive {
 	}
 
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+	@UtilityClass
 	public static class FLOAT {
 
 		/**
@@ -135,7 +133,7 @@ public class Primitive {
 	}
 
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+	@UtilityClass
 	public static class INTEGER {
 
 		/**
@@ -157,7 +155,7 @@ public class Primitive {
 	}
 
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+	@UtilityClass
 	public static class SHORT {
 
 		/**
@@ -179,7 +177,7 @@ public class Primitive {
 	}
 
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+	@UtilityClass
 	public static class BYTE {
 
 		/**

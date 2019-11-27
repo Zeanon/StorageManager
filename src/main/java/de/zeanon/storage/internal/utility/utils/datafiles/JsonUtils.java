@@ -3,9 +3,7 @@ package de.zeanon.storage.internal.utility.utils.datafiles;
 import de.zeanon.storage.internal.base.cache.base.Provider;
 import java.util.List;
 import java.util.Map;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import org.jetbrains.annotations.Contract;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,7 +15,7 @@ import org.json.JSONObject;
  * @author Zeanon
  * @version 1.1.0
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+@UtilityClass
 @SuppressWarnings({"unchecked", "unused", "WeakerAccess"})
 public class JsonUtils {
 

@@ -9,8 +9,7 @@ import de.zeanon.storage.internal.utility.utils.editor.ThunderEditor;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.3.0
  */
+@UtilityClass
 @SuppressWarnings("unused")
-@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
 public class ThunderUtils {
 
 

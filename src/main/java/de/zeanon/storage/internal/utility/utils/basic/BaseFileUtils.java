@@ -10,7 +10,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.Synchronized;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 2.2.0
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+@UtilityClass
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class BaseFileUtils {
 
