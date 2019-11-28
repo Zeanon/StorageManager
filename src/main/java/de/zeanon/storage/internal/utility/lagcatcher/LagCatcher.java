@@ -3,9 +3,7 @@ package de.zeanon.storage.internal.utility.lagcatcher;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import org.jetbrains.annotations.Contract;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -15,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.0.0
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = {@Contract(pure = true)})
+@UtilityClass
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class LagCatcher {
 

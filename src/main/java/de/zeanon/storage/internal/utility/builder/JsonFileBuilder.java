@@ -20,12 +20,13 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public final class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, Map, List> {
+public class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, Map, List> {
 
 
-	public JsonFileBuilder(final @NotNull File file) {
+	protected JsonFileBuilder(final @NotNull File file) {
 		super(file, HashMap.class, GapList.class);
 	}
+
 
 	@Override
 	@Contract("-> new")
@@ -38,6 +39,7 @@ public final class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonF
 	public @NotNull JsonFileBuilder bigList(final boolean bigList) {
 		return this.listType(bigList ? BigList.class : GapList.class);
 	}
+
 
 	private static final class LocalJsonFile extends JsonFile {
 

@@ -20,12 +20,13 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public final class TomlFileBuilder extends StorageManager<TomlFileBuilder, TomlFile, Map, List> {
+public class TomlFileBuilder extends StorageManager<TomlFileBuilder, TomlFile, Map, List> {
 
 
-	public TomlFileBuilder(final @NotNull File file) {
+	protected TomlFileBuilder(final @NotNull File file) {
 		super(file, HashMap.class, GapList.class);
 	}
+
 
 	@Override
 	@Contract("-> new")

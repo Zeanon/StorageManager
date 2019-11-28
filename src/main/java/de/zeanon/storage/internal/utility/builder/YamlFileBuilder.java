@@ -25,14 +25,14 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public final class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, Map, List> {
+public class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, Map, List> {
 
 
 	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private @NotNull CommentSetting commentSetting = Comment.SKIP;
 
 
-	public YamlFileBuilder(final @NotNull File file) {
+	protected YamlFileBuilder(final @NotNull File file) {
 		super(file, HashMap.class, GapList.class);
 	}
 
@@ -47,6 +47,7 @@ public final class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlF
 	public final @NotNull YamlFileBuilder bigList(final boolean bigList) {
 		return this.listType(bigList ? BigList.class : GapList.class);
 	}
+
 
 	private static final class LocalYamlFile extends YamlFile {
 

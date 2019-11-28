@@ -26,14 +26,14 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public final class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, ThunderFile, TripletMap, List> {
+public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, ThunderFile, TripletMap, List> {
 
 
 	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private @NotNull CommentSetting commentSetting = Comment.SKIP;
 
 
-	public ThunderFileBuilder(final @NotNull File file) {
+	protected ThunderFileBuilder(final @NotNull File file) {
 		super(file, GapTripletMap.class, GapList.class);
 	}
 

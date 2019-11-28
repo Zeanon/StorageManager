@@ -26,14 +26,14 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public final class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, ThunderConfig, TripletMap, List> {
+public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, ThunderConfig, TripletMap, List> {
 
 
 	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private @NotNull CommentSetting commentSetting = Comment.PRESERVE;
 
 
-	public ThunderConfigBuilder(final @NotNull File file) {
+	protected ThunderConfigBuilder(final @NotNull File file) {
 		super(file, GapTripletMap.class, GapList.class);
 	}
 
@@ -42,7 +42,6 @@ public final class ThunderConfigBuilder extends StorageManager<ThunderConfigBuil
 	public final @NotNull ThunderConfig create() {
 		return new LocalThunderConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.mapType, this.listType);
 	}
-
 
 	@Contract("_ -> this")
 	public final @NotNull ThunderConfigBuilder bigMap(final boolean bigMap) {
