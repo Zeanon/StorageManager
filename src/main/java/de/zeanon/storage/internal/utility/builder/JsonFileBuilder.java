@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 public class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, Map, List> {
 
 
-	protected JsonFileBuilder(final @NotNull File file) {
+	public JsonFileBuilder(final @NotNull File file) {
 		super(file, HashMap.class, GapList.class);
 	}
 

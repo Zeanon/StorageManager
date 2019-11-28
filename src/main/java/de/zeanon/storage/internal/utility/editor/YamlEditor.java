@@ -1,4 +1,4 @@
-package de.zeanon.storage.internal.utility.utils.editor;
+package de.zeanon.storage.internal.utility.editor;
 
 import de.zeanon.storage.internal.base.cache.base.Provider;
 import java.io.File;

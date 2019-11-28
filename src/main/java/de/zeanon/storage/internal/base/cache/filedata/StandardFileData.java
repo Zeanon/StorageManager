@@ -3,7 +3,6 @@ package de.zeanon.storage.internal.base.cache.filedata;
 import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.FileData;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,7 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 
 
 	@Contract(pure = true)
-	public StandardFileData(final @NotNull Provider<M, L> provider) {
+	protected StandardFileData(final @NotNull Provider<M, L> provider) {
 		this.provider = provider;
 		this.dataMap = this.provider.newMap();
 	}
@@ -78,13 +77,13 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 */
 	@Override
 	@Contract("_ -> new")
-	public @NotNull List<Map.Entry<String, Object>> entryList(final @NotNull String key) {
-		final @NotNull Object tempObject = this.get(key);
+	public @Nullable List<Map.Entry<String, Object>> entryList(final @NotNull String key) {
+		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
 			return this.internalEntryList((Map) tempObject);
 		} else {
-			throw new ObjectNullException("File does not contain '" + key + "'");
+			return null;
 		}
 	}
 
@@ -97,13 +96,13 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 */
 	@Override
 	@Contract("_ -> new")
-	public @NotNull List<Map.Entry<String, Object>> blockEntryList(final @NotNull String key) {
-		final @NotNull Object tempObject = this.get(key);
+	public @Nullable List<Map.Entry<String, Object>> blockEntryList(final @NotNull String key) {
+		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
 			return provider.newList(new Class[]{Set.class}, ((Map) tempObject).entrySet());
 		} else {
-			throw new ObjectNullException("File does not contain '" + key + "'");
+			return null;
 		}
 	}
 
@@ -117,13 +116,13 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 */
 	@Override
 	@Contract("_ -> new")
-	public @NotNull List<Map.Entry<String, Object>> entryListUseArray(final @NotNull String... key) {
-		final @NotNull Object tempObject = this.getUseArray(key);
+	public @Nullable List<Map.Entry<String, Object>> entryListUseArray(final @NotNull String... key) {
+		final @Nullable Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
 			return this.internalEntryList((Map) tempObject);
 		} else {
-			throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "'");
+			return null;
 		}
 	}
 
@@ -136,13 +135,13 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 */
 	@Override
 	@Contract("_ -> new")
-	public @NotNull List<Map.Entry<String, Object>> blockEntryListUseArray(final @NotNull String... key) {
-		final @NotNull Object tempObject = this.getUseArray(key);
+	public @Nullable List<Map.Entry<String, Object>> blockEntryListUseArray(final @NotNull String... key) {
+		final @Nullable Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
 			return provider.newList(new Class[]{Set.class}, ((Map) tempObject).entrySet());
 		} else {
-			throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "'");
+			return null;
 		}
 	}
 
@@ -243,7 +242,7 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 * @throws ObjectNullException if the given key does not exist
 	 */
 	@Override
-	public @NotNull Object get(final @NotNull String key) {
+	public @Nullable Object get(final @NotNull String key) {
 		final @NotNull String[] parts = key.split("\\.");
 		return this.internalGet(this.dataMap, parts);
 	}
@@ -258,7 +257,7 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 * @throws ObjectNullException if the given key does not exist
 	 */
 	@Override
-	public @NotNull Object getUseArray(final @NotNull String... key) {
+	public @Nullable Object getUseArray(final @NotNull String... key) {
 		return this.internalGet(this.dataMap, key);
 	}
 
@@ -277,11 +276,11 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 */
 	@Override
 	public int blockSize(final @NotNull String key) {
-		final @NotNull Object tempObject = this.get(key);
+		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			return ((Map) tempObject).size();
 		} else {
-			throw new ObjectNullException("File does not contain '" + key + "'");
+			return 0;
 		}
 	}
 
@@ -292,11 +291,11 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 */
 	@Override
 	public int blockSizeUseArray(final @NotNull String... key) {
-		final @NotNull Object tempObject = this.getUseArray(key);
+		final @Nullable Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			return ((Map) tempObject).size();
 		} else {
-			throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "'");
+			return 0;
 		}
 	}
 
@@ -316,12 +315,12 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 */
 	@Override
 	public int size(final @NotNull String key) {
-		final @NotNull Object tempObject = this.get(key);
+		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
 			return this.internalSize((Map) tempObject);
 		} else {
-			throw new ObjectNullException("File does not contain '" + key + "'");
+			return 0;
 		}
 	}
 
@@ -332,12 +331,12 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 */
 	@Override
 	public int sizeUseArray(final @NotNull String... key) {
-		final @NotNull Object tempObject = this.getUseArray(key);
+		final @Nullable Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
 			return this.internalSize((Map) tempObject);
 		} else {
-			throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "'");
+			return 0;
 		}
 	}
 
@@ -460,12 +459,12 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	}
 
 	@Synchronized
-	private @NotNull Object internalGet(final @NotNull Map map, final @NotNull String[] key) {
+	private @Nullable Object internalGet(final @NotNull Map map, final @NotNull String[] key) {
 		@NotNull Object tempValue = map;
 		for (String tempKey : key) {
 			try {
 				if (tempValue instanceof Map) {
-					tempValue = Objects.notNull(((Map) tempValue).get(tempKey), "File does not contain '" + Arrays.toString(key) + "' -> could not find '" + tempKey + "'");
+					tempValue = ((Map) tempValue).get(tempKey);
 				} else {
 					throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "' -> could not find '" + tempKey + "'");
 				}
@@ -493,7 +492,7 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 
 	@Override
 	public int compareTo(final @NotNull StandardFileData fileData) {
-		return Integer.compare(this.dataMap.size(), Objects.notNull(fileData.dataMap).size());
+		return Integer.compare(this.dataMap.size(), fileData.dataMap.size());
 	}
 
 

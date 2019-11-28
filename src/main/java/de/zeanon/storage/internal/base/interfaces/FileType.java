@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.base.interfaces;
 
-import de.zeanon.storage.internal.utility.utils.basic.BaseFileUtils;
+import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;

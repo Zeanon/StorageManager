@@ -1,8 +1,9 @@
-package de.zeanon.storage.internal.utility.utils.basic;
+package de.zeanon.storage.internal.utility.basic;
 
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -27,23 +28,26 @@ public class Primitive {
 	 *
 	 * @throws ObjectNullException if a passed value is null
 	 */
-	public static <T> @NotNull T getFromDef(final @NotNull Object object, final @NotNull Class<T> def) {
-		Object tempObj = Objects.notNull(object, "Object must not be null");
-		if (object instanceof String && def == Integer.class) {
-			tempObj = Integer.parseInt((String) object);
-		} else if (object instanceof String && def == Long.class) {
-			tempObj = Long.parseLong((String) object);
-		} else if (object instanceof String && def == Double.class) {
-			tempObj = Double.parseDouble((String) object);
-		} else if (object instanceof String && def == Float.class) {
-			tempObj = Double.parseDouble((String) object);
-		} else if (object instanceof String && def == Short.class) {
-			tempObj = Short.parseShort((String) object);
-		} else if (object instanceof String && def == Boolean.class) {
-			tempObj = ((String) object).equalsIgnoreCase("true");
+	public static <T> @Nullable T getFromDef(@Nullable Object object, final @NotNull Class<T> def) {
+		if (object == null) {
+			return null;
+		} else {
+			if (object instanceof String && def == Integer.class) {
+				object = Integer.parseInt((String) object);
+			} else if (object instanceof String && def == Long.class) {
+				object = Long.parseLong((String) object);
+			} else if (object instanceof String && def == Double.class) {
+				object = Double.parseDouble((String) object);
+			} else if (object instanceof String && def == Float.class) {
+				object = Double.parseDouble((String) object);
+			} else if (object instanceof String && def == Short.class) {
+				object = Short.parseShort((String) object);
+			} else if (object instanceof String && def == Boolean.class) {
+				object = ((String) object).equalsIgnoreCase("true");
+			}
+			//noinspection unchecked
+			return (T) object;
 		}
-		//noinspection unchecked
-		return (T) tempObj;
 	}
 
 

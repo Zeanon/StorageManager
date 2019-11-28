@@ -1,4 +1,4 @@
-package de.zeanon.storage.internal.utility.utils.basic;
+package de.zeanon.storage.internal.utility.basic;
 
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;

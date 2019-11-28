@@ -10,7 +10,7 @@ import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.files.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.files.section.TomlFileSection;
-import de.zeanon.storage.internal.utility.utils.basic.BaseFileUtils;
+import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

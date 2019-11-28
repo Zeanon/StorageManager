@@ -9,8 +9,8 @@ import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.base.settings.Comment;
 import de.zeanon.storage.internal.files.raw.ThunderFile;
 import de.zeanon.storage.internal.files.section.ThunderConfigSection;
-import de.zeanon.storage.internal.utility.utils.datafiles.ThunderUtils;
-import de.zeanon.storage.internal.utility.utils.editor.ThunderEditor;
+import de.zeanon.storage.internal.utility.datafiles.ThunderUtils;
+import de.zeanon.storage.internal.utility.editor.ThunderEditor;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class ThunderConfig extends ThunderFile implements Config<TripletMap, List> {
 
 
@@ -77,7 +77,7 @@ public class ThunderConfig extends ThunderFile implements Config<TripletMap, Lis
 		}
 	}
 
-	public @NotNull List<String> getHeader(final @NotNull String key) {
+	public @Nullable List<String> getHeader(final @NotNull String key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -88,7 +88,7 @@ public class ThunderConfig extends ThunderFile implements Config<TripletMap, Lis
 		}
 	}
 
-	public @NotNull List<String> getHeaderUseArray(final @NotNull String... key) {
+	public @Nullable List<String> getHeaderUseArray(final @NotNull String... key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {

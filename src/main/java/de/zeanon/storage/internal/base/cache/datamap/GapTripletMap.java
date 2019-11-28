@@ -2,7 +2,6 @@ package de.zeanon.storage.internal.base.cache.datamap;
 
 import de.zeanon.storage.external.lists.GapList;
 import de.zeanon.storage.internal.base.cache.base.TripletMap;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Contract;
@@ -32,6 +31,6 @@ public class GapTripletMap<K, V> extends TripletMap<K, V> {
 	@Override
 	@Contract("-> new")
 	public @NotNull List<TripletNode<K, V>> entryList() {
-		return new ArrayList<>(this.localList);
+		return new GapList<>(this.localList);
 	}
 }

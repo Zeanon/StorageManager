@@ -8,7 +8,7 @@ import de.zeanon.storage.internal.base.interfaces.Config;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.base.settings.Comment;
 import de.zeanon.storage.internal.files.raw.YamlFile;
-import de.zeanon.storage.internal.utility.utils.editor.YamlEditor;
+import de.zeanon.storage.internal.utility.editor.YamlEditor;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

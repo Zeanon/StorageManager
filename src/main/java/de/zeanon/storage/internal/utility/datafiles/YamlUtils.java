@@ -1,7 +1,7 @@
-package de.zeanon.storage.internal.utility.utils.datafiles;
+package de.zeanon.storage.internal.utility.datafiles;
 
 import de.zeanon.storage.internal.base.cache.base.Provider;
-import de.zeanon.storage.internal.utility.utils.editor.YamlEditor;
+import de.zeanon.storage.internal.utility.editor.YamlEditor;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 public class TomlFileBuilder extends StorageManager<TomlFileBuilder, TomlFile, Map, List> {
 
 
-	protected TomlFileBuilder(final @NotNull File file) {
+	public TomlFileBuilder(final @NotNull File file) {
 		super(file, HashMap.class, GapList.class);
 	}
 

@@ -105,8 +105,7 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @throws ObjectNullException if the given key does not exist
 	 */
-	@Nullable
-	Object getUseArray(final @NotNull String... key);
+	@Nullable Object getUseArray(final @NotNull String... key);
 
 	/**
 	 * @return the size of the top most layer of the internal DataMap
@@ -184,7 +183,7 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@NotNull List<E> entryList(final @NotNull String key);
+	@Nullable List<E> entryList(final @NotNull String key);
 
 	/**
 	 * Get a List consisting of TripletMap.TripletNode objects of only the given Block
@@ -193,7 +192,7 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@NotNull List<E> blockEntryList(final @NotNull String key);
+	@Nullable List<E> blockEntryList(final @NotNull String key);
 
 	/**
 	 * Get a List consisting of TripletMap.TripletNode objects whereas values being instances of TripletMap are also getting parsed to
@@ -203,7 +202,7 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@NotNull List<E> entryListUseArray(final @NotNull String... key);
+	@Nullable List<E> entryListUseArray(final @NotNull String... key);
 
 	/**
 	 * Get a List consisting of TripletMap.TripletNode objects of only the given Block
@@ -212,7 +211,7 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@NotNull List<E> blockEntryListUseArray(final @NotNull String... key);
+	@Nullable List<E> blockEntryListUseArray(final @NotNull String... key);
 
 	@Override
 	@NotNull String toString();

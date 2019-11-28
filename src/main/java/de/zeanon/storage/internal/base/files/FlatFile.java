@@ -8,15 +8,17 @@ import de.zeanon.storage.internal.base.interfaces.FileData;
 import de.zeanon.storage.internal.base.interfaces.FileType;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.base.settings.Reload;
-import de.zeanon.storage.internal.utility.utils.basic.BaseFileUtils;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
+import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -206,15 +208,15 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@Override
-	public @NotNull Object get(final @NotNull String key) {
+	public @Nullable Object get(final @NotNull String key) {
 		this.update();
-		return Objects.notNull(this.fileData.get(key), "File does not contain '" + key + "'");
+		return this.fileData.get(key);
 	}
 
 	@Override
-	public @NotNull Object getUseArray(final @NotNull String... key) {
+	public @Nullable Object getUseArray(final @NotNull String... key) {
 		this.update();
-		return Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'");
+		return this.fileData.getUseArray(key);
 	}
 
 	@Override
@@ -224,7 +226,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		//noinspection unchecked
 		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
 		for (@NotNull String key : keys) {
-			tempMap.put(key, Objects.notNull(this.fileData.get(key), "File does not contain '" + key + "'"));
+			tempMap.put(key, this.fileData.get(key));
 		}
 		return tempMap;
 	}
@@ -236,7 +238,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		//noinspection unchecked
 		final @NotNull Map<String[], Object> tempMap = this.provider.newMap();
 		for (String[] key : keys) {
-			tempMap.put(key, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
+			tempMap.put(key, this.fileData.getUseArray(key));
 		}
 		return tempMap;
 	}
@@ -248,7 +250,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		//noinspection unchecked
 		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
 		for (@NotNull String key : keys) {
-			tempMap.put(key, Objects.notNull(this.fileData.get(key), "File does not contain '" + key + "'"));
+			tempMap.put(key, this.fileData.get(key));
 		}
 		return tempMap;
 	}
@@ -260,7 +262,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		//noinspection unchecked
 		final @NotNull Map<String[], Object> tempMap = this.provider.newMap();
 		for (String[] key : keys) {
-			tempMap.put(key, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
+			tempMap.put(key, this.fileData.getUseArray(key));
 		}
 		return tempMap;
 	}
@@ -272,7 +274,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		//noinspection unchecked
 		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
 		for (String tempKey : keys) {
-			tempMap.put(blockKey, Objects.notNull(this.fileData.get(blockKey + "." + tempKey), "File does not contain '" + blockKey + "." + tempKey + "'"));
+			tempMap.put(blockKey, this.fileData.get(blockKey + "." + tempKey));
 		}
 		return tempMap;
 	}
@@ -288,7 +290,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
-			tempMap.put(blockKey, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
+			tempMap.put(blockKey, this.fileData.getUseArray(key));
 		}
 		return tempMap;
 	}
@@ -300,7 +302,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		//noinspection unchecked
 		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
 		for (String tempKey : keys) {
-			tempMap.put(blockKey, Objects.notNull(this.fileData.get(blockKey + "." + tempKey), "File does not contain '" + blockKey + "." + tempKey + "'"));
+			tempMap.put(blockKey, this.fileData.get(blockKey + "." + tempKey));
 		}
 		return tempMap;
 	}
@@ -316,7 +318,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 			@NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
-			tempMap.put(blockKey, Objects.notNull(this.fileData.getUseArray(key), "File does not contain '" + Arrays.toString(key) + "'"));
+			tempMap.put(blockKey, this.fileData.getUseArray(key));
 		}
 		return tempMap;
 	}

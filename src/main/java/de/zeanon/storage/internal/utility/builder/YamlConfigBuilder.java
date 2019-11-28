@@ -32,7 +32,7 @@ public class YamlConfigBuilder extends StorageManager<YamlConfigBuilder, YamlCon
 	private @NotNull CommentSetting commentSetting = Comment.PRESERVE;
 
 
-	protected YamlConfigBuilder(final @NotNull File file) {
+	public YamlConfigBuilder(final @NotNull File file) {
 		super(file, HashMap.class, GapList.class);
 	}
 

@@ -1,4 +1,4 @@
-package de.zeanon.storage.internal.utility.utils.editor;
+package de.zeanon.storage.internal.utility.editor;
 
 import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.cache.base.TripletMap;
@@ -42,7 +42,7 @@ public class ThunderEditor {
 	 * @throws RuntimeIOException  if the File can not be accessed properly
 	 * @throws ObjectNullException if a passed value is null
 	 */
-	public static void writeData(final @NotNull File file, final @NotNull ThunderFileData<TripletMap, List> fileData, final @NotNull CommentSetting commentSetting) {
+	public static void writeData(final @NotNull File file, final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData, final @NotNull CommentSetting commentSetting) {
 		if (commentSetting == Comment.PRESERVE) {
 			ThunderEditor.initialWriteWithComments(file, fileData);
 		} else if (commentSetting == Comment.SKIP) {
@@ -80,7 +80,7 @@ public class ThunderEditor {
 	// <Write Data>
 	// <Write Data with Comments>
 	@Synchronized
-	private static void initialWriteWithComments(final @NotNull File file, final @NotNull ThunderFileData<TripletMap, List> fileData) {
+	private static void initialWriteWithComments(final @NotNull File file, final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData) {
 		try (final @NotNull PrintWriter writer = new PrintWriter(file)) {
 			if (!fileData.isEmpty()) {
 				final @NotNull Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
@@ -144,7 +144,7 @@ public class ThunderEditor {
 	// <Write Data without Comments>
 	@Synchronized
 	private static void initialWriteWithOutComments(final @NotNull File file,
-													final @NotNull ThunderFileData<TripletMap, List> fileData) {
+													final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData) {
 		try (final @NotNull PrintWriter writer = new PrintWriter(file)) {
 			if (!fileData.isEmpty()) {
 				final @NotNull Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();

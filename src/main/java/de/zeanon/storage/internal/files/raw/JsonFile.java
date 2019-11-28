@@ -10,9 +10,8 @@ import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.files.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.files.section.JsonFileSection;
-import de.zeanon.storage.internal.utility.utils.basic.BaseFileUtils;
-import de.zeanon.storage.internal.utility.utils.basic.Objects;
-import de.zeanon.storage.internal.utility.utils.datafiles.JsonUtils;
+import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
+import de.zeanon.storage.internal.utility.datafiles.JsonUtils;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
@@ -102,9 +101,8 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	 *
 	 * @return Map
 	 */
-	@NotNull
 	@Override
-	public Map getMap(final @NotNull String key) {
+	public @Nullable Map getMap(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return this.provider().newMap();
 		} else {
@@ -112,9 +110,8 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		}
 	}
 
-	@NotNull
 	@Override
-	public Map getMapUseArray(final @NotNull String... key) {
+	public @Nullable Map getMapUseArray(final @NotNull String... key) {
 		if (!this.hasKeyUseArray(key)) {
 			return this.provider().newMap();
 		} else {
@@ -135,28 +132,26 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		return new LocalSection(sectionKey, this);
 	}
 
-	@NotNull
 	@Override
-	public JsonFileSection getSectionUseArray(@NotNull String... sectionKey) {
+	public @NotNull JsonFileSection getSectionUseArray(@NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
-	@NotNull
-	private Map getMapWithoutPath(final @NotNull String key, final @NotNull Provider<? extends Map, ? extends List> provider) {
+	private @Nullable Map getMapWithoutPath(final @NotNull String key, final @NotNull Provider<? extends Map, ? extends List> provider) {
 		this.update();
 
 		if (!this.hasKey(key)) {
 			return this.provider().newMap();
 		}
 
-		Object map;
+		@Nullable Object map;
 		try {
 			map = this.get(key);
 		} catch (JSONException e) {
 			return this.provider().newMap();
 		}
 		if (map instanceof Map) {
-			return (Map<?, ?>) Objects.notNull(this.fileData().get(key), "The File does not contain '" + key + "'");
+			return (Map<?, ?>) this.fileData().get(key);
 		} else if (map instanceof JSONObject) {
 			return JsonUtils.jsonToMap((JSONObject) map, provider);
 		} else {
@@ -164,22 +159,21 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		}
 	}
 
-	@NotNull
-	private Map getMapWithoutPath(final @NotNull String... key) {
+	private @Nullable Map getMapWithoutPath(final @NotNull String... key) {
 		this.update();
 
 		if (!this.hasKeyUseArray(key)) {
 			return this.provider().newMap();
 		}
 
-		Object map;
+		@Nullable Object map;
 		try {
 			map = this.getUseArray(key);
 		} catch (JSONException e) {
 			return this.provider().newMap();
 		}
 		if (map instanceof Map) {
-			return (Map<?, ?>) Objects.notNull(this.fileData().getUseArray(key), "The File does not contain '" + Arrays.toString(key) + "'");
+			return (Map<?, ?>) this.fileData().getUseArray(key);
 		} else if (map instanceof JSONObject) {
 			return JsonUtils.jsonToMap((JSONObject) map, this.provider());
 		} else {

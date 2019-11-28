@@ -7,8 +7,8 @@ import de.zeanon.storage.internal.files.raw.JsonFile;
 import de.zeanon.storage.internal.files.raw.ThunderFile;
 import de.zeanon.storage.internal.files.raw.TomlFile;
 import de.zeanon.storage.internal.files.raw.YamlFile;
+import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import de.zeanon.storage.internal.utility.builder.*;
-import de.zeanon.storage.internal.utility.utils.basic.BaseFileUtils;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -51,187 +51,187 @@ public abstract class StorageManager<B extends StorageManager, F extends FlatFil
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull File file) {
-		return new LocalJsonFileBuilder(file);
+		return new JsonFileBuilder(file);
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull Path file) {
-		return new LocalJsonFileBuilder(file.toFile());
+		return new JsonFileBuilder(file.toFile());
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull String name) {
-		return new LocalJsonFileBuilder(new File(name + "." + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(name + "." + JsonFile.FileType.JSON));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull String directory, final @NotNull String name) {
-		return new LocalJsonFileBuilder(new File(directory, name + "." + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(directory, name + "." + JsonFile.FileType.JSON));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull File directory, final @NotNull String name) {
-		return new LocalJsonFileBuilder(new File(directory, name + "." + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(directory, name + "." + JsonFile.FileType.JSON));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull Path directory, final @NotNull String name) {
-		return new LocalJsonFileBuilder(new File(directory.toFile(), name + "." + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(directory.toFile(), name + "." + JsonFile.FileType.JSON));
 	}
 
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull File file) {
-		return new LocalThunderFileBuilder(file);
+		return new ThunderFileBuilder(file);
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull Path file) {
-		return new LocalThunderFileBuilder(file.toFile());
+		return new ThunderFileBuilder(file.toFile());
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull String name) {
-		return new LocalThunderFileBuilder(new File(name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderFileBuilder(new File(name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull String directory, final @NotNull String name) {
-		return new LocalThunderFileBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderFileBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull File directory, final @NotNull String name) {
-		return new LocalThunderFileBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderFileBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull Path directory, final @NotNull String name) {
-		return new LocalThunderFileBuilder(new File(directory.toFile(), name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderFileBuilder(new File(directory.toFile(), name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull File file) {
-		return new LocalThunderConfigBuilder(file);
+		return new ThunderConfigBuilder(file);
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull Path file) {
-		return new LocalThunderConfigBuilder(file.toFile());
+		return new ThunderConfigBuilder(file.toFile());
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull String name) {
-		return new LocalThunderConfigBuilder(new File(name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderConfigBuilder(new File(name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull String directory, final @NotNull String name) {
-		return new LocalThunderConfigBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderConfigBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull File directory, final @NotNull String name) {
-		return new LocalThunderConfigBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderConfigBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull Path directory, final @NotNull String name) {
-		return new LocalThunderConfigBuilder(new File(directory.toFile(), name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderConfigBuilder(new File(directory.toFile(), name + "." + ThunderFile.FileType.THUNDER));
 	}
 
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull File file) {
-		return new LocalTomlFileBuilder(file);
+		return new TomlFileBuilder(file);
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull Path file) {
-		return new LocalTomlFileBuilder(file.toFile());
+		return new TomlFileBuilder(file.toFile());
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull String name) {
-		return new LocalTomlFileBuilder(new File(name + "." + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(name + "." + TomlFile.FileType.TOML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull String directory, final @NotNull String name) {
-		return new LocalTomlFileBuilder(new File(directory, name + "." + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(directory, name + "." + TomlFile.FileType.TOML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull File directory, final @NotNull String name) {
-		return new LocalTomlFileBuilder(new File(directory, name + "." + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(directory, name + "." + TomlFile.FileType.TOML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull Path directory, final @NotNull String name) {
-		return new LocalTomlFileBuilder(new File(directory.toFile(), name + "." + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(directory.toFile(), name + "." + TomlFile.FileType.TOML));
 	}
 
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull YamlFileBuilder yamlFile(final @NotNull File file) {
-		return new LocalYamlFileBuilder(file);
+		return new YamlFileBuilder(file);
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull YamlFileBuilder yamlFile(final @NotNull Path file) {
-		return new LocalYamlFileBuilder(file.toFile());
+		return new YamlFileBuilder(file.toFile());
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull YamlFileBuilder yamlFile(final @NotNull String name) {
-		return new LocalYamlFileBuilder(new File(name + "." + YamlFile.FileType.YAML));
+		return new YamlFileBuilder(new File(name + "." + YamlFile.FileType.YAML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull YamlFileBuilder yamlFile(final @NotNull String directory, final @NotNull String name) {
-		return new LocalYamlFileBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
+		return new YamlFileBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull YamlFileBuilder yamlFile(final @NotNull File directory, final @NotNull String name) {
-		return new LocalYamlFileBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
+		return new YamlFileBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull YamlFileBuilder yamlFile(final @NotNull Path directory, final @NotNull String name) {
-		return new LocalYamlFileBuilder(new File(directory.toFile(), name + "." + YamlFile.FileType.YAML));
+		return new YamlFileBuilder(new File(directory.toFile(), name + "." + YamlFile.FileType.YAML));
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull YamlConfigBuilder yamlConfig(final @NotNull File file) {
-		return new LocalYamlConfigBuilder(file);
+		return new YamlConfigBuilder(file);
 	}
 
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull YamlConfigBuilder yamlConfig(final @NotNull Path file) {
-		return new LocalYamlConfigBuilder(file.toFile());
+		return new YamlConfigBuilder(file.toFile());
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull YamlConfigBuilder yamlConfig(final @NotNull String name) {
-		return new LocalYamlConfigBuilder(new File(name + "." + YamlFile.FileType.YAML));
+		return new YamlConfigBuilder(new File(name + "." + YamlFile.FileType.YAML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull YamlConfigBuilder yamlConfig(final @NotNull String directory, final @NotNull String name) {
-		return new LocalYamlConfigBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
+		return new YamlConfigBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull YamlConfigBuilder yamlConfig(final @NotNull File directory, final @NotNull String name) {
-		return new LocalYamlConfigBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
+		return new YamlConfigBuilder(new File(directory, name + "." + YamlFile.FileType.YAML));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull YamlConfigBuilder yamlConfig(final @NotNull Path directory, final @NotNull String name) {
-		return new LocalYamlConfigBuilder(new File(directory.toFile(), name + "." + YamlFile.FileType.YAML));
+		return new YamlConfigBuilder(new File(directory.toFile(), name + "." + YamlFile.FileType.YAML));
 	}
 
 
@@ -321,47 +321,4 @@ public abstract class StorageManager<B extends StorageManager, F extends FlatFil
 	 */
 	@Contract("-> new")
 	public abstract @NotNull F create();
-
-
-	private static final class LocalJsonFileBuilder extends JsonFileBuilder {
-
-		public LocalJsonFileBuilder(@NotNull File file) {
-			super(file);
-		}
-	}
-
-	private static final class LocalThunderConfigBuilder extends ThunderConfigBuilder {
-
-		public LocalThunderConfigBuilder(@NotNull File file) {
-			super(file);
-		}
-	}
-
-	private static final class LocalThunderFileBuilder extends ThunderFileBuilder {
-
-		public LocalThunderFileBuilder(@NotNull File file) {
-			super(file);
-		}
-	}
-
-	private static final class LocalTomlFileBuilder extends TomlFileBuilder {
-
-		public LocalTomlFileBuilder(@NotNull File file) {
-			super(file);
-		}
-	}
-
-	private static final class LocalYamlConfigBuilder extends YamlConfigBuilder {
-
-		protected LocalYamlConfigBuilder(@NotNull File file) {
-			super(file);
-		}
-	}
-
-	private static final class LocalYamlFileBuilder extends YamlFileBuilder {
-
-		public LocalYamlFileBuilder(@NotNull File file) {
-			super(file);
-		}
-	}
 }

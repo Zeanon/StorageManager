@@ -2,7 +2,10 @@ package de.zeanon.storage.internal.base.cache.base;
 
 import de.zeanon.storage.external.lists.IList;
 import java.util.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -259,7 +262,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 
 
 	/**
-	 * The entries stored in a TripletMap
+	 * The EntryNodes to be stored in a TripletMap
 	 *
 	 * @param <K> the type of keys maintained by this map
 	 * @param <V> the type of mapped values
@@ -267,19 +270,83 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * @author Zeanon
 	 * @version 1.3.0
 	 */
-	@Setter
 	@EqualsAndHashCode
 	@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
 	@SuppressWarnings("unused")
 	public static class TripletNode<K, V> implements Map.Entry<K, V>, Comparable<TripletNode> {
 
+		/**
+		 * -- Getter --
+		 * Returns the line corresponding to this entry.
+		 * has been removed from the backing map (by the iterator's
+		 * <tt>remove</tt> operation), the results of this call are undefined.
+		 *
+		 * @return the line corresponding to this entry
+		 */
 		@Getter
 		private int line;
+		/**
+		 * -- Getter --
+		 * Returns the key corresponding to this entry.
+		 * has been removed from the backing map (by the iterator's
+		 * <tt>remove</tt> operation), the results of this call are undefined.
+		 *
+		 * @return the key corresponding to this entry
+		 */
 		@Getter(onMethod_ = {@Override})
 		private @NotNull K key;
+		/**
+		 * -- Getter --
+		 * Returns the value corresponding to this entry.  If the mapping
+		 * has been removed from the backing map (by the iterator's
+		 * <tt>remove</tt> operation), the results of this call are undefined.
+		 *
+		 * @return the value corresponding to this entry
+		 */
 		@Getter(onMethod_ = {@Override})
 		private @Nullable V value;
 
+
+		/**
+		 * Replaces the line corresponding to this entry with the specified
+		 * line (optional operation).  (Writes through to the map.)  The
+		 * behavior of this call is undefined if the mapping has already been
+		 * removed from the map (by the iterator's <tt>remove</tt> operation).
+		 *
+		 * @param line new key to be stored in this entry
+		 *
+		 * @return old key corresponding to the entry
+		 *
+		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
+		 *                                       is not supported by the backing map
+		 * @throws ClassCastException            if the class of the specified line
+		 *                                       prevents it from being stored in the backing map
+		 */
+		public int setLine(final int line) {
+			try {
+				return this.line;
+			} finally {
+				this.line = line;
+			}
+		}
+
+		/**
+		 * Replaces the key corresponding to this entry with the specified
+		 * key (optional operation).  (Writes through to the map.)  The
+		 * behavior of this call is undefined if the mapping has already been
+		 * removed from the map (by the iterator's <tt>remove</tt> operation).
+		 *
+		 * @param key new key to be stored in this entry
+		 *
+		 * @return old key corresponding to the entry
+		 *
+		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
+		 *                                       is not supported by the backing map
+		 * @throws ClassCastException            if the class of the specified key
+		 *                                       prevents it from being stored in the backing map
+		 * @throws NullPointerException          if the backing map does not permit
+		 *                                       null keys, and the specified key is null
+		 */
 		public @NotNull K setKey(final @NotNull K key) {
 			try {
 				return this.key;
@@ -288,6 +355,25 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 			}
 		}
 
+		/**
+		 * Replaces the value corresponding to this entry with the specified
+		 * value (optional operation).  (Writes through to the map.)  The
+		 * behavior of this call is undefined if the mapping has already been
+		 * removed from the map (by the iterator's <tt>remove</tt> operation).
+		 *
+		 * @param value new value to be stored in this entry
+		 *
+		 * @return old value corresponding to the entry
+		 *
+		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
+		 *                                       is not supported by the backing map
+		 * @throws ClassCastException            if the class of the specified value
+		 *                                       prevents it from being stored in the backing map
+		 * @throws NullPointerException          if the backing map does not permit
+		 *                                       null values, and the specified value is null
+		 * @throws IllegalArgumentException      if some property of this value
+		 *                                       prevents it from being stored in the backing map
+		 */
 		@Override
 		public @Nullable V setValue(final @NotNull V value) {
 			try {
@@ -297,6 +383,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 			}
 		}
 
+
 		@Override
 		public int compareTo(final @NotNull TripletMap.TripletNode entry) {
 			return Integer.compare(this.line, entry.line);
@@ -304,7 +391,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 
 		@Override
 		public @NotNull String toString() {
-			return "(" + this.line + "," + this.key + "," + this.value + ")";
+			return "(" + this.key + "={" + this.value + "," + this.line + "})";
 		}
 	}
 }

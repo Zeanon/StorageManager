@@ -2,6 +2,7 @@ package de.zeanon.storage.internal.base.interfaces;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  * @version 1.1.0
  */
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public interface Config<M, L> extends DataStorage<M, L> {
+public interface Config<M extends Map, L extends List> extends DataStorage<M, L> {
 
 
 	void setCommentSetting(final CommentSetting commentSetting);

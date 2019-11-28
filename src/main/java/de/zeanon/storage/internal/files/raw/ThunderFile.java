@@ -14,8 +14,8 @@ import de.zeanon.storage.internal.base.files.CommentEnabledFile;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.files.section.ThunderFileSection;
-import de.zeanon.storage.internal.utility.utils.basic.BaseFileUtils;
-import de.zeanon.storage.internal.utility.utils.editor.ThunderEditor;
+import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
+import de.zeanon.storage.internal.utility.editor.ThunderEditor;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, List>, TripletMap, List> {
+public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List>, TripletMap, List> {
 
 
 	/**
@@ -165,7 +165,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 		}
 	}
 
-	private static class LocalFileData extends ThunderFileData<TripletMap, List> {
+	private static class LocalFileData extends ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> {
 
 		private LocalFileData(final @NotNull Provider<TripletMap, List> provider) {
 			super(provider);

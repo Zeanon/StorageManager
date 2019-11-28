@@ -32,7 +32,7 @@ public class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, M
 	private @NotNull CommentSetting commentSetting = Comment.SKIP;
 
 
-	protected YamlFileBuilder(final @NotNull File file) {
+	public YamlFileBuilder(final @NotNull File file) {
 		super(file, HashMap.class, GapList.class);
 	}
 

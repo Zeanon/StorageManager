@@ -33,7 +33,7 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 	private @NotNull CommentSetting commentSetting = Comment.SKIP;
 
 
-	protected ThunderFileBuilder(final @NotNull File file) {
+	public ThunderFileBuilder(final @NotNull File file) {
 		super(file, GapTripletMap.class, GapList.class);
 	}
 
