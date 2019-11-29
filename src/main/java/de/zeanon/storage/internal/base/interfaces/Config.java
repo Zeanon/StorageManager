@@ -1,6 +1,5 @@
 package de.zeanon.storage.internal.base.interfaces;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
@@ -21,19 +20,19 @@ public interface Config<M extends Map, L extends List> extends DataStorage<M, L>
 
 	@Nullable List<String> getHeader();
 
-	default void setHeader(final @Nullable String... header) {
-		this.setHeader(header == null ? null : Arrays.asList(header));
+	default void setHeader(final @Nullable List<String> header) {
+		this.setHeader(header == null ? null : header.toArray(new String[0]));
 	}
 
-	void setHeader(final @Nullable List<String> header);
+	void setHeader(final @Nullable String... header);
 
 	@NotNull List<String> getFooter();
 
-	default void setFooter(final @Nullable String... footer) {
-		this.setFooter(footer == null ? null : Arrays.asList(footer));
+	default void setFooter(final @Nullable List<String> footer) {
+		this.setFooter(footer == null ? null : footer.toArray(new String[0]));
 	}
 
-	void setFooter(final @Nullable List<String> footer);
+	void setFooter(final @Nullable String... footer);
 
 	@NotNull List<String> getComments();
 

@@ -5,7 +5,6 @@ import de.zeanon.storage.external.lists.GapList;
 import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.cache.filedata.StandardFileData;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
-import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.files.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
@@ -13,7 +12,6 @@ import de.zeanon.storage.internal.files.section.JsonFileSection;
 import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import de.zeanon.storage.internal.utility.datafiles.JsonUtils;
 import java.io.*;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import lombok.Cleanup;
@@ -48,7 +46,11 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 */
-	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
+	protected JsonFile(final @NotNull File file,
+					   final @Nullable InputStream inputStream,
+					   final @NotNull ReloadSetting reloadSetting,
+					   final @NotNull Class<? extends Map> map,
+					   final @NotNull Class<? extends List> list) {
 		super(file, FileType.JSON, new LocalFileData(new Collections(map, list)), reloadSetting);
 
 		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
@@ -56,13 +58,20 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		}
 
 		try {
-			final @NotNull JSONTokener jsonTokener = new JSONTokener(BaseFileUtils.createNewInputStreamFromFile(this.file()));
+			final @NotNull JSONTokener jsonTokener = new JSONTokener(
+					BaseFileUtils.createNewInputStreamFromFile(this.file()));
 			this.fileData().loadData(new JSONObject(jsonTokener).toMap());
 			this.lastLoaded(System.currentTimeMillis());
 		} catch (JSONException e) {
-			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
+			throw new FileParseException("Error while parsing '"
+										 + this.getAbsolutePath()
+										 + "'",
+										 e.getCause());
 		} catch (RuntimeIOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '"
+										 + this.getAbsolutePath()
+										 + "'",
+										 e.getCause());
 		}
 	}
 
@@ -71,11 +80,15 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	@Synchronized
 	public void reload() {
 		try {
-			final @NotNull JSONTokener jsonTokener = new JSONTokener(BaseFileUtils.createNewInputStreamFromFile(this.file()));
+			final @NotNull JSONTokener jsonTokener = new JSONTokener(
+					BaseFileUtils.createNewInputStreamFromFile(this.file()));
 			this.fileData().loadData(new JSONObject(jsonTokener).toMap());
 			this.lastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
-			throw new FileParseException("Error while reloading '" + this.getAbsolutePath() + "'", e.getCause());
+			throw new FileParseException("Error while reloading '"
+										 + this.getAbsolutePath()
+										 + "'",
+										 e.getCause());
 		}
 	}
 
@@ -85,7 +98,10 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		try {
 			this.write(new JSONObject(this.fileData().getDataMap()));
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while writing to "
+										 + this.file().getAbsolutePath()
+										 + "'",
+										 e.getCause());
 		}
 	}
 
@@ -137,7 +153,8 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		return new LocalSection(sectionKey, this);
 	}
 
-	private @Nullable Map getMapWithoutPath(final @NotNull String key, final @NotNull Provider<? extends Map, ? extends List> provider) {
+	private @Nullable Map getMapWithoutPath(final @NotNull String key,
+											final @NotNull Provider<? extends Map, ? extends List> provider) {
 		this.update();
 
 		if (!this.hasKey(key)) {
@@ -150,12 +167,13 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		} catch (JSONException e) {
 			return this.provider().newMap();
 		}
+
 		if (map instanceof Map) {
 			return (Map<?, ?>) this.fileData().get(key);
 		} else if (map instanceof JSONObject) {
 			return JsonUtils.jsonToMap((JSONObject) map, provider);
 		} else {
-			throw new ObjectNullException("The File does not contain: '" + key + "'");
+			return null;
 		}
 	}
 
@@ -172,12 +190,13 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		} catch (JSONException e) {
 			return this.provider().newMap();
 		}
+
 		if (map instanceof Map) {
 			return (Map<?, ?>) this.fileData().getUseArray(key);
 		} else if (map instanceof JSONObject) {
 			return JsonUtils.jsonToMap((JSONObject) map, this.provider());
 		} else {
-			throw new ObjectNullException("The File does not contain: '" + Arrays.toString(key) + "'");
+			return null;
 		}
 	}
 

@@ -31,6 +31,8 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 
 	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private @NotNull CommentSetting commentSetting = Comment.SKIP;
+	@Setter(onMethod_ = {@Contract("_ -> this")})
+	private int bufferSize = 8192;
 
 
 	public ThunderFileBuilder(final @NotNull File file) {
@@ -40,7 +42,7 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 	@Override
 	@Contract("-> new")
 	public final @NotNull ThunderFile create() {
-		return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.mapType, this.listType);
+		return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bufferSize, this.mapType, this.listType);
 	}
 
 	@Contract("_ -> this")
@@ -57,8 +59,8 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 
 	private static final class LocalThunderFile extends ThunderFile {
 
-		private LocalThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final @NotNull Class<? extends TripletMap> map, final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, commentSetting, map, list);
+		private LocalThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final int bufferSize, final @NotNull Class<? extends TripletMap> map, final @NotNull Class<? extends List> list) {
+			super(file, inputStream, reloadSetting, commentSetting, bufferSize, map, list);
 		}
 	}
 }

@@ -52,7 +52,10 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	private @NotNull ReloadSetting reloadSetting;
 
 
-	protected FlatFile(final @NotNull File file, final @NotNull FileType fileType, final @NotNull D fileData, final @NotNull ReloadSetting reloadSetting) {
+	protected FlatFile(final @NotNull File file,
+					   final @NotNull FileType fileType,
+					   final @NotNull D fileData,
+					   final @NotNull ReloadSetting reloadSetting) {
 		if (fileType.isTypeOf(file)) {
 			this.fileType = fileType;
 			this.file = file;

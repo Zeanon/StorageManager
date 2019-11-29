@@ -31,7 +31,8 @@ public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, T
 
 	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private @NotNull CommentSetting commentSetting = Comment.PRESERVE;
-
+	@Setter(onMethod_ = {@Contract("_ -> this")})
+	private int bufferSize = 8192;
 
 	public ThunderConfigBuilder(final @NotNull File file) {
 		super(file, GapTripletMap.class, GapList.class);
@@ -40,7 +41,7 @@ public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, T
 	@Override
 	@Contract("-> new")
 	public final @NotNull ThunderConfig create() {
-		return new LocalThunderConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.mapType, this.listType);
+		return new LocalThunderConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bufferSize, this.mapType, this.listType);
 	}
 
 	@Contract("_ -> this")
@@ -57,8 +58,8 @@ public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, T
 
 	private static final class LocalThunderConfig extends ThunderConfig {
 
-		private LocalThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final @NotNull Class<? extends TripletMap> map, final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, commentSetting, map, list);
+		private LocalThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final int bufferSize, final @NotNull Class<? extends TripletMap> map, final @NotNull Class<? extends List> list) {
+			super(file, inputStream, reloadSetting, commentSetting, bufferSize, map, list);
 		}
 	}
 }

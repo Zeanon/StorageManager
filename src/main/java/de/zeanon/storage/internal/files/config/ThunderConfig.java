@@ -41,8 +41,14 @@ public class ThunderConfig extends ThunderFile implements Config<TripletMap, Lis
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected ThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final @NotNull Class<? extends TripletMap> map, final @NotNull Class<? extends List> list) {
-		super(file, inputStream, reloadSetting, commentSetting, map, list);
+	protected ThunderConfig(final @NotNull File file,
+							final @Nullable InputStream inputStream,
+							final @NotNull ReloadSetting reloadSetting,
+							final @NotNull CommentSetting commentSetting,
+							final int bufferSize,
+							final @NotNull Class<? extends TripletMap> map,
+							final @NotNull Class<? extends List> list) {
+		super(file, inputStream, reloadSetting, commentSetting, bufferSize, map, list);
 	}
 
 
@@ -60,16 +66,11 @@ public class ThunderConfig extends ThunderFile implements Config<TripletMap, Lis
 	}
 
 	@Override
-	public void setHeader(final @Nullable List<String> header) {
-		this.setHeader(header == null ? null : header.toArray(new String[0]));
-	}
-
-	@Override
 	public void setHeader(final @Nullable String... header) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			@NotNull String tempData = this.fileData().toString();
+			final @NotNull String tempData = this.fileData().toString();
 			ThunderUtils.setHeader(this.fileData(), header);
 			if (!this.fileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
@@ -99,11 +100,13 @@ public class ThunderConfig extends ThunderFile implements Config<TripletMap, Lis
 		}
 	}
 
-	public void setHeader(final @NotNull String key, final @Nullable List<String> header) {
+	public void setHeader(final @NotNull String key,
+						  final @Nullable List<String> header) {
 		this.setHeader(key, header == null ? null : header.toArray(new String[0]));
 	}
 
-	public void setHeader(final @NotNull String key, final @Nullable String... header) {
+	public void setHeader(final @NotNull String key,
+						  final @Nullable String... header) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -115,15 +118,17 @@ public class ThunderConfig extends ThunderFile implements Config<TripletMap, Lis
 		}
 	}
 
-	public void setHeaderUseArray(final @NotNull String[] key, final @Nullable List<String> header) {
+	public void setHeaderUseArray(final @NotNull String[] key,
+								  final @Nullable List<String> header) {
 		this.setHeaderUseArray(key, header == null ? null : header.toArray(new String[0]));
 	}
 
-	public void setHeaderUseArray(final @NotNull String[] key, final @Nullable String... header) {
+	public void setHeaderUseArray(final @NotNull String[] key,
+								  final @Nullable String... header) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			@NotNull String tempData = this.fileData().toString();
+			final @NotNull String tempData = this.fileData().toString();
 			ThunderUtils.setHeaderUseArray(this.fileData(), key, header);
 			if (!this.fileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
@@ -146,16 +151,11 @@ public class ThunderConfig extends ThunderFile implements Config<TripletMap, Lis
 	}
 
 	@Override
-	public void setFooter(final @Nullable List<String> footer) {
-		this.setFooter(footer == null ? null : footer.toArray(new String[0]));
-	}
-
-	@Override
 	public void setFooter(final @Nullable String... footer) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			@NotNull String tempData = this.fileData().toString();
+			final @NotNull String tempData = this.fileData().toString();
 			ThunderUtils.setFooter(this.fileData(), footer);
 			if (!this.fileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
@@ -187,15 +187,17 @@ public class ThunderConfig extends ThunderFile implements Config<TripletMap, Lis
 		}
 	}
 
-	public void setFooter(final @NotNull String key, final @Nullable List<String> footer) {
+	public void setFooter(final @NotNull String key,
+						  final @Nullable List<String> footer) {
 		this.setFooter(key, footer == null ? null : footer.toArray(new String[0]));
 	}
 
-	public void setFooter(final @NotNull String key, final @Nullable String... footer) {
+	public void setFooter(final @NotNull String key,
+						  final @Nullable String... footer) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			@NotNull String tempData = this.fileData().toString();
+			final @NotNull String tempData = this.fileData().toString();
 			ThunderUtils.setFooter(this.fileData(), key, footer);
 			if (!this.fileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
@@ -203,11 +205,13 @@ public class ThunderConfig extends ThunderFile implements Config<TripletMap, Lis
 		}
 	}
 
-	public void setFooterUseArray(final @NotNull String[] key, final @Nullable List<String> footer) {
+	public void setFooterUseArray(final @NotNull String[] key,
+								  final @Nullable List<String> footer) {
 		this.setFooterUseArray(key, footer == null ? null : footer.toArray(new String[0]));
 	}
 
-	public void setFooterUseArray(final @NotNull String[] key, final @Nullable String... footer) {
+	public void setFooterUseArray(final @NotNull String[] key,
+								  final @Nullable String... footer) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -314,11 +318,13 @@ public class ThunderConfig extends ThunderFile implements Config<TripletMap, Lis
 
 	private static class LocalSection extends ThunderConfigSection {
 
-		private LocalSection(final @NotNull String sectionKey, final @NotNull ThunderConfig thunderConfig) {
+		private LocalSection(final @NotNull String sectionKey,
+							 final @NotNull ThunderConfig thunderConfig) {
 			super(sectionKey, thunderConfig);
 		}
 
-		private LocalSection(final @NotNull String[] sectionKey, final @NotNull ThunderConfig thunderConfig) {
+		private LocalSection(final @NotNull String[] sectionKey,
+							 final @NotNull ThunderConfig thunderConfig) {
 			super(sectionKey, thunderConfig);
 		}
 	}

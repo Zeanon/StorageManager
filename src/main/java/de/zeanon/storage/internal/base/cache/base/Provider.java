@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,12 +22,19 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.3.0
  */
-@SuppressWarnings("unused")
+@Getter
+@Setter
 @AllArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
+@SuppressWarnings("unused")
 public abstract class Provider<M extends Map, L extends List> {
 
-
+	/**
+	 * The Map implementation to be used
+	 */
 	private Class<? extends M> mapType;
+	/**
+	 * the List implementation to be used
+	 */
 	private Class<? extends L> listType;
 
 
@@ -106,28 +115,14 @@ public abstract class Provider<M extends Map, L extends List> {
 	/**
 	 * Get the TypeName of the saved Map-Type
 	 */
-	public String getMapType() {
+	public String getMapTypeName() {
 		return this.mapType.getTypeName();
-	}
-
-	/**
-	 * Set the Map-Type
-	 */
-	public void setMapType(final @NotNull Class<? extends M> mapType) {
-		this.mapType = mapType;
 	}
 
 	/**
 	 * Get the TypeName of the save List-Type
 	 */
-	public String getListType() {
+	public String getListTypeName() {
 		return this.listType.getTypeName();
-	}
-
-	/**
-	 * Set the List-Type
-	 */
-	public void setListType(final @NotNull Class<? extends L> listType) {
-		this.listType = listType;
 	}
 }

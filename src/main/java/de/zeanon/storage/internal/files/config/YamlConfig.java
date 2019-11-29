@@ -46,7 +46,12 @@ public class YamlConfig extends YamlFile implements Config<Map, List> {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
+	protected YamlConfig(final @NotNull File file,
+						 final @Nullable InputStream inputStream,
+						 final @NotNull ReloadSetting reloadSetting,
+						 final @NotNull CommentSetting commentSetting,
+						 final @NotNull Class<? extends Map> map,
+						 final @NotNull Class<? extends List> list) {
 		super(file, inputStream, reloadSetting, commentSetting, map, list);
 	}
 
@@ -63,20 +68,28 @@ public class YamlConfig extends YamlFile implements Config<Map, List> {
 				this.header = YamlEditor.readHeader(this.file(), this.provider());
 				return this.header;
 			} catch (YamlException e) {
-				throw new FileParseException("Error while getting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
+				throw new FileParseException("Error while getting header of '"
+											 + this.file().getAbsolutePath()
+											 + "'",
+											 e.getCause());
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while getting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
+				throw new RuntimeIOException("Error while getting header of '"
+											 + this.file().getAbsolutePath()
+											 + "'",
+											 e.getCause());
 			}
 		}
 	}
 
 	@Override
-	public void setHeader(final @Nullable List<String> header) {
-		if (header != null) {
+	public void setHeader(final @Nullable String... header) {
+		if (header != null && header.length > 0) {
 			//noinspection unchecked
-			@NotNull List<String> tmp = this.provider().newList();
-			for (final @NotNull String line : header) {
-				if (!line.startsWith("#")) {
+			final @NotNull List<String> tmp = this.provider().newList();
+			for (final @Nullable String line : header) {
+				if (line == null) {
+					tmp.add("#");
+				} else if (!line.startsWith("#")) {
 					tmp.add("#" + line);
 				} else {
 					tmp.add(line);
@@ -88,9 +101,15 @@ public class YamlConfig extends YamlFile implements Config<Map, List> {
 				try {
 					YamlEditor.write(this.file(), this.header);
 				} catch (YamlException e) {
-					throw new FileParseException("Error while setting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
+					throw new FileParseException("Error while setting header of '"
+												 + this.file().getAbsolutePath()
+												 + "'",
+												 e.getCause());
 				} catch (IOException e) {
-					throw new RuntimeIOException("Error while setting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
+					throw new RuntimeIOException("Error while setting header of '"
+												 + this.file().getAbsolutePath()
+												 + "'",
+												 e.getCause());
 				}
 			} else {
 				try {
@@ -103,9 +122,15 @@ public class YamlConfig extends YamlFile implements Config<Map, List> {
 
 					YamlEditor.write(this.file(), newLines);
 				} catch (YamlException e) {
-					throw new FileParseException("Error while setting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
+					throw new FileParseException("Error while setting header of '"
+												 + this.file().getAbsolutePath()
+												 + "'",
+												 e.getCause());
 				} catch (IOException e) {
-					throw new RuntimeIOException("Error while setting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
+					throw new RuntimeIOException("Error while setting header of '"
+												 + this.file().getAbsolutePath()
+												 + "'",
+												 e.getCause());
 				}
 			}
 		} else {
@@ -120,9 +145,15 @@ public class YamlConfig extends YamlFile implements Config<Map, List> {
 
 				YamlEditor.write(this.file(), lines);
 			} catch (YamlException e) {
-				throw new FileParseException("Error while setting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
+				throw new FileParseException("Error while setting header of '"
+											 + this.file().getAbsolutePath()
+											 + "'",
+											 e.getCause());
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while setting header of '" + this.file().getAbsolutePath() + "'", e.getCause());
+				throw new RuntimeIOException("Error while setting header of '"
+											 + this.file().getAbsolutePath()
+											 + "'",
+											 e.getCause());
 			}
 		}
 	}
@@ -139,20 +170,28 @@ public class YamlConfig extends YamlFile implements Config<Map, List> {
 				this.footer = YamlEditor.readFooter(this.file(), provider());
 				return this.footer;
 			} catch (YamlException e) {
-				throw new FileParseException("Error while getting footer of '" + this.file().getAbsolutePath() + "'", e.getCause());
+				throw new FileParseException("Error while getting footer of '"
+											 + this.file().getAbsolutePath()
+											 + "'",
+											 e.getCause());
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while getting footer of '" + this.file().getAbsolutePath() + "'.", e.getCause());
+				throw new RuntimeIOException("Error while getting footer of '"
+											 + this.file().getAbsolutePath()
+											 + "'",
+											 e.getCause());
 			}
 		}
 	}
 
 	@Override
-	public void setFooter(final @Nullable List<String> footer) {
-		if (footer != null) {
+	public void setFooter(final @Nullable String... footer) {
+		if (footer != null && footer.length > 0) {
 			//noinspection unchecked
-			@NotNull List<String> tmp = this.provider().newList();
-			for (final @NotNull String line : footer) {
-				if (!line.startsWith("#")) {
+			final @NotNull List<String> tmp = this.provider().newList();
+			for (final @Nullable String line : footer) {
+				if (line == null) {
+					tmp.add("#");
+				} else if (!line.startsWith("#")) {
 					tmp.add("#" + line);
 				} else {
 					tmp.add(line);
@@ -164,9 +203,15 @@ public class YamlConfig extends YamlFile implements Config<Map, List> {
 				try {
 					YamlEditor.write(this.file(), this.footer);
 				} catch (YamlException e) {
-					throw new FileParseException("Error while setting footer of '" + this.file().getAbsolutePath() + "'", e.getCause());
+					throw new FileParseException("Error while setting footer of '"
+												 + this.file().getAbsolutePath()
+												 + "'",
+												 e.getCause());
 				} catch (IOException e) {
-					throw new RuntimeIOException("Error while setting footer of '" + this.file().getAbsolutePath() + "'", e.getCause());
+					throw new RuntimeIOException("Error while setting footer of '"
+												 + this.file().getAbsolutePath()
+												 + "'",
+												 e.getCause());
 				}
 			} else {
 				try {
@@ -178,9 +223,15 @@ public class YamlConfig extends YamlFile implements Config<Map, List> {
 
 					YamlEditor.write(this.file(), lines);
 				} catch (YamlException e) {
-					throw new FileParseException("Error while setting footer of '" + this.file().getAbsolutePath() + "'", e.getCause());
+					throw new FileParseException("Error while setting footer of '"
+												 + this.file().getAbsolutePath()
+												 + "'",
+												 e.getCause());
 				} catch (IOException e) {
-					throw new RuntimeIOException("Error while setting footer of '" + this.file().getAbsolutePath() + "'", e.getCause());
+					throw new RuntimeIOException("Error while setting footer of '"
+												 + this.file().getAbsolutePath()
+												 + "'",
+												 e.getCause());
 				}
 			}
 		} else {
@@ -195,9 +246,15 @@ public class YamlConfig extends YamlFile implements Config<Map, List> {
 
 				YamlEditor.write(this.file(), lines);
 			} catch (YamlException e) {
-				throw new FileParseException("Error while setting footer of '" + this.file().getAbsolutePath() + "'", e.getCause());
+				throw new FileParseException("Error while setting footer of '"
+											 + this.file().getAbsolutePath()
+											 + "'",
+											 e.getCause());
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while setting footer of '" + this.file().getAbsolutePath() + "'", e.getCause());
+				throw new RuntimeIOException("Error while setting footer of '"
+											 + this.file().getAbsolutePath()
+											 + "'",
+											 e.getCause());
 			}
 		}
 	}
@@ -214,9 +271,15 @@ public class YamlConfig extends YamlFile implements Config<Map, List> {
 				this.comments = YamlEditor.readComments(this.file(), provider());
 				return this.comments;
 			} catch (YamlException e) {
-				throw new FileParseException("Error while getting comments from '" + this.file().getAbsolutePath() + "'", e.getCause());
+				throw new FileParseException("Error while getting comments from '"
+											 + this.file().getAbsolutePath()
+											 + "'",
+											 e.getCause());
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while getting comments from '" + this.file().getAbsolutePath() + "'", e.getCause());
+				throw new RuntimeIOException("Error while getting comments from '"
+											 + this.file().getAbsolutePath()
+											 + "'",
+											 e.getCause());
 			}
 		}
 	}

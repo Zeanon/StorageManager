@@ -39,7 +39,11 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	private CommentSetting commentSetting;
 
 
-	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileType fileType, final @NotNull D fileData, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting) {
+	protected CommentEnabledFile(final @NotNull File file,
+								 final @NotNull FileType fileType,
+								 final @NotNull D fileData,
+								 final @NotNull ReloadSetting reloadSetting,
+								 final @NotNull CommentSetting commentSetting) {
 		super(file, fileType, fileData, reloadSetting);
 		this.commentSetting = commentSetting;
 	}
@@ -54,38 +58,83 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 		this.reload();
 	}
 
+	/**
+	 * Save with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#save()
+	 */
+	public void save(final @NotNull CommentSetting commentSetting) {
+		this.setCommentSetting(commentSetting);
+		this.save();
+	}
+
 
 	/**
 	 * Set with a specific {@link CommentSetting}
 	 *
 	 * @see FlatFile#set(String, Object)
 	 */
-	public void set(final @NotNull CommentSetting commentSetting, final @NotNull String key, final @Nullable Object value) {
+	public void set(final @NotNull CommentSetting commentSetting,
+					final @NotNull String key,
+					final @Nullable Object value) {
 		this.setCommentSetting(commentSetting);
 		this.set(key, value);
 	}
 
-	public void setUseArray(final @NotNull CommentSetting commentSetting, final @NotNull String[] key, final @Nullable Object value) {
+	/**
+	 * Set with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#set(String, Object)
+	 */
+	public void setUseArray(final @NotNull CommentSetting commentSetting,
+							final @NotNull String[] key,
+							final @Nullable Object value) {
 		this.setCommentSetting(commentSetting);
 		this.setUseArray(key, value);
 	}
 
-	public void setAll(final @NotNull CommentSetting commentSetting, final @NotNull Map<String, Object> dataMap) {
+	/**
+	 * Set with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#set(String, Object)
+	 */
+	public void setAll(final @NotNull CommentSetting commentSetting,
+					   final @NotNull Map<String, Object> dataMap) {
 		this.setCommentSetting(commentSetting);
 		this.setAll(dataMap);
 	}
 
-	public void setAllUseArray(final @NotNull CommentSetting commentSetting, final @NotNull Map<String[], Object> dataMap) {
+	/**
+	 * Set with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#set(String, Object)
+	 */
+	public void setAllUseArray(final @NotNull CommentSetting commentSetting,
+							   final @NotNull Map<String[], Object> dataMap) {
 		this.setCommentSetting(commentSetting);
 		this.setAllUseArray(dataMap);
 	}
 
-	public void setAll(final @NotNull CommentSetting commentSetting, final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+	/**
+	 * Set with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#set(String, Object)
+	 */
+	public void setAll(final @NotNull CommentSetting commentSetting,
+					   final @NotNull String key,
+					   final @NotNull Map<String, Object> dataMap) {
 		this.setCommentSetting(commentSetting);
 		this.setAll(key, dataMap);
 	}
 
-	public void setAllUseArray(final @NotNull CommentSetting commentSetting, final @NotNull String[] blockKey, final @NotNull Map<String[], Object> dataMap) {
+	/**
+	 * Set with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#set(String, Object)
+	 */
+	public void setAllUseArray(final @NotNull CommentSetting commentSetting,
+							   final @NotNull String[] blockKey,
+							   final @NotNull Map<String[], Object> dataMap) {
 		this.setCommentSetting(commentSetting);
 		this.setAllUseArray(blockKey, dataMap);
 	}
@@ -96,52 +145,105 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	 *
 	 * @see FlatFile#remove(String)
 	 */
-	public void remove(final @NotNull CommentSetting commentSetting, final @NotNull String key) {
+	public void remove(final @NotNull CommentSetting commentSetting,
+					   final @NotNull String key) {
 		this.setCommentSetting(commentSetting);
 		this.remove(key);
 	}
 
-	public void removeUseArray(final @NotNull CommentSetting commentSetting, final @NotNull String[] key) {
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeUseArray(final @NotNull CommentSetting commentSetting,
+							   final @NotNull String[] key) {
 		this.setCommentSetting(commentSetting);
 		this.removeUseArray(key);
 	}
 
-	public void removeAll(final @NotNull CommentSetting commentSetting, final @NotNull String... keys) {
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeAll(final @NotNull CommentSetting commentSetting,
+						  final @NotNull String... keys) {
 		this.setCommentSetting(commentSetting);
 		this.removeAll(keys);
 	}
 
-	public void removeAll(final @NotNull CommentSetting commentSetting, final @NotNull Collection<String> keys) {
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeAll(final @NotNull CommentSetting commentSetting,
+						  final @NotNull Collection<String> keys) {
 		this.setCommentSetting(commentSetting);
 		this.removeAll(keys);
 	}
 
-	public void removeAllUseArray(final @NotNull CommentSetting commentSetting, final @NotNull String[]... keys) {
+	public void removeAllUseArray(final @NotNull CommentSetting commentSetting,
+								  final @NotNull String[]... keys) {
 		this.setCommentSetting(commentSetting);
 		this.removeAllUseArray(keys);
 	}
 
-	public void removeAllUseArray(final @NotNull CommentSetting commentSetting, final @NotNull Collection<String[]> keys) {
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeAllUseArray(final @NotNull CommentSetting commentSetting,
+								  final @NotNull Collection<String[]> keys) {
 		this.setCommentSetting(commentSetting);
 		this.removeAllUseArray(keys);
 	}
 
-	public void removeAll(final @NotNull CommentSetting commentSetting, final @NotNull String key, final @NotNull String... keys) {
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeAll(final @NotNull CommentSetting commentSetting,
+						  final @NotNull String key,
+						  final @NotNull String... keys) {
 		this.setCommentSetting(commentSetting);
 		this.removeAll(key, keys);
 	}
 
-	public void removeAll(final @NotNull CommentSetting commentSetting, final @NotNull String key, final @NotNull Collection<String> keys) {
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeAll(final @NotNull CommentSetting commentSetting,
+						  final @NotNull String key,
+						  final @NotNull Collection<String> keys) {
 		this.setCommentSetting(commentSetting);
 		this.removeAll(key, keys);
 	}
 
-	public void removeAllUseArray(final @NotNull CommentSetting commentSetting, final @NotNull String[] blockKey, final @NotNull String[]... keys) {
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeAllUseArray(final @NotNull CommentSetting commentSetting,
+								  final @NotNull String[] blockKey,
+								  final @NotNull String[]... keys) {
 		this.setCommentSetting(commentSetting);
 		this.removeAllUseArray(blockKey, keys);
 	}
 
-	public void removeAllUseArray(final @NotNull CommentSetting commentSetting, final @NotNull String[] key, final @NotNull Collection<String[]> keys) {
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeAllUseArray(final @NotNull CommentSetting commentSetting,
+								  final @NotNull String[] key, final @NotNull Collection<String[]> keys) {
 		this.setCommentSetting(commentSetting);
 		this.removeAllUseArray(key, keys);
 	}

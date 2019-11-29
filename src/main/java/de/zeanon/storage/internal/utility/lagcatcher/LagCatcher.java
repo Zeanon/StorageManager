@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 1.0.0
  */
 @UtilityClass
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings("unused")
 public class LagCatcher {
 
 

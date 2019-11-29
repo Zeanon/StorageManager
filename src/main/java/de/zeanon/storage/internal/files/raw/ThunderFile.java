@@ -39,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List>, TripletMap, List> {
 
 
-	private int bufferSize = 8192;
+	private int bufferSize;
 
 
 	/**
@@ -55,9 +55,11 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 						  final @Nullable InputStream inputStream,
 						  final @NotNull ReloadSetting reloadSetting,
 						  final @NotNull CommentSetting commentSetting,
+						  final int bufferSize,
 						  final @NotNull Class<? extends TripletMap> map,
 						  final @NotNull Class<? extends List> list) {
 		super(file, FileType.THUNDER, new LocalFileData(new Collections(map, list)), reloadSetting, commentSetting);
+		this.bufferSize = bufferSize;
 
 		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
 			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
