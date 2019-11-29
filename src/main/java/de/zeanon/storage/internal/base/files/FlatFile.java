@@ -9,16 +9,14 @@ import de.zeanon.storage.internal.base.interfaces.FileType;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.base.settings.Reload;
 import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -198,7 +196,10 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 */
 	@Synchronized
 	public void replaceInFile(final @NotNull CharSequence target, final @NotNull CharSequence replacement) throws IOException {
-		final @NotNull Iterator<String> lines = Files.readAllLines(this.file.toPath()).iterator();
+		final @NotNull Iterator<String> lines;
+		try (final @NotNull BufferedReader reader = new BufferedReader(new FileReader(this.file))) {
+			lines = reader.lines().collect(Collectors.toList()).iterator();
+		}
 		final @NotNull @Cleanup PrintWriter writer = new PrintWriter(this.file);
 		writer.print((lines.next()).replace(target, replacement));
 		lines.forEachRemaining(line -> {
@@ -225,7 +226,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 		//noinspection unchecked
 		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
-		for (@NotNull String key : keys) {
+		for (final @NotNull String key : keys) {
 			tempMap.put(key, this.fileData.get(key));
 		}
 		return tempMap;
@@ -237,7 +238,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 		//noinspection unchecked
 		final @NotNull Map<String[], Object> tempMap = this.provider.newMap();
-		for (String[] key : keys) {
+		for (final @NotNull String[] key : keys) {
 			tempMap.put(key, this.fileData.getUseArray(key));
 		}
 		return tempMap;
@@ -249,7 +250,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 		//noinspection unchecked
 		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
-		for (@NotNull String key : keys) {
+		for (final @NotNull String key : keys) {
 			tempMap.put(key, this.fileData.get(key));
 		}
 		return tempMap;
@@ -261,7 +262,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 		//noinspection unchecked
 		final @NotNull Map<String[], Object> tempMap = this.provider.newMap();
-		for (String[] key : keys) {
+		for (final @NotNull String[] key : keys) {
 			tempMap.put(key, this.fileData.getUseArray(key));
 		}
 		return tempMap;
@@ -273,7 +274,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 		//noinspection unchecked
 		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
-		for (String tempKey : keys) {
+		for (final @NotNull String tempKey : keys) {
 			tempMap.put(blockKey, this.fileData.get(blockKey + "." + tempKey));
 		}
 		return tempMap;
@@ -286,8 +287,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 		//noinspection unchecked
 		final @NotNull Map<String[], Object> tempMap = this.provider.newMap();
-		for (@NotNull String[] tempKey : keys) {
-			@NotNull String[] key = new String[blockKey.length + tempKey.length];
+		for (final @NotNull String[] tempKey : keys) {
+			final @NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
 			tempMap.put(blockKey, this.fileData.getUseArray(key));
@@ -301,7 +302,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 		//noinspection unchecked
 		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
-		for (String tempKey : keys) {
+		for (final @NotNull String tempKey : keys) {
 			tempMap.put(blockKey, this.fileData.get(blockKey + "." + tempKey));
 		}
 		return tempMap;
@@ -314,8 +315,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 		//noinspection unchecked
 		final @NotNull Map<String[], Object> tempMap = this.provider.newMap();
-		for (@NotNull String[] tempKey : keys) {
-			@NotNull String[] key = new String[blockKey.length + tempKey.length];
+		for (final @NotNull String[] tempKey : keys) {
+			final @NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
 			tempMap.put(blockKey, this.fileData.getUseArray(key));
@@ -528,8 +529,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
-		for (@NotNull Map.Entry<String[], Object> entry : map.entrySet()) {
-			@NotNull String[] tempKey = new String[key.length + entry.getKey().length];
+		for (final @NotNull Map.Entry<String[], Object> entry : map.entrySet()) {
+			final @NotNull String[] tempKey = new String[key.length + entry.getKey().length];
 			System.arraycopy(key, 0, tempKey, 0, key.length);
 			System.arraycopy(entry.getKey(), 0, tempKey, key.length, entry.getKey().length);
 			this.fileData.insertUseArray(tempKey, entry.getValue());
@@ -548,7 +549,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	private boolean internalRemoveUseArray(final @NotNull String... key) {
 		this.update();
 
-		@NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData.toString();
 		this.fileData.removeUseArray(key);
 		return !this.fileData.toString().equals(tempData);
 	}
@@ -619,7 +620,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 		final @NotNull String tempData = this.fileData.toString();
 		for (final @NotNull String[] tempKey : keys) {
-			@NotNull String[] key = new String[blockKey.length + tempKey.length];
+			final @NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
 			this.fileData().removeUseArray(key);
@@ -633,7 +634,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 		final @NotNull String tempData = this.fileData.toString();
 		for (final @NotNull String[] tempKey : keys) {
-			@NotNull String[] key = new String[blockKey.length + tempKey.length];
+			final @NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
 			this.fileData().removeUseArray(key);

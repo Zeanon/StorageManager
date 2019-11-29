@@ -25,29 +25,29 @@ public class YamlFileSection extends CommentEnabledSection<YamlFile, Map, List> 
 
 
 	@NotNull
-	private final YamlFile yamlFile;
+	private final YamlFile baseFile;
 
 
-	protected YamlFileSection(final @NotNull String sectionKey, final @NotNull YamlFile yamlFile) {
-		super(sectionKey, yamlFile);
-		this.yamlFile = yamlFile;
+	protected YamlFileSection(final @NotNull String sectionKey, final @NotNull YamlFile baseFile) {
+		super(sectionKey, baseFile);
+		this.baseFile = baseFile;
 	}
 
-	protected YamlFileSection(final @NotNull String[] sectionKey, final @NotNull YamlFile yamlFile) {
-		super(sectionKey, yamlFile);
-		this.yamlFile = yamlFile;
+	protected YamlFileSection(final @NotNull String[] sectionKey, final @NotNull YamlFile baseFile) {
+		super(sectionKey, baseFile);
+		this.baseFile = baseFile;
 	}
 
 
 	@NotNull
 	@Override
 	public YamlFileSection getSection(final @NotNull String sectionKey) {
-		return new YamlFileSection(this.getFinalKey(sectionKey), this.yamlFile);
+		return new YamlFileSection(this.getFinalKey(sectionKey), this.baseFile);
 	}
 
 	@NotNull
 	@Override
 	public YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new YamlFileSection(this.getFinalArrayKey(sectionKey), this.yamlFile);
+		return new YamlFileSection(this.getFinalArrayKey(sectionKey), this.baseFile);
 	}
 }

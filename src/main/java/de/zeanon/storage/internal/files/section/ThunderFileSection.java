@@ -24,33 +24,34 @@ public class ThunderFileSection extends CommentEnabledSection<ThunderFile, Tripl
 
 
 	@NotNull
-	private final ThunderFile thunderFile;
+	private final ThunderFile baseFile;
 
 
-	protected ThunderFileSection(final @NotNull String sectionKey, final @NotNull ThunderFile thunderFile) {
-		super(sectionKey, thunderFile);
-		this.thunderFile = thunderFile;
+	protected ThunderFileSection(final @NotNull String sectionKey, final @NotNull ThunderFile baseFile) {
+		super(sectionKey, baseFile);
+		this.baseFile = baseFile;
 	}
 
-	protected ThunderFileSection(final @NotNull String[] sectionKey, final @NotNull ThunderFile thunderFile) {
-		super(sectionKey, thunderFile);
-		this.thunderFile = thunderFile;
+	protected ThunderFileSection(final @NotNull String[] sectionKey, final @NotNull ThunderFile baseFile) {
+		super(sectionKey, baseFile);
+		this.baseFile = baseFile;
 	}
 
 
 	public void setBigMap(final boolean bigMap) {
-		this.thunderFile.bigMap(bigMap);
+		this.baseFile.bigMap(bigMap);
 	}
+
 
 	@NotNull
 	@Override
 	public ThunderFileSection getSection(final @NotNull String sectionKey) {
-		return new ThunderFileSection(this.getFinalKey(sectionKey), this.thunderFile);
+		return new ThunderFileSection(this.getFinalKey(sectionKey), this.baseFile);
 	}
 
 	@NotNull
 	@Override
 	public ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new ThunderFileSection(this.getFinalArrayKey(sectionKey), this.thunderFile);
+		return new ThunderFileSection(this.getFinalArrayKey(sectionKey), this.baseFile);
 	}
 }

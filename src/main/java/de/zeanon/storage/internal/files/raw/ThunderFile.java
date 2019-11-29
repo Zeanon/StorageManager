@@ -19,11 +19,7 @@ import de.zeanon.storage.internal.utility.editor.ThunderEditor;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Synchronized;
-import lombok.ToString;
-import lombok.experimental.Accessors;
+import lombok.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,11 +32,14 @@ import org.jetbrains.annotations.Nullable;
  * @version 2.5.0
  */
 @Getter
-@Accessors(fluent = true)
+@Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
 public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List>, TripletMap, List> {
+
+
+	private int bufferSize = 8192;
 
 
 	/**
@@ -52,7 +51,12 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected ThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final @NotNull Class<? extends TripletMap> map, final @NotNull Class<? extends List> list) {
+	protected ThunderFile(final @NotNull File file,
+						  final @Nullable InputStream inputStream,
+						  final @NotNull ReloadSetting reloadSetting,
+						  final @NotNull CommentSetting commentSetting,
+						  final @NotNull Class<? extends TripletMap> map,
+						  final @NotNull Class<? extends List> list) {
 		super(file, FileType.THUNDER, new LocalFileData(new Collections(map, list)), reloadSetting, commentSetting);
 
 		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
@@ -60,7 +64,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 		}
 
 		try {
-			this.fileData().loadData(ThunderEditor.readData(this.file(), this.getCommentSetting(), this.provider()));
+			this.fileData().loadData(ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize));
 			this.lastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
@@ -74,7 +78,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 	@Synchronized
 	public void reload() {
 		try {
-			this.fileData().loadData(ThunderEditor.readData(this.file(), this.getCommentSetting(), this.provider()));
+			this.fileData().loadData(ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize));
 			this.lastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());

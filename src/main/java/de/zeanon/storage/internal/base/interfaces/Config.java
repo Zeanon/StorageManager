@@ -19,7 +19,7 @@ public interface Config<M extends Map, L extends List> extends DataStorage<M, L>
 
 	void setCommentSetting(final CommentSetting commentSetting);
 
-	@NotNull List<String> getHeader();
+	@Nullable List<String> getHeader();
 
 	default void setHeader(final @Nullable String... header) {
 		this.setHeader(header == null ? null : Arrays.asList(header));
@@ -37,7 +37,7 @@ public interface Config<M extends Map, L extends List> extends DataStorage<M, L>
 
 	@NotNull List<String> getComments();
 
-	default @NotNull List<String> getHeader(final @NotNull CommentSetting commentSetting) {
+	default @Nullable List<String> getHeader(final @NotNull CommentSetting commentSetting) {
 		this.setCommentSetting(commentSetting);
 		return this.getHeader();
 	}

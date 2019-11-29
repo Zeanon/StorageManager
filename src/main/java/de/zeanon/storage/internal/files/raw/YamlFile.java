@@ -20,8 +20,10 @@ import de.zeanon.storage.internal.utility.editor.YamlEditor;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
-import lombok.*;
-import lombok.experimental.Accessors;
+import lombok.Cleanup;
+import lombok.EqualsAndHashCode;
+import lombok.Synchronized;
+import lombok.ToString;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,8 +35,6 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.3.0
  */
-@Getter
-@Accessors(fluent = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
@@ -129,7 +129,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 	}
 
 	private void write(final @NotNull Map fileData) throws IOException {
-		@NotNull @Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.file()));
+		final @NotNull @Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.file()));
 		writer.write(fileData);
 	}
 

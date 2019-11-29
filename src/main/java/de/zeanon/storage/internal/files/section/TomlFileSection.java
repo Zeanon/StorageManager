@@ -24,28 +24,29 @@ public class TomlFileSection extends FlatSection<TomlFile, Map, List> {
 
 
 	@NotNull
-	private final TomlFile tomlFile;
+	private final TomlFile baseFile;
 
 
-	protected TomlFileSection(final @NotNull String sectionKey, final @NotNull TomlFile tomlFile) {
-		super(sectionKey, tomlFile);
-		this.tomlFile = tomlFile;
+	protected TomlFileSection(final @NotNull String sectionKey, final @NotNull TomlFile baseFile) {
+		super(sectionKey, baseFile);
+		this.baseFile = baseFile;
 	}
 
-	protected TomlFileSection(final @NotNull String[] sectionKey, final @NotNull TomlFile tomlFile) {
-		super(sectionKey, tomlFile);
-		this.tomlFile = tomlFile;
+	protected TomlFileSection(final @NotNull String[] sectionKey, final @NotNull TomlFile baseFile) {
+		super(sectionKey, baseFile);
+		this.baseFile = baseFile;
 	}
+
 
 	@NotNull
 	@Override
 	public TomlFileSection getSection(final @NotNull String sectionKey) {
-		return new TomlFileSection(this.getFinalKey(sectionKey), this.tomlFile);
+		return new TomlFileSection(this.getFinalKey(sectionKey), this.baseFile);
 	}
 
 	@NotNull
 	@Override
 	public TomlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new TomlFileSection(this.getFinalArrayKey(sectionKey), this.tomlFile);
+		return new TomlFileSection(this.getFinalArrayKey(sectionKey), this.baseFile);
 	}
 }

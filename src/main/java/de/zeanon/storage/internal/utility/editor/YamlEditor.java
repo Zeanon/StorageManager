@@ -1,15 +1,12 @@
 package de.zeanon.storage.internal.utility.editor;
 
 import de.zeanon.storage.internal.base.cache.base.Provider;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
+import java.io.*;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.Cleanup;
 import lombok.Synchronized;
 import lombok.experimental.UtilityClass;
@@ -35,7 +32,9 @@ public class YamlEditor {
 	@Synchronized
 	@Contract("_ -> new")
 	public static @NotNull List<String> read(final @NotNull File file) throws IOException {
-		return Files.readAllLines(file.toPath());
+		try (final @NotNull BufferedReader reader = new BufferedReader(new FileReader(file))) {
+			return reader.lines().collect(Collectors.toList());
+		}
 	}
 
 	public static @NotNull List<String> readFooter(final @NotNull File file, final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {

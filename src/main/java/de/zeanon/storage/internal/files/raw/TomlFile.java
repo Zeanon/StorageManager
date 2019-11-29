@@ -17,10 +17,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.Synchronized;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,8 +30,6 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.2.0
  */
-@Getter
-@Accessors(fluent = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")

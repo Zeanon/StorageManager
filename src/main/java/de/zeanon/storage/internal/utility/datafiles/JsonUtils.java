@@ -32,7 +32,7 @@ public class JsonUtils {
 		return jsonData;
 	}
 
-	public static @NotNull Map<String, Object> jsonToMap(final @NotNull JSONObject json, @NotNull final Provider<? extends Map, ? extends List> provider) {
+	public static @NotNull Map<String, Object> jsonToMap(final @NotNull JSONObject json, final @NotNull Provider<? extends Map, ? extends List> provider) {
 		final @NotNull Map<String, Object> retMap = provider.newMap();
 		if (json != JSONObject.NULL) {
 			retMap.putAll(json.toMap());

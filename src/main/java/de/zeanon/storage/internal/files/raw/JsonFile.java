@@ -16,8 +16,10 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import lombok.*;
-import lombok.experimental.Accessors;
+import lombok.Cleanup;
+import lombok.EqualsAndHashCode;
+import lombok.Synchronized;
+import lombok.ToString;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,8 +34,6 @@ import org.json.JSONTokener;
  * @author Zeanon
  * @version 2.0.0
  */
-@Getter
-@Accessors(fluent = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")

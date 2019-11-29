@@ -8,13 +8,10 @@ import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.exceptions.ThunderException;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.settings.Comment;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
+import java.io.*;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 import javafx.util.Pair;
 import lombok.Synchronized;
 import lombok.experimental.UtilityClass;
@@ -42,7 +39,9 @@ public class ThunderEditor {
 	 * @throws RuntimeIOException  if the File can not be accessed properly
 	 * @throws ObjectNullException if a passed value is null
 	 */
-	public static void writeData(final @NotNull File file, final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData, final @NotNull CommentSetting commentSetting) {
+	public static void writeData(final @NotNull File file,
+								 final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData,
+								 final @NotNull CommentSetting commentSetting) {
 		if (commentSetting == Comment.PRESERVE) {
 			ThunderEditor.initialWriteWithComments(file, fileData);
 		} else if (commentSetting == Comment.SKIP) {
@@ -65,11 +64,14 @@ public class ThunderEditor {
 	 * @throws ThunderException    if the Content of the File can not be parsed properly
 	 * @throws ObjectNullException if a passed value is null
 	 */
-	public static @NotNull TripletMap<String, Object> readData(final @NotNull File file, final @NotNull CommentSetting commentSetting, @NotNull final Provider<? extends TripletMap, ? extends List> provider) throws ThunderException {
+	public static @NotNull TripletMap<String, Object> readData(final @NotNull File file,
+															   final @NotNull Provider<? extends TripletMap, ? extends List> provider,
+															   final @NotNull CommentSetting commentSetting,
+															   final int buffer_size) throws ThunderException {
 		if (commentSetting == Comment.PRESERVE) {
-			return ThunderEditor.initialReadWithComments(file, provider);
+			return ThunderEditor.initialReadWithComments(file, provider, buffer_size);
 		} else if (commentSetting == Comment.SKIP) {
-			return ThunderEditor.initialReadWithOutComments(file, provider);
+			return ThunderEditor.initialReadWithOutComments(file, provider, buffer_size);
 		} else {
 			throw new IllegalArgumentException("Illegal CommentSetting");
 		}
@@ -224,9 +226,13 @@ public class ThunderEditor {
 	// <Read Data with Comments>
 	@Synchronized
 	private static @NotNull TripletMap<String, Object> initialReadWithComments(final @NotNull File file,
-																			   @NotNull final Provider<? extends TripletMap, ? extends List> provider) throws ThunderException {
+																			   final @NotNull Provider<? extends TripletMap, ? extends List> provider,
+																			   final int buffer_size) throws ThunderException {
 		try {
-			final @NotNull List<String> lines = Files.readAllLines(file.toPath());
+			final @NotNull List<String> lines;
+			try (final @NotNull BufferedReader reader = new BufferedReader(new FileReader(file), buffer_size)) {
+				lines = reader.lines().collect(Collectors.toList());
+			}
 			//noinspection unchecked
 			final @NotNull TripletMap<String, Object> tempMap = provider.newMap();
 
@@ -264,7 +270,7 @@ public class ThunderEditor {
 
 	private static @NotNull TripletMap<String, Object> internalReadWithComments(final @NotNull String filePath,
 																				final @NotNull List<String> lines,
-																				@NotNull final Provider<? extends TripletMap, ? extends List> provider) throws ThunderException {
+																				final @NotNull Provider<? extends TripletMap, ? extends List> provider) throws ThunderException {
 		//noinspection unchecked
 		final @NotNull TripletMap<String, Object> tempMap = provider.newMap();
 
@@ -302,9 +308,13 @@ public class ThunderEditor {
 	// <Read Data without Comments>
 	@Synchronized
 	private static @NotNull TripletMap<String, Object> initialReadWithOutComments(final @NotNull File file,
-																				  @NotNull final Provider<? extends TripletMap, ? extends List> provider) throws ThunderException {
+																				  final @NotNull Provider<? extends TripletMap, ? extends List> provider,
+																				  final int buffer_size) throws ThunderException {
 		try {
-			final @NotNull List<String> lines = Files.readAllLines(file.toPath());
+			final @NotNull List<String> lines;
+			try (final @NotNull BufferedReader reader = new BufferedReader(new FileReader(file), buffer_size)) {
+				lines = reader.lines().collect(Collectors.toList());
+			}
 			//noinspection unchecked
 			final @NotNull TripletMap<String, Object> tempMap = provider.newMap();
 
@@ -340,7 +350,7 @@ public class ThunderEditor {
 
 	private static @NotNull TripletMap<String, Object> internalReadWithOutComments(final @NotNull String filePath,
 																				   final @NotNull List<String> lines,
-																				   @NotNull final Provider<? extends TripletMap, ? extends List> provider) throws ThunderException {
+																				   final @NotNull Provider<? extends TripletMap, ? extends List> provider) throws ThunderException {
 		//noinspection unchecked
 		final @NotNull TripletMap<String, Object> tempMap = provider.newMap();
 
@@ -377,7 +387,7 @@ public class ThunderEditor {
 											final @NotNull List<String> lines,
 											final @NotNull TripletMap<String, Object> tempMap,
 											final @NotNull String tempLine,
-											@NotNull final Provider<? extends TripletMap, ? extends List> provider,
+											final @NotNull Provider<? extends TripletMap, ? extends List> provider,
 											@Nullable String tempKey) throws ThunderException {
 		if (tempLine.contains("=")) {
 			final @NotNull String[] line = tempLine.split("=", 2);
@@ -423,7 +433,7 @@ public class ThunderEditor {
 
 	private static @NotNull List<String> readList(final @NotNull String filePath,
 												  final @NotNull List<String> lines,
-												  @NotNull final Provider<? extends TripletMap, ? extends List> provider) throws ThunderException {
+												  final @NotNull Provider<? extends TripletMap, ? extends List> provider) throws ThunderException {
 		@NotNull String tempLine;
 		//noinspection unchecked
 		final @NotNull List<String> tempList = provider.newList();

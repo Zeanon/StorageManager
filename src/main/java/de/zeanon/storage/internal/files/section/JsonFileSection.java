@@ -24,28 +24,28 @@ public class JsonFileSection extends FlatSection<JsonFile, Map, List> {
 
 
 	@NotNull
-	private final JsonFile jsonFile;
+	private final JsonFile baseFile;
 
 
-	protected JsonFileSection(final @NotNull String sectionKey, final @NotNull JsonFile jsonFile) {
-		super(sectionKey, jsonFile);
-		this.jsonFile = jsonFile;
+	protected JsonFileSection(final @NotNull String sectionKey, final @NotNull JsonFile baseFile) {
+		super(sectionKey, baseFile);
+		this.baseFile = baseFile;
 	}
 
-	protected JsonFileSection(final @NotNull String[] sectionKey, final @NotNull JsonFile jsonFile) {
-		super(sectionKey, jsonFile);
-		this.jsonFile = jsonFile;
+	protected JsonFileSection(final @NotNull String[] sectionKey, final @NotNull JsonFile baseFile) {
+		super(sectionKey, baseFile);
+		this.baseFile = baseFile;
 	}
 
 	@NotNull
 	@Override
 	public JsonFileSection getSection(final @NotNull String sectionKey) {
-		return new JsonFileSection(this.getFinalKey(sectionKey), this.jsonFile);
+		return new JsonFileSection(this.getFinalKey(sectionKey), this.baseFile);
 	}
 
 	@NotNull
 	@Override
 	public JsonFileSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new JsonFileSection(this.getFinalArrayKey(sectionKey), this.jsonFile);
+		return new JsonFileSection(this.getFinalArrayKey(sectionKey), this.baseFile);
 	}
 }
