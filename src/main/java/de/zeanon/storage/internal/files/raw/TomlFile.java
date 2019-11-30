@@ -98,9 +98,9 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 
 
 	@Override
-	protected void readFile() {
+	protected Map readFile() {
 		try {
-			this.fileData().loadData(com.electronwill.toml.Toml.read(this.file()));
+			return com.electronwill.toml.Toml.read(this.file());
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
 		} catch (TomlException e) {

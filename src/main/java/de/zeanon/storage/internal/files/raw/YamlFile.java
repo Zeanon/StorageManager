@@ -120,10 +120,10 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 
 
 	@Override
-	protected void readFile() {
+	protected Map readFile() {
 		try {
 			//noinspection unchecked
-			this.fileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.file())).read());
+			return (Map<String, Object>) new YamlReader(new FileReader(this.file())).read();
 		} catch (YamlException e) {
 			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e.getCause());
 		} catch (FileNotFoundException e) {

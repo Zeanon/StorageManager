@@ -174,7 +174,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 */
 	@Synchronized
 	public void reload() {
-		this.readFile();
+		this.fileData().loadData(this.readFile());
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
@@ -471,7 +471,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	/**
 	 * Read the Content of the File and parse it
 	 */
-	protected abstract void readFile();
+	protected abstract M readFile();
 
 	/**
 	 * Checks if the File needs to be reloaded and does so if true.

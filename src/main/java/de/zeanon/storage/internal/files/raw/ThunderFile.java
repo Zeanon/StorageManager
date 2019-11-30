@@ -115,9 +115,9 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 
 
 	@Override
-	protected void readFile() {
+	protected TripletMap readFile() {
 		try {
-			this.fileData().loadData(ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize));
+			return ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize);
 		} catch (RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
 		} catch (ThunderException e) {

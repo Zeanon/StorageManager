@@ -177,10 +177,10 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 
 
 	@Override
-	protected void readFile() {
+	protected Map readFile() {
 		try {
-			this.fileData().loadData(new JSONObject(new JSONTokener(
-					BaseFileUtils.createNewInputStreamFromFile(this.file()))).toMap());
+			return new JSONObject(new JSONTokener(
+					BaseFileUtils.createNewInputStreamFromFile(this.file()))).toMap();
 		} catch (RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '"
 										 + this.getAbsolutePath()
