@@ -170,9 +170,13 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	/**
-	 * Reread the content of the File into the cache
+	 * Reload the content of the File into the cache
 	 */
-	public abstract void reload();
+	@Synchronized
+	public void reload() {
+		this.readFile();
+		this.lastLoaded(System.currentTimeMillis());
+	}
 
 	/**
 	 * Save the cached Data to the File
@@ -439,7 +443,6 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
-
 	@Override
 	public void removeAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
 		if (this.internalRemoveAllUseArray(blockKey, keys)) {
@@ -464,6 +467,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	public boolean shouldReload() {
 		return this.reloadSetting.shouldReload(this);
 	}
+
+	/**
+	 * Read the Content of the File and parse it
+	 */
+	protected abstract void readFile();
 
 	/**
 	 * Checks if the File needs to be reloaded and does so if true.

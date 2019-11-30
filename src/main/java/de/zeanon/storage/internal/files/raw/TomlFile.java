@@ -61,20 +61,6 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		}
 	}
 
-
-	@Override
-	@Synchronized
-	public void reload() {
-		try {
-			this.fileData().loadData(com.electronwill.toml.Toml.read(this.file()));
-			this.lastLoaded(System.currentTimeMillis());
-		} catch (IOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
-		} catch (TomlException e) {
-			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
-		}
-	}
-
 	@Override
 	@Synchronized
 	public void save() {
@@ -108,6 +94,18 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	@Override
 	public TomlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
+	}
+
+
+	@Override
+	protected void readFile() {
+		try {
+			this.fileData().loadData(com.electronwill.toml.Toml.read(this.file()));
+		} catch (IOException e) {
+			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
+		} catch (TomlException e) {
+			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
+		}
 	}
 
 

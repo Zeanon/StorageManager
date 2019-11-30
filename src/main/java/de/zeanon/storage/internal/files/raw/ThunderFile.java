@@ -75,20 +75,6 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 		}
 	}
 
-
-	@Override
-	@Synchronized
-	public void reload() {
-		try {
-			this.fileData().loadData(ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize));
-			this.lastLoaded(System.currentTimeMillis());
-		} catch (RuntimeIOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
-		} catch (ThunderException e) {
-			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
-		}
-	}
-
 	@Override
 	@Synchronized
 	public void save() {
@@ -125,6 +111,18 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 	@Override
 	public ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
+	}
+
+
+	@Override
+	protected void readFile() {
+		try {
+			this.fileData().loadData(ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize));
+		} catch (RuntimeIOException e) {
+			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
+		} catch (ThunderException e) {
+			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
+		}
 	}
 
 

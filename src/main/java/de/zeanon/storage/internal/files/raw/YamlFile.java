@@ -73,21 +73,6 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 		}
 	}
 
-
-	@Override
-	@Synchronized
-	public void reload() {
-		try {
-			//noinspection unchecked
-			this.fileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.file())).read());
-			this.lastLoaded(System.currentTimeMillis());
-		} catch (YamlException e) {
-			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e.getCause());
-		} catch (FileNotFoundException e) {
-			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
-		}
-	}
-
 	@Override
 	@Synchronized
 	public void save() {
@@ -131,6 +116,19 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 	@Override
 	public @NotNull YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
+	}
+
+
+	@Override
+	protected void readFile() {
+		try {
+			//noinspection unchecked
+			this.fileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.file())).read());
+		} catch (YamlException e) {
+			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e.getCause());
+		} catch (FileNotFoundException e) {
+			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
+		}
 	}
 
 	private void write(final @NotNull Map fileData) throws IOException {

@@ -37,6 +37,7 @@ public class ThunderConfigSection extends ThunderFileSection implements Config<T
 		this.baseFile = baseFile;
 	}
 
+
 	@Override
 	public @Nullable List<String> getHeader() {
 		return this.baseFile.getHeader(this.getSectionKey());

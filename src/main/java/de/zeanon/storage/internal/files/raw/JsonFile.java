@@ -76,40 +76,6 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	}
 
 
-	@Override
-	@Synchronized
-	public void reload() {
-		try {
-			final @NotNull JSONTokener jsonTokener = new JSONTokener(
-					BaseFileUtils.createNewInputStreamFromFile(this.file()));
-			this.fileData().loadData(new JSONObject(jsonTokener).toMap());
-			this.lastLoaded(System.currentTimeMillis());
-		} catch (RuntimeIOException e) {
-			throw new FileParseException("Error while reloading '"
-										 + this.getAbsolutePath()
-										 + "'",
-										 e.getCause());
-		}
-	}
-
-	@Override
-	@Synchronized
-	public void save() {
-		try {
-			this.write(new JSONObject(this.fileData().getDataMap()));
-		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to "
-										 + this.file().getAbsolutePath()
-										 + "'",
-										 e.getCause());
-		}
-	}
-
-	@Override
-	public void bigList(final boolean bigList) {
-		this.provider().setListType(bigList ? BigList.class : GapList.class);
-	}
-
 	/**
 	 * Gets a Map by key, also used to get nested objects {@link JsonFile}
 	 *
@@ -119,42 +85,6 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	 */
 	@Override
 	public @Nullable Map getMap(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return this.provider().newMap();
-		} else {
-			return this.getMapWithoutPath(key);
-		}
-	}
-
-	@Override
-	public @Nullable Map getMapUseArray(final @NotNull String... key) {
-		if (!this.hasKeyUseArray(key)) {
-			return this.provider().newMap();
-		} else {
-			return this.getMapWithoutPath(key);
-		}
-	}
-
-	/**
-	 * Get a Section with a defined SectionKey
-	 *
-	 * @param sectionKey the sectionKey to be used as a prefix by the Section
-	 *
-	 * @return the Section using the given sectionKey
-	 */
-	@NotNull
-	@Override
-	public JsonFileSection getSection(final @NotNull String sectionKey) {
-		return new LocalSection(sectionKey, this);
-	}
-
-	@Override
-	public @NotNull JsonFileSection getSectionUseArray(@NotNull String... sectionKey) {
-		return new LocalSection(sectionKey, this);
-	}
-
-	private @Nullable Map getMapWithoutPath(final @NotNull String key,
-											final @NotNull Provider<? extends Map, ? extends List> provider) {
 		this.update();
 
 		if (!this.hasKey(key)) {
@@ -171,13 +101,21 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		if (map instanceof Map) {
 			return (Map<?, ?>) this.fileData().get(key);
 		} else if (map instanceof JSONObject) {
-			return JsonUtils.jsonToMap((JSONObject) map, provider);
+			return JsonUtils.jsonToMap((JSONObject) map, this.provider());
 		} else {
 			return null;
 		}
 	}
 
-	private @Nullable Map getMapWithoutPath(final @NotNull String... key) {
+	/**
+	 * Gets a Map by key, also used to get nested objects {@link JsonFile}
+	 *
+	 * @param key Path to Map-List in JSON
+	 *
+	 * @return Map
+	 */
+	@Override
+	public @Nullable Map getMapUseArray(final @NotNull String... key) {
 		this.update();
 
 		if (!this.hasKeyUseArray(key)) {
@@ -200,9 +138,55 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		}
 	}
 
-	private void write(final @NotNull JSONObject object) throws IOException {
-		@NotNull @Cleanup Writer writer = new PrintWriter(new FileWriter(this.file().getAbsolutePath()));
-		writer.write(object.toString(3));
+	@Override
+	@Synchronized
+	public void save() {
+		try {
+			final @NotNull @Cleanup Writer writer = new PrintWriter(new FileWriter(this.file().getAbsolutePath()));
+			writer.write(new JSONObject(this.fileData().getDataMap()).toString(3));
+		} catch (IOException e) {
+			throw new RuntimeIOException("Error while writing to "
+										 + this.file().getAbsolutePath()
+										 + "'",
+										 e.getCause());
+		}
+	}
+
+	@Override
+	public void bigList(final boolean bigList) {
+		this.provider().setListType(bigList ? BigList.class : GapList.class);
+	}
+
+	/**
+	 * Get a Section with a defined SectionKey
+	 *
+	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 *
+	 * @return the Section using the given sectionKey
+	 */
+	@NotNull
+	@Override
+	public JsonFileSection getSection(final @NotNull String sectionKey) {
+		return new LocalSection(sectionKey, this);
+	}
+
+	@Override
+	public @NotNull JsonFileSection getSectionUseArray(@NotNull String... sectionKey) {
+		return new LocalSection(sectionKey, this);
+	}
+
+
+	@Override
+	protected void readFile() {
+		try {
+			this.fileData().loadData(new JSONObject(new JSONTokener(
+					BaseFileUtils.createNewInputStreamFromFile(this.file()))).toMap());
+		} catch (RuntimeIOException e) {
+			throw new RuntimeIOException("Error while loading '"
+										 + this.getAbsolutePath()
+										 + "'",
+										 e.getCause());
+		}
 	}
 
 
