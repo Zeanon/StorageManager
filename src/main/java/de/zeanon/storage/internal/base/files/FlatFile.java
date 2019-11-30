@@ -63,7 +63,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 			this.reloadSetting = reloadSetting;
 			this.provider = this.fileData.provider();
 		} else {
-			throw new FileTypeException("File '" + file.getAbsolutePath() + "' is not of type '" + fileType + "'");
+			throw new FileTypeException("File '"
+										+ file.getAbsolutePath()
+										+ "' is not of type '"
+										+ fileType
+										+ "'");
 		}
 	}
 
@@ -76,7 +80,10 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		try {
 			return this.file.getCanonicalPath();
 		} catch (@NotNull IOException | SecurityException e) {
-			throw new RuntimeIOException("Could not get Canonical Path of '" + this.file.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Could not get Canonical Path of '"
+										 + this.file.getAbsolutePath()
+										 + "'",
+										 e);
 		}
 	}
 
@@ -112,7 +119,9 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		try {
 			Files.delete(this.file.toPath());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Could not delete '" + this.file.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Could not delete '"
+										 + this.file.getAbsolutePath() + "'",
+										 e);
 		}
 	}
 
@@ -202,7 +211,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @param replacement the Replacement Sequence.
 	 */
 	@Synchronized
-	public void replaceInFile(final @NotNull CharSequence target, final @NotNull CharSequence replacement) throws IOException {
+	public void replaceInFile(final @NotNull CharSequence target,
+							  final @NotNull CharSequence replacement) throws IOException {
 		final @NotNull Iterator<String> lines;
 		try (final @NotNull BufferedReader reader = new BufferedReader(new FileReader(this.file))) {
 			lines = reader.lines().collect(Collectors.toList()).iterator();
@@ -276,7 +286,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@Override
-	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull String... keys) {
+	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey,
+											   final @NotNull String... keys) {
 		this.update();
 
 		//noinspection unchecked
@@ -289,7 +300,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 	@Override
 	@SuppressWarnings("DuplicatedCode")
-	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
+	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey,
+														 final @NotNull Collection<String[]> keys) {
 		this.update();
 
 		//noinspection unchecked
@@ -304,20 +316,9 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@Override
-	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
-		this.update();
-
-		//noinspection unchecked
-		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
-		for (final @NotNull String tempKey : keys) {
-			tempMap.put(blockKey, this.fileData.get(blockKey + "." + tempKey));
-		}
-		return tempMap;
-	}
-
-	@Override
 	@SuppressWarnings("DuplicatedCode")
-	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
+	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey,
+														 final @NotNull String[]... keys) {
 		this.update();
 
 		//noinspection unchecked
@@ -327,6 +328,19 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
 			tempMap.put(blockKey, this.fileData.getUseArray(key));
+		}
+		return tempMap;
+	}
+
+	@Override
+	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey,
+											   final @NotNull Collection<String> keys) {
+		this.update();
+
+		//noinspection unchecked
+		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
+		for (final @NotNull String tempKey : keys) {
+			tempMap.put(blockKey, this.fileData.get(blockKey + "." + tempKey));
 		}
 		return tempMap;
 	}
@@ -364,7 +378,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@Override
-	public void setAll(final @NotNull String blockKey, final @NotNull Map<String, Object> dataMap) {
+	public void setAll(final @NotNull String blockKey,
+					   final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(blockKey, dataMap)) {
 			this.save();
 		}
@@ -372,7 +387,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@Override
-	public void setAllUseArray(final @NotNull String[] blockKey, final @NotNull Map<String[], Object> dataMap) {
+	public void setAllUseArray(final @NotNull String[] blockKey,
+							   final @NotNull Map<String[], Object> dataMap) {
 		if (this.insertAllUseArray(blockKey, dataMap)) {
 			this.save();
 		}
@@ -428,7 +444,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@Override
-	public void removeAll(final @NotNull String blockKey, final @NotNull String... keys) {
+	public void removeAll(final @NotNull String blockKey,
+						  final @NotNull String... keys) {
 		if (this.internalRemoveAll(blockKey, keys)) {
 			this.save();
 		}
@@ -436,7 +453,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@Override
-	public void removeAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
+	public void removeAll(final @NotNull String blockKey,
+						  final @NotNull Collection<String> keys) {
 		if (this.internalRemoveAll(blockKey, keys)) {
 			this.save();
 		}
@@ -444,7 +462,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@Override
-	public void removeAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
+	public void removeAllUseArray(final @NotNull String[] blockKey,
+								  final @NotNull String[]... keys) {
 		if (this.internalRemoveAllUseArray(blockKey, keys)) {
 			this.save();
 		}
@@ -452,7 +471,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@Override
-	public void removeAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
+	public void removeAllUseArray(final @NotNull String[] blockKey,
+								  final @NotNull Collection<String[]> keys) {
 		if (this.internalRemoveAllUseArray(blockKey, keys)) {
 			this.save();
 		}
@@ -490,7 +510,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 *
 	 * @return true if the Data contained by FileData contained after adding the key-value-pair.
 	 */
-	private boolean insert(final @NotNull String key, final @Nullable Object value) {
+	private boolean insert(final @NotNull String key,
+						   final @Nullable Object value) {
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -498,7 +519,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	private boolean insertUseArray(final @NotNull String[] key, final @Nullable Object value) {
+	private boolean insertUseArray(final @NotNull String[] key,
+								   final @Nullable Object value) {
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -526,7 +548,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	private boolean insertAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
+	private boolean insertAll(final @NotNull String key,
+							  final @NotNull Map<String, Object> map) {
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -536,7 +559,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	private boolean insertAllUseArray(final @NotNull String[] key, final @NotNull Map<String[], Object> map) {
+	private boolean insertAllUseArray(final @NotNull String[] key,
+									  final @NotNull Map<String[], Object> map) {
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -605,7 +629,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	private boolean internalRemoveAll(final @NotNull String blockKey, final @NotNull String... keys) {
+	private boolean internalRemoveAll(final @NotNull String blockKey,
+									  final @NotNull String... keys) {
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -615,7 +640,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	private boolean internalRemoveAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
+	private boolean internalRemoveAll(final @NotNull String blockKey,
+									  final @NotNull Collection<String> keys) {
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -626,7 +652,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@SuppressWarnings("DuplicatedCode")
-	private boolean internalRemoveAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
+	private boolean internalRemoveAllUseArray(final @NotNull String[] blockKey,
+											  final @NotNull String[]... keys) {
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
@@ -640,7 +667,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@SuppressWarnings("DuplicatedCode")
-	private boolean internalRemoveAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
+	private boolean internalRemoveAllUseArray(final @NotNull String[] blockKey,
+											  final @NotNull Collection<String[]> keys) {
 		this.update();
 
 		final @NotNull String tempData = this.fileData.toString();
