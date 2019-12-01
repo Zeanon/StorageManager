@@ -43,7 +43,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	@Getter(onMethod_ = {@Override})
 	private final @NotNull Provider<M, L> provider;
 	@Setter(AccessLevel.PROTECTED)
-	private long lastLoaded;
+	private volatile long lastLoaded;
 	/**
 	 * Default: {@link Reload#INTELLIGENT}
 	 */
@@ -491,7 +491,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	/**
 	 * Read the Content of the File and parse it
 	 */
-	protected abstract M readFile();
+	protected abstract @NotNull M readFile();
 
 	/**
 	 * Checks if the File needs to be reloaded and does so if true.

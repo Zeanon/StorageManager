@@ -38,7 +38,7 @@ public class ThunderFileSection extends CommentEnabledSection<ThunderFile, Tripl
 	}
 
 
-	public void setBigMap(final boolean bigMap) {
+	public void bigMap(final boolean bigMap) {
 		this.baseFile.bigMap(bigMap);
 	}
 

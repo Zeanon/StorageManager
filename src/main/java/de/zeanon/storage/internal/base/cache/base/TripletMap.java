@@ -2,10 +2,7 @@ package de.zeanon.storage.internal.base.cache.base;
 
 import de.zeanon.storage.external.lists.IList;
 import java.util.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,12 +18,12 @@ import org.jetbrains.annotations.Nullable;
  * @version 1.3.0
  */
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
 @SuppressWarnings("unused")
 public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 
 
-	protected @NotNull IList<TripletMap.TripletNode<K, V>> localList;
+	protected final @NotNull IList<TripletMap.TripletNode<K, V>> localList;
 
 
 	/**
@@ -93,13 +90,13 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * previously associated <tt>null</tt> with <tt>key</tt>.)
 	 */
 	@Override
-	public @Nullable V put(final @NotNull K key, final @NotNull V value) {
+	public @Nullable V put(final @NotNull K key, final @Nullable V value) {
 		for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
 			if (tempNode.getKey().equals(key)) {
 				return tempNode.setValue(value);
 			}
 		}
-		this.localList.add(new TripletNode<>(this.localList.size(), key, value));
+		this.add(key, value);
 		return null;
 	}
 
@@ -134,8 +131,8 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * @param key   key with which the specified value is to be associated
 	 * @param value value to be associated with the specified key
 	 */
-	public void add(final @NotNull K key, final @NotNull V value) {
-		this.localList.add(new TripletNode<>(this.size(), key, value));
+	public void add(final @NotNull K key, final @Nullable V value) {
+		this.add(new TripletNode<>(this.size(), key, value));
 	}
 
 	/**
@@ -163,7 +160,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 */
 	public void addAll(final @NotNull Map<? extends K, ? extends V> nodeMap) {
 		for (final @NotNull Map.Entry<? extends K, ? extends V> entry : nodeMap.entrySet()) {
-			this.localList.add(new TripletNode<>(this.size(), entry.getKey(), entry.getValue()));
+			this.add(entry.getKey(), entry.getValue());
 		}
 	}
 
@@ -375,7 +372,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		 *                                       prevents it from being stored in the backing map
 		 */
 		@Override
-		public @Nullable V setValue(final @NotNull V value) {
+		public @Nullable V setValue(final @Nullable V value) {
 			try {
 				return this.value;
 			} finally {

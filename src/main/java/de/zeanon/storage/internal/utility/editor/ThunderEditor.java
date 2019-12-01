@@ -94,7 +94,7 @@ public class ThunderEditor {
 			}
 			writer.flush();
 		} catch (FileNotFoundException e) {
-			throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -164,7 +164,7 @@ public class ThunderEditor {
 			}
 			writer.flush();
 		} catch (FileNotFoundException e) {
-			throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -262,9 +262,9 @@ public class ThunderEditor {
 			tempMap.trimToSize();
 			return tempMap;
 		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new ThunderException("Error while parsing content of '" + file.getAbsolutePath() + "'", e.getCause());
+			throw new ThunderException("Error while parsing content of '" + file.getAbsolutePath() + "'", e);
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -342,9 +342,9 @@ public class ThunderEditor {
 			tempMap.trimToSize();
 			return tempMap;
 		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new ThunderException("Error while parsing content of '" + file.getAbsolutePath() + "'", e.getCause());
+			throw new ThunderException("Error while parsing content of '" + file.getAbsolutePath() + "'", e);
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
 		}
 	}
 

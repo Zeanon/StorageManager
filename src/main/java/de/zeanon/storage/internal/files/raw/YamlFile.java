@@ -18,8 +18,10 @@ import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import de.zeanon.storage.internal.utility.datafiles.YamlUtils;
 import de.zeanon.storage.internal.utility.editor.YamlEditor;
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.Cleanup;
 import lombok.EqualsAndHashCode;
 import lombok.Synchronized;
@@ -67,9 +69,9 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 			this.fileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.file())).read());
 			this.lastLoaded(System.currentTimeMillis());
 		} catch (FileNotFoundException e) {
-			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
 		} catch (YamlException e) {
-			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e.getCause());
+			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -92,13 +94,18 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 				this.write(this.fileData().getDataMap());
 			}
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e);
 		}
 	}
 
 	@Override
 	public void bigList(final boolean bigList) {
 		this.provider().setListType(bigList ? BigList.class : GapList.class);
+	}
+
+	@Override
+	public void synchronizeData(final boolean synchronize) {
+		this.provider().setMapType(synchronize ? ConcurrentHashMap.class : HashMap.class);
 	}
 
 	/**
@@ -120,14 +127,14 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 
 
 	@Override
-	protected Map readFile() {
+	protected @NotNull Map readFile() {
 		try {
 			//noinspection unchecked
 			return (Map<String, Object>) new YamlReader(new FileReader(this.file())).read();
 		} catch (YamlException e) {
-			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e.getCause());
+			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e);
 		} catch (FileNotFoundException e) {
-			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
 		}
 	}
 

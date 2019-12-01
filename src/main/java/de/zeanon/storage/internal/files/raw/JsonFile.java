@@ -12,8 +12,10 @@ import de.zeanon.storage.internal.files.section.JsonFileSection;
 import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import de.zeanon.storage.internal.utility.datafiles.JsonUtils;
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.Cleanup;
 import lombok.EqualsAndHashCode;
 import lombok.Synchronized;
@@ -42,6 +44,8 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	 * @param file          the File to be used as a backend
 	 * @param inputStream   the FileContent to be set on the creation of the File
 	 * @param reloadSetting the ReloadSetting to be used with this instance
+	 * @param map           the Map implementation to be used, default is HashMap or ConcurrentHashMap if synchronized
+	 * @param list          the List implementation to be used, default ist GapList
 	 *
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 * @throws RuntimeIOException if the File can not be accessed properly
@@ -66,12 +70,12 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 			throw new FileParseException("Error while parsing '"
 										 + this.getAbsolutePath()
 										 + "'",
-										 e.getCause());
+										 e);
 		} catch (RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '"
 										 + this.getAbsolutePath()
 										 + "'",
-										 e.getCause());
+										 e);
 		}
 	}
 
@@ -148,13 +152,18 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 			throw new RuntimeIOException("Error while writing to "
 										 + this.file().getAbsolutePath()
 										 + "'",
-										 e.getCause());
+										 e);
 		}
 	}
 
 	@Override
 	public void bigList(final boolean bigList) {
 		this.provider().setListType(bigList ? BigList.class : GapList.class);
+	}
+
+	@Override
+	public void synchronizeData(final boolean synchronize) {
+		this.provider().setMapType(synchronize ? ConcurrentHashMap.class : HashMap.class);
 	}
 
 	/**
@@ -177,7 +186,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 
 
 	@Override
-	protected Map readFile() {
+	protected @NotNull Map readFile() {
 		try {
 			return new JSONObject(new JSONTokener(
 					BaseFileUtils.createNewInputStreamFromFile(this.file()))).toMap();
@@ -185,7 +194,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 			throw new RuntimeIOException("Error while loading '"
 										 + this.getAbsolutePath()
 										 + "'",
-										 e.getCause());
+										 e);
 		}
 	}
 

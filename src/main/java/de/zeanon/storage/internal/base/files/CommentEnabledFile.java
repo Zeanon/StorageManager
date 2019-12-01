@@ -35,8 +35,7 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	/**
 	 * Default: {@link Comment#SKIP}
 	 */
-	@NotNull
-	private CommentSetting commentSetting;
+	private @NotNull CommentSetting commentSetting;
 
 
 	protected CommentEnabledFile(final @NotNull File file,

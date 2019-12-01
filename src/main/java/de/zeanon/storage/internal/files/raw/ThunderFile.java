@@ -5,6 +5,8 @@ import de.zeanon.storage.external.lists.GapList;
 import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.cache.base.TripletMap;
 import de.zeanon.storage.internal.base.cache.datamap.BigTripletMap;
+import de.zeanon.storage.internal.base.cache.datamap.ConcurrentBigTripletMap;
+import de.zeanon.storage.internal.base.cache.datamap.ConcurrentGapTripletMap;
 import de.zeanon.storage.internal.base.cache.datamap.GapTripletMap;
 import de.zeanon.storage.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
@@ -40,6 +42,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 
 
 	private int bufferSize;
+	private boolean bigMap;
+	private boolean synchronizedData;
 
 
 	/**
@@ -56,10 +60,14 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 						  final @NotNull ReloadSetting reloadSetting,
 						  final @NotNull CommentSetting commentSetting,
 						  final int bufferSize,
+						  final boolean bigMap,
+						  final boolean synchronizedData,
 						  final @NotNull Class<? extends TripletMap> map,
 						  final @NotNull Class<? extends List> list) {
 		super(file, FileType.THUNDER, new LocalFileData(new Collections(map, list)), reloadSetting, commentSetting);
 		this.bufferSize = bufferSize;
+		this.bigMap = bigMap;
+		this.synchronizedData = synchronizedData;
 
 		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
 			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
@@ -69,9 +77,9 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 			this.fileData().loadData(ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize));
 			this.lastLoaded(System.currentTimeMillis());
 		} catch (RuntimeIOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e);
 		} catch (ThunderException e) {
-			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
+			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -81,17 +89,26 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 		try {
 			ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
 		} catch (RuntimeIOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e);
 		}
 	}
 
 	public void bigMap(final boolean bigMap) {
-		this.provider().setMapType(bigMap ? BigTripletMap.class : GapTripletMap.class);
+		this.bigMap = bigMap;
+		this.provider().setMapType(this.synchronizedData ? (this.bigMap ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
+														 : (this.bigMap ? BigTripletMap.class : GapTripletMap.class));
 	}
 
 	@Override
 	public void bigList(final boolean bigList) {
 		this.provider().setListType(bigList ? BigList.class : GapList.class);
+	}
+
+	@Override
+	public void synchronizeData(final boolean synchronize) {
+		this.synchronizedData = synchronize;
+		this.provider().setMapType(this.synchronizedData ? (this.bigMap ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
+														 : (this.bigMap ? BigTripletMap.class : GapTripletMap.class));
 	}
 
 	/**
@@ -115,13 +132,13 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 
 
 	@Override
-	protected TripletMap readFile() {
+	protected @NotNull TripletMap readFile() {
 		try {
 			return ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize);
 		} catch (RuntimeIOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e);
 		} catch (ThunderException e) {
-			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
+			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}
 	}
 

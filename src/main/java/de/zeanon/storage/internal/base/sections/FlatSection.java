@@ -69,6 +69,11 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	}
 
 	@Override
+	public void synchronizeData(final boolean synchronize) {
+		this.flatFile.synchronizeData(synchronize);
+	}
+
+	@Override
 	public @Nullable Object get(final @NotNull String key) {
 		return this.flatFile.get(this.getFinalKey(key));
 	}

@@ -23,6 +23,8 @@ public interface DataStorage<M extends Map, L extends List> {
 
 	void bigList(final boolean bigList);
 
+	void synchronizeData(final boolean synchronize);
+
 	@NotNull Provider<M, L> provider();
 
 	/**

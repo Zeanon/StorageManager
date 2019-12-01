@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
@@ -46,6 +47,12 @@ public class YamlConfigBuilder extends StorageManager<YamlConfigBuilder, YamlCon
 	@Contract("_ -> this")
 	public final @NotNull YamlConfigBuilder bigList(final boolean bigList) {
 		return this.listType(bigList ? BigList.class : GapList.class);
+	}
+
+	@Override
+	@Contract("_ -> this")
+	public @NotNull YamlConfigBuilder synchronizeData(final boolean synchronize) {
+		return this.mapType(synchronize ? ConcurrentHashMap.class : HashMap.class);
 	}
 
 

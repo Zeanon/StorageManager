@@ -14,8 +14,10 @@ import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.EqualsAndHashCode;
 import lombok.Synchronized;
 import lombok.ToString;
@@ -55,9 +57,9 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 			this.fileData().loadData(com.electronwill.toml.Toml.read(this.file()));
 			this.lastLoaded(System.currentTimeMillis());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
 		} catch (TomlException e) {
-			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
+			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -68,13 +70,18 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 			//noinspection unchecked
 			com.electronwill.toml.Toml.write(this.fileData().getDataMap(), this.file());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e);
 		}
 	}
 
 	@Override
 	public void bigList(final boolean bigList) {
 		this.provider().setListType(bigList ? BigList.class : GapList.class);
+	}
+
+	@Override
+	public void synchronizeData(final boolean synchronize) {
+		this.provider().setMapType(synchronize ? ConcurrentHashMap.class : HashMap.class);
 	}
 
 	/**
@@ -98,13 +105,13 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 
 
 	@Override
-	protected Map readFile() {
+	protected @NotNull Map readFile() {
 		try {
 			return com.electronwill.toml.Toml.read(this.file());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
 		} catch (TomlException e) {
-			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e.getCause());
+			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}
 	}
 

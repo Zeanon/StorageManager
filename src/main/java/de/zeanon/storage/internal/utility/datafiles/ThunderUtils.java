@@ -277,7 +277,7 @@ public class ThunderUtils {
 		if (header != null) {
 			for (@Nullable String comment : header) {
 				if (comment != null) {
-					returnMap.add(comment.startsWith("#") ? comment : "#" + comment, ThunderEditor.LineType.HEADER);
+					returnMap.add(comment.startsWith("#") ? comment : "# " + comment, ThunderEditor.LineType.HEADER);
 				}
 			}
 		}
@@ -298,7 +298,7 @@ public class ThunderUtils {
 		if (footer != null) {
 			for (@Nullable String comment : footer) {
 				if (comment != null) {
-					returnMap.add(comment.startsWith("#") ? comment : "#" + comment, ThunderEditor.LineType.FOOTER);
+					returnMap.add(comment.startsWith("#") ? comment : "# " + comment, ThunderEditor.LineType.FOOTER);
 				}
 			}
 		}

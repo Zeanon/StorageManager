@@ -3,13 +3,11 @@ package de.zeanon.storage.internal.base.cache.filedata;
 import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.FileData;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Synchronized;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -164,7 +162,8 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 * @param value the value to be assigned to the key
 	 */
 	@Override
-	public void insert(final @NotNull String key, @Nullable Object value) {
+	public void insert(final @NotNull String key,
+					   final @Nullable Object value) {
 		final @NotNull String[] parts = key.split("\\.");
 		this.initialInsert(value, parts);
 	}
@@ -176,7 +175,8 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 * @param value the value to be assigned to the key
 	 */
 	@Override
-	public void insertUseArray(final @NotNull String[] key, @Nullable Object value) {
+	public void insertUseArray(final @NotNull String[] key,
+							   final @Nullable Object value) {
 		this.initialInsert(value, key);
 	}
 
@@ -361,24 +361,27 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 
 
 	// <Internal>
-	@Synchronized
-	private void initialInsert(@Nullable Object value, @NotNull String[] parts) {
+	private void initialInsert(final @Nullable Object value,
+							   final @NotNull String[] key) {
 		if (value == null) {
-			this.removeUseArray(parts);
+			this.removeUseArray(key);
 		} else {
-			final Object tempValue = this.dataMap.get(parts[0]);
+			final Object tempValue = this.dataMap.get(key[0]);
 			//noinspection unchecked
 			final @NotNull Map<String, Object> childMap =
-					this.dataMap.containsKey(parts[0])
+					this.dataMap.containsKey(key[0])
 					&& tempValue instanceof Map
 					? (Map) tempValue
 					: provider.newMap();
 			//noinspection unchecked
-			this.dataMap.put(parts[0], this.internalInsert(childMap, parts, value, 1));
+			this.dataMap.put(key[0], this.internalInsert(childMap, key, value, 1));
 		}
 	}
 
-	private @NotNull Object internalInsert(final @NotNull Map<String, Object> map, final @NotNull String[] key, final @NotNull Object value, final int keyIndex) {
+	private @NotNull Object internalInsert(final @NotNull Map<String, Object> map,
+										   final @NotNull String[] key,
+										   final @NotNull Object value,
+										   final int keyIndex) {
 		if (keyIndex < key.length) {
 			final Object tempValue = map.get(key[keyIndex]);
 			//noinspection unchecked
@@ -394,26 +397,25 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 		}
 	}
 
-	@Synchronized
-	private void initialRemove(@NotNull String[] parts) {
-		if (parts.length == 1) {
-			this.dataMap.remove(parts[0]);
+	private void initialRemove(final @NotNull String[] key) {
+		if (key.length == 1) {
+			this.dataMap.remove(key[0]);
 		} else {
-			final Object tempValue = this.dataMap.get(parts[0]);
+			final Object tempValue = this.dataMap.get(key[0]);
 			if (tempValue instanceof Map) {
 				//noinspection unchecked
-				this.dataMap.put(parts[0], this.internalRemove((Map) tempValue, parts, 1));
-				if (((Map) this.dataMap.get(parts[0])).isEmpty()) {
-					this.dataMap.remove(parts[0]);
+				this.dataMap.put(key[0], this.internalRemove((Map) tempValue, key, 1));
+				if (((Map) this.dataMap.get(key[0])).isEmpty()) {
+					this.dataMap.remove(key[0]);
 				}
-			} else {
-				throw new ObjectNullException("File does not contain '" + Arrays.toString(parts) + "' -> could not find '" + parts[0] + "'");
 			}
 		}
 	}
 
 	@Contract("_, _, _ -> param1")
-	private @NotNull Map<String, Object> internalRemove(final @NotNull Map<String, Object> map, final @NotNull String[] key, final int keyIndex) {
+	private @NotNull Map<String, Object> internalRemove(final @NotNull Map<String, Object> map,
+														final @NotNull String[] key,
+														final int keyIndex) {
 		if (keyIndex < key.length - 1) {
 			final Object tempValue = map.get(key[keyIndex]);
 			if (tempValue instanceof Map) {
@@ -422,14 +424,11 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 				if (((Map) map.get(key[keyIndex])).isEmpty()) {
 					map.remove(key[keyIndex]);
 				}
-				return map;
-			} else {
-				throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "' -> could not find '" + key[keyIndex] + "'");
 			}
 		} else {
 			map.remove(key[keyIndex]);
-			return map;
 		}
+		return map;
 	}
 
 	private @NotNull List<Map.Entry<String, Object>> internalEntryList(final @NotNull Map<String, Object> map) {
@@ -444,32 +443,29 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 		return tempList;
 	}
 
-	private boolean internalContainsKey(final @NotNull Map<String, Object> map, final @NotNull String[] key, final int keyIndex) {
+	private boolean internalContainsKey(final @NotNull Map<String, Object> map,
+										final @NotNull String[] key,
+										final int keyIndex) {
 		if (keyIndex < key.length - 1) {
 			final Object tempValue = map.get(key[keyIndex]);
 			if (tempValue instanceof Map) {
 				//noinspection unchecked
 				return this.internalContainsKey((Map) tempValue, key, keyIndex + 1);
 			} else {
-				throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "' -> could not find '" + key[keyIndex] + "'");
+				return false;
 			}
 		} else {
 			return map.containsKey(key[keyIndex]);
 		}
 	}
 
-	@Synchronized
 	private @Nullable Object internalGet(final @NotNull Map map, final @NotNull String[] key) {
 		@NotNull Object tempValue = map;
 		for (String tempKey : key) {
-			try {
-				if (tempValue instanceof Map) {
-					tempValue = ((Map) tempValue).get(tempKey);
-				} else {
-					throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "' -> could not find '" + tempKey + "'");
-				}
-			} catch (NullPointerException e) {
-				throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "' -> could not find '" + tempKey + "'");
+			if (tempValue instanceof Map) {
+				tempValue = ((Map) tempValue).get(tempKey);
+			} else {
+				return null;
 			}
 		}
 		return tempValue;

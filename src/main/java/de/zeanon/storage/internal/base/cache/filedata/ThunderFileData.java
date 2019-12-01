@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Synchronized;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -361,7 +360,6 @@ public class ThunderFileData<M extends TripletMap, E extends Map.Entry, L extend
 
 
 	// <Internal>
-	@Synchronized
 	private void initialInsert(@Nullable Object value, @NotNull String[] parts) {
 		if (value == null) {
 			this.removeUseArray(parts);
@@ -395,7 +393,6 @@ public class ThunderFileData<M extends TripletMap, E extends Map.Entry, L extend
 		}
 	}
 
-	@Synchronized
 	private void initialRemove(@NotNull String[] parts) {
 		if (parts.length == 1) {
 			this.dataMap.remove(parts[0]);
@@ -457,7 +454,6 @@ public class ThunderFileData<M extends TripletMap, E extends Map.Entry, L extend
 		}
 	}
 
-	@Synchronized
 	private @Nullable Object internalGet(final @NotNull TripletMap map, final @NotNull String[] key) {
 		@Nullable Object tempValue = map;
 		for (final @NotNull String tempKey : key) {

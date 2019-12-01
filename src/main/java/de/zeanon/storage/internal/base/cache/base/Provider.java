@@ -44,7 +44,10 @@ public abstract class Provider<M extends Map, L extends List> {
 	public @NotNull M newMap() {
 		try {
 			return mapType.getDeclaredConstructor().newInstance();
-		} catch (@NotNull InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+		} catch (@NotNull InstantiationException
+				| InvocationTargetException
+				| NoSuchMethodException
+				| IllegalAccessException e) {
 			throw new ProviderException(e);
 		}
 	}
@@ -55,7 +58,10 @@ public abstract class Provider<M extends Map, L extends List> {
 	public @NotNull L newList() {
 		try {
 			return listType.getDeclaredConstructor().newInstance();
-		} catch (@NotNull InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+		} catch (@NotNull InstantiationException
+				| IllegalAccessException
+				| InvocationTargetException
+				| NoSuchMethodException e) {
 			throw new ProviderException(e);
 		}
 	}
@@ -69,8 +75,12 @@ public abstract class Provider<M extends Map, L extends List> {
 			for (@NotNull Object parameter : parameters) {
 				parameterTypes.add(parameter.getClass());
 			}
-			return mapType.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0])).newInstance(parameters);
-		} catch (@NotNull InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+			return mapType.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0]))
+						  .newInstance(parameters);
+		} catch (@NotNull InstantiationException
+				| InvocationTargetException
+				| NoSuchMethodException
+				| IllegalAccessException e) {
 			throw new ProviderException(e);
 		}
 	}
@@ -78,10 +88,15 @@ public abstract class Provider<M extends Map, L extends List> {
 	/**
 	 * Get yourself a new Instance of the saved Map-Type with the given parameters and parameter-types
 	 */
-	public @NotNull M newMap(final @NotNull Class<?>[] parameterTypes, final @NotNull Object... parameters) {
+	public @NotNull M newMap(final @NotNull Class<?>[] parameterTypes,
+							 final @NotNull Object... parameters) {
 		try {
-			return mapType.getDeclaredConstructor(parameterTypes).newInstance(parameters);
-		} catch (@NotNull InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+			return mapType.getDeclaredConstructor(parameterTypes)
+						  .newInstance(parameters);
+		} catch (@NotNull InstantiationException
+				| InvocationTargetException
+				| NoSuchMethodException
+				| IllegalAccessException e) {
 			throw new ProviderException(e);
 		}
 	}
@@ -95,8 +110,12 @@ public abstract class Provider<M extends Map, L extends List> {
 			for (@NotNull Object parameter : parameters) {
 				parameterTypes.add(parameter.getClass());
 			}
-			return listType.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0])).newInstance(parameters);
-		} catch (@NotNull InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			return listType.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0]))
+						   .newInstance(parameters);
+		} catch (@NotNull InstantiationException
+				| IllegalAccessException
+				| InvocationTargetException
+				| NoSuchMethodException e) {
 			throw new ProviderException(e);
 		}
 	}
@@ -104,10 +123,15 @@ public abstract class Provider<M extends Map, L extends List> {
 	/**
 	 * Get yourself a new Instance of the saved List-Type with the given parameters and parameter-types
 	 */
-	public @NotNull L newList(final @NotNull Class<?>[] parameterTypes, final @NotNull Object... parameters) {
+	public @NotNull L newList(final @NotNull Class<?>[] parameterTypes,
+							  final @NotNull Object... parameters) {
 		try {
-			return listType.getDeclaredConstructor(parameterTypes).newInstance(parameters);
-		} catch (@NotNull InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			return listType.getDeclaredConstructor(parameterTypes)
+						   .newInstance(parameters);
+		} catch (@NotNull InstantiationException
+				| IllegalAccessException
+				| InvocationTargetException
+				| NoSuchMethodException e) {
 			throw new ProviderException(e);
 		}
 	}

@@ -46,9 +46,11 @@ public class ThunderConfig extends ThunderFile implements Config<TripletMap, Lis
 							final @NotNull ReloadSetting reloadSetting,
 							final @NotNull CommentSetting commentSetting,
 							final int bufferSize,
+							final boolean bigMap,
+							final boolean synchronizedData,
 							final @NotNull Class<? extends TripletMap> map,
 							final @NotNull Class<? extends List> list) {
-		super(file, inputStream, reloadSetting, commentSetting, bufferSize, map, list);
+		super(file, inputStream, reloadSetting, commentSetting, bufferSize, bigMap, synchronizedData, map, list);
 	}
 
 
