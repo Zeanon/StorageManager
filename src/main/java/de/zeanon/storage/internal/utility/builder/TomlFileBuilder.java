@@ -43,14 +43,18 @@ public class TomlFileBuilder extends StorageManager<TomlFileBuilder, TomlFile, M
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull TomlFileBuilder synchronizeData(final boolean synchronize) {
+	public @NotNull TomlFileBuilder concurrentData(final boolean synchronize) {
 		return this.mapType(synchronize ? ConcurrentHashMap.class : HashMap.class);
 	}
 
 
 	private static final class LocalTomlFile extends TomlFile {
 
-		private LocalTomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
+		private LocalTomlFile(final @NotNull File file,
+							  final @Nullable InputStream inputStream,
+							  final @NotNull ReloadSetting reloadSetting,
+							  final @NotNull Class<? extends Map> map,
+							  final @NotNull Class<? extends List> list) {
 			super(file, inputStream, reloadSetting, map, list);
 		}
 	}

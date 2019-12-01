@@ -51,14 +51,19 @@ public class YamlConfigBuilder extends StorageManager<YamlConfigBuilder, YamlCon
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull YamlConfigBuilder synchronizeData(final boolean synchronize) {
+	public @NotNull YamlConfigBuilder concurrentData(final boolean synchronize) {
 		return this.mapType(synchronize ? ConcurrentHashMap.class : HashMap.class);
 	}
 
 
 	private static final class LocalYamlConfig extends YamlConfig {
 
-		private LocalYamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
+		private LocalYamlConfig(final @NotNull File file,
+								final @Nullable InputStream inputStream,
+								final @NotNull ReloadSetting reloadSetting,
+								final @NotNull CommentSetting commentSetting,
+								final @NotNull Class<? extends Map> map,
+								final @NotNull Class<? extends List> list) {
 			super(file, inputStream, reloadSetting, commentSetting, map, list);
 		}
 	}

@@ -34,13 +34,12 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @Accessors(fluent = true, chain = false)
 @SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess", "DefaultAnnotationParam"})
-public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L extends List> implements DataStorage<M, L>, Comparable<FlatFile> {
+public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L extends List> implements DataStorage, Comparable<FlatFile> {
 
 
 	private final @NotNull File file;
 	private final @NotNull FileType fileType;
 	private final @NotNull D fileData;
-	@Getter(onMethod_ = {@Override})
 	private final @NotNull Provider<M, L> provider;
 	@Setter(AccessLevel.PROTECTED)
 	private volatile long lastLoaded;
@@ -191,6 +190,10 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * Save the cached Data to the File
 	 */
 	public abstract void save();
+
+	public abstract void bigList(final boolean bigList);
+
+	public abstract void concurrentData(final boolean synchronize);
 
 	@Override
 	public boolean hasKey(final @NotNull String key) {

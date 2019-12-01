@@ -46,7 +46,11 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
+	protected TomlFile(final @NotNull File file,
+					   final @Nullable InputStream inputStream,
+					   final @NotNull ReloadSetting reloadSetting,
+					   final @NotNull Class<? extends Map> map,
+					   final @NotNull Class<? extends List> list) {
 		super(file, FileType.TOML, new LocalFileData(new Collections(map, list)), reloadSetting);
 
 		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
@@ -80,7 +84,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	}
 
 	@Override
-	public void synchronizeData(final boolean synchronize) {
+	public void concurrentData(final boolean synchronize) {
 		this.provider().setMapType(synchronize ? ConcurrentHashMap.class : HashMap.class);
 	}
 

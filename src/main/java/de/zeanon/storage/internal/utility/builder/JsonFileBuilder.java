@@ -43,14 +43,18 @@ public class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, M
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull JsonFileBuilder synchronizeData(final boolean synchronize) {
+	public @NotNull JsonFileBuilder concurrentData(final boolean synchronize) {
 		return this.mapType(synchronize ? ConcurrentHashMap.class : HashMap.class);
 	}
 
 
 	private static final class LocalJsonFile extends JsonFile {
 
-		private LocalJsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
+		private LocalJsonFile(final @NotNull File file,
+							  final @Nullable InputStream inputStream,
+							  final @NotNull ReloadSetting reloadSetting,
+							  final @NotNull Class<? extends Map> map,
+							  final @NotNull Class<? extends List> list) {
 			super(file, inputStream, reloadSetting, map, list);
 		}
 	}

@@ -31,8 +31,8 @@ import org.jetbrains.annotations.Nullable;
 public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, ThunderFile, TripletMap, List> {
 
 
-	private boolean bigMap;
-	private boolean synchronizedData;
+	private boolean bigData;
+	private boolean concurrentData;
 	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private @NotNull CommentSetting commentSetting = Comment.SKIP;
 	@Setter(onMethod_ = {@Contract("_ -> this")})
@@ -46,14 +46,14 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 	@Override
 	@Contract("-> new")
 	public final @NotNull ThunderFile create() {
-		return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bufferSize, this.bigMap, this.synchronizedData, this.mapType, this.listType);
+		return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bufferSize, this.bigData, this.concurrentData, this.mapType, this.listType);
 	}
 
 	@Contract("_ -> this")
-	public final @NotNull ThunderFileBuilder bigMap(final boolean bigMap) {
-		this.bigMap = bigMap;
-		return this.mapType(this.synchronizedData ? (this.bigMap ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
-												  : (this.bigMap ? BigTripletMap.class : GapTripletMap.class));
+	public final @NotNull ThunderFileBuilder bigData(final boolean bigData) {
+		this.bigData = bigData;
+		return this.mapType(this.concurrentData ? (this.bigData ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
+												: (this.bigData ? BigTripletMap.class : GapTripletMap.class));
 	}
 
 	@Override
@@ -64,17 +64,17 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull ThunderFileBuilder synchronizeData(final boolean synchronize) {
-		this.synchronizedData = synchronize;
-		return this.mapType(this.synchronizedData ? (this.bigMap ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
-												  : (this.bigMap ? BigTripletMap.class : GapTripletMap.class));
+	public @NotNull ThunderFileBuilder concurrentData(final boolean synchronize) {
+		this.concurrentData = synchronize;
+		return this.mapType(this.concurrentData ? (this.bigData ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
+												: (this.bigData ? BigTripletMap.class : GapTripletMap.class));
 	}
 
 
 	private static final class LocalThunderFile extends ThunderFile {
 
-		private LocalThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final int bufferSize, final boolean bigMap, final boolean synchronizedData, final @NotNull Class<? extends TripletMap> map, final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, commentSetting, bufferSize, bigMap, synchronizedData, map, list);
+		private LocalThunderFile(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final int bufferSize, final boolean bigData, final boolean concurrentData, final @NotNull Class<? extends TripletMap> map, final @NotNull Class<? extends List> list) {
+			super(file, inputStream, reloadSetting, commentSetting, bufferSize, bigData, concurrentData, map, list);
 		}
 	}
 }

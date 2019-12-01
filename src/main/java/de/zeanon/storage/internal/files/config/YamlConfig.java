@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class YamlConfig extends YamlFile implements Config<Map, List> {
+public class YamlConfig extends YamlFile implements Config {
 
 
 	private List<String> header;

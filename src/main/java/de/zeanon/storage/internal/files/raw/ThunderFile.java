@@ -42,8 +42,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 
 
 	private int bufferSize;
-	private boolean bigMap;
-	private boolean synchronizedData;
+	private boolean concurrentData;
+	private boolean bigData;
 
 
 	/**
@@ -60,14 +60,14 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 						  final @NotNull ReloadSetting reloadSetting,
 						  final @NotNull CommentSetting commentSetting,
 						  final int bufferSize,
-						  final boolean bigMap,
-						  final boolean synchronizedData,
+						  final boolean concurrentData,
+						  final boolean bigData,
 						  final @NotNull Class<? extends TripletMap> map,
 						  final @NotNull Class<? extends List> list) {
 		super(file, FileType.THUNDER, new LocalFileData(new Collections(map, list)), reloadSetting, commentSetting);
 		this.bufferSize = bufferSize;
-		this.bigMap = bigMap;
-		this.synchronizedData = synchronizedData;
+		this.bigData = bigData;
+		this.concurrentData = concurrentData;
 
 		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
 			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
@@ -93,10 +93,10 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 		}
 	}
 
-	public void bigMap(final boolean bigMap) {
-		this.bigMap = bigMap;
-		this.provider().setMapType(this.synchronizedData ? (this.bigMap ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
-														 : (this.bigMap ? BigTripletMap.class : GapTripletMap.class));
+	public void bigData(final boolean bigData) {
+		this.bigData = bigData;
+		this.provider().setMapType(this.concurrentData ? (this.bigData ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
+													   : (this.bigData ? BigTripletMap.class : GapTripletMap.class));
 	}
 
 	@Override
@@ -105,10 +105,10 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 	}
 
 	@Override
-	public void synchronizeData(final boolean synchronize) {
-		this.synchronizedData = synchronize;
-		this.provider().setMapType(this.synchronizedData ? (this.bigMap ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
-														 : (this.bigMap ? BigTripletMap.class : GapTripletMap.class));
+	public void concurrentData(final boolean synchronize) {
+		this.concurrentData = synchronize;
+		this.provider().setMapType(this.concurrentData ? (this.bigData ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
+													   : (this.bigData ? BigTripletMap.class : GapTripletMap.class));
 	}
 
 	/**

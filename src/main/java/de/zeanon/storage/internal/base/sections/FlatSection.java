@@ -1,6 +1,5 @@
 package de.zeanon.storage.internal.base.sections;
 
-import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.files.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.DataStorage;
 import de.zeanon.storage.internal.base.interfaces.FileData;
@@ -26,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 @ToString(callSuper = true)
 @SuppressWarnings("unused")
-public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>, M, L>, M extends Map, L extends List> implements DataStorage<M, L>, Comparable<FlatSection> {
+public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>, M, L>, M extends Map, L extends List> implements DataStorage, Comparable<FlatSection> {
 
 
 	private final @NotNull F flatFile;
@@ -55,22 +54,6 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 
 	public void reloadSetting(final @NotNull ReloadSetting reloadSetting) {
 		this.flatFile.reloadSetting(reloadSetting);
-	}
-
-	@NotNull
-	@Override
-	public Provider<M, L> provider() {
-		return this.flatFile.provider();
-	}
-
-	@Override
-	public void bigList(final boolean bigList) {
-		this.flatFile.bigList(bigList);
-	}
-
-	@Override
-	public void synchronizeData(final boolean synchronize) {
-		this.flatFile.synchronizeData(synchronize);
 	}
 
 	@Override

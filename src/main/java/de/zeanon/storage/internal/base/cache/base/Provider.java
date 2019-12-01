@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public abstract class Provider<M extends Map, L extends List> {
 
+
 	/**
 	 * The Map implementation to be used
 	 */

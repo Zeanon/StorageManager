@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public class ThunderConfig extends ThunderFile implements Config<TripletMap, List> {
+public class ThunderConfig extends ThunderFile implements Config {
 
 
 	/**
@@ -47,10 +47,10 @@ public class ThunderConfig extends ThunderFile implements Config<TripletMap, Lis
 							final @NotNull CommentSetting commentSetting,
 							final int bufferSize,
 							final boolean bigMap,
-							final boolean synchronizedData,
+							final boolean concurrentData,
 							final @NotNull Class<? extends TripletMap> map,
 							final @NotNull Class<? extends List> list) {
-		super(file, inputStream, reloadSetting, commentSetting, bufferSize, bigMap, synchronizedData, map, list);
+		super(file, inputStream, reloadSetting, commentSetting, bufferSize, bigMap, concurrentData, map, list);
 	}
 
 

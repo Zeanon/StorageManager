@@ -37,7 +37,7 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	@Contract(pure = true)
 	protected StandardFileData(final @NotNull Provider<M, L> provider) {
 		this.provider = provider;
-		this.dataMap = this.provider.newMap();
+		this.dataMap = this.provider().newMap();
 	}
 
 	/**

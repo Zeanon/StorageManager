@@ -1,6 +1,5 @@
 package de.zeanon.storage.internal.base.interfaces;
 
-import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.sections.FlatSection;
 import de.zeanon.storage.internal.utility.basic.Objects;
 import java.util.Collection;
@@ -18,14 +17,8 @@ import org.jetbrains.annotations.Nullable;
  * @version 2.4.0
  */
 @SuppressWarnings({"unused", "unchecked", "UnusedReturnValue"})
-public interface DataStorage<M extends Map, L extends List> {
+public interface DataStorage {
 
-
-	void bigList(final boolean bigList);
-
-	void synchronizeData(final boolean synchronize);
-
-	@NotNull Provider<M, L> provider();
 
 	/**
 	 * Get an Object from a File

@@ -8,7 +8,9 @@ import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.exceptions.ThunderException;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.settings.Comment;
+import de.zeanon.storage.internal.utility.basic.Objects;
 import java.io.*;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -82,7 +84,8 @@ public class ThunderEditor {
 	// <Write Data>
 	// <Write Data with Comments>
 	@Synchronized
-	private static void initialWriteWithComments(final @NotNull File file, final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData) {
+	private static void initialWriteWithComments(final @NotNull File file,
+												 final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData) {
 		try (final @NotNull PrintWriter writer = new PrintWriter(file)) {
 			if (!fileData.isEmpty()) {
 				final @NotNull Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
@@ -101,19 +104,29 @@ public class ThunderEditor {
 	private static void topLayerWriteWithComments(final @NotNull PrintWriter writer,
 												  final @NotNull TripletMap.TripletNode<String, Object> entry) {
 		if (entry.getValue() == LineType.COMMENT || entry.getValue() == LineType.HEADER || entry.getValue() == LineType.FOOTER) {
-			writer.print((entry.getKey().startsWith("#") ? entry.getKey() : "#" + entry.getKey()));
+			writer.print(entry.getKey().startsWith("#") ? entry.getKey() : ("#" + entry.getKey()));
 		} else if (entry.getValue() instanceof TripletMap) {
-			writer.print(entry.getKey() + " " + "{");
+			writer.print(entry.getKey()
+						 + " {");
 			//noinspection unchecked
 			ThunderEditor.internalWriteWithComments((TripletMap<String, Object>) entry.getValue(), "", writer);
-		} else if (entry.getValue() instanceof List) {
-			writer.println(entry.getKey() + " = [");
+		} else if (entry.getValue() instanceof Collection) {
+			writer.println(entry.getKey()
+						   + " = [");
 			//noinspection unchecked
-			ThunderEditor.writeList((List<String>) entry.getValue(), "  ", writer);
+			ThunderEditor.writeCollection((List<String>) entry.getValue(), "  ", writer);
+		} else if (Objects.isArray(entry.getValue())) {
+			writer.println(entry.getKey()
+						   + " = [");
+			ThunderEditor.writeArray(entry.getValue(), "  ", writer);
 		} else if (entry.getValue() instanceof Pair) {
-			writer.print(entry.getKey() + " = [" + ((Pair) entry.getValue()).getKey() + " : " + ((Pair) entry.getValue()).getValue() + "]");
+			writer.print(entry.getKey()
+						 + " = ["
+						 + (((Pair) entry.getValue()).getKey() == null ? ":" : (((Pair) entry.getValue()).getKey() + " :"))
+						 + (((Pair) entry.getValue()).getValue() == null ? "]" : (" " + ((Pair) entry.getValue()).getValue() + "]")));
 		} else if (entry.getValue() != LineType.BLANK_LINE) {
-			writer.print(entry.getKey() + " = " + entry.getValue());
+			writer.print(entry.getKey()
+						 + (entry.getValue() == null ? " =" : (" = " + entry.getValue())));
 		}
 	}
 
@@ -123,19 +136,40 @@ public class ThunderEditor {
 		for (final @NotNull TripletMap.TripletNode<String, Object> entry : map.entryList()) {
 			writer.println();
 			if (entry.getValue() == LineType.COMMENT || entry.getValue() == LineType.HEADER || entry.getValue() == LineType.FOOTER) {
-				writer.print(indentationString + "  " + (entry.getKey().startsWith("#") ? entry.getKey() : "#" + entry.getKey()));
+				writer.print(indentationString
+							 + "  "
+							 + (entry.getKey().startsWith("#") ? entry.getKey() : ("#" + entry.getKey())));
 			} else if (entry.getValue() instanceof TripletMap) {
-				writer.print(indentationString + "  " + entry.getKey() + " " + "{");
+				writer.print(indentationString
+							 + "  "
+							 + entry.getKey()
+							 + " {");
 				//noinspection unchecked
 				ThunderEditor.internalWriteWithComments((TripletMap<String, Object>) entry.getValue(), indentationString + "  ", writer);
-			} else if (entry.getValue() instanceof List) {
-				writer.println(indentationString + "  " + entry.getKey() + " = [");
-				//noinspection unchecked
-				ThunderEditor.writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
+			} else if (entry.getValue() instanceof Collection) {
+				writer.println(indentationString
+							   + "  "
+							   + entry.getKey()
+							   + " = [");
+				ThunderEditor.writeCollection((Collection) entry.getValue(), indentationString + "  ", writer);
+			} else if (Objects.isArray(entry.getValue())) {
+				writer.println(indentationString
+							   + "  "
+							   + entry.getKey()
+							   + " = [");
+				ThunderEditor.writeArray(entry.getValue(), indentationString + "  ", writer);
 			} else if (entry.getValue() instanceof Pair) {
-				writer.print(indentationString + "  " + entry.getKey() + " = [" + ((Pair) entry.getValue()).getKey() + " : " + ((Pair) entry.getValue()).getValue() + "]");
+				writer.print(indentationString
+							 + "  "
+							 + entry.getKey()
+							 + " = ["
+							 + (((Pair) entry.getValue()).getKey() == null ? ":" : (((Pair) entry.getValue()).getKey() + " :"))
+							 + (((Pair) entry.getValue()).getValue() == null ? "]" : (" " + ((Pair) entry.getValue()).getValue() + "]")));
 			} else if (entry.getValue() != LineType.BLANK_LINE) {
-				writer.print(indentationString + "  " + entry.getKey() + " = " + entry.getValue());
+				writer.print(indentationString
+							 + "  "
+							 + entry.getKey()
+							 + (entry.getValue() == null ? " =" : (" = " + entry.getValue())));
 			}
 		}
 		writer.println();
@@ -171,17 +205,27 @@ public class ThunderEditor {
 	private static void topLayerWriteWithOutComments(final @NotNull PrintWriter writer,
 													 final @NotNull TripletMap.TripletNode<String, Object> entry) {
 		if (entry.getValue() instanceof TripletMap) {
-			writer.print(entry.getKey() + " " + "{");
+			writer.print(entry.getKey()
+						 + " {");
 			//noinspection unchecked
 			ThunderEditor.internalWriteWithoutComments((TripletMap<String, Object>) entry.getValue(), "", writer);
-		} else if (entry.getValue() instanceof List) {
-			writer.println(entry.getKey() + " = [");
+		} else if (entry.getValue() instanceof Collection) {
+			writer.println(entry.getKey()
+						   + " = [");
 			//noinspection unchecked
-			ThunderEditor.writeList((List<String>) entry.getValue(), "  ", writer);
+			ThunderEditor.writeCollection((List<String>) entry.getValue(), "  ", writer);
+		} else if (Objects.isArray(entry.getValue())) {
+			writer.println(entry.getKey()
+						   + " = [");
+			ThunderEditor.writeArray(entry.getValue(), "  ", writer);
 		} else if (entry.getValue() instanceof Pair) {
-			writer.print(entry.getKey() + " = [" + ((Pair) entry.getValue()).getKey() + " : " + ((Pair) entry.getValue()).getValue() + "]");
+			writer.print(entry.getKey()
+						 + " = ["
+						 + (((Pair) entry.getValue()).getKey() == null ? ":" : (((Pair) entry.getValue()).getKey() + " :"))
+						 + (((Pair) entry.getValue()).getValue() == null ? "]" : (" " + ((Pair) entry.getValue()).getValue() + "]")));
 		} else {
-			writer.print(entry.getKey() + " = " + entry.getValue());
+			writer.print(entry.getKey()
+						 + (entry.getValue() == null ? " =" : (" = " + entry.getValue())));
 		}
 	}
 
@@ -192,17 +236,36 @@ public class ThunderEditor {
 			if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.HEADER && entry.getValue() != LineType.FOOTER && entry.getValue() != LineType.BLANK_LINE) {
 				writer.println();
 				if (entry.getValue() instanceof TripletMap) {
-					writer.print(indentationString + "  " + entry.getKey() + " " + "{");
+					writer.print(indentationString
+								 + "  "
+								 + entry.getKey()
+								 + " {");
 					//noinspection unchecked
 					ThunderEditor.internalWriteWithoutComments((TripletMap<String, Object>) entry.getValue(), indentationString + "  ", writer);
-				} else if (entry.getValue() instanceof List) {
-					writer.println(indentationString + "  " + entry.getKey() + " = [");
-					//noinspection unchecked
-					ThunderEditor.writeList((List<String>) entry.getValue(), indentationString + "  ", writer);
+				} else if (entry.getValue() instanceof Collection) {
+					writer.println(indentationString
+								   + "  "
+								   + entry.getKey()
+								   + " = [");
+					ThunderEditor.writeCollection((Collection) entry.getValue(), indentationString + "  ", writer);
+				} else if (Objects.isArray(entry.getValue())) {
+					writer.println(indentationString
+								   + "  "
+								   + entry.getKey()
+								   + " = [");
+					ThunderEditor.writeArray(entry.getValue(), indentationString + "  ", writer);
 				} else if (entry.getValue() instanceof Pair) {
-					writer.print(indentationString + "  " + entry.getKey() + " = [" + ((Pair) entry.getValue()).getKey() + " : " + ((Pair) entry.getValue()).getValue() + "]");
+					writer.print(indentationString
+								 + "  "
+								 + entry.getKey()
+								 + " = ["
+								 + (((Pair) entry.getValue()).getKey() == null ? ":" : (((Pair) entry.getValue()).getKey() + " :"))
+								 + (((Pair) entry.getValue()).getValue() == null ? "]" : (" " + ((Pair) entry.getValue()).getValue() + "]")));
 				} else {
-					writer.print(indentationString + "  " + entry.getKey() + " = " + entry.getValue());
+					writer.print(indentationString
+								 + "  "
+								 + entry.getKey()
+								 + (entry.getValue() == null ? " =" : (" = " + entry.getValue())));
 				}
 			}
 		}
@@ -211,14 +274,77 @@ public class ThunderEditor {
 	}
 	// </Write Data without Comments>
 
-	private static <E> void writeList(final @NotNull List<E> list,
-									  final @NotNull String indentationString,
-									  final @NotNull PrintWriter writer) {
-		for (final @NotNull E line : list) {
-			writer.println(indentationString + "  - " + line);
+	// <Utilities>
+	private static void writeCollection(final @NotNull Collection list,
+										final @NotNull String indentationString,
+										final @NotNull PrintWriter writer) {
+		for (final @Nullable Object line : list) {
+			writer.println(indentationString
+						   + (line == null ? "  -" : ("  - " + line)));
 		}
 		writer.print(indentationString + "]");
 	}
+
+	private static void writeArray(final @NotNull Object array,
+								   final @NotNull String indentationString,
+								   final @NotNull PrintWriter writer) {
+		if (array instanceof Object[]) {
+			for (final @Nullable Object line : (Object[]) array) {
+				writer.println(indentationString
+							   + (line == null ? "  -" : ("  - " + line)));
+			}
+		} else if (array instanceof boolean[]) {
+			for (final boolean line : (boolean[]) array) {
+				writer.println(indentationString
+							   + "  - "
+							   + line);
+			}
+		} else if (array instanceof byte[]) {
+			for (final byte line : (byte[]) array) {
+				writer.println(indentationString
+							   + "  - "
+							   + line);
+			}
+		} else if (array instanceof short[]) {
+			for (final short line : (short[]) array) {
+				writer.println(indentationString
+							   + "  - "
+							   + line);
+			}
+		} else if (array instanceof char[]) {
+			for (final char line : (char[]) array) {
+				writer.println(indentationString
+							   + "  - "
+							   + line);
+			}
+		} else if (array instanceof int[]) {
+			for (final int line : (int[]) array) {
+				writer.println(indentationString
+							   + "  - "
+							   + line);
+			}
+		} else if (array instanceof long[]) {
+			for (final long line : (long[]) array) {
+				writer.println(indentationString
+							   + "  - "
+							   + line);
+			}
+		} else if (array instanceof float[]) {
+			for (final float line : (float[]) array) {
+				writer.println(indentationString
+							   + "  - "
+							   + line);
+			}
+		} else if (array instanceof double[]) {
+			for (final double line : (double[]) array) {
+				writer.println(indentationString
+							   + "  - "
+							   + line);
+			}
+		}
+		writer.print(indentationString + "]");
+	}
+	// </Utilities>
 	// </Write Data>
 
 
@@ -395,7 +521,7 @@ public class ThunderEditor {
 			line[1] = line[1].trim();
 			if (line[1].startsWith("[")) {
 				if (line[1].endsWith("]")) {
-					if (line[1].startsWith("[") && line[1].endsWith("]") && line[1].contains(":")) {
+					if (line[1].startsWith("[") && line[1].endsWith("]") && line[1].contains(":") && !line[1].replaceFirst(":", "").contains(":")) {
 						final @NotNull String[] pair = line[1].substring(1, line[1].length() - 1).split(":");
 						if (pair.length > 2) {
 							throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' ->  Illegal Object(Pairs may only have two values");
@@ -450,7 +576,7 @@ public class ThunderEditor {
 			} else if (tempLine.endsWith("]")) {
 				return tempList;
 			} else {
-				throw new ThunderException("Error at '" + filePath + "' -> List not closed properly");
+				throw new ThunderException("Error at '" + filePath + "' -> Syntax Error at '" + tempLine + "' -> missing '-'");
 			}
 		}
 		throw new ThunderException("Error at '" + filePath + "' -> List not closed properly");

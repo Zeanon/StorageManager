@@ -38,7 +38,7 @@ public class ThunderFileData<M extends TripletMap, E extends Map.Entry, L extend
 	@Contract(pure = true)
 	protected ThunderFileData(final @NotNull Provider<M, L> provider) {
 		this.provider = provider;
-		this.dataMap = this.provider.newMap();
+		this.dataMap = this.provider().newMap();
 	}
 
 	/**

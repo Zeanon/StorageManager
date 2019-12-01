@@ -1,6 +1,5 @@
 package de.zeanon.storage.internal.files.section;
 
-import de.zeanon.storage.internal.base.cache.base.TripletMap;
 import de.zeanon.storage.internal.base.interfaces.Config;
 import de.zeanon.storage.internal.files.config.ThunderConfig;
 import java.util.List;
@@ -21,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ThunderConfigSection extends ThunderFileSection implements Config<TripletMap, List> {
+public class ThunderConfigSection extends ThunderFileSection implements Config {
 
 
 	private final @NotNull ThunderConfig baseFile;
@@ -92,6 +91,7 @@ public class ThunderConfigSection extends ThunderFileSection implements Config<T
 	public @NotNull List<String> getBlockComments(final @NotNull String blockKey) {
 		return this.baseFile.getBlockComments(this.getFinalKey(blockKey));
 	}
+
 
 	@Override
 	public @NotNull ThunderConfigSection getSection(final @NotNull String sectionKey) {

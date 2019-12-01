@@ -314,7 +314,8 @@ public abstract class StorageManager<B extends StorageManager, F extends FlatFil
 
 	public abstract @NotNull B bigList(final boolean bigList);
 
-	public abstract @NotNull B synchronizeData(final boolean synchronize);
+	public abstract @NotNull B concurrentData(final boolean synchronize);
+
 
 	/**
 	 * Create the defined File

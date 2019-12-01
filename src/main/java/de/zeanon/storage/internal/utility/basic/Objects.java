@@ -69,6 +69,8 @@ public class Objects {
 				return (T) (Object) Objects.toShort(object);
 			} else if (def == boolean.class || def == Boolean.class) {
 				return (T) (Object) Objects.toBoolean(object);
+			} else if (def == String.class) {
+				return (T) Objects.toString(object);
 			} else {
 				return (T) object;
 			}
@@ -92,18 +94,20 @@ public class Objects {
 		if (object == null) {
 			return null;
 		} else {
-			if (def instanceof Integer) {
+			if (def.getClass() == int.class || def.getClass() == Integer.class) {
 				return (T) (Object) Objects.toInt(object);
-			} else if (def instanceof Long) {
+			} else if (def.getClass() == long.class || def.getClass() == Long.class) {
 				return (T) (Object) Objects.toLong(object);
-			} else if (def instanceof Double) {
+			} else if (def.getClass() == double.class || def.getClass() == Double.class) {
 				return (T) (Object) Objects.toDouble(object);
-			} else if (def instanceof Float) {
+			} else if (def.getClass() == float.class || def.getClass() == Float.class) {
 				return (T) (Object) Objects.toFloat(object);
-			} else if (def == short.class || def == Short.class) {
+			} else if (def.getClass() == short.class || def.getClass() == Short.class) {
 				return (T) (Object) Objects.toShort(object);
-			} else if (def == boolean.class || def == Boolean.class) {
+			} else if (def.getClass() == boolean.class || def.getClass() == Boolean.class) {
 				return (T) (Object) Objects.toBoolean(object);
+			} else if (def.getClass() == String.class) {
+				return (T) Objects.toString(object);
 			} else {
 				return (T) object;
 			}
@@ -226,6 +230,15 @@ public class Objects {
 		} else {
 			return Byte.parseByte(Objects.toString(object));
 		}
+	}
+
+	@Contract("null -> false")
+	public static boolean isArray(final @Nullable Object object) {
+		return object instanceof Object[] || object instanceof boolean[] ||
+			   object instanceof byte[] || object instanceof short[] ||
+			   object instanceof char[] || object instanceof int[] ||
+			   object instanceof long[] || object instanceof float[] ||
+			   object instanceof double[];
 	}
 
 	/**
