@@ -4,6 +4,8 @@ import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import java.io.*;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -12,7 +14,6 @@ import java.util.Collection;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Synchronized;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -54,8 +55,9 @@ public class BaseFileUtils {
 	 * @param file the File to be created
 	 */
 	public static boolean createFile(final @NotNull File file) {
-		try {
-			return BaseFileUtils.createFileInternally(file, false);
+		boolean create = !file.exists();
+		try (final @NotNull FileChannel localChannel = new RandomAccessFile(file, "rws").getChannel()) {
+			return create;
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while creating '"
 										 + file.getAbsolutePath()
@@ -71,12 +73,9 @@ public class BaseFileUtils {
 	 * @param file the File to be used
 	 */
 	public static boolean createParents(final @NotNull File file) {
-		try {
-			if (file.getParentFile() != null) {
-				return BaseFileUtils.createFileInternally(file.getParentFile(), true);
-			} else {
-				return false;
-			}
+		boolean create = !file.exists();
+		try (final @NotNull FileChannel localChannel = new RandomAccessFile(file.getParentFile(), "rws").getChannel()) {
+			return create;
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while creating parents of '"
 										 + file.getAbsolutePath()
@@ -86,6 +85,17 @@ public class BaseFileUtils {
 		}
 	}
 
+
+	/**
+	 * List all folders in a given directory
+	 *
+	 * @param directory the directory to look into
+	 *
+	 * @return the files of the directory that are folders
+	 */
+	public static @NotNull Collection<File> listFolders(final @NotNull File directory) {
+		return BaseFileUtils.listFolders(directory, false);
+	}
 
 	/**
 	 * List all folders in a given directory
@@ -114,88 +124,16 @@ public class BaseFileUtils {
 		return files;
 	}
 
+
 	/**
-	 * List all folders in a given directory
+	 * List all Files in a given directory
 	 *
 	 * @param directory the directory to look into
 	 *
-	 * @return the files of the directory that are folders
+	 * @return the files of the given directory
 	 */
-	public static @NotNull Collection<File> listFolders(final @NotNull File directory) {
-		return BaseFileUtils.listFolders(directory, false);
-	}
-
-
-	/**
-	 * List all Files in a given directory
-	 *
-	 * @param directory  the directory to look into
-	 * @param extensions the file extensions to look for
-	 * @param deep       also look through subdirectories
-	 *
-	 * @return the files of the given directory with the given extensions
-	 */
-	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
-													  final @NotNull String[] extensions,
-													  final boolean deep) {
-		final @NotNull Collection<File> files = new ArrayList<>();
-		if (directory.isDirectory()) {
-			final @Nullable File[] fileList = directory.listFiles();
-			if (fileList != null) {
-				for (final @Nullable File file : fileList) {
-					if (file != null) {
-						if (Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)) {
-							files.add(file);
-						}
-						if (deep) {
-							files.addAll(BaseFileUtils.listFiles(file, extensions, true));
-						}
-					}
-				}
-			}
-		}
-		return files;
-	}
-
-	/**
-	 * List all Files in a given directory
-	 *
-	 * @param directory  the directory to look into
-	 * @param extensions the file extensions to look for
-	 * @param deep       also look through subdirectories
-	 *
-	 * @return the files of the given directory with the given extensions
-	 */
-	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
-													  final @NotNull List<String> extensions,
-													  final boolean deep) {
-		return BaseFileUtils.listFiles(directory, extensions.toArray(new String[0]), deep);
-	}
-
-	/**
-	 * List all Files in a given directory
-	 *
-	 * @param directory  the directory to look into
-	 * @param extensions the file extensions to look for
-	 *
-	 * @return the files of the given directory with the given extensions
-	 */
-	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
-													  final @NotNull String[] extensions) {
-		return BaseFileUtils.listFiles(directory, extensions, false);
-	}
-
-	/**
-	 * List all Files in a given directory
-	 *
-	 * @param directory  the directory to look into
-	 * @param extensions the file extensions to look for
-	 *
-	 * @return the files of the given directory with the given extensions
-	 */
-	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
-													  final @NotNull List<String> extensions) {
-		return BaseFileUtils.listFiles(directory, extensions.toArray(new String[0]), false);
+	public static @NotNull Collection<File> listFiles(final @NotNull File directory) {
+		return BaseFileUtils.listFiles(directory, false);
 	}
 
 	/**
@@ -228,13 +166,75 @@ public class BaseFileUtils {
 	/**
 	 * List all Files in a given directory
 	 *
-	 * @param directory the directory to look into
+	 * @param directory  the directory to look into
+	 * @param extensions the file extensions to look for
 	 *
-	 * @return the files of the given directory
+	 * @return the files of the given directory with the given extensions
 	 */
-	public static @NotNull Collection<File> listFiles(final @NotNull File directory) {
-		return BaseFileUtils.listFiles(directory, false);
+	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
+													  final @NotNull List<String> extensions) {
+		return BaseFileUtils.listFiles(directory, extensions.toArray(new String[0]), false);
 	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param extensions the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions
+	 */
+	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
+													  final @NotNull String[] extensions) {
+		return BaseFileUtils.listFiles(directory, extensions, false);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param extensions the file extensions to look for
+	 * @param deep       also look through subdirectories
+	 *
+	 * @return the files of the given directory with the given extensions
+	 */
+	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
+													  final @NotNull List<String> extensions,
+													  final boolean deep) {
+		return BaseFileUtils.listFiles(directory, extensions.toArray(new String[0]), deep);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param extensions the file extensions to look for
+	 * @param deep       also look through subdirectories
+	 *
+	 * @return the files of the given directory with the given extensions
+	 */
+	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
+													  final @NotNull String[] extensions,
+													  final boolean deep) {
+		final @NotNull Collection<File> files = new ArrayList<>();
+		if (directory.isDirectory()) {
+			final @Nullable File[] fileList = directory.listFiles();
+			if (fileList != null) {
+				for (final @Nullable File file : fileList) {
+					if (file != null) {
+						if (Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)) {
+							files.add(file);
+						}
+						if (deep) {
+							files.addAll(BaseFileUtils.listFiles(file, extensions, true));
+						}
+					}
+				}
+			}
+		}
+		return files;
+	}
+
 
 	/**
 	 * Create a BufferedInputStream from a File
@@ -461,13 +461,12 @@ public class BaseFileUtils {
 	 * @param file        the File to be written to
 	 * @param inputStream the InputStream which shall be written
 	 */
-	@Synchronized
 	public static void writeToFile(final @NotNull File file,
 								   final @Nullable BufferedInputStream inputStream) {
-		BaseFileUtils.createFile(file);
 		if (inputStream == null) {
-			try (final @NotNull BufferedOutputStream outputStream =
-						 new BufferedOutputStream(new FileOutputStream(file))) {
+			try (final @NotNull FileChannel localChannel = new RandomAccessFile(file, "rws").getChannel();
+				 final @NotNull BufferedOutputStream outputStream = new BufferedOutputStream(Channels.newOutputStream(localChannel))) {
+				localChannel.lock();
 				outputStream.write(new byte[0], 0, 0);
 			} catch (IOException e) {
 				throw new RuntimeIOException("Error while clearing '"
@@ -475,13 +474,46 @@ public class BaseFileUtils {
 											 + "'", e.getCause());
 			}
 		} else {
-			try (final @NotNull BufferedOutputStream outputStream =
-						 new BufferedOutputStream(new FileOutputStream(file))) {
-				BaseFileUtils.createFile(file);
+			try (final @NotNull FileChannel localChannel = new RandomAccessFile(file, "rws").getChannel();
+				 final @NotNull BufferedOutputStream outputStream = new BufferedOutputStream(Channels.newOutputStream(localChannel))) {
+				localChannel.lock();
 				final @NotNull byte[] data = new byte[bufferSize];
 				int count;
 				while ((count = inputStream.read(data, 0, bufferSize)) != -1) {
 					outputStream.write(data, 0, count);
+				}
+			} catch (IOException e) {
+				throw new RuntimeIOException("Error while writing Data to '"
+											 + file.getAbsolutePath()
+											 + "'", e.getCause());
+			}
+		}
+	}
+
+	public static void writeToFileIfCreated(final @NotNull File file,
+											final @Nullable BufferedInputStream inputStream) {
+		if (inputStream == null) {
+			try {
+				new RandomAccessFile(file, "rws");
+			} catch (IOException e) {
+				throw new RuntimeIOException("Error while creating '"
+											 + file.getAbsolutePath()
+											 + "'"
+											 + System.lineSeparator()
+											 + e.getMessage(), e.getCause());
+			}
+		} else {
+			boolean create = !file.exists();
+			try (final @NotNull FileChannel localChannel = new RandomAccessFile(file, "rws").getChannel();
+				 final @NotNull BufferedOutputStream outputStream = new BufferedOutputStream(Channels.newOutputStream(localChannel))) {
+				if (create) {
+					localChannel.lock();
+					final @NotNull byte[] data = new byte[bufferSize];
+					int count;
+					while ((count = inputStream.read(data, 0, bufferSize)) != -1) {
+						outputStream.write(data, 0, count);
+					}
+					outputStream.flush();
 				}
 			} catch (IOException e) {
 				throw new RuntimeIOException("Error while writing Data to '"
@@ -499,8 +531,7 @@ public class BaseFileUtils {
 	 * @return the extension of the given File
 	 */
 	public static @NotNull String getExtension(final @NotNull File file) {
-		return BaseFileUtils.getExtension(
-				file.getName());
+		return BaseFileUtils.getExtension(file.getName());
 	}
 
 	/**
@@ -585,48 +616,6 @@ public class BaseFileUtils {
 			return filePath;
 		} else {
 			return filePath.substring(0, dotInd).toLowerCase();
-		}
-	}
-
-
-	@Synchronized
-	private static boolean createFileInternally(final @NotNull File file,
-												final boolean isDirectory) throws IOException {
-		if (file.getParentFile() != null && !file.getParentFile().exists()) {
-			try {
-				if (!BaseFileUtils.createFileInternally(file.getParentFile(), true)) {
-					throw new IOException();
-				}
-			} catch (IOException e) {
-				throw new IOException("Could not create parents of '"
-									  + file.getAbsolutePath()
-									  + "'"
-									  + System.lineSeparator()
-									  + e.getMessage(), e.getCause());
-			}
-		}
-		if (!file.exists()) {
-			try {
-				if (isDirectory) {
-					if (file.mkdir()) {
-						return true;
-					} else {
-						throw new IOException();
-					}
-				} else {
-					if (file.createNewFile()) {
-						return true;
-					} else {
-						throw new IOException();
-					}
-				}
-			} catch (IOException e) {
-				throw new IOException("Could not create '"
-									  + file.getAbsolutePath()
-									  + "'", e.getCause());
-			}
-		} else {
-			return false;
 		}
 	}
 }

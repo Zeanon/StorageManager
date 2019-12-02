@@ -14,12 +14,13 @@ import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.EqualsAndHashCode;
-import lombok.Synchronized;
 import lombok.ToString;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -54,9 +55,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 					   final @NotNull Class<? extends List> list) {
 		super(file, FileType.TOML, new LocalFileData(new Collections(map, list), synchronizedData), reloadSetting);
 
-		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
-			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
-		}
+		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
 		try {
 			this.fileData().loadData(com.electronwill.toml.Toml.read(this.file()));
@@ -69,9 +68,9 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	}
 
 	@Override
-	@Synchronized
 	public void save() {
-		try {
+		try (final @NotNull FileChannel localChannel = new RandomAccessFile(this.file(), "UTF-8").getChannel()) {
+			localChannel.lock();
 			//noinspection unchecked
 			com.electronwill.toml.Toml.write(this.fileData().dataMap(), this.file());
 		} catch (IOException e) {
@@ -148,7 +147,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 
 	private static class Collections extends Provider<Map, List> {
 
-		private Collections(Class<? extends Map> map, Class<? extends List> list) {
+		private Collections(final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
 			super(map, list);
 		}
 	}

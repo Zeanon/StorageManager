@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import lombok.Cleanup;
-import lombok.Synchronized;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -25,11 +23,11 @@ import org.jetbrains.annotations.NotNull;
 public class YamlEditor {
 
 
-	public static @NotNull List<String> readComments(final @NotNull File file, final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
+	public static @NotNull List<String> readComments(final @NotNull File file,
+													 final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
 		return getCommentsFromLines(read(file), provider);
 	}
 
-	@Synchronized
 	@Contract("_ -> new")
 	public static @NotNull List<String> read(final @NotNull File file) throws IOException {
 		try (final @NotNull BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -37,39 +35,46 @@ public class YamlEditor {
 		}
 	}
 
-	public static @NotNull List<String> readFooter(final @NotNull File file, final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
+	public static @NotNull List<String> readFooter(final @NotNull File file,
+												   final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
 		return getFooterFromLines(read(file), provider);
 	}
 
-	public static @NotNull List<String> readHeader(final @NotNull File file, final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
+	public static @NotNull List<String> readHeader(final @NotNull File file,
+												   final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
 		return getHeaderFromLines(read(file), provider);
 	}
 
-	public static @NotNull List<String> readKeys(final @NotNull File file, final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
+	public static @NotNull List<String> readKeys(final @NotNull File file,
+												 final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
 		return getKeys(read(file), provider);
 	}
 
-	public static @NotNull List<String> readPureComments(final @NotNull File file, final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
+	public static @NotNull List<String> readPureComments(final @NotNull File file,
+														 final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
 		return getPureCommentsFromLines(read(file), provider);
 	}
 
-	public static @NotNull List<String> readWithoutHeaderAndFooter(final @NotNull File file, final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
+	public static @NotNull List<String> readWithoutHeaderAndFooter(final @NotNull File file,
+																   final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
 		return getLinesWithoutFooterAndHeaderFromLines(read(file), provider);
 	}
 
-	@Synchronized
-	public static void write(final @NotNull File file, final @NotNull List<String> lines) throws IOException {
-		@NotNull @Cleanup final PrintWriter writer = new PrintWriter(new FileWriter(file));
-		final @NotNull Iterator<String> linesIterator = lines.iterator();
-		writer.print(linesIterator.next());
-		linesIterator.forEachRemaining(line -> {
-			writer.println();
-			writer.print(line);
-		});
+	public static void write(final @NotNull File file,
+							 final @NotNull List<String> lines) throws IOException {
+		try (final @NotNull PrintWriter writer = new PrintWriter(new FileWriter(file))) {
+			final @NotNull Iterator<String> linesIterator = lines.iterator();
+			writer.print(linesIterator.next());
+			linesIterator.forEachRemaining(line -> {
+				writer.println();
+				writer.print(line);
+			});
+		}
 	}
 
 	@Contract("_, _ -> param1")
-	public static @NotNull List<String> getLinesWithoutFooterAndHeaderFromLines(final @NotNull List<String> lines, final @NotNull Provider<? extends Map, ? extends List> provider) {
+	public static @NotNull List<String> getLinesWithoutFooterAndHeaderFromLines(final @NotNull List<String> lines,
+																				final @NotNull Provider<? extends Map, ? extends List> provider) {
 		final @NotNull List<String> header = getHeaderFromLines(lines, provider);
 		final @NotNull List<String> footer = getFooterFromLines(lines, provider);
 
@@ -79,7 +84,8 @@ public class YamlEditor {
 		return lines;
 	}
 
-	private static @NotNull List<String> getCommentsFromLines(final @NotNull List<String> lines, final @NotNull Provider<? extends Map, ? extends List> provider) {
+	private static @NotNull List<String> getCommentsFromLines(final @NotNull List<String> lines,
+															  final @NotNull Provider<? extends Map, ? extends List> provider) {
 		//noinspection unchecked
 		final @NotNull List<String> result = provider.newList();
 		for (final @NotNull String line : lines) {
@@ -90,7 +96,8 @@ public class YamlEditor {
 		return result;
 	}
 
-	private static @NotNull List<String> getFooterFromLines(final @NotNull List<String> lines, final @NotNull Provider<? extends Map, ? extends List> provider) {
+	private static @NotNull List<String> getFooterFromLines(final @NotNull List<String> lines,
+															final @NotNull Provider<? extends Map, ? extends List> provider) {
 		//noinspection unchecked
 		final @NotNull List<String> result = provider.newList();
 		Collections.reverse(lines);
@@ -106,7 +113,8 @@ public class YamlEditor {
 		return result;
 	}
 
-	private static @NotNull List<String> getHeaderFromLines(final @NotNull List<String> lines, final @NotNull Provider<? extends Map, ? extends List> provider) {
+	private static @NotNull List<String> getHeaderFromLines(final @NotNull List<String> lines,
+															final @NotNull Provider<? extends Map, ? extends List> provider) {
 		//noinspection unchecked
 		final @NotNull List<String> result = provider.newList();
 		for (final @NotNull String line : lines) {
@@ -119,7 +127,8 @@ public class YamlEditor {
 		return result;
 	}
 
-	private static @NotNull List<String> getKeys(final @NotNull List<String> lines, final @NotNull Provider<? extends Map, ? extends List> provider) {
+	private static @NotNull List<String> getKeys(final @NotNull List<String> lines,
+												 final @NotNull Provider<? extends Map, ? extends List> provider) {
 		//noinspection unchecked
 		final @NotNull List<String> result = provider.newList();
 		for (final @NotNull String line : lines) {
@@ -133,7 +142,8 @@ public class YamlEditor {
 	/**
 	 * @return List of comments that don't belong to header or footer
 	 */
-	private static @NotNull List<String> getPureCommentsFromLines(final @NotNull List<String> lines, final @NotNull Provider<? extends Map, ? extends List> provider) {
+	private static @NotNull List<String> getPureCommentsFromLines(final @NotNull List<String> lines,
+																  final @NotNull Provider<? extends Map, ? extends List> provider) {
 		final @NotNull List<String> comments = getCommentsFromLines(lines, provider);
 		final @NotNull List<String> header = getHeaderFromLines(lines, provider);
 		final @NotNull List<String> footer = getFooterFromLines(lines, provider);

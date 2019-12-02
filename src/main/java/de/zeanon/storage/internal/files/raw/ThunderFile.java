@@ -21,7 +21,10 @@ import de.zeanon.storage.internal.utility.editor.ThunderEditor;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -70,9 +73,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 		this.bigData = bigData;
 		this.concurrentData = concurrentData;
 
-		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
-			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
-		}
+		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
 		try {
 			this.fileData().loadData(ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize));
@@ -85,7 +86,6 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 	}
 
 	@Override
-	@Synchronized
 	public void save() {
 		try {
 			ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
@@ -171,7 +171,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 
 	private static class Collections extends Provider<TripletMap, List> {
 
-		private Collections(Class<? extends TripletMap> map, Class<? extends List> list) {
+		private Collections(final @NotNull Class<? extends TripletMap> map, final @NotNull Class<? extends List> list) {
 			super(map, list);
 		}
 	}

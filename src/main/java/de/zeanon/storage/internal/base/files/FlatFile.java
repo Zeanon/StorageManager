@@ -11,6 +11,8 @@ import de.zeanon.storage.internal.base.settings.Reload;
 import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import java.io.*;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Iterator;
@@ -45,6 +47,10 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	private volatile long lastLoaded;
 	/**
 	 * Default: {@link Reload#INTELLIGENT}
+	 * -- Setter --
+	 * Set the ReloadSetting to be used
+	 * -- Getter --
+	 * Get the value of the saved ReloadSetting
 	 */
 	@Setter
 	@Accessors(fluent = true, chain = false)
@@ -113,10 +119,10 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	/**
 	 * Just delete the File
 	 */
-	@Synchronized
 	public void deleteFile() {
-		try {
-			Files.delete(this.file.toPath());
+		try (final @NotNull FileChannel localChannel = new RandomAccessFile(this.file(), "rw").getChannel()) {
+			localChannel.lock();
+			Files.delete(this.file().toPath());
 		} catch (IOException e) {
 			throw new RuntimeIOException("Could not delete '"
 										 + this.file.getAbsolutePath() + "'",
@@ -180,7 +186,6 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	/**
 	 * Reload the content of the File into the cache
 	 */
-	@Synchronized
 	public void reload() {
 		this.fileData().loadData(this.readFile());
 		this.lastLoaded(System.currentTimeMillis());
@@ -217,19 +222,23 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @param target      the CharSequence to be replaced.
 	 * @param replacement the Replacement Sequence.
 	 */
-	@Synchronized
 	public void replaceInFile(final @NotNull CharSequence target,
 							  final @NotNull CharSequence replacement) throws IOException {
-		final @NotNull Iterator<String> lines;
-		try (final @NotNull BufferedReader reader = new BufferedReader(new FileReader(this.file))) {
-			lines = reader.lines().collect(Collectors.toList()).iterator();
+		try (final @NotNull FileChannel localChannel = new RandomAccessFile(this.file(), "rws").getChannel()) {
+			localChannel.lock();
+			final @NotNull Iterator<String> lines;
+			try (final @NotNull BufferedReader reader = new BufferedReader(Channels.newReader(localChannel, "UTF-8"))) {
+				lines = reader.lines().collect(Collectors.toList()).iterator();
+			}
+
+			try (final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(localChannel, "UTF-8"))) {
+				writer.print((lines.next()).replace(target, replacement));
+				lines.forEachRemaining(line -> {
+					writer.println();
+					writer.print((line).replace(target, replacement));
+				});
+			}
 		}
-		final @NotNull @Cleanup PrintWriter writer = new PrintWriter(this.file);
-		writer.print((lines.next()).replace(target, replacement));
-		lines.forEachRemaining(line -> {
-			writer.println();
-			writer.print((line).replace(target, replacement));
-		});
 	}
 
 	@Override
@@ -353,7 +362,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@Override
-	public void set(final @NotNull String key, final @Nullable Object value) {
+	public void set(final @NotNull String key,
+					final @Nullable Object value) {
 		if (this.insert(key, value)) {
 			this.save();
 		}
@@ -361,7 +371,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@Override
-	public void setUseArray(final @NotNull String[] key, final @Nullable Object value) {
+	public void setUseArray(final @NotNull String[] key,
+							final @Nullable Object value) {
 		if (this.insertUseArray(key, value)) {
 			this.save();
 		}

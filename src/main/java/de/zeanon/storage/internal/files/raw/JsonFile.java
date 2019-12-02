@@ -12,13 +12,14 @@ import de.zeanon.storage.internal.files.section.JsonFileSection;
 import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import de.zeanon.storage.internal.utility.datafiles.JsonUtils;
 import java.io.*;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Cleanup;
 import lombok.EqualsAndHashCode;
-import lombok.Synchronized;
 import lombok.ToString;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -58,9 +59,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 					   final @NotNull Class<? extends List> list) {
 		super(file, FileType.JSON, new LocalFileData(new Collections(map, list), synchronizedData), reloadSetting);
 
-		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
-			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
-		}
+		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
 		try {
 			final @NotNull JSONTokener jsonTokener = new JSONTokener(
@@ -144,10 +143,9 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	}
 
 	@Override
-	@Synchronized
 	public void save() {
-		try {
-			final @NotNull @Cleanup Writer writer = new PrintWriter(new FileWriter(this.file().getAbsolutePath()));
+		try (final @NotNull FileChannel localChannel = new RandomAccessFile(this.file(), "rws").getChannel()) {
+			final @NotNull @Cleanup Writer writer = new PrintWriter(Channels.newWriter(localChannel, "UTF-8"));
 			writer.write(new JSONObject(this.fileData().dataMap()).toString(3));
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while writing to "
@@ -227,7 +225,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 
 	private static class Collections extends Provider<Map, List> {
 
-		private Collections(Class<? extends Map> map, Class<? extends List> list) {
+		private Collections(final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
 			super(map, list);
 		}
 	}

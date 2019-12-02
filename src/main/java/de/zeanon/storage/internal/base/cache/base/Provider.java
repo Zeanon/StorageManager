@@ -5,10 +5,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,27 +23,57 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.3.0
  */
-@Getter
-@Setter
 @AllArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
 @SuppressWarnings("unused")
 public abstract class Provider<M extends Map, L extends List> {
 
 
 	/**
+	 * Lock access to the mapType so no new MapType is set while a new instance is generated
+	 */
+	private final @NotNull ReadWriteLock mapLock = new ReentrantReadWriteLock(true);
+	/**
+	 * Lock access to the listType so no new ListType is set while a new instance is generated
+	 */
+	private final @NotNull ReadWriteLock listLock = new ReentrantReadWriteLock(true);
+
+
+	/**
 	 * The Map implementation to be used
 	 */
-	private Class<? extends M> mapType;
+	@Getter
+	private @NotNull Class<? extends M> mapType;
 	/**
 	 * the List implementation to be used
 	 */
-	private Class<? extends L> listType;
+	@Getter
+	private @NotNull Class<? extends L> listType;
+
+
+	public void setMapType(final @NotNull Class<? extends M> mapType) {
+		this.mapLock.writeLock().lock();
+		try {
+			this.mapType = mapType;
+		} finally {
+			this.mapLock.writeLock().unlock();
+		}
+	}
+
+	public void setListType(final @NotNull Class<? extends L> listType) {
+		this.listLock.writeLock().lock();
+		try {
+			this.listType = listType;
+		} finally {
+			this.listLock.writeLock().unlock();
+		}
+	}
 
 
 	/**
 	 * Get yourself a new Instance of the saved Map-Type
 	 */
 	public @NotNull M newMap() {
+		this.mapLock.readLock().lock();
 		try {
 			return mapType.getDeclaredConstructor().newInstance();
 		} catch (@NotNull InstantiationException
@@ -50,6 +81,8 @@ public abstract class Provider<M extends Map, L extends List> {
 				| NoSuchMethodException
 				| IllegalAccessException e) {
 			throw new ProviderException(e);
+		} finally {
+			this.mapLock.readLock().unlock();
 		}
 	}
 
@@ -57,6 +90,7 @@ public abstract class Provider<M extends Map, L extends List> {
 	 * Get yourself a new Instance of the saved List-Type
 	 */
 	public @NotNull L newList() {
+		this.listLock.readLock().lock();
 		try {
 			return listType.getDeclaredConstructor().newInstance();
 		} catch (@NotNull InstantiationException
@@ -64,6 +98,8 @@ public abstract class Provider<M extends Map, L extends List> {
 				| InvocationTargetException
 				| NoSuchMethodException e) {
 			throw new ProviderException(e);
+		} finally {
+			this.listLock.readLock().unlock();
 		}
 	}
 
@@ -72,7 +108,8 @@ public abstract class Provider<M extends Map, L extends List> {
 	 */
 	public @NotNull M newMap(final @NotNull Object... parameters) {
 		try {
-			@NotNull List<Class<?>> parameterTypes = new ArrayList<>();
+			this.mapLock.readLock().lock();
+			final @NotNull List<Class<?>> parameterTypes = new ArrayList<>();
 			for (@NotNull Object parameter : parameters) {
 				parameterTypes.add(parameter.getClass());
 			}
@@ -83,6 +120,8 @@ public abstract class Provider<M extends Map, L extends List> {
 				| NoSuchMethodException
 				| IllegalAccessException e) {
 			throw new ProviderException(e);
+		} finally {
+			this.mapLock.readLock().unlock();
 		}
 	}
 
@@ -91,6 +130,7 @@ public abstract class Provider<M extends Map, L extends List> {
 	 */
 	public @NotNull M newMap(final @NotNull Class<?>[] parameterTypes,
 							 final @NotNull Object... parameters) {
+		this.mapLock.readLock().lock();
 		try {
 			return mapType.getDeclaredConstructor(parameterTypes)
 						  .newInstance(parameters);
@@ -99,6 +139,8 @@ public abstract class Provider<M extends Map, L extends List> {
 				| NoSuchMethodException
 				| IllegalAccessException e) {
 			throw new ProviderException(e);
+		} finally {
+			this.mapLock.readLock().unlock();
 		}
 	}
 
@@ -106,8 +148,9 @@ public abstract class Provider<M extends Map, L extends List> {
 	 * Get yourself a new Instance of the saved List-Type with the given parameters
 	 */
 	public @NotNull L newList(final @NotNull Object... parameters) {
+		this.listLock.readLock().lock();
 		try {
-			@NotNull List<Class<?>> parameterTypes = new ArrayList<>();
+			final @NotNull List<Class<?>> parameterTypes = new ArrayList<>();
 			for (@NotNull Object parameter : parameters) {
 				parameterTypes.add(parameter.getClass());
 			}
@@ -118,6 +161,8 @@ public abstract class Provider<M extends Map, L extends List> {
 				| InvocationTargetException
 				| NoSuchMethodException e) {
 			throw new ProviderException(e);
+		} finally {
+			this.listLock.readLock().unlock();
 		}
 	}
 
@@ -126,6 +171,7 @@ public abstract class Provider<M extends Map, L extends List> {
 	 */
 	public @NotNull L newList(final @NotNull Class<?>[] parameterTypes,
 							  final @NotNull Object... parameters) {
+		this.listLock.readLock().lock();
 		try {
 			return listType.getDeclaredConstructor(parameterTypes)
 						   .newInstance(parameters);
@@ -134,6 +180,8 @@ public abstract class Provider<M extends Map, L extends List> {
 				| InvocationTargetException
 				| NoSuchMethodException e) {
 			throw new ProviderException(e);
+		} finally {
+			this.listLock.readLock().unlock();
 		}
 	}
 
@@ -141,13 +189,23 @@ public abstract class Provider<M extends Map, L extends List> {
 	 * Get the TypeName of the saved Map-Type
 	 */
 	public String getMapTypeName() {
-		return this.mapType.getTypeName();
+		this.mapLock.readLock().lock();
+		try {
+			return this.mapType.getTypeName();
+		} finally {
+			this.mapLock.readLock().unlock();
+		}
 	}
 
 	/**
 	 * Get the TypeName of the save List-Type
 	 */
 	public String getListTypeName() {
-		return this.listType.getTypeName();
+		this.listLock.readLock().lock();
+		try {
+			return this.listType.getTypeName();
+		} finally {
+			this.listLock.readLock().lock();
+		}
 	}
 }

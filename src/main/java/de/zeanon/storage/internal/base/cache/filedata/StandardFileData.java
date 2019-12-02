@@ -155,7 +155,7 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 * @param map the values to be loaded
 	 */
 	@Override
-	public void loadData(@Nullable M map) {
+	public void loadData(final @Nullable M map) {
 		if (map != null) {
 			//noinspection unchecked
 			this.dataMap = this.synchronizedData ? ((M) Collections.synchronizedMap(map)) : map;

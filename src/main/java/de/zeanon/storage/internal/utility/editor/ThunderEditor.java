@@ -10,12 +10,13 @@ import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.settings.Comment;
 import de.zeanon.storage.internal.utility.basic.Objects;
 import java.io.*;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.util.Pair;
-import lombok.Synchronized;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -83,21 +84,31 @@ public class ThunderEditor {
 	// <Internal>
 	// <Write Data>
 	// <Write Data with Comments>
-	@Synchronized
 	private static void initialWriteWithComments(final @NotNull File file,
 												 final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData) {
-		try (final @NotNull PrintWriter writer = new PrintWriter(file)) {
-			if (!fileData.isEmpty()) {
+		if (!fileData.isEmpty()) {
+			try (final @NotNull FileChannel localChannel = new RandomAccessFile(file, "rws").getChannel();
+				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(localChannel, "UTF-8"))) {
+				localChannel.lock();
 				final @NotNull Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
 				ThunderEditor.topLayerWriteWithComments(writer, mapIterator.next());
 				mapIterator.forEachRemaining(entry -> {
 					writer.println();
 					ThunderEditor.topLayerWriteWithComments(writer, entry);
 				});
+				writer.flush();
+			} catch (IOException e) {
+				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
 			}
-			writer.flush();
-		} catch (FileNotFoundException e) {
-			throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
+		} else {
+			try (final @NotNull FileChannel localChannel = new RandomAccessFile(file, "rws").getChannel();
+				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(localChannel, "UTF-8"))) {
+				localChannel.lock();
+				writer.print("");
+				writer.flush();
+			} catch (IOException e) {
+				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
+			}
 		}
 	}
 
@@ -178,11 +189,12 @@ public class ThunderEditor {
 	// </Write Data with Comments>
 
 	// <Write Data without Comments>
-	@Synchronized
 	private static void initialWriteWithOutComments(final @NotNull File file,
 													final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData) {
-		try (final @NotNull PrintWriter writer = new PrintWriter(file)) {
-			if (!fileData.isEmpty()) {
+		if (!fileData.isEmpty()) {
+			try (final @NotNull FileChannel localChannel = new RandomAccessFile(file, "rws").getChannel();
+				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(localChannel, "UTF-8"))) {
+				localChannel.lock();
 				final @NotNull Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
 				@NotNull TripletMap.TripletNode<String, Object> initialEntry = mapIterator.next();
 				while (initialEntry.getValue() == LineType.COMMENT || initialEntry.getValue() == LineType.HEADER || initialEntry.getValue() == LineType.FOOTER || initialEntry.getValue() == LineType.BLANK_LINE) {
@@ -195,10 +207,19 @@ public class ThunderEditor {
 						ThunderEditor.topLayerWriteWithOutComments(writer, entry);
 					}
 				});
+				writer.flush();
+			} catch (IOException e) {
+				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
 			}
-			writer.flush();
-		} catch (FileNotFoundException e) {
-			throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
+		} else {
+			try (final @NotNull FileChannel localChannel = new RandomAccessFile(file, "rws").getChannel();
+				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(localChannel, "UTF-8"))) {
+				localChannel.lock();
+				writer.print("");
+				writer.flush();
+			} catch (IOException e) {
+				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
+			}
 		}
 	}
 
@@ -350,15 +371,17 @@ public class ThunderEditor {
 
 	// <Read Data>
 	// <Read Data with Comments>
-	@Synchronized
 	private static @NotNull TripletMap<String, Object> initialReadWithComments(final @NotNull File file,
 																			   final @NotNull Provider<? extends TripletMap, ? extends List> provider,
 																			   final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull List<String> lines;
-			try (final @NotNull BufferedReader reader = new BufferedReader(new FileReader(file), buffer_size)) {
+			try (final @NotNull FileChannel localChannel = new RandomAccessFile(file, "r").getChannel();
+				 final @NotNull BufferedReader reader = new BufferedReader(Channels.newReader(localChannel, "UTF-8"), buffer_size)) {
+				localChannel.lock();
 				lines = reader.lines().collect(Collectors.toList());
 			}
+
 			//noinspection unchecked
 			final @NotNull TripletMap<String, Object> tempMap = provider.newMap();
 
@@ -432,15 +455,17 @@ public class ThunderEditor {
 	// </Read Data with Comments>
 
 	// <Read Data without Comments>
-	@Synchronized
 	private static @NotNull TripletMap<String, Object> initialReadWithOutComments(final @NotNull File file,
 																				  final @NotNull Provider<? extends TripletMap, ? extends List> provider,
 																				  final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull List<String> lines;
-			try (final @NotNull BufferedReader reader = new BufferedReader(new FileReader(file), buffer_size)) {
+			try (final @NotNull FileChannel localChannel = new RandomAccessFile(file, "r").getChannel();
+				 final @NotNull BufferedReader reader = new BufferedReader(Channels.newReader(localChannel, "UTF-8"), buffer_size)) {
+				localChannel.lock();
 				lines = reader.lines().collect(Collectors.toList());
 			}
+
 			//noinspection unchecked
 			final @NotNull TripletMap<String, Object> tempMap = provider.newMap();
 

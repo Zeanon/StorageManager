@@ -18,13 +18,13 @@ import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import de.zeanon.storage.internal.utility.datafiles.YamlUtils;
 import de.zeanon.storage.internal.utility.editor.YamlEditor;
 import java.io.*;
+import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Cleanup;
 import lombok.EqualsAndHashCode;
-import lombok.Synchronized;
 import lombok.ToString;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -61,9 +61,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 					   final @NotNull Class<? extends List> list) {
 		super(file, FileType.YAML, new LocalFileData(new Collections(map, list), synchronizedData), reloadSetting, commentSetting);
 
-		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
-			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
-		}
+		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
 		try {
 			//noinspection unchecked
@@ -77,9 +75,9 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 	}
 
 	@Override
-	@Synchronized
 	public void save() {
-		try {
+		try (final @NotNull FileChannel localChannel = new RandomAccessFile(this.file(), "rws").getChannel()) {
+			localChannel.lock();
 			if (this.getCommentSetting() != Comment.PRESERVE) {
 				this.write(this.fileData().dataMap());
 			} else {
@@ -172,7 +170,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 
 	private static class Collections extends Provider<Map, List> {
 
-		private Collections(Class<? extends Map> map, Class<? extends List> list) {
+		private Collections(final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
 			super(map, list);
 		}
 	}

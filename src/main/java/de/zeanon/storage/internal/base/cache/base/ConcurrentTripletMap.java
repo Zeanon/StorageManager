@@ -1,13 +1,12 @@
 package de.zeanon.storage.internal.base.cache.base;
 
 import de.zeanon.storage.external.lists.IList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,86 +26,13 @@ import org.jetbrains.annotations.Nullable;
 public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implements ConcurrentMap<K, V> {
 
 
+	private final @NotNull ReadWriteLock localLock = new ReentrantReadWriteLock(true);
+
+
 	protected ConcurrentTripletMap(@NotNull IList<TripletNode<K, V>> localList) {
 		super(localList);
 	}
 
-	/**
-	 * Associates the specified value with the specified key in this map.
-	 * If the map previously contained a mapping for the key, the old
-	 * value is replaced.
-	 *
-	 * @param key   key with which the specified value is to be associated
-	 * @param value value to be associated with the specified key
-	 *
-	 * @return the previous value associated with <tt>key</tt>, or
-	 * <tt>null</tt> if there was no mapping for <tt>key</tt>.
-	 * (A <tt>null</tt> return can also indicate that the map
-	 * previously associated <tt>null</tt> with <tt>key</tt>.)
-	 */
-	@Override
-	public @Nullable V put(final @NotNull K key, final @Nullable V value) {
-		for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
-			if (tempNode.getKey().equals(key)) {
-				if (Objects.equals(tempNode.getValue(), value)) {
-					return value;
-				} else {
-					return tempNode.setValue(value);
-				}
-			}
-		}
-		this.add(key, value);
-		return null;
-	}
-
-	/**
-	 * Associates the specified value with the specified key in this map.
-	 *
-	 * @param node mapping to be added to the map
-	 */
-	@Override
-	public void add(final @NotNull TripletMap.TripletNode<K, V> node) {
-		synchronized (this.localList) {
-			this.localList.add(node);
-		}
-	}
-
-	/**
-	 * Copies all of the mappings from the specified map to this map.
-	 *
-	 * @param nodes mappings to be added to the map
-	 */
-	@Override
-	public void addAll(final @NotNull List<TripletNode<K, V>> nodes) {
-		synchronized (this.localList) {
-			this.localList.addAll(nodes);
-		}
-	}
-
-	/**
-	 * Removes the mapping for the specified key from this map if present.
-	 *
-	 * @param key key whose mapping is to be removed from the map
-	 *
-	 * @return the previous value associated with <tt>key</tt>, or
-	 * <tt>null</tt> if there was no mapping for <tt>key</tt>.
-	 * (A <tt>null</tt> return can also indicate that the map
-	 * previously associated <tt>null</tt> with <tt>key</tt>.)
-	 */
-	@Override
-	public @Nullable V remove(final @NotNull Object key) {
-		final @NotNull Iterator<TripletNode<K, V>> tempIterator = this.localList.iterator();
-		TripletNode<K, V> tempNode;
-		synchronized (this.localList) {
-			while ((tempNode = tempIterator.next()) != null) {
-				if (tempNode.getKey().equals(key)) {
-					tempIterator.remove();
-					return tempNode.getValue();
-				}
-			}
-		}
-		return null;
-	}
 
 	/**
 	 * If the specified key is not already associated
@@ -143,10 +69,15 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@Override
 	public V putIfAbsent(@NotNull K key, V value) {
-		for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
-			if (tempNode.getKey().equals(key)) {
-				return tempNode.getValue();
+		this.localLock.readLock().lock();
+		try {
+			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+				if (tempNode.getKey().equals(key)) {
+					return tempNode.getValue();
+				}
 			}
+		} finally {
+			this.localLock.readLock().unlock();
 		}
 		this.add(key, value);
 		return null;
@@ -185,15 +116,18 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	public boolean remove(@NotNull Object key, Object value) {
 		final @NotNull Iterator<TripletNode<K, V>> tempIterator = this.localList.iterator();
 		TripletNode<K, V> tempNode;
-		synchronized (this.localList) {
+		this.localLock.readLock().lock();
+		try {
 			while ((tempNode = tempIterator.next()) != null) {
 				if (tempNode.getKey().equals(key)) {
 					tempIterator.remove();
 					return true;
 				}
 			}
+			return false;
+		} finally {
+			this.localLock.writeLock().unlock();
 		}
-		return false;
 	}
 
 	/**
@@ -228,19 +162,24 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@Override
 	public boolean replace(final @NotNull K key, final @Nullable V oldValue, final @Nullable V newValue) {
-		for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
-			if (tempNode.getKey().equals(key)) {
-				if (Objects.equals(tempNode.getValue(), oldValue)) {
-					if (Objects.equals(tempNode.getValue(), newValue)) {
-						return true;
-					} else {
-						tempNode.setValue(newValue);
-						return true;
+		this.localLock.readLock().lock();
+		try {
+			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+				if (tempNode.getKey().equals(key)) {
+					if (Objects.equals(tempNode.getValue(), oldValue)) {
+						if (Objects.equals(tempNode.getValue(), newValue)) {
+							return true;
+						} else {
+							tempNode.setValue(newValue);
+							return true;
+						}
 					}
 				}
 			}
+			return false;
+		} finally {
+			this.localLock.readLock().unlock();
 		}
-		return false;
 	}
 
 	/**
@@ -277,16 +216,300 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@Override
 	public V replace(final @NotNull K key, final @Nullable V value) {
-		for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
-			if (tempNode.getKey().equals(key)) {
-				if (Objects.equals(tempNode.getValue(), value)) {
-					return value;
-				} else {
-					return tempNode.setValue(value);
+		this.localLock.readLock().lock();
+		try {
+			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+				if (tempNode.getKey().equals(key)) {
+					if (Objects.equals(tempNode.getValue(), value)) {
+						return value;
+					} else {
+						return tempNode.setValue(value);
+					}
 				}
 			}
+			return null;
+		} finally {
+			this.localLock.readLock().unlock();
 		}
+	}
+
+	/**
+	 * Returns <tt>true</tt> if this map contains a mapping for the
+	 * specified key.
+	 *
+	 * @param key The key whose presence in this map is to be tested
+	 *
+	 * @return <tt>true</tt> if this map contains a mapping for the specified
+	 * key.
+	 */
+	@Override
+	@Contract(pure = true)
+	public boolean containsKey(final @NotNull Object key) {
+		this.localLock.readLock().lock();
+		try {
+			for (final @NotNull TripletNode<K, V> TempNode : this.localList) {
+				if (TempNode.getKey().equals(key)) {
+					return true;
+				}
+			}
+			return false;
+		} finally {
+			this.localLock.readLock().unlock();
+		}
+	}
+
+	/**
+	 * Returns <tt>true</tt> if this map maps one or more keys to the
+	 * specified value.
+	 *
+	 * @param value value whose presence in this map is to be tested
+	 *
+	 * @return <tt>true</tt> if this map maps one or more keys to the
+	 * specified value
+	 */
+	@Override
+	@Contract(pure = true)
+	public boolean containsValue(final @NotNull Object value) {
+		this.localLock.readLock().lock();
+		try {
+			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+				if (value.equals(tempNode.getValue())) {
+					return true;
+				}
+			}
+			return false;
+		} finally {
+			this.localLock.readLock().unlock();
+		}
+	}
+
+	/**
+	 * Associates the specified value with the specified key in this map.
+	 * If the map previously contained a mapping for the key, the old
+	 * value is replaced.
+	 *
+	 * @param key   key with which the specified value is to be associated
+	 * @param value value to be associated with the specified key
+	 *
+	 * @return the previous value associated with <tt>key</tt>, or
+	 * <tt>null</tt> if there was no mapping for <tt>key</tt>.
+	 * (A <tt>null</tt> return can also indicate that the map
+	 * previously associated <tt>null</tt> with <tt>key</tt>.)
+	 */
+	@Override
+	public @Nullable V put(final @NotNull K key, final @Nullable V value) {
+		this.localLock.readLock().lock();
+		try {
+			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+				if (tempNode.getKey().equals(key)) {
+					if (Objects.equals(tempNode.getValue(), value)) {
+						return value;
+					} else {
+						return tempNode.setValue(value);
+					}
+				}
+			}
+		} finally {
+			this.localLock.readLock().unlock();
+		}
+		this.add(key, value);
 		return null;
+	}
+
+	/**
+	 * Associates the specified value with the specified key in this map.
+	 *
+	 * @param node mapping to be added to the map
+	 */
+	@Override
+	public void add(final @NotNull TripletMap.TripletNode<K, V> node) {
+		this.localLock.writeLock().lock();
+		try {
+			this.localList.add(node);
+		} finally {
+			this.localLock.writeLock().unlock();
+		}
+	}
+
+	/**
+	 * Copies all of the mappings from the specified map to this map.
+	 *
+	 * @param nodes mappings to be added to the map
+	 */
+	@Override
+	public void addAll(final @NotNull List<TripletNode<K, V>> nodes) {
+		this.localLock.writeLock().lock();
+		try {
+			this.localList.addAll(nodes);
+		} finally {
+			this.localLock.writeLock().unlock();
+		}
+	}
+
+	/**
+	 * Returns the value to which the specified key is mapped,
+	 * or {@code null} if this map contains no mapping for the key.
+	 *
+	 * <p>More formally, if this map contains a mapping from a key
+	 * {@code k} to a value {@code v} such that {@code (key==null ? k==null :
+	 * key.equals(k))}, then this method returns {@code v}; otherwise
+	 * it returns {@code null}.  (There can be at most one such mapping.)
+	 *
+	 * <p>A return value of {@code null} does not <i>necessarily</i>
+	 * indicate that the map contains no mapping for the key; it's also
+	 * possible that the map explicitly maps the key to {@code null}.
+	 * The {@link #containsKey containsKey} operation may be used to
+	 * distinguish these two cases.
+	 *
+	 * @see #put(Object, Object)
+	 */
+	@Override
+	public @Nullable V get(final @NotNull Object key) {
+		this.localLock.readLock().lock();
+		try {
+			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+				if (tempNode.getKey().equals(key)) {
+					return tempNode.getValue();
+				}
+			}
+			return null;
+		} finally {
+			this.localLock.readLock().unlock();
+		}
+	}
+
+	/**
+	 * Removes the mapping for the specified key from this map if present.
+	 *
+	 * @param key key whose mapping is to be removed from the map
+	 *
+	 * @return the previous value associated with <tt>key</tt>, or
+	 * <tt>null</tt> if there was no mapping for <tt>key</tt>.
+	 * (A <tt>null</tt> return can also indicate that the map
+	 * previously associated <tt>null</tt> with <tt>key</tt>.)
+	 */
+	@Override
+	public @Nullable V remove(final @NotNull Object key) {
+		this.localLock.writeLock().lock();
+		try {
+			final @NotNull Iterator<TripletNode<K, V>> tempIterator = this.localList.iterator();
+			TripletNode<K, V> tempNode;
+			while ((tempNode = tempIterator.next()) != null) {
+				if (tempNode.getKey().equals(key)) {
+					tempIterator.remove();
+					return tempNode.getValue();
+				}
+			}
+			return null;
+		} finally {
+			this.localLock.writeLock().unlock();
+		}
+	}
+
+	/**
+	 * Removes all of the mappings from this map.
+	 * The map will be empty after this call returns.
+	 */
+	@Override
+	public void clear() {
+		this.localLock.writeLock().lock();
+		try {
+			this.localList.clear();
+		} finally {
+			this.localLock.writeLock().unlock();
+		}
+	}
+
+	@Override
+	public void trimToSize() {
+		this.localLock.writeLock().lock();
+		try {
+			this.localList.trimToSize();
+		} finally {
+			this.localLock.writeLock().unlock();
+		}
+	}
+
+	@Contract("-> new")
+	public abstract @NotNull List<TripletNode<K, V>> entryList();
+
+	/**
+	 * Returns a {@link Set} view of the mappings contained in this map.
+	 * The set is backed by the map, so changes to the map are
+	 * reflected in the set, and vice-versa.  If the map is modified
+	 * while an iteration over the set is in progress (except through
+	 * the iterator's own <tt>remove</tt> operation, or through the
+	 * <tt>setValue</tt> operation on a map entry returned by the
+	 * iterator) the results of the iteration are undefined.  The set
+	 * supports element removal, which removes the corresponding
+	 * mapping from the map, via the <tt>Iterator.remove</tt>,
+	 * <tt>Set.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt> and
+	 * <tt>clear</tt> operations.  It does not support the
+	 * <tt>add</tt> or <tt>addAll</tt> operations.
+	 *
+	 * @return a set view of the mappings contained in this map
+	 */
+	@Override
+	@Contract("-> new")
+	public @NotNull Set<Entry<K, V>> entrySet() {
+		this.localLock.readLock().lock();
+		try {
+			return new HashSet<>(this.localList);
+		} finally {
+			this.localLock.readLock().unlock();
+		}
+	}
+
+	/**
+	 * Returns the number of key-value mappings in this map.
+	 *
+	 * @return the number of key-value mappings in this map
+	 */
+	@Override
+	public int size() {
+		this.localLock.readLock().lock();
+		try {
+			return this.localList.size();
+		} finally {
+			this.localLock.readLock().unlock();
+		}
+	}
+
+	/**
+	 * Returns <tt>true</tt> if this map contains no key-value mappings.
+	 *
+	 * @return <tt>true</tt> if this map contains no key-value mappings
+	 */
+	@Override
+	@Contract(pure = true)
+	public boolean isEmpty() {
+		this.localLock.readLock().lock();
+		try {
+			return this.localList.isEmpty();
+		} finally {
+			this.localLock.readLock().unlock();
+		}
+	}
+
+	@Contract("_ -> param1")
+	protected @NotNull List<TripletNode<K, V>> entryList(final @NotNull List<TripletNode<K, V>> entryList) {
+		this.localLock.readLock().lock();
+		try {
+			entryList.addAll(this.localList);
+			return entryList;
+		} finally {
+			this.localLock.readLock().unlock();
+		}
+	}
+
+	@Override
+	public @NotNull String toString() {
+		this.localLock.readLock().lock();
+		try {
+			return this.localList.toString();
+		} finally {
+			this.localLock.readLock().unlock();
+		}
 	}
 
 	/**
@@ -299,9 +522,10 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 * @version 1.3.0
 	 */
 	@EqualsAndHashCode
-	@Getter(onMethod_ = {@Override})
 	@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
 	public static class ConcurrentTripletNode<K, V> implements TripletNode<K, V> {
+
+		private final @NotNull ReadWriteLock localLock = new ReentrantReadWriteLock(true);
 
 		/**
 		 * -- Getter --
@@ -348,11 +572,13 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 		 *                                       prevents it from being stored in the backing map
 		 */
 		@Override
-		public synchronized int setLine(final int line) {
+		public int setLine(final int line) {
+			this.localLock.writeLock().lock();
 			try {
 				return this.line;
 			} finally {
 				this.line = line;
+				this.localLock.writeLock().unlock();
 			}
 		}
 
@@ -374,11 +600,13 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 		 *                                       null keys, and the specified key is null
 		 */
 		@Override
-		public synchronized @NotNull K setKey(final @NotNull K key) {
+		public @NotNull K setKey(final @NotNull K key) {
+			this.localLock.writeLock().lock();
 			try {
 				return this.key;
 			} finally {
 				this.key = key;
+				this.localLock.writeLock().unlock();
 			}
 		}
 
@@ -402,11 +630,43 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 		 *                                       prevents it from being stored in the backing map
 		 */
 		@Override
-		public synchronized @Nullable V setValue(final @Nullable V value) {
+		public @Nullable V setValue(final @Nullable V value) {
+			this.localLock.writeLock().lock();
 			try {
 				return this.value;
 			} finally {
 				this.value = value;
+				this.localLock.writeLock().unlock();
+			}
+		}
+
+		@Override
+		public int getLine() {
+			this.localLock.readLock().lock();
+			try {
+				return this.line;
+			} finally {
+				this.localLock.readLock().unlock();
+			}
+		}
+
+		@Override
+		public @NotNull K getKey() {
+			this.localLock.readLock().lock();
+			try {
+				return this.key;
+			} finally {
+				this.localLock.readLock().unlock();
+			}
+		}
+
+		@Override
+		public @Nullable V getValue() {
+			this.localLock.readLock().lock();
+			try {
+				return this.value;
+			} finally {
+				this.localLock.readLock().unlock();
 			}
 		}
 
