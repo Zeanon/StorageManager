@@ -62,9 +62,10 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 						  final int bufferSize,
 						  final boolean concurrentData,
 						  final boolean bigData,
+						  final boolean synchronizedData,
 						  final @NotNull Class<? extends TripletMap> map,
 						  final @NotNull Class<? extends List> list) {
-		super(file, FileType.THUNDER, new LocalFileData(new Collections(map, list)), reloadSetting, commentSetting);
+		super(file, FileType.THUNDER, new LocalFileData(new Collections(map, list), synchronizedData), reloadSetting, commentSetting);
 		this.bufferSize = bufferSize;
 		this.bigData = bigData;
 		this.concurrentData = concurrentData;
@@ -188,8 +189,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 
 	private static class LocalFileData extends ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> {
 
-		private LocalFileData(final @NotNull Provider<TripletMap, List> provider) {
-			super(provider);
+		private LocalFileData(final @NotNull Provider<TripletMap, List> provider, final boolean synchronize) {
+			super(provider, synchronize);
 		}
 	}
 }

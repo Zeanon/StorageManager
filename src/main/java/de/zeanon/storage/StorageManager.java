@@ -36,6 +36,7 @@ public abstract class StorageManager<B extends StorageManager, F extends FlatFil
 
 	protected final @NotNull File file;
 	protected @NotNull ReloadSetting reloadSetting = Reload.INTELLIGENT;
+	protected boolean synchronizedData = false;
 	protected @Nullable BufferedInputStream inputStream;
 	protected @NotNull Class<? extends M> mapType;
 	protected @NotNull Class<? extends L> listType;
@@ -312,9 +313,16 @@ public abstract class StorageManager<B extends StorageManager, F extends FlatFil
 		return (B) this;
 	}
 
+	@Contract("_ -> this")
+	public final @NotNull B synchronizedData(final boolean synchronizedData) {
+		this.synchronizedData = synchronizedData;
+		//noinspection unchecked
+		return (B) this;
+	}
+
 	public abstract @NotNull B bigList(final boolean bigList);
 
-	public abstract @NotNull B concurrentData(final boolean synchronize);
+	public abstract @NotNull B concurrentData(final boolean concurrentData);
 
 
 	/**

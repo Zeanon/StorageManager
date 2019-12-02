@@ -195,6 +195,10 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 	public abstract void concurrentData(final boolean synchronize);
 
+	public void synchronizeData(final boolean synchronize) {
+		this.fileData().synchronizedData(synchronize);
+	}
+
 	@Override
 	public boolean hasKey(final @NotNull String key) {
 		this.update();

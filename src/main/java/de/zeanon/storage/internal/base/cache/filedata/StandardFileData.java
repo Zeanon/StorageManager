@@ -3,11 +3,13 @@ package de.zeanon.storage.internal.base.cache.filedata;
 import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.FileData;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -22,22 +24,26 @@ import org.jetbrains.annotations.Nullable;
  */
 @Getter
 @EqualsAndHashCode
-@SuppressWarnings("unused")
+@Accessors(fluent = true, chain = false)
+@SuppressWarnings({"unused", "DefaultAnnotationParam"})
 public class StandardFileData<M extends Map, L extends List> implements FileData<M, Map.Entry<String, Object>, L>, Comparable<StandardFileData> {
 
 
-	@Accessors(fluent = true)
 	private final @NotNull Provider<M, L> provider;
 	/**
 	 * internal cache for the contents of the File
 	 */
 	private @NotNull M dataMap;
+	@Setter
+	private boolean synchronizedData;
 
 
 	@Contract(pure = true)
-	protected StandardFileData(final @NotNull Provider<M, L> provider) {
+	protected StandardFileData(final @NotNull Provider<M, L> provider, final boolean synchronize) {
 		this.provider = provider;
-		this.dataMap = this.provider().newMap();
+		this.synchronizedData = synchronize;
+		//noinspection unchecked
+		this.dataMap = this.synchronizedData ? ((M) Collections.synchronizedMap(this.provider().newMap())) : this.provider().newMap(); //NOSONAR
 	}
 
 	/**
@@ -151,7 +157,11 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	@Override
 	public void loadData(@Nullable M map) {
 		if (map != null) {
-			this.dataMap = map;
+			//noinspection unchecked
+			this.dataMap = this.synchronizedData ? ((M) Collections.synchronizedMap(map)) : map;
+		} else {
+			//noinspection unchecked
+			this.dataMap = this.synchronizedData ? ((M) Collections.synchronizedMap(this.provider().newMap())) : this.provider().newMap(); //NOSONAR
 		}
 	}
 
@@ -372,7 +382,7 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 					this.dataMap.containsKey(key[0])
 					&& tempValue instanceof Map
 					? (Map) tempValue
-					: provider.newMap();
+					: this.provider().newMap();
 			//noinspection unchecked
 			this.dataMap.put(key[0], this.internalInsert(childMap, key, value, 1));
 		}
@@ -389,7 +399,7 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 					map.containsKey(key[keyIndex])
 					&& tempValue instanceof Map
 					? (Map) tempValue
-					: this.provider.newMap();
+					: this.provider().newMap();
 			map.put(key[keyIndex], this.internalInsert(childMap, key, value, keyIndex + 1));
 			return map;
 		} else {

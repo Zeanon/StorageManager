@@ -53,9 +53,10 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	protected JsonFile(final @NotNull File file,
 					   final @Nullable InputStream inputStream,
 					   final @NotNull ReloadSetting reloadSetting,
+					   final boolean synchronizedData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, FileType.JSON, new LocalFileData(new Collections(map, list)), reloadSetting);
+		super(file, FileType.JSON, new LocalFileData(new Collections(map, list), synchronizedData), reloadSetting);
 
 		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
 			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
@@ -147,7 +148,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	public void save() {
 		try {
 			final @NotNull @Cleanup Writer writer = new PrintWriter(new FileWriter(this.file().getAbsolutePath()));
-			writer.write(new JSONObject(this.fileData().getDataMap()).toString(3));
+			writer.write(new JSONObject(this.fileData().dataMap()).toString(3));
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while writing to "
 										 + this.file().getAbsolutePath()
@@ -244,8 +245,8 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 
 	private static class LocalFileData extends StandardFileData<Map, List> {
 
-		private LocalFileData(final @NotNull Provider<Map, List> provider) {
-			super(provider);
+		private LocalFileData(final @NotNull Provider<Map, List> provider, final boolean synchronize) {
+			super(provider, synchronize);
 		}
 	}
 }

@@ -158,7 +158,9 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 */
 	boolean isEmpty();
 
-	@NotNull M getDataMap();
+	@NotNull M dataMap();
+
+	void synchronizedData(final boolean synchronize);
 
 	/**
 	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to

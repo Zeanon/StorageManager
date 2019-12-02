@@ -40,7 +40,7 @@ public class YamlConfigBuilder extends StorageManager<YamlConfigBuilder, YamlCon
 	@Override
 	@Contract("-> new")
 	public final @NotNull YamlConfig create() {
-		return new LocalYamlConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.mapType, this.listType);
+		return new LocalYamlConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.synchronizedData, this.mapType, this.listType);
 	}
 
 	@Override
@@ -51,8 +51,8 @@ public class YamlConfigBuilder extends StorageManager<YamlConfigBuilder, YamlCon
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull YamlConfigBuilder concurrentData(final boolean synchronize) {
-		return this.mapType(synchronize ? ConcurrentHashMap.class : HashMap.class);
+	public @NotNull YamlConfigBuilder concurrentData(final boolean concurrentData) {
+		return this.mapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 
 
@@ -62,9 +62,10 @@ public class YamlConfigBuilder extends StorageManager<YamlConfigBuilder, YamlCon
 								final @Nullable InputStream inputStream,
 								final @NotNull ReloadSetting reloadSetting,
 								final @NotNull CommentSetting commentSetting,
+								final boolean synchronizedData,
 								final @NotNull Class<? extends Map> map,
 								final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, commentSetting, map, list);
+			super(file, inputStream, reloadSetting, commentSetting, synchronizedData, map, list);
 		}
 	}
 }

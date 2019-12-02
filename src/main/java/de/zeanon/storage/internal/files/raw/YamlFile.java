@@ -56,9 +56,10 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 					   final @Nullable InputStream inputStream,
 					   final @NotNull ReloadSetting reloadSetting,
 					   final @NotNull CommentSetting commentSetting,
+					   final boolean synchronizedData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, FileType.YAML, new LocalFileData(new Collections(map, list)), reloadSetting, commentSetting);
+		super(file, FileType.YAML, new LocalFileData(new Collections(map, list), synchronizedData), reloadSetting, commentSetting);
 
 		if (BaseFileUtils.createFile(this.file()) && inputStream != null) {
 			BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
@@ -80,18 +81,18 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 	public void save() {
 		try {
 			if (this.getCommentSetting() != Comment.PRESERVE) {
-				this.write(this.fileData().getDataMap());
+				this.write(this.fileData().dataMap());
 			} else {
 				final @NotNull List<String> unEdited = YamlEditor.read(this.file());
 				final @NotNull List<String> header = YamlEditor.readHeader(this.file(), this.provider());
 				final @NotNull List<String> footer = YamlEditor.readFooter(this.file(), this.provider());
-				this.write(this.fileData().getDataMap());
+				this.write(this.fileData().dataMap());
 				header.addAll(YamlEditor.read(this.file()));
 				if (!header.containsAll(footer)) {
 					header.addAll(footer);
 				}
 				YamlEditor.write(this.file(), YamlUtils.parseComments(unEdited, header, this.provider()));
-				this.write(this.fileData().getDataMap());
+				this.write(this.fileData().dataMap());
 			}
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e);
@@ -189,8 +190,8 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 
 	private static class LocalFileData extends StandardFileData<Map, List> {
 
-		private LocalFileData(final @NotNull Provider<Map, List> provider) {
-			super(provider);
+		private LocalFileData(final @NotNull Provider<Map, List> provider, final boolean synchronize) {
+			super(provider, synchronize);
 		}
 	}
 }

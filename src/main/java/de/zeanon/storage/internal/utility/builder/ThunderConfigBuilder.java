@@ -44,7 +44,7 @@ public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, T
 	@Override
 	@Contract("-> new")
 	public final @NotNull ThunderConfig create() {
-		return new LocalThunderConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bufferSize, this.bigData, this.concurrentData, this.mapType, this.listType);
+		return new LocalThunderConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bufferSize, this.bigData, this.concurrentData, this.synchronizedData, this.mapType, this.listType);
 	}
 
 	@Contract("_ -> this")
@@ -62,8 +62,8 @@ public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, T
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull ThunderConfigBuilder concurrentData(final boolean synchronize) {
-		this.concurrentData = synchronize;
+	public @NotNull ThunderConfigBuilder concurrentData(final boolean concurrentData) {
+		this.concurrentData = concurrentData;
 		return this.mapType(this.concurrentData ? (this.bigData ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
 												: (this.bigData ? BigTripletMap.class : GapTripletMap.class));
 	}
@@ -71,8 +71,17 @@ public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, T
 
 	private static final class LocalThunderConfig extends ThunderConfig {
 
-		private LocalThunderConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @NotNull ReloadSetting reloadSetting, final @NotNull CommentSetting commentSetting, final int bufferSize, final boolean bigData, final boolean concurrentData, final @NotNull Class<? extends TripletMap> map, final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, commentSetting, bufferSize, bigData, concurrentData, map, list);
+		private LocalThunderConfig(final @NotNull File file,
+								   final @Nullable InputStream inputStream,
+								   final @NotNull ReloadSetting reloadSetting,
+								   final @NotNull CommentSetting commentSetting,
+								   final int bufferSize,
+								   final boolean bigData,
+								   final boolean concurrentData,
+								   final boolean synchronizedData,
+								   final @NotNull Class<? extends TripletMap> map,
+								   final @NotNull Class<? extends List> list) {
+			super(file, inputStream, reloadSetting, commentSetting, bufferSize, bigData, concurrentData, synchronizedData, map, list);
 		}
 	}
 }

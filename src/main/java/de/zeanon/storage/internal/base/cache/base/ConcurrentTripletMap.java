@@ -5,7 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentMap;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,10 +27,9 @@ import org.jetbrains.annotations.Nullable;
 public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implements ConcurrentMap<K, V> {
 
 
-	protected ConcurrentTripletMap(final @NotNull IList<TripletMap.TripletNode<K, V>> localList) {
+	protected ConcurrentTripletMap(@NotNull IList<TripletNode<K, V>> localList) {
 		super(localList);
 	}
-
 
 	/**
 	 * Associates the specified value with the specified key in this map.
@@ -49,10 +51,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 				if (Objects.equals(tempNode.getValue(), value)) {
 					return value;
 				} else {
-					//noinspection SynchronizationOnLocalVariableOrMethodParameter
-					synchronized (tempNode) {
-						return tempNode.setValue(value);
-					}
+					return tempNode.setValue(value);
 				}
 			}
 		}
@@ -235,11 +234,8 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 					if (Objects.equals(tempNode.getValue(), newValue)) {
 						return true;
 					} else {
-						//noinspection SynchronizationOnLocalVariableOrMethodParameter
-						synchronized (tempNode) {
-							tempNode.setValue(newValue);
-							return true;
-						}
+						tempNode.setValue(newValue);
+						return true;
 					}
 				}
 			}
@@ -286,13 +282,143 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 				if (Objects.equals(tempNode.getValue(), value)) {
 					return value;
 				} else {
-					//noinspection SynchronizationOnLocalVariableOrMethodParameter
-					synchronized (tempNode) {
-						return tempNode.setValue(value);
-					}
+					return tempNode.setValue(value);
 				}
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * The concurrent EntryNodes to be stored in a TripletMap
+	 *
+	 * @param <K> the type of keys maintained by this map
+	 * @param <V> the type of mapped values
+	 *
+	 * @author Zeanon
+	 * @version 1.3.0
+	 */
+	@EqualsAndHashCode
+	@Getter(onMethod_ = {@Override})
+	@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
+	public static class ConcurrentTripletNode<K, V> implements TripletNode<K, V> {
+
+		/**
+		 * -- Getter --
+		 * Returns the line corresponding to this entry.
+		 * has been removed from the backing map (by the iterator's
+		 * <tt>remove</tt> operation), the results of this call are undefined.
+		 *
+		 * @return the line corresponding to this entry
+		 */
+		private int line;
+		/**
+		 * -- Getter --
+		 * Returns the key corresponding to this entry.
+		 * has been removed from the backing map (by the iterator's
+		 * <tt>remove</tt> operation), the results of this call are undefined.
+		 *
+		 * @return the key corresponding to this entry
+		 */
+		private @NotNull K key;
+		/**
+		 * -- Getter --
+		 * Returns the value corresponding to this entry.  If the mapping
+		 * has been removed from the backing map (by the iterator's
+		 * <tt>remove</tt> operation), the results of this call are undefined.
+		 *
+		 * @return the value corresponding to this entry
+		 */
+		private @Nullable V value;
+
+
+		/**
+		 * Replaces the line corresponding to this entry with the specified
+		 * line (optional operation).  (Writes through to the map.)  The
+		 * behavior of this call is undefined if the mapping has already been
+		 * removed from the map (by the iterator's <tt>remove</tt> operation).
+		 *
+		 * @param line new key to be stored in this entry
+		 *
+		 * @return old key corresponding to the entry
+		 *
+		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
+		 *                                       is not supported by the backing map
+		 * @throws ClassCastException            if the class of the specified line
+		 *                                       prevents it from being stored in the backing map
+		 */
+		@Override
+		public synchronized int setLine(final int line) {
+			try {
+				return this.line;
+			} finally {
+				this.line = line;
+			}
+		}
+
+		/**
+		 * Replaces the key corresponding to this entry with the specified
+		 * key (optional operation).  (Writes through to the map.)  The
+		 * behavior of this call is undefined if the mapping has already been
+		 * removed from the map (by the iterator's <tt>remove</tt> operation).
+		 *
+		 * @param key new key to be stored in this entry
+		 *
+		 * @return old key corresponding to the entry
+		 *
+		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
+		 *                                       is not supported by the backing map
+		 * @throws ClassCastException            if the class of the specified key
+		 *                                       prevents it from being stored in the backing map
+		 * @throws NullPointerException          if the backing map does not permit
+		 *                                       null keys, and the specified key is null
+		 */
+		@Override
+		public synchronized @NotNull K setKey(final @NotNull K key) {
+			try {
+				return this.key;
+			} finally {
+				this.key = key;
+			}
+		}
+
+		/**
+		 * Replaces the value corresponding to this entry with the specified
+		 * value (optional operation).  (Writes through to the map.)  The
+		 * behavior of this call is undefined if the mapping has already been
+		 * removed from the map (by the iterator's <tt>remove</tt> operation).
+		 *
+		 * @param value new value to be stored in this entry
+		 *
+		 * @return old value corresponding to the entry
+		 *
+		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
+		 *                                       is not supported by the backing map
+		 * @throws ClassCastException            if the class of the specified value
+		 *                                       prevents it from being stored in the backing map
+		 * @throws NullPointerException          if the backing map does not permit
+		 *                                       null values, and the specified value is null
+		 * @throws IllegalArgumentException      if some property of this value
+		 *                                       prevents it from being stored in the backing map
+		 */
+		@Override
+		public synchronized @Nullable V setValue(final @Nullable V value) {
+			try {
+				return this.value;
+			} finally {
+				this.value = value;
+			}
+		}
+
+
+		@Override
+		public int compareTo(final @NotNull TripletMap.TripletNode entry) {
+			return Integer.compare(this.getLine(), entry.getLine());
+		}
+
+		@Override
+		public @NotNull String toString() {
+			return "(" + this.key + "={" + this.value + "," + this.line + "})";
+		}
 	}
 }

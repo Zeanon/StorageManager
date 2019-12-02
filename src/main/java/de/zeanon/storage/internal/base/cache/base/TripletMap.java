@@ -132,7 +132,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * @param value value to be associated with the specified key
 	 */
 	public void add(final @NotNull K key, final @Nullable V value) {
-		this.add(new TripletNode<>(this.size(), key, value));
+		this.add(new StandardTripletNode<>(this.size(), key, value));
 	}
 
 	/**
@@ -258,6 +258,24 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	}
 
 
+	public interface TripletNode<K, V> extends Map.Entry<K, V>, Comparable<TripletNode> {
+
+		int getLine();
+
+		@Override
+		@NotNull K getKey();
+
+		@Override
+		@Nullable V getValue();
+
+		int setLine(final int line);
+
+		@NotNull K setKey(final @NotNull K key);
+
+		@Override
+		@Nullable V setValue(final @Nullable V value);
+	}
+
 	/**
 	 * The EntryNodes to be stored in a TripletMap
 	 *
@@ -268,9 +286,10 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * @version 1.3.0
 	 */
 	@EqualsAndHashCode
+	@Getter(onMethod_ = {@Override})
 	@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
 	@SuppressWarnings("unused")
-	public static class TripletNode<K, V> implements Map.Entry<K, V>, Comparable<TripletNode> {
+	public static class StandardTripletNode<K, V> implements TripletNode<K, V> {
 
 		/**
 		 * -- Getter --
@@ -280,7 +299,6 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		 *
 		 * @return the line corresponding to this entry
 		 */
-		@Getter
 		private int line;
 		/**
 		 * -- Getter --
@@ -290,7 +308,6 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		 *
 		 * @return the key corresponding to this entry
 		 */
-		@Getter(onMethod_ = {@Override})
 		private @NotNull K key;
 		/**
 		 * -- Getter --
@@ -300,7 +317,6 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		 *
 		 * @return the value corresponding to this entry
 		 */
-		@Getter(onMethod_ = {@Override})
 		private @Nullable V value;
 
 
@@ -319,6 +335,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		 * @throws ClassCastException            if the class of the specified line
 		 *                                       prevents it from being stored in the backing map
 		 */
+		@Override
 		public int setLine(final int line) {
 			try {
 				return this.line;
@@ -344,6 +361,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		 * @throws NullPointerException          if the backing map does not permit
 		 *                                       null keys, and the specified key is null
 		 */
+		@Override
 		public @NotNull K setKey(final @NotNull K key) {
 			try {
 				return this.key;
@@ -383,7 +401,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 
 		@Override
 		public int compareTo(final @NotNull TripletMap.TripletNode entry) {
-			return Integer.compare(this.line, entry.line);
+			return Integer.compare(this.getLine(), entry.getLine());
 		}
 
 		@Override

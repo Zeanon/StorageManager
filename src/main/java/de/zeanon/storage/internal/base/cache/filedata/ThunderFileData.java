@@ -5,10 +5,12 @@ import de.zeanon.storage.internal.base.cache.base.TripletMap;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.FileData;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -23,22 +25,26 @@ import org.jetbrains.annotations.Nullable;
  */
 @Getter
 @EqualsAndHashCode
-@SuppressWarnings("unused")
+@Accessors(fluent = true, chain = false)
+@SuppressWarnings({"unused", "DefaultAnnotationParam"})
 public class ThunderFileData<M extends TripletMap, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<ThunderFileData> {
 
 
-	@Accessors(fluent = true)
 	private final @NotNull Provider<M, L> provider;
 	/**
 	 * internal cache for the contents of the File
 	 */
 	private @NotNull M dataMap;
+	@Setter
+	private boolean synchronizedData;
 
 
 	@Contract(pure = true)
-	protected ThunderFileData(final @NotNull Provider<M, L> provider) {
+	protected ThunderFileData(final @NotNull Provider<M, L> provider, final boolean synchronize) {
 		this.provider = provider;
-		this.dataMap = this.provider().newMap();
+		this.synchronizedData = synchronize;
+		//noinspection unchecked
+		this.dataMap = this.synchronizedData ? ((M) Collections.synchronizedMap(this.provider().newMap())) : this.provider().newMap(); //NOSONAR
 	}
 
 	/**
@@ -152,9 +158,11 @@ public class ThunderFileData<M extends TripletMap, E extends Map.Entry, L extend
 	@Override
 	public void loadData(final @Nullable M map) {
 		if (map != null) {
-			this.dataMap = map;
+			//noinspection unchecked
+			this.dataMap = this.synchronizedData ? ((M) Collections.synchronizedMap(map)) : map;
 		} else {
-			this.dataMap = provider.newMap();
+			//noinspection unchecked
+			this.dataMap = this.synchronizedData ? ((M) Collections.synchronizedMap(this.provider().newMap())) : this.provider().newMap(); //NOSONAR
 		}
 	}
 
@@ -370,7 +378,7 @@ public class ThunderFileData<M extends TripletMap, E extends Map.Entry, L extend
 					this.dataMap.containsKey(parts[0])
 					&& tempValue instanceof TripletMap
 					? (TripletMap) tempValue
-					: this.provider.newMap();
+					: this.provider().newMap();
 			//noinspection unchecked
 			this.dataMap.put(parts[0], this.internalInsert(childMap, parts, value, 1));
 		}
@@ -384,7 +392,7 @@ public class ThunderFileData<M extends TripletMap, E extends Map.Entry, L extend
 					map.containsKey(key[keyIndex])
 					&& tempValue instanceof TripletMap
 					? (TripletMap) tempValue
-					: this.provider.newMap();
+					: this.provider().newMap();
 			map.put(key[keyIndex], this.internalInsert(childMap, key, value, keyIndex + 1));
 			return map;
 		} else {
@@ -482,7 +490,7 @@ public class ThunderFileData<M extends TripletMap, E extends Map.Entry, L extend
 	@Contract("_ -> new")
 	private @NotNull TripletMap<String, Object> parseMap(final @NotNull Map<String, Object> map) {
 		//noinspection unchecked
-		final @NotNull TripletMap<String, Object> tempMap = this.provider.newMap();
+		final @NotNull TripletMap<String, Object> tempMap = this.provider().newMap();
 		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map && !(entry.getValue() instanceof TripletMap)) {
 				//noinspection unchecked

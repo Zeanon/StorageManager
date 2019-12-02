@@ -50,9 +50,10 @@ public class YamlConfig extends YamlFile implements Config {
 						 final @Nullable InputStream inputStream,
 						 final @NotNull ReloadSetting reloadSetting,
 						 final @NotNull CommentSetting commentSetting,
+						 final boolean synchronizedData,
 						 final @NotNull Class<? extends Map> map,
 						 final @NotNull Class<? extends List> list) {
-		super(file, inputStream, reloadSetting, commentSetting, map, list);
+		super(file, inputStream, reloadSetting, commentSetting, synchronizedData, map, list);
 	}
 
 
