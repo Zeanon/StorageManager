@@ -1,7 +1,7 @@
 package de.zeanon.storage.internal.utility.editor;
 
 import de.zeanon.storage.internal.base.cache.base.Provider;
-import de.zeanon.storage.internal.base.files.ReadWriteLockChannel;
+import de.zeanon.storage.internal.utility.basic.ReadWriteLockChannel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;

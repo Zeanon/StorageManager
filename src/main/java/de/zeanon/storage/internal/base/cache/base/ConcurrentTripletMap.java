@@ -172,14 +172,12 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 		final long lockStamp = this.localLock.readLock();
 		try {
 			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
-				if (tempNode.getKey().equals(key)) {
-					if (Objects.equals(tempNode.getValue(), oldValue)) {
-						if (Objects.equals(tempNode.getValue(), newValue)) {
-							return true;
-						} else {
-							tempNode.setValue(newValue);
-							return true;
-						}
+				if (tempNode.getKey().equals(key) && Objects.equals(tempNode.getValue(), oldValue)) {
+					if (Objects.equals(tempNode.getValue(), newValue)) {
+						return true;
+					} else {
+						tempNode.setValue(newValue);
+						return true;
 					}
 				}
 			}

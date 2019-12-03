@@ -1,4 +1,4 @@
-package de.zeanon.storage.internal.base.files;
+package de.zeanon.storage.internal.utility.basic;
 
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import java.io.*;
@@ -35,7 +35,7 @@ public class ReadWriteLockChannel implements AutoCloseable {
 	@Contract(pure = true)
 	private ReadWriteLockChannel(final @NotNull File file, final @NotNull String mode) throws FileNotFoundException {
 		this.localChannel = new RandomAccessFile(file, mode).getChannel();
-		this.instances.incrementAndGet();
+		this.instances.getAndIncrement();
 	}
 
 
@@ -57,18 +57,19 @@ public class ReadWriteLockChannel implements AutoCloseable {
 				Thread.sleep(5);
 			}
 			this.readLock.compareAndSet(null, this.localChannel.lock(0, Long.MAX_VALUE, true));
-			this.readers.incrementAndGet();
+			this.readers.getAndIncrement();
 		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
 			throw new IOException(e);
 		} finally {
 			this.internalLock.unlockRead(lockStamp);
 		}
 	}
 
-	public void releaseRead() throws RuntimeIOException {
+	public void releaseRead() {
 		if (this.readers.get() == 1 && this.readLock.get() != null) {
 			this.readers.set(0);
-			this.readLock.updateAndGet(current -> {
+			this.readLock.getAndUpdate(current -> {
 				try {
 					current.release();
 					return null;
@@ -77,7 +78,7 @@ public class ReadWriteLockChannel implements AutoCloseable {
 				}
 			});
 		} else {
-			this.readers.decrementAndGet();
+			this.readers.getAndDecrement();
 		}
 	}
 
@@ -90,6 +91,7 @@ public class ReadWriteLockChannel implements AutoCloseable {
 			}
 			this.writeLock.set(this.localChannel.lock());
 		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
 			throw new IOException(e);
 		} finally {
 			this.internalLock.unlockWrite(lockStamp);
@@ -162,7 +164,7 @@ public class ReadWriteLockChannel implements AutoCloseable {
 		if (this.instances.get() == 1) {
 			openChannels.remove(this);
 		} else {
-			this.instances.decrementAndGet();
+			this.instances.getAndDecrement();
 		}
 		this.localChannel.close();
 	}
