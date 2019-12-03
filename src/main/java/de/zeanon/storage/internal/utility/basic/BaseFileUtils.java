@@ -132,6 +132,44 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
+	public static @NotNull Collection<File> listAllFiles(final @NotNull File directory) {
+		return BaseFileUtils.listAllFiles(directory, false);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory the directory to look into
+	 * @param deep      also look through subdirectories
+	 *
+	 * @return the files of the given directory
+	 */
+	public static @NotNull Collection<File> listAllFiles(final @NotNull File directory,
+														 final boolean deep) {
+		final @NotNull Collection<File> files = new ArrayList<>();
+		if (directory.isDirectory()) {
+			final @Nullable File[] fileList = directory.listFiles();
+			if (fileList != null) {
+				for (final @Nullable File file : fileList) {
+					if (file != null) {
+						files.add(file);
+						if (deep && file.isDirectory()) {
+							files.addAll(listAllFiles(file, true));
+						}
+					}
+				}
+			}
+		}
+		return files;
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory the directory to look into
+	 *
+	 * @return the files of the given directory
+	 */
 	public static @NotNull Collection<File> listFiles(final @NotNull File directory) {
 		return BaseFileUtils.listFiles(directory, false);
 	}
@@ -152,8 +190,10 @@ public class BaseFileUtils {
 			if (fileList != null) {
 				for (final @Nullable File file : fileList) {
 					if (file != null) {
-						files.add(file);
-						if (deep) {
+						if (file.isFile()) {
+							files.add(file);
+						}
+						if (deep && file.isDirectory()) {
 							files.addAll(listFiles(file, true));
 						}
 					}
@@ -225,7 +265,7 @@ public class BaseFileUtils {
 						if (Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)) {
 							files.add(file);
 						}
-						if (deep) {
+						if (deep && file.isDirectory()) {
 							files.addAll(BaseFileUtils.listFiles(file, extensions, true));
 						}
 					}
