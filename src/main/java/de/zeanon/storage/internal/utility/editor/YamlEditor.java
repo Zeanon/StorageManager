@@ -1,7 +1,12 @@
 package de.zeanon.storage.internal.utility.editor;
 
 import de.zeanon.storage.internal.base.cache.base.Provider;
-import java.io.*;
+import de.zeanon.storage.internal.base.files.ReadWriteLockChannel;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.channels.Channels;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -30,31 +35,43 @@ public class YamlEditor {
 
 	@Contract("_ -> new")
 	public static @NotNull List<String> read(final @NotNull File file) throws IOException {
-		try (final @NotNull BufferedReader reader = new BufferedReader(new FileReader(file))) {
+		return YamlEditor.read(file, 8192);
+	}
+
+	@Contract("_, _ -> new")
+	public static @NotNull List<String> read(final @NotNull File file, final int buffer_size) throws IOException {
+		try (final @NotNull ReadWriteLockChannel localChannel = ReadWriteLockChannel.get(file, "r");
+			 final @NotNull BufferedReader reader = new BufferedReader(Channels.newReader(localChannel.getChannel(), "UTF-8"), buffer_size)) {
+			localChannel.readLock();
 			return reader.lines().collect(Collectors.toList());
 		}
 	}
 
+	@Contract("_, _ -> new")
 	public static @NotNull List<String> readFooter(final @NotNull File file,
 												   final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
 		return getFooterFromLines(read(file), provider);
 	}
 
+	@Contract("_, _ -> new")
 	public static @NotNull List<String> readHeader(final @NotNull File file,
 												   final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
 		return getHeaderFromLines(read(file), provider);
 	}
 
+	@Contract("_, _ -> new")
 	public static @NotNull List<String> readKeys(final @NotNull File file,
 												 final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
 		return getKeys(read(file), provider);
 	}
 
+	@Contract("_, _ -> new")
 	public static @NotNull List<String> readPureComments(final @NotNull File file,
 														 final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
 		return getPureCommentsFromLines(read(file), provider);
 	}
 
+	@Contract("_, _ -> new")
 	public static @NotNull List<String> readWithoutHeaderAndFooter(final @NotNull File file,
 																   final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
 		return getLinesWithoutFooterAndHeaderFromLines(read(file), provider);
@@ -62,7 +79,9 @@ public class YamlEditor {
 
 	public static void write(final @NotNull File file,
 							 final @NotNull List<String> lines) throws IOException {
-		try (final @NotNull PrintWriter writer = new PrintWriter(new FileWriter(file))) {
+		try (final @NotNull ReadWriteLockChannel localChannel = ReadWriteLockChannel.get(file);
+			 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(localChannel.getChannel(), "UTF-8"))) {
+			localChannel.writeLock();
 			final @NotNull Iterator<String> linesIterator = lines.iterator();
 			writer.print(linesIterator.next());
 			linesIterator.forEachRemaining(line -> {
@@ -84,6 +103,7 @@ public class YamlEditor {
 		return lines;
 	}
 
+	@Contract("_, _ -> new")
 	private static @NotNull List<String> getCommentsFromLines(final @NotNull List<String> lines,
 															  final @NotNull Provider<? extends Map, ? extends List> provider) {
 		//noinspection unchecked
@@ -96,6 +116,7 @@ public class YamlEditor {
 		return result;
 	}
 
+	@Contract("_, _ -> new")
 	private static @NotNull List<String> getFooterFromLines(final @NotNull List<String> lines,
 															final @NotNull Provider<? extends Map, ? extends List> provider) {
 		//noinspection unchecked
@@ -113,6 +134,7 @@ public class YamlEditor {
 		return result;
 	}
 
+	@Contract("_, _ -> new")
 	private static @NotNull List<String> getHeaderFromLines(final @NotNull List<String> lines,
 															final @NotNull Provider<? extends Map, ? extends List> provider) {
 		//noinspection unchecked
@@ -127,6 +149,7 @@ public class YamlEditor {
 		return result;
 	}
 
+	@Contract("_, _ -> new")
 	private static @NotNull List<String> getKeys(final @NotNull List<String> lines,
 												 final @NotNull Provider<? extends Map, ? extends List> provider) {
 		//noinspection unchecked
@@ -142,6 +165,7 @@ public class YamlEditor {
 	/**
 	 * @return List of comments that don't belong to header or footer
 	 */
+	@Contract("_, _ -> new")
 	private static @NotNull List<String> getPureCommentsFromLines(final @NotNull List<String> lines,
 																  final @NotNull Provider<? extends Map, ? extends List> provider) {
 		final @NotNull List<String> comments = getCommentsFromLines(lines, provider);

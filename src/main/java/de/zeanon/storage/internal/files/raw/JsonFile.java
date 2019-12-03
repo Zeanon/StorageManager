@@ -161,8 +161,8 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	}
 
 	@Override
-	public void concurrentData(final boolean synchronize) {
-		this.provider().setMapType(synchronize ? ConcurrentHashMap.class : HashMap.class);
+	public void concurrentData(final boolean concurrentData) {
+		this.provider().setMapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 
 	/**

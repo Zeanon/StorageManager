@@ -17,8 +17,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Provider class to register a custom Collection Framework
  *
- * @param <M> the Map-Type to be used
- * @param <L> the List<Type to be used
+ * @param <M> the basic Map-Type to be used
+ * @param <L> the basic List<Type to be used
  *
  * @author Zeanon
  * @version 1.3.0

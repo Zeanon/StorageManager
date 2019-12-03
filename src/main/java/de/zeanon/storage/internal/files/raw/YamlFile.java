@@ -103,8 +103,8 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 	}
 
 	@Override
-	public void concurrentData(final boolean synchronize) {
-		this.provider().setMapType(synchronize ? ConcurrentHashMap.class : HashMap.class);
+	public void concurrentData(final boolean concurrentData) {
+		this.provider().setMapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 
 	/**

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 
 
@@ -100,6 +100,17 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		return null;
 	}
 
+	public @Nullable V put(final @NotNull K key, final @Nullable V value, final int index) {
+		for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+			if (tempNode.getKey().equals(key)) {
+				tempNode.setIndex(index);
+				return tempNode.setValue(value);
+			}
+		}
+		this.add(key, value, index);
+		return null;
+	}
+
 	/**
 	 * Copies all of the mappings from the specified map to this map.
 	 * These mappings will replace any mappings that this map had for
@@ -132,7 +143,18 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * @param value value to be associated with the specified key
 	 */
 	public void add(final @NotNull K key, final @Nullable V value) {
-		this.add(new StandardTripletNode<>(this.size(), key, value));
+		this.add(new Node<>(this.size(), key, value));
+	}
+
+	/**
+	 * Associates the specified value with the specified key in this map.
+	 *
+	 * @param key   key with which the specified value is to be associated
+	 * @param value value to be associated with the specified key
+	 * @param index the index to be associated with the specific key
+	 */
+	public void add(final @NotNull K key, final @Nullable V value, final int index) {
+		this.add(new Node<>(index, key, value));
 	}
 
 	/**
@@ -260,7 +282,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 
 	public interface TripletNode<K, V> extends Map.Entry<K, V>, Comparable<TripletNode> {
 
-		int getLine();
+		int getIndex();
 
 		@Override
 		@NotNull K getKey();
@@ -268,7 +290,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		@Override
 		@Nullable V getValue();
 
-		int setLine(final int line);
+		int setIndex(final int index);
 
 		@NotNull K setKey(final @NotNull K key);
 
@@ -289,17 +311,17 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	@Getter(onMethod_ = {@Override})
 	@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
 	@SuppressWarnings("unused")
-	public static class StandardTripletNode<K, V> implements TripletNode<K, V> {
+	public static class Node<K, V> implements TripletNode<K, V> {
 
 		/**
 		 * -- Getter --
-		 * Returns the line corresponding to this entry.
+		 * Returns the index corresponding to this entry.
 		 * has been removed from the backing map (by the iterator's
 		 * <tt>remove</tt> operation), the results of this call are undefined.
 		 *
-		 * @return the line corresponding to this entry
+		 * @return the index corresponding to this entry
 		 */
-		private int line;
+		private int index;
 		/**
 		 * -- Getter --
 		 * Returns the key corresponding to this entry.
@@ -321,26 +343,26 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 
 
 		/**
-		 * Replaces the line corresponding to this entry with the specified
-		 * line (optional operation).  (Writes through to the map.)  The
+		 * Replaces the index corresponding to this entry with the specified
+		 * index (optional operation).  (Writes through to the map.)  The
 		 * behavior of this call is undefined if the mapping has already been
 		 * removed from the map (by the iterator's <tt>remove</tt> operation).
 		 *
-		 * @param line new key to be stored in this entry
+		 * @param index new key to be stored in this entry
 		 *
 		 * @return old key corresponding to the entry
 		 *
 		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
 		 *                                       is not supported by the backing map
-		 * @throws ClassCastException            if the class of the specified line
+		 * @throws ClassCastException            if the class of the specified index
 		 *                                       prevents it from being stored in the backing map
 		 */
 		@Override
-		public int setLine(final int line) {
+		public int setIndex(final int index) {
 			try {
-				return this.line;
+				return this.index;
 			} finally {
-				this.line = line;
+				this.index = index;
 			}
 		}
 
@@ -401,12 +423,12 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 
 		@Override
 		public int compareTo(final @NotNull TripletMap.TripletNode entry) {
-			return Integer.compare(this.getLine(), entry.getLine());
+			return Integer.compare(this.getIndex(), entry.getIndex());
 		}
 
 		@Override
 		public @NotNull String toString() {
-			return "(" + this.key + "={" + this.value + "," + this.line + "})";
+			return "(" + this.key + "={" + this.value + "," + this.index + "})";
 		}
 	}
 }

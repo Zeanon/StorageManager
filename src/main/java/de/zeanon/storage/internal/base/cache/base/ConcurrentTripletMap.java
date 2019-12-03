@@ -3,8 +3,7 @@ package de.zeanon.storage.internal.base.cache.base;
 import de.zeanon.storage.external.lists.IList;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.StampedLock;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Contract;
@@ -26,9 +25,10 @@ import org.jetbrains.annotations.Nullable;
 public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implements ConcurrentMap<K, V> {
 
 
-	private final @NotNull ReadWriteLock localLock = new ReentrantReadWriteLock(true);
+	protected final @NotNull StampedLock localLock = new StampedLock();
 
 
+	@Contract(pure = true)
 	protected ConcurrentTripletMap(@NotNull IList<TripletNode<K, V>> localList) {
 		super(localList);
 	}
@@ -69,7 +69,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@Override
 	public V putIfAbsent(@NotNull K key, V value) {
-		this.localLock.readLock().lock();
+		final long lockStamp = this.localLock.readLock();
 		try {
 			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
 				if (tempNode.getKey().equals(key)) {
@@ -77,7 +77,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 				}
 			}
 		} finally {
-			this.localLock.readLock().unlock();
+			this.localLock.unlockRead(lockStamp);
 		}
 		this.add(key, value);
 		return null;
@@ -116,17 +116,24 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	public boolean remove(@NotNull Object key, Object value) {
 		final @NotNull Iterator<TripletNode<K, V>> tempIterator = this.localList.iterator();
 		TripletNode<K, V> tempNode;
-		this.localLock.readLock().lock();
+		long lockStamp = this.localLock.readLock();
 		try {
 			while ((tempNode = tempIterator.next()) != null) {
 				if (tempNode.getKey().equals(key)) {
+					long tempLock = this.localLock.tryConvertToWriteLock(lockStamp);
+					if (this.localLock.validate(tempLock)) {
+						lockStamp = tempLock;
+					} else {
+						this.localLock.unlockRead(lockStamp);
+						lockStamp = this.localLock.writeLock();
+					}
 					tempIterator.remove();
 					return true;
 				}
 			}
 			return false;
 		} finally {
-			this.localLock.writeLock().unlock();
+			this.localLock.unlock(lockStamp);
 		}
 	}
 
@@ -162,7 +169,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@Override
 	public boolean replace(final @NotNull K key, final @Nullable V oldValue, final @Nullable V newValue) {
-		this.localLock.readLock().lock();
+		final long lockStamp = this.localLock.readLock();
 		try {
 			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
 				if (tempNode.getKey().equals(key)) {
@@ -178,7 +185,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 			}
 			return false;
 		} finally {
-			this.localLock.readLock().unlock();
+			this.localLock.unlockRead(lockStamp);
 		}
 	}
 
@@ -216,7 +223,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@Override
 	public V replace(final @NotNull K key, final @Nullable V value) {
-		this.localLock.readLock().lock();
+		final long lockStamp = this.localLock.readLock();
 		try {
 			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
 				if (tempNode.getKey().equals(key)) {
@@ -229,7 +236,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 			}
 			return null;
 		} finally {
-			this.localLock.readLock().unlock();
+			this.localLock.unlockRead(lockStamp);
 		}
 	}
 
@@ -245,7 +252,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	@Override
 	@Contract(pure = true)
 	public boolean containsKey(final @NotNull Object key) {
-		this.localLock.readLock().lock();
+		final long lockStamp = this.localLock.readLock();
 		try {
 			for (final @NotNull TripletNode<K, V> TempNode : this.localList) {
 				if (TempNode.getKey().equals(key)) {
@@ -254,7 +261,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 			}
 			return false;
 		} finally {
-			this.localLock.readLock().unlock();
+			this.localLock.unlockRead(lockStamp);
 		}
 	}
 
@@ -270,7 +277,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	@Override
 	@Contract(pure = true)
 	public boolean containsValue(final @NotNull Object value) {
-		this.localLock.readLock().lock();
+		final long lockStamp = this.localLock.readLock();
 		try {
 			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
 				if (value.equals(tempNode.getValue())) {
@@ -279,7 +286,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 			}
 			return false;
 		} finally {
-			this.localLock.readLock().unlock();
+			this.localLock.unlockRead(lockStamp);
 		}
 	}
 
@@ -298,7 +305,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@Override
 	public @Nullable V put(final @NotNull K key, final @Nullable V value) {
-		this.localLock.readLock().lock();
+		final long lockStamp = this.localLock.readLock();
 		try {
 			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
 				if (tempNode.getKey().equals(key)) {
@@ -310,7 +317,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 				}
 			}
 		} finally {
-			this.localLock.readLock().unlock();
+			this.localLock.unlockRead(lockStamp);
 		}
 		this.add(key, value);
 		return null;
@@ -323,11 +330,11 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@Override
 	public void add(final @NotNull TripletMap.TripletNode<K, V> node) {
-		this.localLock.writeLock().lock();
+		final long lockStamp = this.localLock.writeLock();
 		try {
 			this.localList.add(node);
 		} finally {
-			this.localLock.writeLock().unlock();
+			this.localLock.unlockWrite(lockStamp);
 		}
 	}
 
@@ -338,11 +345,11 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@Override
 	public void addAll(final @NotNull List<TripletNode<K, V>> nodes) {
-		this.localLock.writeLock().lock();
+		final long lockStamp = this.localLock.writeLock();
 		try {
 			this.localList.addAll(nodes);
 		} finally {
-			this.localLock.writeLock().unlock();
+			this.localLock.unlockWrite(lockStamp);
 		}
 	}
 
@@ -365,7 +372,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@Override
 	public @Nullable V get(final @NotNull Object key) {
-		this.localLock.readLock().lock();
+		final long lockStamp = this.localLock.readLock();
 		try {
 			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
 				if (tempNode.getKey().equals(key)) {
@@ -374,7 +381,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 			}
 			return null;
 		} finally {
-			this.localLock.readLock().unlock();
+			this.localLock.unlockRead(lockStamp);
 		}
 	}
 
@@ -390,19 +397,26 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@Override
 	public @Nullable V remove(final @NotNull Object key) {
-		this.localLock.writeLock().lock();
+		long lockStamp = this.localLock.readLock();
 		try {
 			final @NotNull Iterator<TripletNode<K, V>> tempIterator = this.localList.iterator();
 			TripletNode<K, V> tempNode;
 			while ((tempNode = tempIterator.next()) != null) {
 				if (tempNode.getKey().equals(key)) {
+					long tempLock = this.localLock.tryConvertToWriteLock(lockStamp);
+					if (this.localLock.validate(tempLock)) {
+						lockStamp = tempLock;
+					} else {
+						this.localLock.unlockRead(lockStamp);
+						lockStamp = this.localLock.writeLock();
+					}
 					tempIterator.remove();
 					return tempNode.getValue();
 				}
 			}
 			return null;
 		} finally {
-			this.localLock.writeLock().unlock();
+			this.localLock.unlock(lockStamp);
 		}
 	}
 
@@ -412,21 +426,21 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@Override
 	public void clear() {
-		this.localLock.writeLock().lock();
+		final long lockStamp = this.localLock.writeLock();
 		try {
 			this.localList.clear();
 		} finally {
-			this.localLock.writeLock().unlock();
+			this.localLock.unlockWrite(lockStamp);
 		}
 	}
 
 	@Override
 	public void trimToSize() {
-		this.localLock.writeLock().lock();
+		final long lockStamp = this.localLock.writeLock();
 		try {
 			this.localList.trimToSize();
 		} finally {
-			this.localLock.writeLock().unlock();
+			this.localLock.unlockWrite(lockStamp);
 		}
 	}
 
@@ -452,11 +466,11 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	@Override
 	@Contract("-> new")
 	public @NotNull Set<Entry<K, V>> entrySet() {
-		this.localLock.readLock().lock();
+		final long lockStamp = this.localLock.readLock();
 		try {
 			return new HashSet<>(this.localList);
 		} finally {
-			this.localLock.readLock().unlock();
+			this.localLock.unlockRead(lockStamp);
 		}
 	}
 
@@ -467,11 +481,11 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@Override
 	public int size() {
-		this.localLock.readLock().lock();
+		final long lockStamp = this.localLock.readLock();
 		try {
 			return this.localList.size();
 		} finally {
-			this.localLock.readLock().unlock();
+			this.localLock.unlockRead(lockStamp);
 		}
 	}
 
@@ -483,32 +497,32 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	@Override
 	@Contract(pure = true)
 	public boolean isEmpty() {
-		this.localLock.readLock().lock();
+		final long lockStamp = this.localLock.readLock();
 		try {
 			return this.localList.isEmpty();
 		} finally {
-			this.localLock.readLock().unlock();
+			this.localLock.unlockRead(lockStamp);
 		}
 	}
 
 	@Contract("_ -> param1")
 	protected @NotNull List<TripletNode<K, V>> entryList(final @NotNull List<TripletNode<K, V>> entryList) {
-		this.localLock.readLock().lock();
+		final long lockStamp = this.localLock.readLock();
 		try {
 			entryList.addAll(this.localList);
 			return entryList;
 		} finally {
-			this.localLock.readLock().unlock();
+			this.localLock.unlockRead(lockStamp);
 		}
 	}
 
 	@Override
 	public @NotNull String toString() {
-		this.localLock.readLock().lock();
+		final long lockStamp = this.localLock.readLock();
 		try {
 			return this.localList.toString();
 		} finally {
-			this.localLock.readLock().unlock();
+			this.localLock.unlockRead(lockStamp);
 		}
 	}
 
@@ -523,19 +537,21 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@EqualsAndHashCode
 	@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
-	public static class ConcurrentTripletNode<K, V> implements TripletNode<K, V> {
+	public static class ConcurrentNode<K, V> implements TripletNode<K, V> {
 
-		private final @NotNull ReadWriteLock localLock = new ReentrantReadWriteLock(true);
+
+		private final @NotNull StampedLock localLock = new StampedLock();
+
 
 		/**
 		 * -- Getter --
-		 * Returns the line corresponding to this entry.
+		 * Returns the index corresponding to this entry.
 		 * has been removed from the backing map (by the iterator's
 		 * <tt>remove</tt> operation), the results of this call are undefined.
 		 *
-		 * @return the line corresponding to this entry
+		 * @return the index corresponding to this entry
 		 */
-		private int line;
+		private int index;
 		/**
 		 * -- Getter --
 		 * Returns the key corresponding to this entry.
@@ -557,28 +573,28 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 
 
 		/**
-		 * Replaces the line corresponding to this entry with the specified
-		 * line (optional operation).  (Writes through to the map.)  The
+		 * Replaces the index corresponding to this entry with the specified
+		 * index (optional operation).  (Writes through to the map.)  The
 		 * behavior of this call is undefined if the mapping has already been
 		 * removed from the map (by the iterator's <tt>remove</tt> operation).
 		 *
-		 * @param line new key to be stored in this entry
+		 * @param index new key to be stored in this entry
 		 *
 		 * @return old key corresponding to the entry
 		 *
 		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
 		 *                                       is not supported by the backing map
-		 * @throws ClassCastException            if the class of the specified line
+		 * @throws ClassCastException            if the class of the specified index
 		 *                                       prevents it from being stored in the backing map
 		 */
 		@Override
-		public int setLine(final int line) {
-			this.localLock.writeLock().lock();
+		public int setIndex(final int index) {
+			final long lockStamp = this.localLock.writeLock();
 			try {
-				return this.line;
+				return this.index;
 			} finally {
-				this.line = line;
-				this.localLock.writeLock().unlock();
+				this.index = index;
+				this.localLock.unlockWrite(lockStamp);
 			}
 		}
 
@@ -601,12 +617,12 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 		 */
 		@Override
 		public @NotNull K setKey(final @NotNull K key) {
-			this.localLock.writeLock().lock();
+			final long lockStamp = this.localLock.writeLock();
 			try {
 				return this.key;
 			} finally {
 				this.key = key;
-				this.localLock.writeLock().unlock();
+				this.localLock.unlockWrite(lockStamp);
 			}
 		}
 
@@ -631,54 +647,54 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 		 */
 		@Override
 		public @Nullable V setValue(final @Nullable V value) {
-			this.localLock.writeLock().lock();
+			final long lockStamp = this.localLock.writeLock();
 			try {
 				return this.value;
 			} finally {
 				this.value = value;
-				this.localLock.writeLock().unlock();
+				this.localLock.unlockWrite(lockStamp);
 			}
 		}
 
 		@Override
-		public int getLine() {
-			this.localLock.readLock().lock();
+		public int getIndex() {
+			final long lockStamp = this.localLock.readLock();
 			try {
-				return this.line;
+				return this.index;
 			} finally {
-				this.localLock.readLock().unlock();
+				this.localLock.unlockRead(lockStamp);
 			}
 		}
 
 		@Override
 		public @NotNull K getKey() {
-			this.localLock.readLock().lock();
+			final long lockStamp = this.localLock.readLock();
 			try {
 				return this.key;
 			} finally {
-				this.localLock.readLock().unlock();
+				this.localLock.unlockRead(lockStamp);
 			}
 		}
 
 		@Override
 		public @Nullable V getValue() {
-			this.localLock.readLock().lock();
+			final long lockStamp = this.localLock.readLock();
 			try {
 				return this.value;
 			} finally {
-				this.localLock.readLock().unlock();
+				this.localLock.unlockRead(lockStamp);
 			}
 		}
 
 
 		@Override
 		public int compareTo(final @NotNull TripletMap.TripletNode entry) {
-			return Integer.compare(this.getLine(), entry.getLine());
+			return Integer.compare(this.getIndex(), entry.getIndex());
 		}
 
 		@Override
 		public @NotNull String toString() {
-			return "(" + this.key + "={" + this.value + "," + this.line + "})";
+			return "(" + this.key + "={" + this.value + "," + this.index + "})";
 		}
 	}
 }

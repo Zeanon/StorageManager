@@ -31,6 +31,6 @@ public class ConcurrentGapTripletMap<K, V> extends ConcurrentTripletMap<K, V> {
 	@Override
 	@Contract("-> new")
 	public @NotNull List<TripletNode<K, V>> entryList() {
-		return new GapList<>(this.localList);
+		return this.entryList(new GapList<>());
 	}
 }

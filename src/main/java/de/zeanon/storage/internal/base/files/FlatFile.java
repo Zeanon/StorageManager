@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Basic foundation for the Data Classes, providing the necessary fields and basic methods
+ * Basic foundation for the Data Classes, providing the necessary fields and fundamental methods
  *
  * @author Zeanon
  * @version 2.4.0
@@ -198,7 +198,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 	public abstract void bigList(final boolean bigList);
 
-	public abstract void concurrentData(final boolean synchronize);
+	public abstract void concurrentData(final boolean concurrentData);
 
 	public void synchronizeData(final boolean synchronize) {
 		this.fileData().synchronizedData(synchronize);
@@ -315,7 +315,6 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@Override
-	@SuppressWarnings("DuplicatedCode")
 	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey,
 														 final @NotNull Collection<String[]> keys) {
 		this.update();
@@ -332,7 +331,6 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@Override
-	@SuppressWarnings("DuplicatedCode")
 	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey,
 														 final @NotNull String[]... keys) {
 		this.update();
@@ -669,7 +667,6 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@SuppressWarnings("DuplicatedCode")
 	private boolean internalRemoveAllUseArray(final @NotNull String[] blockKey,
 											  final @NotNull String[]... keys) {
 		this.update();
@@ -684,7 +681,6 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	@SuppressWarnings("DuplicatedCode")
 	private boolean internalRemoveAllUseArray(final @NotNull String[] blockKey,
 											  final @NotNull Collection<String[]> keys) {
 		this.update();

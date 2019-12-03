@@ -31,6 +31,6 @@ public class ConcurrentBigTripletMap<K, V> extends ConcurrentTripletMap<K, V> {
 	@Override
 	@Contract("-> new")
 	public @NotNull List<TripletNode<K, V>> entryList() {
-		return new BigList<>(this.localList);
+		return this.entryList(new BigList<>());
 	}
 }

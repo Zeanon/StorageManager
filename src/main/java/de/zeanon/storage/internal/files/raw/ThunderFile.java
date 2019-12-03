@@ -106,8 +106,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 	}
 
 	@Override
-	public void concurrentData(final boolean synchronize) {
-		this.concurrentData = synchronize;
+	public void concurrentData(final boolean concurrentData) {
+		this.concurrentData = concurrentData;
 		this.provider().setMapType(this.concurrentData ? (this.bigData ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
 													   : (this.bigData ? BigTripletMap.class : GapTripletMap.class));
 	}
