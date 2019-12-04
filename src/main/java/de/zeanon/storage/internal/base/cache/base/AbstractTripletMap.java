@@ -1,6 +1,7 @@
 package de.zeanon.storage.internal.base.cache.base;
 
 import de.zeanon.storage.external.lists.IList;
+import de.zeanon.storage.internal.base.interfaces.TripletMap;
 import java.util.*;
 import lombok.*;
 import org.jetbrains.annotations.Contract;
@@ -20,10 +21,10 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
+public abstract class AbstractTripletMap<K, V> extends AbstractMap<K, V> implements TripletMap<K, V> {
 
 
-	protected final @NotNull IList<TripletMap.TripletNode<K, V>> localList;
+	protected final @NotNull IList<TripletNode<K, V>> localList;
 
 
 	/**
@@ -100,6 +101,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		return null;
 	}
 
+	@Override
 	public @Nullable V put(final @NotNull K key, final @Nullable V value, final int index) {
 		for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
 			if (tempNode.getKey().equals(key)) {
@@ -142,6 +144,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * @param key   key with which the specified value is to be associated
 	 * @param value value to be associated with the specified key
 	 */
+	@Override
 	public void add(final @NotNull K key, final @Nullable V value) {
 		this.add(new Node<>(this.size(), key, value));
 	}
@@ -153,6 +156,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 * @param value value to be associated with the specified key
 	 * @param index the index to be associated with the specific key
 	 */
+	@Override
 	public void add(final @NotNull K key, final @Nullable V value, final int index) {
 		this.add(new Node<>(index, key, value));
 	}
@@ -162,7 +166,8 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 *
 	 * @param node mapping to be added to the map
 	 */
-	public void add(final @NotNull TripletMap.TripletNode<K, V> node) {
+	@Override
+	public void add(final @NotNull TripletNode<K, V> node) {
 		this.localList.add(node);
 	}
 
@@ -171,6 +176,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 *
 	 * @param nodes mappings to be added to the map
 	 */
+	@Override
 	public void addAll(final @NotNull List<TripletNode<K, V>> nodes) {
 		this.localList.addAll(nodes);
 	}
@@ -180,6 +186,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	 *
 	 * @param nodeMap mappings to be stored in this map
 	 */
+	@Override
 	public void addAll(final @NotNull Map<? extends K, ? extends V> nodeMap) {
 		for (final @NotNull Map.Entry<? extends K, ? extends V> entry : nodeMap.entrySet()) {
 			this.add(entry.getKey(), entry.getValue());
@@ -245,12 +252,10 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		this.localList.clear();
 	}
 
+	@Override
 	public void trimToSize() {
 		this.localList.trimToSize();
 	}
-
-	@Contract("-> new")
-	public abstract @NotNull List<TripletNode<K, V>> entryList();
 
 	/**
 	 * Returns a {@link Set} view of the mappings contained in this map.
@@ -280,26 +285,8 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	}
 
 
-	public interface TripletNode<K, V> extends Map.Entry<K, V>, Comparable<TripletNode> {
-
-		int getIndex();
-
-		@Override
-		@NotNull K getKey();
-
-		@Override
-		@Nullable V getValue();
-
-		int setIndex(final int index);
-
-		@NotNull K setKey(final @NotNull K key);
-
-		@Override
-		@Nullable V setValue(final @Nullable V value);
-	}
-
 	/**
-	 * The EntryNodes to be stored in a TripletMap
+	 * The EntryNodes to be stored in a AbstractTripletMap
 	 *
 	 * @param <K> the type of keys maintained by this map
 	 * @param <V> the type of mapped values
@@ -311,7 +298,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 	@Getter(onMethod_ = {@Override})
 	@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
 	@SuppressWarnings("unused")
-	public static class Node<K, V> implements TripletNode<K, V> {
+	private static class Node<K, V> implements TripletNode<K, V> {
 
 		/**
 		 * -- Getter --
@@ -322,6 +309,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		 * @return the index corresponding to this entry
 		 */
 		private int index;
+
 		/**
 		 * -- Getter --
 		 * Returns the key corresponding to this entry.
@@ -331,6 +319,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 		 * @return the key corresponding to this entry
 		 */
 		private @NotNull K key;
+
 		/**
 		 * -- Getter --
 		 * Returns the value corresponding to this entry.  If the mapping
@@ -422,7 +411,7 @@ public abstract class TripletMap<K, V> extends AbstractMap<K, V> {
 
 
 		@Override
-		public int compareTo(final @NotNull TripletMap.TripletNode entry) {
+		public int compareTo(final @NotNull TripletNode entry) {
 			return Integer.compare(this.getIndex(), entry.getIndex());
 		}
 

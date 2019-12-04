@@ -1,7 +1,8 @@
 package de.zeanon.storage.internal.utility.editor;
 
 import de.zeanon.storage.internal.base.cache.base.Provider;
-import de.zeanon.storage.internal.utility.basic.ReadWriteLockChannel;
+import de.zeanon.storage.internal.base.interfaces.ReadWriteFileLock;
+import de.zeanon.storage.internal.utility.locks.ExtendedFileLock;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -40,9 +41,9 @@ public class YamlEditor {
 
 	@Contract("_, _ -> new")
 	public static @NotNull List<String> read(final @NotNull File file, final int buffer_size) throws IOException {
-		try (final @NotNull ReadWriteLockChannel localChannel = ReadWriteLockChannel.get(file, "r");
-			 final @NotNull BufferedReader reader = new BufferedReader(Channels.newReader(localChannel.getChannel(), "UTF-8"), buffer_size)) {
-			localChannel.readLock();
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, "r").readLock();
+			 final @NotNull BufferedReader reader = new BufferedReader(Channels.newReader(tempLock.getChannel(), "UTF-8"), buffer_size)) {
+			tempLock.lock();
 			return reader.lines().collect(Collectors.toList());
 		}
 	}
@@ -79,9 +80,9 @@ public class YamlEditor {
 
 	public static void write(final @NotNull File file,
 							 final @NotNull List<String> lines) throws IOException {
-		try (final @NotNull ReadWriteLockChannel localChannel = ReadWriteLockChannel.get(file);
-			 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(localChannel.getChannel(), "UTF-8"))) {
-			localChannel.writeLock();
+		try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
+			 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(tempLock.getChannel(), "UTF-8"))) {
+			tempLock.writeLock().lock();
 			final @NotNull Iterator<String> linesIterator = lines.iterator();
 			writer.print(linesIterator.next());
 			linesIterator.forEachRemaining(line -> {

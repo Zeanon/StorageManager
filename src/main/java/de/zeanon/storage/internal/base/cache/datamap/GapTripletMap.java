@@ -1,7 +1,7 @@
 package de.zeanon.storage.internal.base.cache.datamap;
 
 import de.zeanon.storage.external.lists.GapList;
-import de.zeanon.storage.internal.base.cache.base.TripletMap;
+import de.zeanon.storage.internal.base.cache.base.AbstractTripletMap;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Contract;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class GapTripletMap<K, V> extends TripletMap<K, V> {
+public class GapTripletMap<K, V> extends AbstractTripletMap<K, V> {
 
 
 	public GapTripletMap() {

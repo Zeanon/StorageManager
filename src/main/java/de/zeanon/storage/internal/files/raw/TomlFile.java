@@ -61,7 +61,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 			this.fileData().loadData(com.electronwill.toml.Toml.read(this.file()));
 			this.lastLoaded(System.currentTimeMillis());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
 		} catch (TomlException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}
@@ -74,7 +74,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 			//noinspection unchecked
 			com.electronwill.toml.Toml.write(this.fileData().dataMap(), this.file());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -113,7 +113,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		try {
 			return com.electronwill.toml.Toml.read(this.file());
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
 		} catch (TomlException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}

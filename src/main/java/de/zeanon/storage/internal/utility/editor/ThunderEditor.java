@@ -1,15 +1,16 @@
 package de.zeanon.storage.internal.utility.editor;
 
 import de.zeanon.storage.internal.base.cache.base.Provider;
-import de.zeanon.storage.internal.base.cache.base.TripletMap;
 import de.zeanon.storage.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.exceptions.ThunderException;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
+import de.zeanon.storage.internal.base.interfaces.ReadWriteFileLock;
+import de.zeanon.storage.internal.base.interfaces.TripletMap;
 import de.zeanon.storage.internal.base.settings.Comment;
 import de.zeanon.storage.internal.utility.basic.Objects;
-import de.zeanon.storage.internal.utility.basic.ReadWriteLockChannel;
+import de.zeanon.storage.internal.utility.locks.ExtendedFileLock;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -90,9 +91,9 @@ public class ThunderEditor {
 	private static void initialWriteWithComments(final @NotNull File file,
 												 final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData) {
 		if (!fileData.isEmpty()) {
-			try (final @NotNull ReadWriteLockChannel localChannel = ReadWriteLockChannel.get(file);
-				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(localChannel.getChannel(), "UTF-8"))) {
-				localChannel.writeLock();
+			try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
+				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(tempLock.getChannel(), "UTF-8"))) {
+				tempLock.writeLock().lock();
 				final @NotNull Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
 				ThunderEditor.topLayerWriteWithComments(writer, mapIterator.next());
 				mapIterator.forEachRemaining(entry -> {
@@ -101,16 +102,16 @@ public class ThunderEditor {
 				});
 				writer.flush();
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		} else {
-			try (final @NotNull ReadWriteLockChannel localChannel = ReadWriteLockChannel.get(file);
-				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(localChannel.getChannel(), "UTF-8"))) {
-				localChannel.writeLock();
+			try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
+				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(tempLock.getChannel(), "UTF-8"))) {
+				tempLock.writeLock().lock();
 				writer.print("");
 				writer.flush();
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -195,9 +196,9 @@ public class ThunderEditor {
 	private static void initialWriteWithOutComments(final @NotNull File file,
 													final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData) {
 		if (!fileData.isEmpty()) {
-			try (final @NotNull ReadWriteLockChannel localChannel = ReadWriteLockChannel.get(file);
-				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(localChannel.getChannel(), "UTF-8"))) {
-				localChannel.writeLock();
+			try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
+				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(tempLock.getChannel(), "UTF-8"))) {
+				tempLock.writeLock().lock();
 				final @NotNull Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
 				@NotNull TripletMap.TripletNode<String, Object> initialEntry = mapIterator.next();
 				while (initialEntry.getValue() == LineType.COMMENT || initialEntry.getValue() == LineType.HEADER || initialEntry.getValue() == LineType.FOOTER || initialEntry.getValue() == LineType.BLANK_LINE) {
@@ -212,16 +213,16 @@ public class ThunderEditor {
 				});
 				writer.flush();
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		} else {
-			try (final @NotNull ReadWriteLockChannel localChannel = ReadWriteLockChannel.get(file);
-				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(localChannel.getChannel(), "UTF-8"))) {
-				localChannel.writeLock();
+			try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
+				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(tempLock.getChannel(), "UTF-8"))) {
+				tempLock.writeLock().lock();
 				writer.print("");
 				writer.flush();
 			} catch (IOException e) {
-				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
+				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
@@ -379,9 +380,9 @@ public class ThunderEditor {
 																			   final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull List<String> lines;
-			try (final @NotNull ReadWriteLockChannel localChannel = ReadWriteLockChannel.get(file, "r");
-				 final @NotNull BufferedReader reader = new BufferedReader(Channels.newReader(localChannel.getChannel(), "UTF-8"), buffer_size)) {
-				localChannel.readLock();
+			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, "r").readLock();
+				 final @NotNull BufferedReader reader = new BufferedReader(Channels.newReader(tempLock.getChannel(), "UTF-8"), buffer_size)) {
+				tempLock.lock();
 				lines = reader.lines().collect(Collectors.toList());
 			}
 
@@ -416,7 +417,7 @@ public class ThunderEditor {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			throw new ThunderException("Error while parsing content of '" + file.getAbsolutePath() + "'", e);
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
@@ -463,9 +464,9 @@ public class ThunderEditor {
 																				  final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull List<String> lines;
-			try (final @NotNull ReadWriteLockChannel localChannel = ReadWriteLockChannel.get(file, "r");
-				 final @NotNull BufferedReader reader = new BufferedReader(Channels.newReader(localChannel.getChannel(), "UTF-8"), buffer_size)) {
-				localChannel.readLock();
+			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, "r").readLock();
+				 final @NotNull BufferedReader reader = new BufferedReader(Channels.newReader(tempLock.getChannel(), "UTF-8"), buffer_size)) {
+				tempLock.lock();
 				lines = reader.lines().collect(Collectors.toList());
 			}
 
@@ -498,7 +499,7 @@ public class ThunderEditor {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			throw new ThunderException("Error while parsing content of '" + file.getAbsolutePath() + "'", e);
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 

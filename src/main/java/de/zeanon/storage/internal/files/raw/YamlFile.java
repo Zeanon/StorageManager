@@ -93,7 +93,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 				this.write(this.fileData().dataMap());
 			}
 		} catch (IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e.getCause());
 		}
 	}
 

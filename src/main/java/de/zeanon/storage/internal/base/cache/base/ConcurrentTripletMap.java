@@ -1,11 +1,14 @@
 package de.zeanon.storage.internal.base.cache.base;
 
 import de.zeanon.storage.external.lists.IList;
+import de.zeanon.storage.internal.base.interfaces.TripletMap;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.StampedLock;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,17 +24,13 @@ import org.jetbrains.annotations.Nullable;
  * @version 1.3.0
  */
 @EqualsAndHashCode(callSuper = true)
+@RequiredArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
 @SuppressWarnings("unused")
-public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implements ConcurrentMap<K, V> {
+public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> implements TripletMap<K, V>, ConcurrentMap<K, V> {
 
 
 	protected final @NotNull StampedLock localLock = new StampedLock();
-
-
-	@Contract(pure = true)
-	protected ConcurrentTripletMap(@NotNull IList<TripletNode<K, V>> localList) {
-		super(localList);
-	}
+	protected final @NotNull IList<TripletNode<K, V>> localList;
 
 
 	/**
@@ -321,18 +320,52 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 		return null;
 	}
 
+	@Override
+	public @Nullable V put(@NotNull K key, @Nullable V value, int index) {
+		final long lockStamp = this.localLock.readLock();
+		try {
+			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+				if (tempNode.getKey().equals(key)) {
+					tempNode.setIndex(index);
+					return tempNode.setValue(value);
+				}
+			}
+		} finally {
+			this.localLock.unlockRead(lockStamp);
+		}
+		this.add(key, value, index);
+		return null;
+	}
+
 	/**
 	 * Associates the specified value with the specified key in this map.
 	 *
 	 * @param node mapping to be added to the map
 	 */
 	@Override
-	public void add(final @NotNull TripletMap.TripletNode<K, V> node) {
+	public void add(final @NotNull TripletNode<K, V> node) {
 		final long lockStamp = this.localLock.writeLock();
 		try {
 			this.localList.add(node);
 		} finally {
 			this.localLock.unlockWrite(lockStamp);
+		}
+	}
+
+	@Override
+	public void add(@NotNull K key, @Nullable V value) {
+		this.add(new ConcurrentNode<>(this.size(), key, value));
+	}
+
+	@Override
+	public void add(@NotNull K key, @Nullable V value, int index) {
+		this.add(new ConcurrentNode<>(index, key, value));
+	}
+
+	@Override
+	public void addAll(@NotNull Map<? extends K, ? extends V> nodeMap) {
+		for (final @NotNull Map.Entry<? extends K, ? extends V> entry : nodeMap.entrySet()) {
+			this.add(entry.getKey(), entry.getValue());
 		}
 	}
 
@@ -442,9 +475,6 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 		}
 	}
 
-	@Contract("-> new")
-	public abstract @NotNull List<TripletNode<K, V>> entryList();
-
 	/**
 	 * Returns a {@link Set} view of the mappings contained in this map.
 	 * The set is backed by the map, so changes to the map are
@@ -525,7 +555,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	}
 
 	/**
-	 * The concurrent EntryNodes to be stored in a TripletMap
+	 * The concurrent EntryNodes to be stored in a AbstractTripletMap
 	 *
 	 * @param <K> the type of keys maintained by this map
 	 * @param <V> the type of mapped values
@@ -535,7 +565,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 	 */
 	@EqualsAndHashCode
 	@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
-	public static class ConcurrentNode<K, V> implements TripletNode<K, V> {
+	private static class ConcurrentNode<K, V> implements TripletNode<K, V> {
 
 
 		private final @NotNull StampedLock localLock = new StampedLock();
@@ -686,7 +716,7 @@ public abstract class ConcurrentTripletMap<K, V> extends TripletMap<K, V> implem
 
 
 		@Override
-		public int compareTo(final @NotNull TripletMap.TripletNode entry) {
+		public int compareTo(final @NotNull TripletNode entry) {
 			return Integer.compare(this.getIndex(), entry.getIndex());
 		}
 

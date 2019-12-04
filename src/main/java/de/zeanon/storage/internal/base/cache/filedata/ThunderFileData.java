@@ -1,9 +1,9 @@
 package de.zeanon.storage.internal.base.cache.filedata;
 
 import de.zeanon.storage.internal.base.cache.base.Provider;
-import de.zeanon.storage.internal.base.cache.base.TripletMap;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.interfaces.FileData;
+import de.zeanon.storage.internal.base.interfaces.TripletMap;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

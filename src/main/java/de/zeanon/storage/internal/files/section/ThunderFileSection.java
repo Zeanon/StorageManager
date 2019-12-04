@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.files.section;
 
-import de.zeanon.storage.internal.base.cache.base.TripletMap;
+import de.zeanon.storage.internal.base.interfaces.TripletMap;
 import de.zeanon.storage.internal.base.sections.CommentEnabledSection;
 import de.zeanon.storage.internal.files.raw.ThunderFile;
 import java.util.List;

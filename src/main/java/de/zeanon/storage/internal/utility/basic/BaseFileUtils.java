@@ -2,6 +2,8 @@ package de.zeanon.storage.internal.utility.basic;
 
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
+import de.zeanon.storage.internal.base.interfaces.ReadWriteFileLock;
+import de.zeanon.storage.internal.utility.locks.ExtendedFileLock;
 import java.io.*;
 import java.net.URL;
 import java.nio.channels.Channels;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
@@ -55,16 +58,7 @@ public class BaseFileUtils {
 	 * @param file the File to be created
 	 */
 	public static boolean createFile(final @NotNull File file) {
-		boolean create = !file.exists();
-		try (final @NotNull FileChannel localChannel = new RandomAccessFile(file, "rws").getChannel()) {
-			return create;
-		} catch (IOException e) {
-			throw new RuntimeIOException("Error while creating '"
-										 + file.getAbsolutePath()
-										 + "'"
-										 + System.lineSeparator()
-										 + e.getMessage(), e.getCause());
-		}
+		return BaseFileUtils.createFileInternally(file, false);
 	}
 
 	/**
@@ -73,16 +67,7 @@ public class BaseFileUtils {
 	 * @param file the File to be used
 	 */
 	public static boolean createParents(final @NotNull File file) {
-		boolean create = !file.exists();
-		try (final @NotNull FileChannel localChannel = new RandomAccessFile(file.getParentFile(), "rws").getChannel()) {
-			return create;
-		} catch (IOException e) {
-			throw new RuntimeIOException("Error while creating parents of '"
-										 + file.getAbsolutePath()
-										 + "'"
-										 + System.lineSeparator()
-										 + e.getMessage(), e.getCause());
-		}
+		return BaseFileUtils.createFileInternally(file.getParentFile(), true);
 	}
 
 
@@ -93,7 +78,7 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	public static @NotNull Collection<File> listFolders(final @NotNull File directory) {
+	public static @NotNull Collection<File> listFolders(final @NotNull File directory) throws IOException {
 		return BaseFileUtils.listFolders(directory, false);
 	}
 
@@ -106,22 +91,25 @@ public class BaseFileUtils {
 	 * @return the files of the directory that are folders
 	 */
 	public static @NotNull Collection<File> listFolders(final @NotNull File directory,
-														final boolean deep) {
-		final @NotNull Collection<File> files = new ArrayList<>();
-		if (directory.isDirectory()) {
-			final @Nullable File[] fileList = directory.listFiles();
-			if (fileList != null) {
-				for (final @Nullable File file : fileList) {
-					if (file != null && file.isDirectory()) {
-						files.add(file);
-						if (deep) {
-							files.addAll(BaseFileUtils.listFolders(file, true));
+														final boolean deep) throws IOException {
+		try (final @NotNull ReadWriteFileLock localLock = new ExtendedFileLock(directory, "r").readLock()) {
+			localLock.lock();
+			final @NotNull Collection<File> files = new ArrayList<>();
+			if (directory.isDirectory()) {
+				final @Nullable File[] fileList = directory.listFiles();
+				if (fileList != null) {
+					for (final @Nullable File file : fileList) {
+						if (file != null && file.isDirectory()) {
+							files.add(file);
+							if (deep) {
+								files.addAll(BaseFileUtils.listFolders(file, true));
+							}
 						}
 					}
 				}
 			}
+			return files;
 		}
-		return files;
 	}
 
 
@@ -132,7 +120,7 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	public static @NotNull Collection<File> listAllFiles(final @NotNull File directory) {
+	public static @NotNull Collection<File> listAllFiles(final @NotNull File directory) throws IOException {
 		return BaseFileUtils.listAllFiles(directory, false);
 	}
 
@@ -145,22 +133,25 @@ public class BaseFileUtils {
 	 * @return the files of the given directory
 	 */
 	public static @NotNull Collection<File> listAllFiles(final @NotNull File directory,
-														 final boolean deep) {
-		final @NotNull Collection<File> files = new ArrayList<>();
-		if (directory.isDirectory()) {
-			final @Nullable File[] fileList = directory.listFiles();
-			if (fileList != null) {
-				for (final @Nullable File file : fileList) {
-					if (file != null) {
-						files.add(file);
-						if (deep && file.isDirectory()) {
-							files.addAll(listAllFiles(file, true));
+														 final boolean deep) throws IOException {
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, "r").readLock()) {
+			tempLock.lock();
+			final @NotNull Collection<File> files = new ArrayList<>();
+			if (directory.isDirectory()) {
+				final @Nullable File[] fileList = directory.listFiles();
+				if (fileList != null) {
+					for (final @Nullable File file : fileList) {
+						if (file != null) {
+							files.add(file);
+							if (deep && file.isDirectory()) {
+								files.addAll(listAllFiles(file, true));
+							}
 						}
 					}
 				}
 			}
+			return files;
 		}
-		return files;
 	}
 
 	/**
@@ -170,7 +161,7 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	public static @NotNull Collection<File> listFiles(final @NotNull File directory) {
+	public static @NotNull Collection<File> listFiles(final @NotNull File directory) throws IOException {
 		return BaseFileUtils.listFiles(directory, false);
 	}
 
@@ -183,24 +174,27 @@ public class BaseFileUtils {
 	 * @return the files of the given directory
 	 */
 	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
-													  final boolean deep) {
-		final @NotNull Collection<File> files = new ArrayList<>();
-		if (directory.isDirectory()) {
-			final @Nullable File[] fileList = directory.listFiles();
-			if (fileList != null) {
-				for (final @Nullable File file : fileList) {
-					if (file != null) {
-						if (file.isFile()) {
-							files.add(file);
-						}
-						if (deep && file.isDirectory()) {
-							files.addAll(listFiles(file, true));
+													  final boolean deep) throws IOException {
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, "r").readLock()) {
+			tempLock.lock();
+			final @NotNull Collection<File> files = new ArrayList<>();
+			if (directory.isDirectory()) {
+				final @Nullable File[] fileList = directory.listFiles();
+				if (fileList != null) {
+					for (final @Nullable File file : fileList) {
+						if (file != null) {
+							if (file.isFile()) {
+								files.add(file);
+							}
+							if (deep && file.isDirectory()) {
+								files.addAll(listFiles(file, true));
+							}
 						}
 					}
 				}
 			}
+			return files;
 		}
-		return files;
 	}
 
 	/**
@@ -212,7 +206,7 @@ public class BaseFileUtils {
 	 * @return the files of the given directory with the given extensions
 	 */
 	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
-													  final @NotNull List<String> extensions) {
+													  final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, extensions.toArray(new String[0]), false);
 	}
 
@@ -225,7 +219,7 @@ public class BaseFileUtils {
 	 * @return the files of the given directory with the given extensions
 	 */
 	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
-													  final @NotNull String[] extensions) {
+													  final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, extensions, false);
 	}
 
@@ -240,7 +234,7 @@ public class BaseFileUtils {
 	 */
 	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
 													  final @NotNull List<String> extensions,
-													  final boolean deep) {
+													  final boolean deep) throws IOException {
 		return BaseFileUtils.listFiles(directory, extensions.toArray(new String[0]), deep);
 	}
 
@@ -255,24 +249,27 @@ public class BaseFileUtils {
 	 */
 	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
 													  final @NotNull String[] extensions,
-													  final boolean deep) {
-		final @NotNull Collection<File> files = new ArrayList<>();
-		if (directory.isDirectory()) {
-			final @Nullable File[] fileList = directory.listFiles();
-			if (fileList != null) {
-				for (final @Nullable File file : fileList) {
-					if (file != null) {
-						if (Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)) {
-							files.add(file);
-						}
-						if (deep && file.isDirectory()) {
-							files.addAll(BaseFileUtils.listFiles(file, extensions, true));
+													  final boolean deep) throws IOException {
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, "r").readLock()) {
+			tempLock.lock();
+			final @NotNull Collection<File> files = new ArrayList<>();
+			if (directory.isDirectory()) {
+				final @Nullable File[] fileList = directory.listFiles();
+				if (fileList != null) {
+					for (final @Nullable File file : fileList) {
+						if (file != null) {
+							if (Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)) {
+								files.add(file);
+							}
+							if (deep && file.isDirectory()) {
+								files.addAll(BaseFileUtils.listFiles(file, extensions, true));
+							}
 						}
 					}
 				}
 			}
+			return files;
 		}
-		return files;
 	}
 
 
@@ -657,5 +654,39 @@ public class BaseFileUtils {
 		} else {
 			return filePath.substring(0, dotInd).toLowerCase();
 		}
+	}
+
+
+	private static boolean createFileInternally(final @Nullable File file,
+												final boolean isDirectory) {
+		final @NotNull AtomicReference<File> tempFile = new AtomicReference<>(file);
+		return tempFile.updateAndGet(current -> {
+			if (current != null && !current.exists()) {
+				try {
+					if (isDirectory) {
+						if (current.mkdirs()) {
+							return current;
+						} else {
+							throw new IOException();
+						}
+					} else {
+						if (current.getParentFile() != null && !current.getParentFile().mkdirs()) {
+							throw new IOException();
+						}
+						if (current.createNewFile()) {
+							return current;
+						} else {
+							throw new IOException();
+						}
+					}
+				} catch (IOException e) {
+					throw new RuntimeIOException("Could not create '"
+												 + current.getAbsolutePath()
+												 + "'", e.getCause());
+				}
+			} else {
+				return null;
+			}
+		}) != null;
 	}
 }
