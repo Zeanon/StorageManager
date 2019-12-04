@@ -35,7 +35,7 @@ public class ReadWriteLockChannel implements AutoCloseable {
 	@Contract(pure = true)
 	private ReadWriteLockChannel(final @NotNull File file, final @NotNull String mode) throws FileNotFoundException {
 		this.localChannel = new RandomAccessFile(file, mode).getChannel();
-		this.instances.getAndIncrement();
+		this.instances.incrementAndGet();
 	}
 
 
@@ -57,7 +57,7 @@ public class ReadWriteLockChannel implements AutoCloseable {
 				Thread.sleep(5);
 			}
 			this.readLock.compareAndSet(null, this.localChannel.lock(0, Long.MAX_VALUE, true));
-			this.readers.getAndIncrement();
+			this.readers.incrementAndGet();
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 			throw new IOException(e);
@@ -69,7 +69,7 @@ public class ReadWriteLockChannel implements AutoCloseable {
 	public void releaseRead() {
 		if (this.readers.get() == 1 && this.readLock.get() != null) {
 			this.readers.set(0);
-			this.readLock.getAndUpdate(current -> {
+			this.readLock.updateAndGet(current -> {
 				try {
 					current.release();
 					return null;
@@ -78,7 +78,7 @@ public class ReadWriteLockChannel implements AutoCloseable {
 				}
 			});
 		} else {
-			this.readers.getAndDecrement();
+			this.readers.decrementAndGet();
 		}
 	}
 
@@ -164,7 +164,7 @@ public class ReadWriteLockChannel implements AutoCloseable {
 		if (this.instances.get() == 1) {
 			openChannels.remove(this);
 		} else {
-			this.instances.getAndDecrement();
+			this.instances.decrementAndGet();
 		}
 		this.localChannel.close();
 	}
