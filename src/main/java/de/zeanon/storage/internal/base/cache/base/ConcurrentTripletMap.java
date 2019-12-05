@@ -320,23 +320,6 @@ public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> imple
 		return null;
 	}
 
-	@Override
-	public @Nullable V put(@NotNull K key, @Nullable V value, int index) {
-		final long lockStamp = this.localLock.readLock();
-		try {
-			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
-				if (tempNode.getKey().equals(key)) {
-					tempNode.setIndex(index);
-					return tempNode.setValue(value);
-				}
-			}
-		} finally {
-			this.localLock.unlockRead(lockStamp);
-		}
-		this.add(key, value, index);
-		return null;
-	}
-
 	/**
 	 * Associates the specified value with the specified key in this map.
 	 *
@@ -354,12 +337,7 @@ public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> imple
 
 	@Override
 	public void add(@NotNull K key, @Nullable V value) {
-		this.add(new ConcurrentNode<>(this.size(), key, value));
-	}
-
-	@Override
-	public void add(@NotNull K key, @Nullable V value, int index) {
-		this.add(new ConcurrentNode<>(index, key, value));
+		this.add(new ConcurrentNode<>(key, value));
 	}
 
 	@Override
@@ -570,16 +548,6 @@ public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> imple
 
 		private final @NotNull StampedLock localLock = new StampedLock();
 
-
-		/**
-		 * -- Getter --
-		 * Returns the index corresponding to this entry.
-		 * has been removed from the backing map (by the iterator's
-		 * <tt>remove</tt> operation), the results of this call are undefined.
-		 *
-		 * @return the index corresponding to this entry
-		 */
-		private int index;
 		/**
 		 * -- Getter --
 		 * Returns the key corresponding to this entry.
@@ -589,6 +557,7 @@ public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> imple
 		 * @return the key corresponding to this entry
 		 */
 		private @NotNull K key;
+
 		/**
 		 * -- Getter --
 		 * Returns the value corresponding to this entry.  If the mapping
@@ -598,33 +567,6 @@ public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> imple
 		 * @return the value corresponding to this entry
 		 */
 		private @Nullable V value;
-
-
-		/**
-		 * Replaces the index corresponding to this entry with the specified
-		 * index (optional operation).  (Writes through to the map.)  The
-		 * behavior of this call is undefined if the mapping has already been
-		 * removed from the map (by the iterator's <tt>remove</tt> operation).
-		 *
-		 * @param index new key to be stored in this entry
-		 *
-		 * @return old key corresponding to the entry
-		 *
-		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
-		 *                                       is not supported by the backing map
-		 * @throws ClassCastException            if the class of the specified index
-		 *                                       prevents it from being stored in the backing map
-		 */
-		@Override
-		public int setIndex(final int index) {
-			final long lockStamp = this.localLock.writeLock();
-			try {
-				return this.index;
-			} finally {
-				this.index = index;
-				this.localLock.unlockWrite(lockStamp);
-			}
-		}
 
 		/**
 		 * Replaces the key corresponding to this entry with the specified
@@ -685,16 +627,6 @@ public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> imple
 		}
 
 		@Override
-		public int getIndex() {
-			final long lockStamp = this.localLock.readLock();
-			try {
-				return this.index;
-			} finally {
-				this.localLock.unlockRead(lockStamp);
-			}
-		}
-
-		@Override
 		public @NotNull K getKey() {
 			final long lockStamp = this.localLock.readLock();
 			try {
@@ -716,13 +648,8 @@ public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> imple
 
 
 		@Override
-		public int compareTo(final @NotNull TripletNode entry) {
-			return Integer.compare(this.getIndex(), entry.getIndex());
-		}
-
-		@Override
 		public @NotNull String toString() {
-			return "(" + this.key + "={" + this.value + "," + this.index + "})";
+			return "(" + this.key + "=" + this.value + ")";
 		}
 	}
 }

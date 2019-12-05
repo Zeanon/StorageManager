@@ -5,8 +5,8 @@ import de.zeanon.storage.internal.base.interfaces.ReadWriteFileLock;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -57,6 +57,10 @@ public class ExtendedFileLock implements AutoCloseable {
 
 	public @NotNull FileChannel getChannel() {
 		return this.localChannel.getChannel();
+	}
+
+	public @NotNull String getFilePath() {
+		return this.localChannel.getFilePath();
 	}
 
 	/**
@@ -120,12 +124,13 @@ public class ExtendedFileLock implements AutoCloseable {
 	private static class ReadWriteLockableChannel {
 
 
-		private static final @NotNull Map<ReadWriteLockableChannel, String> openChannels = new ConcurrentHashMap<>();
+		private static final @NotNull Queue<ReadWriteLockableChannel> openChannels = new ConcurrentLinkedQueue<>();
 		private static final @NotNull StampedLock factoryLock = new StampedLock();
 
 
 		private final @NotNull StampedLock internalLock = new StampedLock();
 		private final @NotNull FileChannel localChannel;
+		private final @NotNull String absolutePath;
 
 		private final @NotNull AtomicReference<FileLock> readLock = new AtomicReference<>();
 		private final @NotNull AtomicReference<FileLock> writeLock = new AtomicReference<>();
@@ -137,38 +142,46 @@ public class ExtendedFileLock implements AutoCloseable {
 		@Contract(pure = true)
 		private ReadWriteLockableChannel(final @NotNull File file, final @NotNull String mode) throws FileNotFoundException {
 			this.localChannel = new RandomAccessFile(file, mode).getChannel();
+			this.absolutePath = file.getAbsolutePath();
 			this.instances.incrementAndGet();
 		}
 
 		@Contract(pure = true)
-		private static ReadWriteLockableChannel getOrCreateChannel(final @NotNull File file, final @NotNull String mode) throws IOException {
-			long lockStamp = factoryLock.readLock();
+		private static @NotNull ReadWriteLockableChannel getOrCreateChannel(final @NotNull File file, final @NotNull String mode) throws IOException {
+			long lockStamp = ReadWriteLockableChannel.factoryLock.readLock();
 			try {
 				final @NotNull String absolutePath = file.getAbsolutePath();
-				for (final @NotNull Map.Entry<ReadWriteLockableChannel, String> entry : openChannels.entrySet()) {
-					if (absolutePath.equals(entry.getValue())) {
-						return entry.getKey();
+				for (final @NotNull ReadWriteLockableChannel tempChannel : ReadWriteLockableChannel.openChannels) {
+					if (absolutePath.equals(tempChannel.getFilePath())) {
+						return tempChannel;
 					}
 				}
-				long tempLock = factoryLock.tryConvertToWriteLock(lockStamp);
-				if (factoryLock.validate(tempLock)) {
+				long tempLock = ReadWriteLockableChannel.factoryLock.tryConvertToWriteLock(lockStamp);
+				if (ReadWriteLockableChannel.factoryLock.validate(tempLock)) {
 					lockStamp = tempLock;
 				} else {
-					factoryLock.unlockRead(lockStamp);
-					lockStamp = factoryLock.writeLock();
+					ReadWriteLockableChannel.factoryLock.unlockRead(lockStamp);
+					lockStamp = ReadWriteLockableChannel.factoryLock.writeLock();
 				}
 				final @NotNull ExtendedFileLock.ReadWriteLockableChannel tempChannel = new ReadWriteLockableChannel(file, mode);
-				openChannels.put(tempChannel, absolutePath);
+				ReadWriteLockableChannel.openChannels.add(tempChannel);
 				return tempChannel;
 			} finally {
-				factoryLock.unlockRead(lockStamp);
+				ReadWriteLockableChannel.factoryLock.unlockRead(lockStamp);
 			}
 		}
+
 
 		@Contract(pure = true)
 		private @NotNull FileChannel getChannel() {
 			return this.localChannel;
 		}
+
+		@Contract(pure = true)
+		private @NotNull String getFilePath() {
+			return this.absolutePath;
+		}
+
 
 		private void lockRead() throws IOException {
 			final long lockStamp = this.internalLock.readLock();
@@ -186,7 +199,7 @@ public class ExtendedFileLock implements AutoCloseable {
 			}
 		}
 
-		private void releaseRead() {
+		private void unlockRead() {
 			if (this.readers.get() == 1 && this.readLock.get() != null) {
 				this.readers.set(0);
 				this.readLock.updateAndGet(current -> {
@@ -202,13 +215,14 @@ public class ExtendedFileLock implements AutoCloseable {
 			}
 		}
 
+
 		private void lockWrite() throws IOException {
 			final long lockStamp = this.internalLock.writeLock();
 			try {
 				while (this.readLock.get() != null || this.writeLock.get() != null) {
 					Thread.sleep(5);
 				}
-				this.writeLock.set(this.localChannel.lock());
+				this.writeLock.set(this.localChannel.lock(0, Long.MAX_VALUE, false));
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 				throw new IOException(e);
@@ -217,7 +231,7 @@ public class ExtendedFileLock implements AutoCloseable {
 			}
 		}
 
-		private void releaseWrite() {
+		private void unlockWrite() {
 			this.writeLock.updateAndGet(current -> {
 				try {
 					current.release();
@@ -255,6 +269,7 @@ public class ExtendedFileLock implements AutoCloseable {
 			this.readWriteLockableChannel = readWriteLockableChannel;
 		}
 
+
 		@Override
 		public synchronized void lock() throws IOException {
 			this.readWriteLockableChannel.lockRead();
@@ -264,13 +279,19 @@ public class ExtendedFileLock implements AutoCloseable {
 		@Override
 		public synchronized void unlock() {
 			if (this.locked.compareAndSet(true, false)) {
-				this.readWriteLockableChannel.releaseRead();
+				this.readWriteLockableChannel.unlockRead();
 			}
 		}
+
 
 		@Override
 		public @NotNull FileChannel getChannel() {
 			return this.readWriteLockableChannel.getChannel();
+		}
+
+		@Override
+		public @NotNull String getFilePath() {
+			return this.readWriteLockableChannel.getFilePath();
 		}
 
 		@Override
@@ -295,6 +316,7 @@ public class ExtendedFileLock implements AutoCloseable {
 			this.readWriteLockableChannel = readWriteLockableChannel;
 		}
 
+
 		@Override
 		public synchronized void lock() throws IOException {
 			this.readWriteLockableChannel.lockWrite();
@@ -304,7 +326,7 @@ public class ExtendedFileLock implements AutoCloseable {
 		@Override
 		public synchronized void unlock() {
 			if (this.locked.compareAndSet(true, false)) {
-				this.readWriteLockableChannel.releaseWrite();
+				this.readWriteLockableChannel.unlockWrite();
 			}
 		}
 
@@ -312,6 +334,11 @@ public class ExtendedFileLock implements AutoCloseable {
 		@Override
 		public @NotNull FileChannel getChannel() {
 			return this.readWriteLockableChannel.getChannel();
+		}
+
+		@Override
+		public @NotNull String getFilePath() {
+			return this.readWriteLockableChannel.getFilePath();
 		}
 
 		@Override

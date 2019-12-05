@@ -101,18 +101,6 @@ public abstract class AbstractTripletMap<K, V> extends AbstractMap<K, V> impleme
 		return null;
 	}
 
-	@Override
-	public @Nullable V put(final @NotNull K key, final @Nullable V value, final int index) {
-		for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
-			if (tempNode.getKey().equals(key)) {
-				tempNode.setIndex(index);
-				return tempNode.setValue(value);
-			}
-		}
-		this.add(key, value, index);
-		return null;
-	}
-
 	/**
 	 * Copies all of the mappings from the specified map to this map.
 	 * These mappings will replace any mappings that this map had for
@@ -146,19 +134,7 @@ public abstract class AbstractTripletMap<K, V> extends AbstractMap<K, V> impleme
 	 */
 	@Override
 	public void add(final @NotNull K key, final @Nullable V value) {
-		this.add(new Node<>(this.size(), key, value));
-	}
-
-	/**
-	 * Associates the specified value with the specified key in this map.
-	 *
-	 * @param key   key with which the specified value is to be associated
-	 * @param value value to be associated with the specified key
-	 * @param index the index to be associated with the specific key
-	 */
-	@Override
-	public void add(final @NotNull K key, final @Nullable V value, final int index) {
-		this.add(new Node<>(index, key, value));
+		this.add(new Node<>(key, value));
 	}
 
 	/**
@@ -302,16 +278,6 @@ public abstract class AbstractTripletMap<K, V> extends AbstractMap<K, V> impleme
 
 		/**
 		 * -- Getter --
-		 * Returns the index corresponding to this entry.
-		 * has been removed from the backing map (by the iterator's
-		 * <tt>remove</tt> operation), the results of this call are undefined.
-		 *
-		 * @return the index corresponding to this entry
-		 */
-		private int index;
-
-		/**
-		 * -- Getter --
 		 * Returns the key corresponding to this entry.
 		 * has been removed from the backing map (by the iterator's
 		 * <tt>remove</tt> operation), the results of this call are undefined.
@@ -329,31 +295,6 @@ public abstract class AbstractTripletMap<K, V> extends AbstractMap<K, V> impleme
 		 * @return the value corresponding to this entry
 		 */
 		private @Nullable V value;
-
-
-		/**
-		 * Replaces the index corresponding to this entry with the specified
-		 * index (optional operation).  (Writes through to the map.)  The
-		 * behavior of this call is undefined if the mapping has already been
-		 * removed from the map (by the iterator's <tt>remove</tt> operation).
-		 *
-		 * @param index new key to be stored in this entry
-		 *
-		 * @return old key corresponding to the entry
-		 *
-		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
-		 *                                       is not supported by the backing map
-		 * @throws ClassCastException            if the class of the specified index
-		 *                                       prevents it from being stored in the backing map
-		 */
-		@Override
-		public int setIndex(final int index) {
-			try {
-				return this.index;
-			} finally {
-				this.index = index;
-			}
-		}
 
 		/**
 		 * Replaces the key corresponding to this entry with the specified
@@ -411,13 +352,8 @@ public abstract class AbstractTripletMap<K, V> extends AbstractMap<K, V> impleme
 
 
 		@Override
-		public int compareTo(final @NotNull TripletNode entry) {
-			return Integer.compare(this.getIndex(), entry.getIndex());
-		}
-
-		@Override
 		public @NotNull String toString() {
-			return "(" + this.key + "={" + this.value + "," + this.index + "})";
+			return "(" + this.key + "=" + this.value + ")";
 		}
 	}
 }

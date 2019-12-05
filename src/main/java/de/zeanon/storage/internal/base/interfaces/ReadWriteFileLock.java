@@ -14,6 +14,8 @@ public interface ReadWriteFileLock extends AutoCloseable {
 
 	@NotNull FileChannel getChannel();
 
+	@NotNull String getFilePath();
+
 	@Override
 	void close();
 }
