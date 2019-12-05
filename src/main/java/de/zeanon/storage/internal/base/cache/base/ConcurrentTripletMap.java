@@ -480,6 +480,11 @@ public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> imple
 		}
 	}
 
+	@Override
+	public @NotNull List<TripletNode<K, V>> entryList() {
+		return this.localList;
+	}
+
 	/**
 	 * Returns the number of key-value mappings in this map.
 	 *
@@ -511,17 +516,6 @@ public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> imple
 		}
 	}
 
-	@Contract("_ -> param1")
-	protected @NotNull List<TripletNode<K, V>> entryList(final @NotNull List<TripletNode<K, V>> entryList) {
-		final long lockStamp = this.localLock.readLock();
-		try {
-			entryList.addAll(this.localList);
-			return entryList;
-		} finally {
-			this.localLock.unlockRead(lockStamp);
-		}
-	}
-
 	@Override
 	public @NotNull String toString() {
 		final long lockStamp = this.localLock.readLock();
@@ -547,6 +541,7 @@ public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> imple
 
 
 		private final @NotNull StampedLock localLock = new StampedLock();
+
 
 		/**
 		 * -- Getter --

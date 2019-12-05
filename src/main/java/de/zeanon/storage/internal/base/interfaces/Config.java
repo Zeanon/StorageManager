@@ -14,8 +14,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public interface Config extends DataStorage {
 
-
-	void setCommentSetting(final CommentSetting commentSetting);
+	void setCommentSetting(final @NotNull CommentSetting commentSetting);
 
 	@Nullable List<String> getHeader();
 

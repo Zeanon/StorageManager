@@ -19,7 +19,6 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings({"unused", "unchecked", "UnusedReturnValue"})
 public interface DataStorage {
 
-
 	/**
 	 * Get an Object from a File
 	 *

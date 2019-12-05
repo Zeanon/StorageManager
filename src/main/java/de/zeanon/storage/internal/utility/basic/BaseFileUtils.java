@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.utility.basic;
 
+import de.zeanon.storage.external.lists.GapList;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.ReadWriteFileLock;
@@ -10,7 +11,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -94,7 +94,7 @@ public class BaseFileUtils {
 														final boolean deep) throws IOException {
 		try (final @NotNull ReadWriteFileLock localLock = new ExtendedFileLock(directory, "r").readLock()) {
 			localLock.lock();
-			final @NotNull Collection<File> files = new ArrayList<>();
+			final @NotNull Collection<File> files = new GapList<>();
 			if (directory.isDirectory()) {
 				final @Nullable File[] fileList = directory.listFiles();
 				if (fileList != null) {
@@ -136,7 +136,7 @@ public class BaseFileUtils {
 														 final boolean deep) throws IOException {
 		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, "r").readLock()) {
 			tempLock.lock();
-			final @NotNull Collection<File> files = new ArrayList<>();
+			final @NotNull Collection<File> files = new GapList<>();
 			if (directory.isDirectory()) {
 				final @Nullable File[] fileList = directory.listFiles();
 				if (fileList != null) {
@@ -177,7 +177,7 @@ public class BaseFileUtils {
 													  final boolean deep) throws IOException {
 		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, "r").readLock()) {
 			tempLock.lock();
-			final @NotNull Collection<File> files = new ArrayList<>();
+			final @NotNull Collection<File> files = new GapList<>();
 			if (directory.isDirectory()) {
 				final @Nullable File[] fileList = directory.listFiles();
 				if (fileList != null) {
@@ -252,7 +252,7 @@ public class BaseFileUtils {
 													  final boolean deep) throws IOException {
 		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, "r").readLock()) {
 			tempLock.lock();
-			final @NotNull Collection<File> files = new ArrayList<>();
+			final @NotNull Collection<File> files = new GapList<>();
 			if (directory.isDirectory()) {
 				final @Nullable File[] fileList = directory.listFiles();
 				if (fileList != null) {

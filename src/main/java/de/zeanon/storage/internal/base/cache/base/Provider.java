@@ -1,8 +1,8 @@
 package de.zeanon.storage.internal.base.cache.base;
 
+import de.zeanon.storage.external.lists.GapList;
 import de.zeanon.storage.internal.base.exceptions.ProviderException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -109,7 +109,7 @@ public abstract class Provider<M extends Map, L extends List> {
 	public @NotNull M newMap(final @NotNull Object... parameters) {
 		try {
 			this.mapLock.readLock().lock();
-			final @NotNull List<Class<?>> parameterTypes = new ArrayList<>();
+			final @NotNull List<Class<?>> parameterTypes = new GapList<>();
 			for (@NotNull Object parameter : parameters) {
 				parameterTypes.add(parameter.getClass());
 			}
@@ -150,7 +150,7 @@ public abstract class Provider<M extends Map, L extends List> {
 	public @NotNull L newList(final @NotNull Object... parameters) {
 		this.listLock.readLock().lock();
 		try {
-			final @NotNull List<Class<?>> parameterTypes = new ArrayList<>();
+			final @NotNull List<Class<?>> parameterTypes = new GapList<>();
 			for (@NotNull Object parameter : parameters) {
 				parameterTypes.add(parameter.getClass());
 			}

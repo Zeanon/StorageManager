@@ -7,7 +7,6 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.StampedLock;
@@ -16,6 +15,12 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * Lock that implements a ReadWriteLock behaviour for files
+ *
+ * @author Zeanon
+ * @version 1.0.0
+ */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class ExtendedFileLock implements AutoCloseable {
 
@@ -62,6 +67,7 @@ public class ExtendedFileLock implements AutoCloseable {
 	public @NotNull String getFilePath() {
 		return this.localChannel.getFilePath();
 	}
+
 
 	/**
 	 * Closes this resource, relinquishing any underlying resources.
@@ -262,7 +268,7 @@ public class ExtendedFileLock implements AutoCloseable {
 
 		private final @NotNull ExtendedFileLock.ReadWriteLockableChannel readWriteLockableChannel;
 
-		private final @NotNull AtomicBoolean locked = new AtomicBoolean();
+		private final @NotNull AtomicInteger lockedCount = new AtomicInteger();
 
 		@Contract(pure = true)
 		ReadLock(final @NotNull ExtendedFileLock.ReadWriteLockableChannel readWriteLockableChannel) {
@@ -271,16 +277,27 @@ public class ExtendedFileLock implements AutoCloseable {
 
 
 		@Override
-		public synchronized void lock() throws IOException {
-			this.readWriteLockableChannel.lockRead();
-			this.locked.set(true);
+		public synchronized void lock() {
+			this.lockedCount.updateAndGet(current -> {
+				try {
+					this.readWriteLockableChannel.lockRead();
+					return current + 1;
+				} catch (IOException e) {
+					throw new RuntimeIOException(e.getCause());
+				}
+			});
 		}
 
 		@Override
 		public synchronized void unlock() {
-			if (this.locked.compareAndSet(true, false)) {
-				this.readWriteLockableChannel.unlockRead();
-			}
+			this.lockedCount.updateAndGet(current -> {
+				if (current == 1) {
+					this.readWriteLockableChannel.unlockRead();
+					return 0;
+				} else {
+					return current - 1;
+				}
+			});
 		}
 
 
@@ -309,7 +326,7 @@ public class ExtendedFileLock implements AutoCloseable {
 
 		private final @NotNull ExtendedFileLock.ReadWriteLockableChannel readWriteLockableChannel;
 
-		private final @NotNull AtomicBoolean locked = new AtomicBoolean();
+		private final @NotNull AtomicInteger lockedCount = new AtomicInteger();
 
 		@Contract(pure = true)
 		WriteLock(final @NotNull ExtendedFileLock.ReadWriteLockableChannel readWriteLockableChannel) {
@@ -318,16 +335,23 @@ public class ExtendedFileLock implements AutoCloseable {
 
 
 		@Override
-		public synchronized void lock() throws IOException {
-			this.readWriteLockableChannel.lockWrite();
-			this.locked.set(true);
+		public synchronized void lock() {
+			this.lockedCount.updateAndGet(current -> {
+				try {
+					this.readWriteLockableChannel.lockWrite();
+					return 1;
+				} catch (IOException e) {
+					throw new RuntimeIOException(e.getCause());
+				}
+			});
 		}
 
 		@Override
 		public synchronized void unlock() {
-			if (this.locked.compareAndSet(true, false)) {
+			this.lockedCount.updateAndGet(current -> {
 				this.readWriteLockableChannel.unlockWrite();
-			}
+				return 0;
+			});
 		}
 
 

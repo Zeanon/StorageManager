@@ -2,15 +2,15 @@ package de.zeanon.storage.internal.base.cache.datamap;
 
 import de.zeanon.storage.external.lists.GapList;
 import de.zeanon.storage.internal.base.cache.base.AbstractTripletMap;
-import java.util.List;
+import de.zeanon.storage.internal.base.interfaces.TripletMap;
+import java.util.Map;
 import lombok.EqualsAndHashCode;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 
 /**
  * Custom Map implementation optimized for ThunderFile
- * Internally based on ArrayList for low memory usage
+ * Internally based on GapList for low memory usage and fast access
  *
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 1.3.0
  */
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class GapTripletMap<K, V> extends AbstractTripletMap<K, V> {
 
 
@@ -27,10 +27,14 @@ public class GapTripletMap<K, V> extends AbstractTripletMap<K, V> {
 		super(new GapList<>());
 	}
 
+	public GapTripletMap(final @NotNull Map<K, V> map) {
+		super(new GapList<>());
+		this.addAll(map);
+	}
+
 
 	@Override
-	@Contract("-> new")
-	public @NotNull List<TripletNode<K, V>> entryList() {
-		return new GapList<>(this.localList);
+	public @NotNull TripletMap<K, V> copy() {
+		return new GapTripletMap<>(this);
 	}
 }

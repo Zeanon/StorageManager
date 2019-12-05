@@ -20,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 
-
 	/**
 	 * Reload the internal cache
 	 *

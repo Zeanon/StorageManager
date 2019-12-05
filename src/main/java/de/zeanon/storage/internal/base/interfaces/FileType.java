@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public interface FileType {
 
-
 	default @NotNull String addExtensionTo(final @NotNull String filePath) {
 		return (filePath + "." + this.toString());
 	}

@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings({"unused", "UnusedReturnValue"})
+@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
 public class ThunderConfig extends ThunderFile implements Config {
 
 
@@ -55,9 +55,8 @@ public class ThunderConfig extends ThunderFile implements Config {
 	}
 
 
-	@NotNull
 	@Override
-	public List<String> getHeader() {
+	public @NotNull List<String> getHeader() {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -113,7 +112,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			@NotNull String tempData = this.fileData().toString();
+			final @NotNull String tempData = this.fileData().toString();
 			ThunderUtils.setHeader(this.fileData(), key, header);
 			if (!this.fileData().toString().equals(tempData)) {
 				ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
@@ -140,9 +139,8 @@ public class ThunderConfig extends ThunderFile implements Config {
 	}
 
 
-	@NotNull
 	@Override
-	public List<String> getFooter() {
+	public @NotNull List<String> getFooter() {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -166,8 +164,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	@NotNull
-	public List<String> getFooter(final @NotNull String key) {
+	public @NotNull List<String> getFooter(final @NotNull String key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -178,8 +175,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	@NotNull
-	public List<String> getFooterUseArray(final @NotNull String... key) {
+	public @NotNull List<String> getFooterUseArray(final @NotNull String... key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -226,9 +222,8 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	@NotNull
 	@Override
-	public List<String> getComments() {
+	public @NotNull List<String> getComments() {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -239,8 +234,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	@NotNull
-	public List<String> getComments(final @NotNull String key) {
+	public @NotNull List<String> getComments(final @NotNull String key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -251,8 +245,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	@NotNull
-	public List<String> getCommentsUseArray(final @NotNull String... key) {
+	public @NotNull List<String> getCommentsUseArray(final @NotNull String... key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -263,8 +256,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	@NotNull
-	public List<String> getBlockComments() {
+	public @NotNull List<String> getBlockComments() {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -275,8 +267,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	@NotNull
-	public List<String> getBlockComments(final @NotNull String key) {
+	public @NotNull List<String> getBlockComments(final @NotNull String key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -287,8 +278,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	@NotNull
-	public List<String> getBlockCommentsUseArray(final @NotNull String... key) {
+	public @NotNull List<String> getBlockCommentsUseArray(final @NotNull String... key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -306,15 +296,13 @@ public class ThunderConfig extends ThunderFile implements Config {
 	 *
 	 * @return the Section using the given sectionKey
 	 */
-	@NotNull
 	@Override
-	public ThunderConfigSection getSection(final @NotNull String sectionKey) {
+	public @NotNull ThunderConfigSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
-	@NotNull
 	@Override
-	public ThunderConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull ThunderConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 

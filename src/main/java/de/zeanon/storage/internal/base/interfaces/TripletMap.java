@@ -39,8 +39,29 @@ public interface TripletMap<K, V> extends Map<K, V> {
 	 */
 	void addAll(final @NotNull Map<? extends K, ? extends V> nodeMap);
 
+	/**
+	 * An application can use this operation to minimize the storage of an instance.
+	 */
 	void trimToSize();
 
+	@NotNull TripletMap<K, V> copy();
+
+	/**
+	 * Returns a {@link List} view of the mappings contained in this map.
+	 * The list is backed by the map, so changes to the map are
+	 * reflected in the set, and vice-versa.  If the map is modified
+	 * while an iteration over the list is in progress (except through
+	 * the iterator's own <tt>remove</tt> operation, or through the
+	 * <tt>setValue</tt> operation on a map entry returned by the
+	 * iterator) the results of the iteration are undefined.  The list
+	 * supports element removal, which removes the corresponding
+	 * mapping from the map, via the <tt>Iterator.remove</tt>,
+	 * <tt>Set.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt> and
+	 * <tt>clear</tt> operations.  It does not support the
+	 * <tt>add</tt> or <tt>addAll</tt> operations.
+	 *
+	 * @return a set view of the mappings contained in this map
+	 */
 	@Contract("-> new")
 	@NotNull List<TripletNode<K, V>> entryList();
 
