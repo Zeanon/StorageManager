@@ -7,6 +7,7 @@ import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import javafx.util.Pair;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 @EqualsAndHashCode
 @ToString(callSuper = true)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "unchecked"})
 public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>, M, L>, M extends Map, L extends List> implements DataStorage, Comparable<FlatSection> {
 
 
@@ -84,6 +85,16 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	@Override
 	public void setAll(final @NotNull String blockKey, final @NotNull Map<String, Object> dataMap) {
 		this.flatFile.setAll(this.getFinalKey(blockKey), dataMap);
+	}
+
+	@Override
+	public void setAll(final @NotNull Pair<String, Object>... dataPairs) {
+		this.flatFile.setAll(this.getSectionKey(), dataPairs);
+	}
+
+	@Override
+	public void setAll(final @NotNull String blockKey, final @NotNull Pair<String, Object>... dataPair) {
+		this.flatFile.setAll(this.getFinalKey(blockKey), dataPair);
 	}
 
 	public void set(final @Nullable Object value) {
@@ -167,6 +178,16 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	@Override
 	public void setAllUseArray(final @NotNull String[] blockKey, final @NotNull Map<String[], Object> dataMap) {
 		this.flatFile.setAllUseArray(this.getFinalArrayKey(blockKey), dataMap);
+	}
+
+	@Override
+	public void setAllUseArray(final @NotNull Pair<String[], Object>... dataPairs) {
+		this.flatFile.setAllUseArray(this.getArraySectionKey(), dataPairs);
+	}
+
+	@Override
+	public void setAllUseArray(final @NotNull String[] blockKey, final @NotNull Pair<String[], Object>... dataPair) {
+		this.flatFile.setAllUseArray(this.getFinalArrayKey(blockKey), dataPair);
 	}
 
 	@Override

@@ -34,7 +34,7 @@ public class GapTripletMap<K, V> extends AbstractTripletMap<K, V> {
 
 
 	@Override
-	public @NotNull TripletMap<K, V> copy() {
+	public @NotNull TripletMap<K, V> clone() {
 		return new GapTripletMap<>(this);
 	}
 }

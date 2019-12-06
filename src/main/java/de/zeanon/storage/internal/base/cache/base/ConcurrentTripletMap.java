@@ -453,6 +453,9 @@ public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> imple
 		}
 	}
 
+	@Override //NOSONAR
+	public abstract @NotNull TripletMap<K, V> clone();
+
 	/**
 	 * Returns a {@link Set} view of the mappings contained in this map.
 	 * The set is backed by the map, so changes to the map are

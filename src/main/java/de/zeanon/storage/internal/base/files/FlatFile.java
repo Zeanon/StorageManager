@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javafx.util.Pair;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 @ToString(callSuper = true)
 @Accessors(fluent = true, chain = false)
-@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess", "DefaultAnnotationParam"})
+@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess", "DefaultAnnotationParam", "unchecked"})
 public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L extends List> implements DataStorage, Comparable<FlatFile> {
 
 
@@ -394,6 +395,22 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	@Override
+	public void setAll(final @NotNull Pair<String, Object>... dataPairs) {
+		if (this.insertAll(dataPairs)) {
+			this.save();
+		}
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	@Override
+	public void setAllUseArray(final @NotNull Pair<String[], Object>... dataPairs) {
+		if (this.insertAllUseArray(dataPairs)) {
+			this.save();
+		}
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	@Override
 	public void setAll(final @NotNull String blockKey,
 					   final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(blockKey, dataMap)) {
@@ -406,6 +423,24 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	public void setAllUseArray(final @NotNull String[] blockKey,
 							   final @NotNull Map<String[], Object> dataMap) {
 		if (this.insertAllUseArray(blockKey, dataMap)) {
+			this.save();
+		}
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	@Override
+	public void setAll(final @NotNull String blockKey,
+					   final @NotNull Pair<String, Object>... dataPairs) {
+		if (this.insertAll(blockKey, dataPairs)) {
+			this.save();
+		}
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	@Override
+	public void setAllUseArray(final @NotNull String[] blockKey,
+							   final @NotNull Pair<String[], Object>... dataPairs) {
+		if (this.insertAllUseArray(blockKey, dataPairs)) {
 			this.save();
 		}
 		this.lastLoaded(System.currentTimeMillis());
@@ -564,6 +599,26 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return !this.fileData.toString().equals(tempData);
 	}
 
+	private boolean insertAll(final @NotNull Pair<String, Object>... pairs) {
+		this.update();
+
+		final @NotNull String tempData = this.fileData.toString();
+		for (@NotNull Pair<String, Object> entry : pairs) {
+			this.fileData.insert(entry.getKey(), entry.getValue());
+		}
+		return !this.fileData.toString().equals(tempData);
+	}
+
+	private boolean insertAllUseArray(final @NotNull Pair<String[], Object>... pairs) {
+		this.update();
+
+		final @NotNull String tempData = this.fileData.toString();
+		for (@NotNull Pair<String[], Object> entry : pairs) {
+			this.fileData.insertUseArray(entry.getKey(), entry.getValue());
+		}
+		return !this.fileData.toString().equals(tempData);
+	}
+
 	private boolean insertAll(final @NotNull String key,
 							  final @NotNull Map<String, Object> map) {
 		this.update();
@@ -581,6 +636,31 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 		final @NotNull String tempData = this.fileData.toString();
 		for (final @NotNull Map.Entry<String[], Object> entry : map.entrySet()) {
+			final @NotNull String[] tempKey = new String[key.length + entry.getKey().length];
+			System.arraycopy(key, 0, tempKey, 0, key.length);
+			System.arraycopy(entry.getKey(), 0, tempKey, key.length, entry.getKey().length);
+			this.fileData.insertUseArray(tempKey, entry.getValue());
+		}
+		return !this.fileData.toString().equals(tempData);
+	}
+
+	private boolean insertAll(final @NotNull String key,
+							  final @NotNull Pair<String, Object>... pairs) {
+		this.update();
+
+		final @NotNull String tempData = this.fileData.toString();
+		for (@NotNull Pair<String, Object> entry : pairs) {
+			this.fileData.insert(key + "." + entry.getKey(), entry.getValue());
+		}
+		return !this.fileData.toString().equals(tempData);
+	}
+
+	private boolean insertAllUseArray(final @NotNull String[] key,
+									  final @NotNull Pair<String[], Object>... pairs) {
+		this.update();
+
+		final @NotNull String tempData = this.fileData.toString();
+		for (final @NotNull Pair<String[], Object> entry : pairs) {
 			final @NotNull String[] tempKey = new String[key.length + entry.getKey().length];
 			System.arraycopy(key, 0, tempKey, 0, key.length);
 			System.arraycopy(entry.getKey(), 0, tempKey, key.length, entry.getKey().length);

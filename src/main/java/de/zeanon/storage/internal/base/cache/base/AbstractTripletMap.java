@@ -233,6 +233,9 @@ public abstract class AbstractTripletMap<K, V> extends AbstractMap<K, V> impleme
 		this.localList.trimToSize();
 	}
 
+	@Override //NOSONAR
+	public abstract @NotNull TripletMap<K, V> clone();
+
 	@Override
 	@Contract("-> new")
 	public @NotNull Set<Map.Entry<K, V>> entrySet() {

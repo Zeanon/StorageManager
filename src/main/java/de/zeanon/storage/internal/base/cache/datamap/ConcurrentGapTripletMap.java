@@ -34,7 +34,7 @@ public class ConcurrentGapTripletMap<K, V> extends ConcurrentTripletMap<K, V> {
 
 
 	@Override
-	public @NotNull TripletMap<K, V> copy() {
+	public @NotNull TripletMap<K, V> clone() {
 		return new ConcurrentGapTripletMap<>(this);
 	}
 }

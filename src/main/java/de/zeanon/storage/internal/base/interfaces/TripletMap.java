@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings("unused")
-public interface TripletMap<K, V> extends Map<K, V> {
+public interface TripletMap<K, V> extends Map<K, V>, Cloneable {
 
 	/**
 	 * Associates the specified value with the specified key in this map.
@@ -44,7 +44,7 @@ public interface TripletMap<K, V> extends Map<K, V> {
 	 */
 	void trimToSize();
 
-	@NotNull TripletMap<K, V> copy();
+	@NotNull TripletMap<K, V> clone();
 
 	/**
 	 * Returns a {@link List} view of the mappings contained in this map.

@@ -621,6 +621,15 @@ public interface DataStorage {
 	/**
 	 * Set several key, value pairs
 	 *
+	 * @param dataPairs the pairs to be set
+	 */
+	void setAll(final @NotNull Pair<String, Object>... dataPairs);
+
+	void setAllUseArray(final @NotNull Pair<String[], Object>... dataPairs);
+
+	/**
+	 * Set several key, value pairs
+	 *
 	 * @param blockKey the key of the SubBlock
 	 * @param dataMap  the pairs to be set
 	 */
@@ -633,6 +642,22 @@ public interface DataStorage {
 	 * @param dataMap  the pairs to be set
 	 */
 	void setAllUseArray(final @NotNull String[] blockKey, final @NotNull Map<String[], Object> dataMap);
+
+	/**
+	 * Set several key, value pairs
+	 *
+	 * @param blockKey  the key of the SubBlock
+	 * @param dataPairs the pairs to be set
+	 */
+	void setAll(final @NotNull String blockKey, final @NotNull Pair<String, Object>... dataPairs);
+
+	/**
+	 * Set several key, value pairs
+	 *
+	 * @param blockKey  the key of the SubBlock
+	 * @param dataPairs the pairs to be set
+	 */
+	void setAllUseArray(final @NotNull String[] blockKey, final @NotNull Pair<String[], Object>... dataPairs);
 
 	/**
 	 * Sets a value to the File if the File doesn't already contain the value

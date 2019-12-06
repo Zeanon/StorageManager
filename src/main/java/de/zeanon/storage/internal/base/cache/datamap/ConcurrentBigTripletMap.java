@@ -35,7 +35,7 @@ public class ConcurrentBigTripletMap<K, V> extends ConcurrentTripletMap<K, V> {
 
 
 	@Override
-	public @NotNull TripletMap<K, V> copy() {
+	public @NotNull TripletMap<K, V> clone() {
 		return new ConcurrentBigTripletMap<>(this);
 	}
 }
