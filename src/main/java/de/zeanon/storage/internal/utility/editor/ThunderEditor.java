@@ -15,7 +15,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.channels.Channels;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -92,7 +91,7 @@ public class ThunderEditor {
 												 final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData) {
 		if (!fileData.isEmpty()) {
 			try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
-				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(tempLock.getChannel(), "UTF-8"))) {
+				 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
 				tempLock.writeLock().lock();
 				final @NotNull Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
 				ThunderEditor.topLayerWriteWithComments(writer, mapIterator.next());
@@ -106,7 +105,7 @@ public class ThunderEditor {
 			}
 		} else {
 			try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
-				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(tempLock.getChannel(), "UTF-8"))) {
+				 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
 				tempLock.writeLock().lock();
 				writer.print("");
 				writer.flush();
@@ -197,7 +196,7 @@ public class ThunderEditor {
 													final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData) {
 		if (!fileData.isEmpty()) {
 			try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
-				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(tempLock.getChannel(), "UTF-8"))) {
+				 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
 				tempLock.writeLock().lock();
 				final @NotNull Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
 				@NotNull TripletMap.TripletNode<String, Object> initialEntry = mapIterator.next();
@@ -217,7 +216,7 @@ public class ThunderEditor {
 			}
 		} else {
 			try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
-				 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(tempLock.getChannel(), "UTF-8"))) {
+				 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
 				tempLock.writeLock().lock();
 				writer.print("");
 				writer.flush();
@@ -381,7 +380,7 @@ public class ThunderEditor {
 		try {
 			final @NotNull List<String> lines;
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, "r").readLock();
-				 final @NotNull BufferedReader reader = new BufferedReader(Channels.newReader(tempLock.getChannel(), "UTF-8"), buffer_size)) {
+				 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
 				tempLock.lock();
 				lines = reader.lines().collect(Collectors.toList());
 			}
@@ -465,7 +464,7 @@ public class ThunderEditor {
 		try {
 			final @NotNull List<String> lines;
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, "r").readLock();
-				 final @NotNull BufferedReader reader = new BufferedReader(Channels.newReader(tempLock.getChannel(), "UTF-8"), buffer_size)) {
+				 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
 				tempLock.lock();
 				lines = reader.lines().collect(Collectors.toList());
 			}

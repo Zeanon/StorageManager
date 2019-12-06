@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.channels.Channels;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -42,7 +41,7 @@ public class YamlEditor {
 	@Contract("_, _ -> new")
 	public static @NotNull List<String> read(final @NotNull File file, final int buffer_size) throws IOException {
 		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, "r").readLock();
-			 final @NotNull BufferedReader reader = new BufferedReader(Channels.newReader(tempLock.getChannel(), "UTF-8"), buffer_size)) {
+			 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
 			tempLock.lock();
 			return reader.lines().collect(Collectors.toList());
 		}
@@ -81,7 +80,7 @@ public class YamlEditor {
 	public static void write(final @NotNull File file,
 							 final @NotNull List<String> lines) throws IOException {
 		try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
-			 final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(tempLock.getChannel(), "UTF-8"))) {
+			 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
 			tempLock.writeLock().lock();
 			final @NotNull Iterator<String> linesIterator = lines.iterator();
 			writer.print(linesIterator.next());
