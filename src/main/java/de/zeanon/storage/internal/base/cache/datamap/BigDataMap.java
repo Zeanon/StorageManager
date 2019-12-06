@@ -1,8 +1,8 @@
 package de.zeanon.storage.internal.base.cache.datamap;
 
 import de.zeanon.storage.external.lists.BigList;
-import de.zeanon.storage.internal.base.cache.base.AbstractTripletMap;
-import de.zeanon.storage.internal.base.interfaces.TripletMap;
+import de.zeanon.storage.internal.base.cache.base.AbstractDataMap;
+import de.zeanon.storage.internal.base.interfaces.DataMap;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
@@ -20,21 +20,21 @@ import org.jetbrains.annotations.NotNull;
  */
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class BigTripletMap<K, V> extends AbstractTripletMap<K, V> {
+public class BigDataMap<K, V> extends AbstractDataMap<K, V> {
 
 
-	public BigTripletMap() {
+	public BigDataMap() {
 		super(new BigList<>());
 	}
 
-	public BigTripletMap(final @NotNull Map<K, V> map) {
+	public BigDataMap(final @NotNull Map<K, V> map) {
 		super(new BigList<>());
 		this.addAll(map);
 	}
 
 
 	@Override
-	public @NotNull TripletMap<K, V> clone() {
-		return new BigTripletMap<>(this);
+	public @NotNull DataMap<K, V> clone() {
+		return new BigDataMap<>(this);
 	}
 }

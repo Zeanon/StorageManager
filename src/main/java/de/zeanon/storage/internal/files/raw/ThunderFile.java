@@ -3,18 +3,18 @@ package de.zeanon.storage.internal.files.raw;
 import de.zeanon.storage.external.lists.BigList;
 import de.zeanon.storage.external.lists.GapList;
 import de.zeanon.storage.internal.base.cache.base.Provider;
-import de.zeanon.storage.internal.base.cache.datamap.BigTripletMap;
-import de.zeanon.storage.internal.base.cache.datamap.ConcurrentBigTripletMap;
-import de.zeanon.storage.internal.base.cache.datamap.ConcurrentGapTripletMap;
-import de.zeanon.storage.internal.base.cache.datamap.GapTripletMap;
+import de.zeanon.storage.internal.base.cache.datamap.BigDataMap;
+import de.zeanon.storage.internal.base.cache.datamap.ConcurrentBigDataMap;
+import de.zeanon.storage.internal.base.cache.datamap.ConcurrentGapDataMap;
+import de.zeanon.storage.internal.base.cache.datamap.GapDataMap;
 import de.zeanon.storage.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.exceptions.ThunderException;
 import de.zeanon.storage.internal.base.files.CommentEnabledFile;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
+import de.zeanon.storage.internal.base.interfaces.DataMap;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
-import de.zeanon.storage.internal.base.interfaces.TripletMap;
 import de.zeanon.storage.internal.files.section.ThunderFileSection;
 import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import de.zeanon.storage.internal.utility.editor.ThunderEditor;
@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List>, TripletMap, List> {
+public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List>, DataMap, List> {
 
 
 	private int bufferSize;
@@ -66,7 +66,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 						  final boolean concurrentData,
 						  final boolean bigData,
 						  final boolean synchronizedData,
-						  final @NotNull Class<? extends TripletMap> map,
+						  final @NotNull Class<? extends DataMap> map,
 						  final @NotNull Class<? extends List> list) {
 		super(file, FileType.THUNDER, new LocalFileData(new Collections(map, list), synchronizedData), reloadSetting, commentSetting);
 		this.bufferSize = bufferSize;
@@ -90,14 +90,14 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 		try {
 			ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
 		} catch (RuntimeIOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
 
 	public void bigData(final boolean bigData) {
 		this.bigData = bigData;
-		this.provider().setMapType(this.concurrentData ? (this.bigData ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
-													   : (this.bigData ? BigTripletMap.class : GapTripletMap.class));
+		this.provider().setMapType(this.concurrentData ? (this.bigData ? ConcurrentBigDataMap.class : ConcurrentGapDataMap.class)
+													   : (this.bigData ? BigDataMap.class : GapDataMap.class));
 	}
 
 	@Override
@@ -108,8 +108,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 	@Override
 	public void concurrentData(final boolean concurrentData) {
 		this.concurrentData = concurrentData;
-		this.provider().setMapType(this.concurrentData ? (this.bigData ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
-													   : (this.bigData ? BigTripletMap.class : GapTripletMap.class));
+		this.provider().setMapType(this.concurrentData ? (this.bigData ? ConcurrentBigDataMap.class : ConcurrentGapDataMap.class)
+													   : (this.bigData ? BigDataMap.class : GapDataMap.class));
 	}
 
 	/**
@@ -133,11 +133,11 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 
 
 	@Override
-	protected @NotNull TripletMap readFile() {
+	protected @NotNull DataMap readFile() {
 		try {
 			return ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize);
 		} catch (RuntimeIOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e);
+			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
 		} catch (ThunderException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}
@@ -169,9 +169,9 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 		}
 	}
 
-	private static class Collections extends Provider<TripletMap, List> {
+	private static class Collections extends Provider<DataMap, List> {
 
-		private Collections(final @NotNull Class<? extends TripletMap> map, final @NotNull Class<? extends List> list) {
+		private Collections(final @NotNull Class<? extends DataMap> map, final @NotNull Class<? extends List> list) {
 			super(map, list);
 		}
 	}
@@ -187,9 +187,9 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<TripletMap, 
 		}
 	}
 
-	private static class LocalFileData extends ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> {
+	private static class LocalFileData extends ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> {
 
-		private LocalFileData(final @NotNull Provider<TripletMap, List> provider, final boolean synchronize) {
+		private LocalFileData(final @NotNull Provider<DataMap, List> provider, final boolean synchronize) {
 			super(provider, synchronize);
 		}
 	}

@@ -4,8 +4,8 @@ import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.interfaces.Config;
+import de.zeanon.storage.internal.base.interfaces.DataMap;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
-import de.zeanon.storage.internal.base.interfaces.TripletMap;
 import de.zeanon.storage.internal.base.settings.Comment;
 import de.zeanon.storage.internal.files.raw.ThunderFile;
 import de.zeanon.storage.internal.files.section.ThunderConfigSection;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class ThunderConfig extends ThunderFile implements Config {
 
 
@@ -49,7 +49,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 							final boolean bigMap,
 							final boolean concurrentData,
 							final boolean synchronizedData,
-							final @NotNull Class<? extends TripletMap> map,
+							final @NotNull Class<? extends DataMap> map,
 							final @NotNull Class<? extends List> list) {
 		super(file, inputStream, reloadSetting, commentSetting, bufferSize, bigMap, concurrentData, synchronizedData, map, list);
 	}

@@ -7,18 +7,20 @@ import de.zeanon.storage.internal.base.cache.filedata.StandardFileData;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.files.FlatFile;
+import de.zeanon.storage.internal.base.interfaces.ReadWriteFileLock;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.files.section.JsonFileSection;
 import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import de.zeanon.storage.internal.utility.datafiles.JsonUtils;
-import java.io.*;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
+import de.zeanon.storage.internal.utility.locks.ExtendedFileLock;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import lombok.Cleanup;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.Contract;
@@ -95,7 +97,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 			return this.provider().newMap();
 		}
 
-		@Nullable Object map;
+		final @Nullable Object map;
 		try {
 			map = this.get(key);
 		} catch (JSONException e) {
@@ -144,8 +146,9 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 
 	@Override
 	public void save() {
-		try (final @NotNull FileChannel localChannel = new RandomAccessFile(this.file(), "rws").getChannel()) {
-			final @NotNull @Cleanup Writer writer = new PrintWriter(Channels.newWriter(localChannel, "UTF-8"));
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(this.file()).writeLock();
+			 final @NotNull Writer writer = tempLock.createPrintWriter()) {
+			tempLock.lock();
 			writer.write(new JSONObject(this.fileData().dataMap()).toString(3));
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while writing to "

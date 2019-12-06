@@ -42,7 +42,6 @@ public class YamlEditor {
 	public static @NotNull List<String> read(final @NotNull File file, final int buffer_size) throws IOException {
 		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, "r").readLock();
 			 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
-			tempLock.lock();
 			return reader.lines().collect(Collectors.toList());
 		}
 	}
@@ -79,9 +78,8 @@ public class YamlEditor {
 
 	public static void write(final @NotNull File file,
 							 final @NotNull List<String> lines) throws IOException {
-		try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
 			 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
-			tempLock.writeLock().lock();
 			final @NotNull Iterator<String> linesIterator = lines.iterator();
 			writer.print(linesIterator.next());
 			linesIterator.forEachRemaining(line -> {

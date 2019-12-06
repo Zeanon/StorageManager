@@ -6,8 +6,8 @@ import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.exceptions.ThunderException;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
+import de.zeanon.storage.internal.base.interfaces.DataMap;
 import de.zeanon.storage.internal.base.interfaces.ReadWriteFileLock;
-import de.zeanon.storage.internal.base.interfaces.TripletMap;
 import de.zeanon.storage.internal.base.settings.Comment;
 import de.zeanon.storage.internal.utility.basic.Objects;
 import de.zeanon.storage.internal.utility.locks.ExtendedFileLock;
@@ -46,7 +46,7 @@ public class ThunderEditor {
 	 * @throws ObjectNullException if a passed value is null
 	 */
 	public static void writeData(final @NotNull File file,
-								 final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData,
+								 final @NotNull ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> fileData,
 								 final @NotNull CommentSetting commentSetting) {
 		if (commentSetting == Comment.PRESERVE) {
 			ThunderEditor.initialWriteWithComments(file, fileData);
@@ -70,10 +70,10 @@ public class ThunderEditor {
 	 * @throws ThunderException    if the Content of the File can not be parsed properly
 	 * @throws ObjectNullException if a passed value is null
 	 */
-	public static @NotNull TripletMap<String, Object> readData(final @NotNull File file,
-															   final @NotNull Provider<? extends TripletMap, ? extends List> provider,
-															   final @NotNull CommentSetting commentSetting,
-															   final int buffer_size) throws ThunderException {
+	public static @NotNull DataMap<String, Object> readData(final @NotNull File file,
+															final @NotNull Provider<? extends DataMap, ? extends List> provider,
+															final @NotNull CommentSetting commentSetting,
+															final int buffer_size) throws ThunderException {
 		if (commentSetting == Comment.PRESERVE) {
 			return ThunderEditor.initialReadWithComments(file, provider, buffer_size);
 		} else if (commentSetting == Comment.SKIP) {
@@ -88,12 +88,12 @@ public class ThunderEditor {
 	// <Write Data>
 	// <Write Data with Comments>
 	private static void initialWriteWithComments(final @NotNull File file,
-												 final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData) {
+												 final @NotNull ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> fileData) {
 		if (!fileData.isEmpty()) {
 			try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
 				 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
 				tempLock.writeLock().lock();
-				final @NotNull Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
+				final @NotNull Iterator<DataMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
 				ThunderEditor.topLayerWriteWithComments(writer, mapIterator.next());
 				mapIterator.forEachRemaining(entry -> {
 					writer.println();
@@ -116,14 +116,14 @@ public class ThunderEditor {
 	}
 
 	private static void topLayerWriteWithComments(final @NotNull PrintWriter writer,
-												  final @NotNull TripletMap.TripletNode<String, Object> entry) {
+												  final @NotNull DataMap.TripletNode<String, Object> entry) {
 		if (entry.getValue() == LineType.COMMENT || entry.getValue() == LineType.HEADER || entry.getValue() == LineType.FOOTER) {
 			writer.print(entry.getKey().startsWith("#") ? entry.getKey() : ("#" + entry.getKey()));
-		} else if (entry.getValue() instanceof TripletMap) {
+		} else if (entry.getValue() instanceof DataMap) {
 			writer.print(entry.getKey()
 						 + " {");
 			//noinspection unchecked
-			ThunderEditor.internalWriteWithComments((TripletMap<String, Object>) entry.getValue(), "", writer);
+			ThunderEditor.internalWriteWithComments((DataMap<String, Object>) entry.getValue(), "", writer);
 		} else if (entry.getValue() instanceof Collection) {
 			writer.println(entry.getKey()
 						   + " = [");
@@ -144,22 +144,22 @@ public class ThunderEditor {
 		}
 	}
 
-	private static void internalWriteWithComments(final @NotNull TripletMap<String, Object> map,
+	private static void internalWriteWithComments(final @NotNull DataMap<String, Object> map,
 												  final @NotNull String indentationString,
 												  final @NotNull PrintWriter writer) {
-		for (final @NotNull TripletMap.TripletNode<String, Object> entry : map.entryList()) {
+		for (final @NotNull DataMap.TripletNode<String, Object> entry : map.entryList()) {
 			writer.println();
 			if (entry.getValue() == LineType.COMMENT || entry.getValue() == LineType.HEADER || entry.getValue() == LineType.FOOTER) {
 				writer.print(indentationString
 							 + "  "
 							 + (entry.getKey().startsWith("#") ? entry.getKey() : ("#" + entry.getKey())));
-			} else if (entry.getValue() instanceof TripletMap) {
+			} else if (entry.getValue() instanceof DataMap) {
 				writer.print(indentationString
 							 + "  "
 							 + entry.getKey()
 							 + " {");
 				//noinspection unchecked
-				ThunderEditor.internalWriteWithComments((TripletMap<String, Object>) entry.getValue(), indentationString + "  ", writer);
+				ThunderEditor.internalWriteWithComments((DataMap<String, Object>) entry.getValue(), indentationString + "  ", writer);
 			} else if (entry.getValue() instanceof Collection) {
 				writer.println(indentationString
 							   + "  "
@@ -193,13 +193,13 @@ public class ThunderEditor {
 
 	// <Write Data without Comments>
 	private static void initialWriteWithOutComments(final @NotNull File file,
-													final @NotNull ThunderFileData<TripletMap, TripletMap.TripletNode<String, Object>, List> fileData) {
+													final @NotNull ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> fileData) {
 		if (!fileData.isEmpty()) {
 			try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
 				 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
 				tempLock.writeLock().lock();
-				final @NotNull Iterator<TripletMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
-				@NotNull TripletMap.TripletNode<String, Object> initialEntry = mapIterator.next();
+				final @NotNull Iterator<DataMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
+				@NotNull DataMap.TripletNode<String, Object> initialEntry = mapIterator.next();
 				while (initialEntry.getValue() == LineType.COMMENT || initialEntry.getValue() == LineType.HEADER || initialEntry.getValue() == LineType.FOOTER || initialEntry.getValue() == LineType.BLANK_LINE) {
 					initialEntry = mapIterator.next();
 				}
@@ -227,12 +227,12 @@ public class ThunderEditor {
 	}
 
 	private static void topLayerWriteWithOutComments(final @NotNull PrintWriter writer,
-													 final @NotNull TripletMap.TripletNode<String, Object> entry) {
-		if (entry.getValue() instanceof TripletMap) {
+													 final @NotNull DataMap.TripletNode<String, Object> entry) {
+		if (entry.getValue() instanceof DataMap) {
 			writer.print(entry.getKey()
 						 + " {");
 			//noinspection unchecked
-			ThunderEditor.internalWriteWithoutComments((TripletMap<String, Object>) entry.getValue(), "", writer);
+			ThunderEditor.internalWriteWithoutComments((DataMap<String, Object>) entry.getValue(), "", writer);
 		} else if (entry.getValue() instanceof Collection) {
 			writer.println(entry.getKey()
 						   + " = [");
@@ -253,19 +253,19 @@ public class ThunderEditor {
 		}
 	}
 
-	private static void internalWriteWithoutComments(final @NotNull TripletMap<String, Object> map,
+	private static void internalWriteWithoutComments(final @NotNull DataMap<String, Object> map,
 													 final @NotNull String indentationString,
 													 final @NotNull PrintWriter writer) {
-		for (final @NotNull TripletMap.TripletNode<String, Object> entry : map.entryList()) {
+		for (final @NotNull DataMap.TripletNode<String, Object> entry : map.entryList()) {
 			if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.HEADER && entry.getValue() != LineType.FOOTER && entry.getValue() != LineType.BLANK_LINE) {
 				writer.println();
-				if (entry.getValue() instanceof TripletMap) {
+				if (entry.getValue() instanceof DataMap) {
 					writer.print(indentationString
 								 + "  "
 								 + entry.getKey()
 								 + " {");
 					//noinspection unchecked
-					ThunderEditor.internalWriteWithoutComments((TripletMap<String, Object>) entry.getValue(), indentationString + "  ", writer);
+					ThunderEditor.internalWriteWithoutComments((DataMap<String, Object>) entry.getValue(), indentationString + "  ", writer);
 				} else if (entry.getValue() instanceof Collection) {
 					writer.println(indentationString
 								   + "  "
@@ -374,9 +374,9 @@ public class ThunderEditor {
 
 	// <Read Data>
 	// <Read Data with Comments>
-	private static @NotNull TripletMap<String, Object> initialReadWithComments(final @NotNull File file,
-																			   final @NotNull Provider<? extends TripletMap, ? extends List> provider,
-																			   final int buffer_size) throws ThunderException {
+	private static @NotNull DataMap<String, Object> initialReadWithComments(final @NotNull File file,
+																			final @NotNull Provider<? extends DataMap, ? extends List> provider,
+																			final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull List<String> lines;
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, "r").readLock();
@@ -386,7 +386,7 @@ public class ThunderEditor {
 			}
 
 			//noinspection unchecked
-			final @NotNull TripletMap<String, Object> tempMap = provider.newMap();
+			final @NotNull DataMap<String, Object> tempMap = provider.newMap();
 
 			@NotNull String tempLine;
 			@Nullable String tempKey = null;
@@ -420,11 +420,11 @@ public class ThunderEditor {
 		}
 	}
 
-	private static @NotNull TripletMap<String, Object> internalReadWithComments(final @NotNull String filePath,
-																				final @NotNull List<String> lines,
-																				final @NotNull Provider<? extends TripletMap, ? extends List> provider) throws ThunderException {
+	private static @NotNull DataMap<String, Object> internalReadWithComments(final @NotNull String filePath,
+																			 final @NotNull List<String> lines,
+																			 final @NotNull Provider<? extends DataMap, ? extends List> provider) throws ThunderException {
 		//noinspection unchecked
-		final @NotNull TripletMap<String, Object> tempMap = provider.newMap();
+		final @NotNull DataMap<String, Object> tempMap = provider.newMap();
 
 		@NotNull String tempLine;
 		@Nullable String tempKey = null;
@@ -458,9 +458,9 @@ public class ThunderEditor {
 	// </Read Data with Comments>
 
 	// <Read Data without Comments>
-	private static @NotNull TripletMap<String, Object> initialReadWithOutComments(final @NotNull File file,
-																				  final @NotNull Provider<? extends TripletMap, ? extends List> provider,
-																				  final int buffer_size) throws ThunderException {
+	private static @NotNull DataMap<String, Object> initialReadWithOutComments(final @NotNull File file,
+																			   final @NotNull Provider<? extends DataMap, ? extends List> provider,
+																			   final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull List<String> lines;
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, "r").readLock();
@@ -470,7 +470,7 @@ public class ThunderEditor {
 			}
 
 			//noinspection unchecked
-			final @NotNull TripletMap<String, Object> tempMap = provider.newMap();
+			final @NotNull DataMap<String, Object> tempMap = provider.newMap();
 
 			@NotNull String tempLine;
 			@Nullable String tempKey = null;
@@ -502,11 +502,11 @@ public class ThunderEditor {
 		}
 	}
 
-	private static @NotNull TripletMap<String, Object> internalReadWithOutComments(final @NotNull String filePath,
-																				   final @NotNull List<String> lines,
-																				   final @NotNull Provider<? extends TripletMap, ? extends List> provider) throws ThunderException {
+	private static @NotNull DataMap<String, Object> internalReadWithOutComments(final @NotNull String filePath,
+																				final @NotNull List<String> lines,
+																				final @NotNull Provider<? extends DataMap, ? extends List> provider) throws ThunderException {
 		//noinspection unchecked
-		final @NotNull TripletMap<String, Object> tempMap = provider.newMap();
+		final @NotNull DataMap<String, Object> tempMap = provider.newMap();
 
 		@NotNull String tempLine;
 		@Nullable String tempKey = null;
@@ -539,9 +539,9 @@ public class ThunderEditor {
 
 	private static @Nullable String readKey(final @NotNull String filePath,
 											final @NotNull List<String> lines,
-											final @NotNull TripletMap<String, Object> tempMap,
+											final @NotNull DataMap<String, Object> tempMap,
 											final @NotNull String tempLine,
-											final @NotNull Provider<? extends TripletMap, ? extends List> provider,
+											final @NotNull Provider<? extends DataMap, ? extends List> provider,
 											@Nullable String tempKey) throws ThunderException {
 		if (tempLine.contains("=")) {
 			final @NotNull String[] line = tempLine.split("=", 2);
@@ -587,7 +587,7 @@ public class ThunderEditor {
 
 	private static @NotNull List<String> readList(final @NotNull String filePath,
 												  final @NotNull List<String> lines,
-												  final @NotNull Provider<? extends TripletMap, ? extends List> provider) throws ThunderException {
+												  final @NotNull Provider<? extends DataMap, ? extends List> provider) throws ThunderException {
 		@NotNull String tempLine;
 		//noinspection unchecked
 		final @NotNull List<String> tempList = provider.newList();

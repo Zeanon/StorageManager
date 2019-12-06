@@ -1,7 +1,7 @@
 package de.zeanon.storage.internal.base.cache.base;
 
 import de.zeanon.storage.external.lists.IList;
-import de.zeanon.storage.internal.base.interfaces.TripletMap;
+import de.zeanon.storage.internal.base.interfaces.DataMap;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.StampedLock;
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
 @SuppressWarnings("unused")
-public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> implements TripletMap<K, V>, ConcurrentMap<K, V> {
+public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implements DataMap<K, V>, ConcurrentMap<K, V> {
 
 
 	protected final @NotNull StampedLock localLock = new StampedLock();
@@ -454,7 +454,7 @@ public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> imple
 	}
 
 	@Override
-	public abstract @NotNull TripletMap<K, V> clone(); //NOSONAR
+	public abstract @NotNull DataMap<K, V> clone(); //NOSONAR
 
 	/**
 	 * Returns a {@link Set} view of the mappings contained in this map.
@@ -530,7 +530,7 @@ public abstract class ConcurrentTripletMap<K, V> extends AbstractMap<K, V> imple
 	}
 
 	/**
-	 * The concurrent EntryNodes to be stored in a AbstractTripletMap
+	 * The concurrent EntryNodes to be stored in a AbstractDataMap
 	 *
 	 * @param <K> the type of keys maintained by this map
 	 * @param <V> the type of mapped values

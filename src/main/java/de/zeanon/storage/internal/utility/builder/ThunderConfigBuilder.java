@@ -3,13 +3,13 @@ package de.zeanon.storage.internal.utility.builder;
 import de.zeanon.storage.StorageManager;
 import de.zeanon.storage.external.lists.BigList;
 import de.zeanon.storage.external.lists.GapList;
-import de.zeanon.storage.internal.base.cache.datamap.BigTripletMap;
-import de.zeanon.storage.internal.base.cache.datamap.ConcurrentBigTripletMap;
-import de.zeanon.storage.internal.base.cache.datamap.ConcurrentGapTripletMap;
-import de.zeanon.storage.internal.base.cache.datamap.GapTripletMap;
+import de.zeanon.storage.internal.base.cache.datamap.BigDataMap;
+import de.zeanon.storage.internal.base.cache.datamap.ConcurrentBigDataMap;
+import de.zeanon.storage.internal.base.cache.datamap.ConcurrentGapDataMap;
+import de.zeanon.storage.internal.base.cache.datamap.GapDataMap;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
+import de.zeanon.storage.internal.base.interfaces.DataMap;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
-import de.zeanon.storage.internal.base.interfaces.TripletMap;
 import de.zeanon.storage.internal.base.settings.Comment;
 import de.zeanon.storage.internal.files.config.ThunderConfig;
 import java.io.File;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, ThunderConfig, TripletMap, List> {
+public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, ThunderConfig, DataMap, List> {
 
 	private boolean bigData;
 	private boolean concurrentData;
@@ -38,7 +38,7 @@ public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, T
 	private int bufferSize = 8192;
 
 	public ThunderConfigBuilder(final @NotNull File file) {
-		super(file, GapTripletMap.class, GapList.class);
+		super(file, GapDataMap.class, GapList.class);
 	}
 
 	@Override
@@ -50,8 +50,8 @@ public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, T
 	@Contract("_ -> this")
 	public final @NotNull ThunderConfigBuilder bigData(final boolean bigData) {
 		this.bigData = bigData;
-		return this.mapType(this.concurrentData ? (this.bigData ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
-												: (this.bigData ? BigTripletMap.class : GapTripletMap.class));
+		return this.mapType(this.concurrentData ? (this.bigData ? ConcurrentBigDataMap.class : ConcurrentGapDataMap.class)
+												: (this.bigData ? BigDataMap.class : GapDataMap.class));
 	}
 
 	@Override
@@ -64,8 +64,8 @@ public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, T
 	@Contract("_ -> this")
 	public @NotNull ThunderConfigBuilder concurrentData(final boolean concurrentData) {
 		this.concurrentData = concurrentData;
-		return this.mapType(this.concurrentData ? (this.bigData ? ConcurrentBigTripletMap.class : ConcurrentGapTripletMap.class)
-												: (this.bigData ? BigTripletMap.class : GapTripletMap.class));
+		return this.mapType(this.concurrentData ? (this.bigData ? ConcurrentBigDataMap.class : ConcurrentGapDataMap.class)
+												: (this.bigData ? BigDataMap.class : GapDataMap.class));
 	}
 
 
@@ -79,7 +79,7 @@ public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, T
 								   final boolean bigData,
 								   final boolean concurrentData,
 								   final boolean synchronizedData,
-								   final @NotNull Class<? extends TripletMap> map,
+								   final @NotNull Class<? extends DataMap> map,
 								   final @NotNull Class<? extends List> list) {
 			super(file, inputStream, reloadSetting, commentSetting, bufferSize, bigData, concurrentData, synchronizedData, map, list);
 		}

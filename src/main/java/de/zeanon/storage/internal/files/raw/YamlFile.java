@@ -18,7 +18,6 @@ import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import de.zeanon.storage.internal.utility.datafiles.YamlUtils;
 import de.zeanon.storage.internal.utility.editor.YamlEditor;
 import java.io.*;
-import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,8 +75,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 
 	@Override
 	public void save() {
-		try (final @NotNull FileChannel localChannel = new RandomAccessFile(this.file(), "rws").getChannel()) {
-			localChannel.lock();
+		try {
 			if (this.getCommentSetting() != Comment.PRESERVE) {
 				this.write(this.fileData().dataMap());
 			} else {
@@ -139,6 +137,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 
 	private void write(final @NotNull Map fileData) throws IOException {
 		final @NotNull @Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.file()));
+		writer.getConfig().writeConfig.setKeepBeanPropertyOrder(true);
 		writer.write(fileData);
 	}
 

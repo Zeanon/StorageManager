@@ -1,5 +1,6 @@
 package de.zeanon.storage.internal.files.raw;
 
+import com.electronwill.toml.Toml;
 import com.electronwill.toml.TomlException;
 import de.zeanon.storage.external.lists.BigList;
 import de.zeanon.storage.external.lists.GapList;
@@ -14,8 +15,6 @@ import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
-import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,8 +68,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 
 	@Override
 	public void save() {
-		try (final @NotNull FileChannel localChannel = new RandomAccessFile(this.file(), "UTF-8").getChannel()) {
-			localChannel.lock();
+		try {
 			//noinspection unchecked
 			com.electronwill.toml.Toml.write(this.fileData().dataMap(), this.file());
 		} catch (IOException e) {
@@ -111,7 +109,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	@Override
 	protected @NotNull Map readFile() {
 		try {
-			return com.electronwill.toml.Toml.read(this.file());
+			return Toml.read(this.file());
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
 		} catch (TomlException e) {

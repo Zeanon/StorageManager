@@ -1,7 +1,7 @@
 package de.zeanon.storage.internal.base.cache.base;
 
 import de.zeanon.storage.external.lists.IList;
-import de.zeanon.storage.internal.base.interfaces.TripletMap;
+import de.zeanon.storage.internal.base.interfaces.DataMap;
 import java.util.*;
 import lombok.*;
 import org.jetbrains.annotations.Contract;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public abstract class AbstractTripletMap<K, V> extends AbstractMap<K, V> implements TripletMap<K, V> {
+public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements DataMap<K, V> {
 
 
 	protected final @NotNull IList<TripletNode<K, V>> localList;
@@ -234,7 +234,7 @@ public abstract class AbstractTripletMap<K, V> extends AbstractMap<K, V> impleme
 	}
 
 	@Override
-	public abstract @NotNull TripletMap<K, V> clone(); //NOSONAR
+	public abstract @NotNull DataMap<K, V> clone(); //NOSONAR
 
 	@Override
 	@Contract("-> new")
@@ -254,7 +254,7 @@ public abstract class AbstractTripletMap<K, V> extends AbstractMap<K, V> impleme
 
 
 	/**
-	 * The EntryNodes to be stored in a AbstractTripletMap
+	 * The EntryNodes to be stored in a AbstractDataMap
 	 *
 	 * @param <K> the type of keys maintained by this map
 	 * @param <V> the type of mapped values

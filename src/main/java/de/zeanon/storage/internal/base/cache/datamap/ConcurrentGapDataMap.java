@@ -1,9 +1,8 @@
 package de.zeanon.storage.internal.base.cache.datamap;
 
-import de.zeanon.storage.external.lists.BigList;
 import de.zeanon.storage.external.lists.GapList;
-import de.zeanon.storage.internal.base.cache.base.ConcurrentTripletMap;
-import de.zeanon.storage.internal.base.interfaces.TripletMap;
+import de.zeanon.storage.internal.base.cache.base.ConcurrentDataMap;
+import de.zeanon.storage.internal.base.interfaces.DataMap;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Custom Concurrent Map implementation optimized for ThunderFile
- * internally based on BigList to optimize for huge amounts of entries
+ * Internally based on GapList for low memory usage and fast access
  *
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
@@ -21,21 +20,21 @@ import org.jetbrains.annotations.NotNull;
  */
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class ConcurrentBigTripletMap<K, V> extends ConcurrentTripletMap<K, V> {
+public class ConcurrentGapDataMap<K, V> extends ConcurrentDataMap<K, V> {
 
 
-	public ConcurrentBigTripletMap() {
-		super(new BigList<>());
+	public ConcurrentGapDataMap() {
+		super(new GapList<>());
 	}
 
-	public ConcurrentBigTripletMap(final @NotNull Map<K, V> map) {
+	public ConcurrentGapDataMap(final @NotNull Map<K, V> map) {
 		super(new GapList<>());
 		this.addAll(map);
 	}
 
 
 	@Override
-	public @NotNull TripletMap<K, V> clone() {
-		return new ConcurrentBigTripletMap<>(this);
+	public @NotNull DataMap<K, V> clone() {
+		return new ConcurrentGapDataMap<>(this);
 	}
 }
