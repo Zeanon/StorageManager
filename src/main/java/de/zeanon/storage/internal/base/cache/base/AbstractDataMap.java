@@ -233,7 +233,7 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		this.localList.trimToSize();
 	}
 
-	@Override
+	@Override //NOSONAR
 	public abstract @NotNull DataMap<K, V> clone(); //NOSONAR
 
 	@Override

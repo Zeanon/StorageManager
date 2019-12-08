@@ -453,7 +453,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 		}
 	}
 
-	@Override
+	@Override //NOSONAR
 	public abstract @NotNull DataMap<K, V> clone(); //NOSONAR
 
 	/**

@@ -70,7 +70,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	public void save() {
 		try {
 			//noinspection unchecked
-			com.electronwill.toml.Toml.write(this.fileData().dataMap(), this.file());
+			Toml.write(this.fileData().dataMap(), this.file());
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e.getCause());
 		}

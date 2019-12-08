@@ -101,6 +101,20 @@ public class ExtendedFileLock implements AutoCloseable {
 		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), csName), buffer_size);
 	}
 
+	@Contract("-> new")
+	public @NotNull BufferedInputStream createBufferedInputStream() {
+		return new BufferedInputStream(Channels.newInputStream(this.readWriteLockableChannel.getFileChannel()));
+	}
+
+	@Contract("-> new")
+	public @NotNull BufferedOutputStream createBufferedOutputStream() {
+		return new BufferedOutputStream(Channels.newOutputStream(this.readWriteLockableChannel.getFileChannel()));
+	}
+
+	public void truncateChannel(final long size) throws IOException {
+		this.readWriteLockableChannel.getFileChannel().truncate(size);
+	}
+
 
 	/**
 	 * Closes this resource, relinquishing any underlying resources.
@@ -301,6 +315,7 @@ public class ExtendedFileLock implements AutoCloseable {
 		private void close() throws IOException {
 			if (this.instances.get() == 1) {
 				openChannels.remove(this);
+				System.out.println(openChannels.size());
 				this.localFileChannel.close();
 			} else {
 				this.instances.decrementAndGet();
@@ -396,6 +411,20 @@ public class ExtendedFileLock implements AutoCloseable {
 			return new BufferedReader(Channels.newReader(this.extendedFileLock.getFileChannel(), csName), buffer_size);
 		}
 
+		@Contract("-> new")
+		public @NotNull BufferedInputStream createBufferedInputStream() {
+			return new BufferedInputStream(Channels.newInputStream(this.extendedFileLock.getFileChannel()));
+		}
+
+		@Contract("-> new")
+		public @NotNull BufferedOutputStream createBufferedOutputStream() {
+			return new BufferedOutputStream(Channels.newOutputStream(this.extendedFileLock.getFileChannel()));
+		}
+
+		public void truncateChannel(final long size) throws IOException {
+			this.extendedFileLock.truncateChannel(size);
+		}
+
 
 		@Override
 		public void close() throws IOException {
@@ -482,6 +511,20 @@ public class ExtendedFileLock implements AutoCloseable {
 		@Contract("null, _ -> fail; !null, _ -> new")
 		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName, final int buffer_size) {
 			return new BufferedReader(Channels.newReader(this.extendedFileLock.getFileChannel(), csName), buffer_size);
+		}
+
+		@Contract("-> new")
+		public @NotNull BufferedInputStream createBufferedInputStream() {
+			return new BufferedInputStream(Channels.newInputStream(this.extendedFileLock.getFileChannel()));
+		}
+
+		@Contract("-> new")
+		public @NotNull BufferedOutputStream createBufferedOutputStream() {
+			return new BufferedOutputStream(Channels.newOutputStream(this.extendedFileLock.getFileChannel()));
+		}
+
+		public void truncateChannel(final long size) throws IOException {
+			this.extendedFileLock.truncateChannel(size);
 		}
 
 

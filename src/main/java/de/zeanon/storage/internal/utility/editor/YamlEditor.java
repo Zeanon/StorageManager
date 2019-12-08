@@ -80,6 +80,8 @@ public class YamlEditor {
 							 final @NotNull List<String> lines) throws IOException {
 		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
 			 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
+			tempLock.lock();
+			tempLock.truncateChannel(0);
 			final @NotNull Iterator<String> linesIterator = lines.iterator();
 			writer.print(linesIterator.next());
 			linesIterator.forEachRemaining(line -> {

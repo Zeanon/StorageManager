@@ -149,6 +149,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(this.file()).writeLock();
 			 final @NotNull Writer writer = tempLock.createPrintWriter()) {
 			tempLock.lock();
+			tempLock.truncateChannel(0);
 			writer.write(new JSONObject(this.fileData().dataMap()).toString(3));
 		} catch (IOException e) {
 			throw new RuntimeIOException("Error while writing to "

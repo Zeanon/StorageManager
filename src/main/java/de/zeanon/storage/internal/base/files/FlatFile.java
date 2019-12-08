@@ -3,16 +3,12 @@ package de.zeanon.storage.internal.base.files;
 import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.exceptions.FileTypeException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
-import de.zeanon.storage.internal.base.interfaces.DataStorage;
-import de.zeanon.storage.internal.base.interfaces.FileData;
-import de.zeanon.storage.internal.base.interfaces.FileType;
-import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
+import de.zeanon.storage.internal.base.interfaces.*;
 import de.zeanon.storage.internal.base.settings.Reload;
 import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
+import de.zeanon.storage.internal.utility.locks.ExtendedFileLock;
 import java.io.*;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Iterator;
@@ -79,29 +75,29 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 
 	public @NotNull String getPath() {
-		return this.file.getPath();
+		return this.file().getPath();
 	}
 
 	public @NotNull String getCanonicalPath() {
 		try {
-			return this.file.getCanonicalPath();
+			return this.file().getCanonicalPath();
 		} catch (@NotNull IOException | SecurityException e) {
 			throw new RuntimeIOException("Could not get Canonical Path of '"
-										 + this.file.getAbsolutePath()
+										 + this.file().getAbsolutePath()
 										 + "'",
 										 e);
 		}
 	}
 
 	public @NotNull String getName() {
-		return this.file.getName();
+		return this.file().getName();
 	}
 
 	/**
 	 * Set the Contents of the FileData and File from a given InputStream
 	 */
 	public void setDataFromStream(final @Nullable InputStream inputStream) {
-		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStream(inputStream));
+		BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 		this.reload();
 	}
 
@@ -114,15 +110,15 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	public void clearFile() {
-		BaseFileUtils.writeToFile(this.file, null);
+		BaseFileUtils.writeToFile(this.file(), null);
 	}
 
 	/**
 	 * Just delete the File
 	 */
 	public void deleteFile() {
-		try (final @NotNull FileChannel localChannel = new RandomAccessFile(this.file(), "rw").getChannel()) {
-			localChannel.lock();
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(this.file()).writeLock()) {
+			tempLock.lock();
 			Files.delete(this.file().toPath());
 		} catch (IOException e) {
 			throw new RuntimeIOException("Could not delete '"
@@ -136,14 +132,14 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * To get any data, you simply need to reload.
 	 */
 	public void clearData() {
-		this.fileData.clear();
+		this.fileData().clear();
 	}
 
 	/**
 	 * Set the Contents of the FileData and File from a given File
 	 */
 	public void setDataFromFile(final @Nullable File file) {
-		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStreamFromFile(file));
+		BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStreamFromFile(file));
 		this.reload();
 	}
 
@@ -151,7 +147,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * Set the Contents of the FileData and File from a given Resource
 	 */
 	public void setDataFromResource(final @Nullable String resource) {
-		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStreamFromResource(resource));
+		BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStreamFromResource(resource));
 		this.reload();
 	}
 
@@ -159,7 +155,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * Set the Contents of the FileData and File from a given URL
 	 */
 	public void setDataFromUrl(final @Nullable String url) {
-		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStreamFromUrl(url));
+		BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStreamFromUrl(url));
 		this.reload();
 	}
 
@@ -167,12 +163,12 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * Set the Contents of the FileData and File from a given URL
 	 */
 	public void setDataFromUrl(final @Nullable URL url) {
-		BaseFileUtils.writeToFile(this.file, BaseFileUtils.createNewInputStreamFromUrl(url));
+		BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStreamFromUrl(url));
 		this.reload();
 	}
 
 	public @NotNull String getAbsolutePath() {
-		return this.file.getAbsolutePath();
+		return this.file().getAbsolutePath();
 	}
 
 	/**
@@ -181,7 +177,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return true if it has changed.
 	 */
 	public boolean hasChanged() {
-		return BaseFileUtils.hasChanged(this.file, this.lastLoaded);
+		return BaseFileUtils.hasChanged(this.file(), this.lastLoaded());
 	}
 
 	/**
@@ -208,13 +204,13 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	@Override
 	public boolean hasKey(final @NotNull String key) {
 		this.update();
-		return this.fileData.containsKey(key);
+		return this.fileData().containsKey(key);
 	}
 
 	@Override
 	public boolean hasKeyUseArray(final @NotNull String... key) {
 		this.update();
-		return this.fileData.containsKeyUseArray(key);
+		return this.fileData().containsKeyUseArray(key);
 	}
 
 	/**
@@ -225,14 +221,15 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 */
 	public void replaceInFile(final @NotNull CharSequence target,
 							  final @NotNull CharSequence replacement) throws IOException {
-		try (final @NotNull FileChannel localChannel = new RandomAccessFile(this.file(), "rws").getChannel()) {
-			localChannel.lock();
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(this.file()).writeLock()) {
+			tempLock.lock();
 			final @NotNull Iterator<String> lines;
-			try (final @NotNull BufferedReader reader = new BufferedReader(Channels.newReader(localChannel, "UTF-8"))) {
+			try (final @NotNull BufferedReader reader = tempLock.createBufferedReader()) {
 				lines = reader.lines().collect(Collectors.toList()).iterator();
 			}
 
-			try (final @NotNull PrintWriter writer = new PrintWriter(Channels.newWriter(localChannel, "UTF-8"))) {
+			tempLock.truncateChannel(0);
+			try (final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
 				writer.print((lines.next()).replace(target, replacement));
 				lines.forEachRemaining(line -> {
 					writer.println();
@@ -251,7 +248,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	@Override
 	public @Nullable Object getUseArray(final @NotNull String... key) {
 		this.update();
-		return this.fileData.getUseArray(key);
+		return this.fileData().getUseArray(key);
 	}
 
 	@Override
@@ -259,9 +256,9 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		//noinspection unchecked
-		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
+		final @NotNull Map<String, Object> tempMap = this.provider().newMap();
 		for (final @NotNull String key : keys) {
-			tempMap.put(key, this.fileData.get(key));
+			tempMap.put(key, this.fileData().get(key));
 		}
 		return tempMap;
 	}
@@ -271,9 +268,9 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		//noinspection unchecked
-		final @NotNull Map<String[], Object> tempMap = this.provider.newMap();
+		final @NotNull Map<String[], Object> tempMap = this.provider().newMap();
 		for (final @NotNull String[] key : keys) {
-			tempMap.put(key, this.fileData.getUseArray(key));
+			tempMap.put(key, this.fileData().getUseArray(key));
 		}
 		return tempMap;
 	}
@@ -283,9 +280,9 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		//noinspection unchecked
-		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
+		final @NotNull Map<String, Object> tempMap = this.provider().newMap();
 		for (final @NotNull String key : keys) {
-			tempMap.put(key, this.fileData.get(key));
+			tempMap.put(key, this.fileData().get(key));
 		}
 		return tempMap;
 	}
@@ -295,9 +292,9 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		//noinspection unchecked
-		final @NotNull Map<String[], Object> tempMap = this.provider.newMap();
+		final @NotNull Map<String[], Object> tempMap = this.provider().newMap();
 		for (final @NotNull String[] key : keys) {
-			tempMap.put(key, this.fileData.getUseArray(key));
+			tempMap.put(key, this.fileData().getUseArray(key));
 		}
 		return tempMap;
 	}

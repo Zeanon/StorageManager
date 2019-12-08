@@ -1,8 +1,6 @@
 package de.zeanon.storage.internal.base.interfaces;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.channels.FileChannel;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,6 +27,13 @@ public interface ReadWriteFileLock extends AutoCloseable {
 	@NotNull BufferedReader createBufferedReader(final int buffer_size);
 
 	@NotNull BufferedReader createBufferedReader(final @NotNull String csName, final int buffer_size);
+
+	@NotNull BufferedInputStream createBufferedInputStream();
+
+	@NotNull BufferedOutputStream createBufferedOutputStream();
+
+	void truncateChannel(final long size) throws IOException;
+
 
 	@Override
 	void close() throws IOException;

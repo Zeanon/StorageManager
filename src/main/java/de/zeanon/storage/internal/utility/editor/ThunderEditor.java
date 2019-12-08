@@ -90,9 +90,10 @@ public class ThunderEditor {
 	private static void initialWriteWithComments(final @NotNull File file,
 												 final @NotNull ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> fileData) {
 		if (!fileData.isEmpty()) {
-			try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
+			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
 				 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
-				tempLock.writeLock().lock();
+				tempLock.lock();
+				tempLock.truncateChannel(0);
 				final @NotNull Iterator<DataMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
 				ThunderEditor.topLayerWriteWithComments(writer, mapIterator.next());
 				mapIterator.forEachRemaining(entry -> {
@@ -104,11 +105,9 @@ public class ThunderEditor {
 				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		} else {
-			try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
-				 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
-				tempLock.writeLock().lock();
-				writer.print("");
-				writer.flush();
+			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock()) {
+				tempLock.lock();
+				tempLock.truncateChannel(0);
 			} catch (IOException e) {
 				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
 			}
@@ -195,9 +194,10 @@ public class ThunderEditor {
 	private static void initialWriteWithOutComments(final @NotNull File file,
 													final @NotNull ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> fileData) {
 		if (!fileData.isEmpty()) {
-			try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
+			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
 				 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
-				tempLock.writeLock().lock();
+				tempLock.lock();
+				tempLock.truncateChannel(0);
 				final @NotNull Iterator<DataMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
 				@NotNull DataMap.TripletNode<String, Object> initialEntry = mapIterator.next();
 				while (initialEntry.getValue() == LineType.COMMENT || initialEntry.getValue() == LineType.HEADER || initialEntry.getValue() == LineType.FOOTER || initialEntry.getValue() == LineType.BLANK_LINE) {
@@ -215,11 +215,9 @@ public class ThunderEditor {
 				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		} else {
-			try (final @NotNull ExtendedFileLock tempLock = new ExtendedFileLock(file);
-				 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
-				tempLock.writeLock().lock();
-				writer.print("");
-				writer.flush();
+			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock()) {
+				tempLock.lock();
+				tempLock.truncateChannel(0);
 			} catch (IOException e) {
 				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
 			}
