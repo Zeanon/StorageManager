@@ -8,9 +8,9 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public interface ReadWriteFileLock extends AutoCloseable {
 
-	void lock();
+	void lock() throws IOException;
 
-	void unlock();
+	void unlock() throws IOException;
 
 	@NotNull FileChannel getFileChannel();
 
@@ -33,6 +33,8 @@ public interface ReadWriteFileLock extends AutoCloseable {
 	@NotNull BufferedOutputStream createBufferedOutputStream();
 
 	void truncateChannel(final long size) throws IOException;
+
+	void convertLock() throws IOException;
 
 
 	@Override

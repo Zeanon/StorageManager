@@ -6,10 +6,11 @@ import java.io.*;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.StampedLock;
 import lombok.EqualsAndHashCode;
@@ -56,9 +57,12 @@ public class ExtendedFileLock implements AutoCloseable {
 	}
 
 
-	public void unlock() {
-		this.readLock.unlock();
-		this.writeLock.unlock();
+	public void unlock() throws IOException {
+		try {
+			this.readWriteLockableChannel.unlockAll();
+		} catch (RuntimeIOException e) {
+			throw new IOException(e.getMessage(), e.getCause());
+		}
 	}
 
 
@@ -113,6 +117,14 @@ public class ExtendedFileLock implements AutoCloseable {
 
 	public void truncateChannel(final long size) throws IOException {
 		this.readWriteLockableChannel.getFileChannel().truncate(size);
+	}
+
+	public void convertLock() throws IOException {
+		try {
+			this.readWriteLockableChannel.convertLock();
+		} catch (RuntimeIOException e) {
+			throw new IOException(e.getMessage(), e.getCause());
+		}
 	}
 
 
@@ -177,7 +189,7 @@ public class ExtendedFileLock implements AutoCloseable {
 	private static class ReadWriteLockableChannel {
 
 
-		private static final @NotNull Queue<ReadWriteLockableChannel> openChannels = new ConcurrentLinkedQueue<>();
+		private static final @NotNull ConcurrentMap<String, ReadWriteLockableChannel> openChannels = new ConcurrentHashMap<>();
 		private static final @NotNull StampedLock factoryLock = new StampedLock();
 
 
@@ -188,39 +200,28 @@ public class ExtendedFileLock implements AutoCloseable {
 		private final @NotNull AtomicReference<FileLock> fileLock = new AtomicReference<>();
 		private final @NotNull AtomicBoolean writeLockActive = new AtomicBoolean();
 
-		private final @NotNull AtomicInteger instances = new AtomicInteger();
-		private final @NotNull AtomicInteger readers = new AtomicInteger();
+		private final @NotNull AtomicLong currentWritingThread = new AtomicLong(-1);
+		private final @NotNull AtomicInteger instanceCount = new AtomicInteger();
+		private final @NotNull AtomicInteger lockHoldCount = new AtomicInteger();
 
 
 		@Contract(pure = true)
 		private ReadWriteLockableChannel(final @NotNull File file, final @NotNull String mode) throws FileNotFoundException {
 			this.localFileChannel = new RandomAccessFile(file, mode).getChannel();
 			this.absolutePath = file.getAbsolutePath();
-			this.instances.incrementAndGet();
+			this.instanceCount.incrementAndGet();
 		}
 
 		@Contract(pure = true)
 		private static @NotNull ReadWriteLockableChannel getOrCreateChannel(final @NotNull File file, final @NotNull String mode) throws IOException {
 			long lockStamp = ReadWriteLockableChannel.factoryLock.readLock();
 			try {
-				final @NotNull String absolutePath = file.getAbsolutePath();
-				for (final @NotNull ReadWriteLockableChannel tempChannel : ReadWriteLockableChannel.openChannels) {
-					if (absolutePath.equals(tempChannel.getFilePath())) {
-						return tempChannel;
-					}
+				if (!ReadWriteLockableChannel.openChannels.containsKey(file.getAbsolutePath())) {
+					ReadWriteLockableChannel.openChannels.putIfAbsent(file.getAbsolutePath(), new ReadWriteLockableChannel(file, mode));
 				}
-				long tempLock = ReadWriteLockableChannel.factoryLock.tryConvertToWriteLock(lockStamp);
-				if (ReadWriteLockableChannel.factoryLock.validate(tempLock)) {
-					lockStamp = tempLock;
-				} else {
-					ReadWriteLockableChannel.factoryLock.unlockRead(lockStamp);
-					lockStamp = ReadWriteLockableChannel.factoryLock.writeLock();
-				}
-				final @NotNull ExtendedFileLock.ReadWriteLockableChannel tempChannel = new ReadWriteLockableChannel(file, mode);
-				ReadWriteLockableChannel.openChannels.add(tempChannel);
-				return tempChannel;
+				return ReadWriteLockableChannel.openChannels.get(file.getAbsolutePath());
 			} finally {
-				ReadWriteLockableChannel.factoryLock.unlock(lockStamp);
+				ReadWriteLockableChannel.factoryLock.unlockRead(lockStamp);
 			}
 		}
 
@@ -239,15 +240,15 @@ public class ExtendedFileLock implements AutoCloseable {
 		private void lockRead() {
 			final long lockStamp = this.internalLock.readLock();
 			try {
-				while (this.fileLock.get() != null && this.writeLockActive.get()) {
+				while (this.writeLockActive.get()) {
 					Thread.sleep(5);
 				}
-				this.readers.updateAndGet(current -> {
+				this.lockHoldCount.updateAndGet(current -> {
 					try {
 						this.fileLock.compareAndSet(null, this.localFileChannel.lock(0, Long.MAX_VALUE, true));
 						return current + 1;
 					} catch (IOException e) {
-						throw new RuntimeIOException(e.getCause());
+						throw new RuntimeIOException(e.getMessage(), e.getCause());
 					}
 				});
 			} catch (InterruptedException e) {
@@ -258,67 +259,182 @@ public class ExtendedFileLock implements AutoCloseable {
 		}
 
 		private void unlockRead() {
-			if (this.readers.get() == 1 && this.fileLock.get() != null) {
-				this.readers.set(0);
-				this.fileLock.updateAndGet(current -> {
+			this.fileLock.updateAndGet(current -> {
+				if (this.lockHoldCount.get() == 0 || this.fileLock.get() == null || this.writeLockActive.get()) {
+					throw new IllegalMonitorStateException("Lock ist not held");
+				} else if (this.lockHoldCount.decrementAndGet() == 0) {
 					try {
 						if (current != null && current.isValid()) {
 							current.release();
 						}
 						return null;
 					} catch (IOException e) {
-						throw new RuntimeIOException(e);
+						throw new RuntimeIOException(e.getMessage(), e.getCause());
 					}
-				});
-			} else {
-				this.readers.decrementAndGet();
-			}
+				} else {
+					return current;
+				}
+			});
 		}
 
 
 		private void lockWrite() {
+			if (this.writeLockActive.get() && this.lockHoldCount.get() > 0 && this.currentWritingThread.get() == Thread.currentThread().getId()) {
+				this.lockHoldCount.incrementAndGet();
+			} else {
+				final long lockStamp = this.internalLock.writeLock();
+				try {
+					while (this.fileLock.get() != null) {
+						Thread.sleep(5);
+					}
+					this.fileLock.updateAndGet(current -> {
+						try {
+							this.writeLockActive.set(true);
+							this.lockHoldCount.set(1);
+							this.currentWritingThread.set(Thread.currentThread().getId());
+							return this.localFileChannel.lock(0, Long.MAX_VALUE, false);
+						} catch (IOException e) {
+							throw new RuntimeIOException(e.getMessage(), e.getCause());
+						}
+					});
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				} finally {
+					this.internalLock.unlockWrite(lockStamp);
+				}
+			}
+		}
+
+		private void unlockWrite() {
+			this.fileLock.updateAndGet(current -> {
+				if (this.lockHoldCount.get() == 0 || this.fileLock.get() == null || !this.writeLockActive.get()) {
+					throw new IllegalMonitorStateException("Lock ist not held");
+				} else if (this.lockHoldCount.decrementAndGet() == 0) {
+					try {
+						if (current != null && current.isValid()) {
+							current.release();
+						}
+						this.writeLockActive.set(false);
+						this.currentWritingThread.set(-1);
+						return null;
+					} catch (IOException e) {
+						throw new RuntimeIOException(e.getMessage(), e.getCause());
+					}
+				} else {
+					return current;
+				}
+			});
+		}
+
+
+		private void unlockAll() {
+			this.fileLock.updateAndGet(current -> {
+				if (this.lockHoldCount.get() == 0 || this.fileLock.get() == null) {
+					throw new IllegalMonitorStateException("Lock ist not held");
+				} else if (this.lockHoldCount.decrementAndGet() == 0) {
+					if (this.writeLockActive.get()) {
+						try {
+							if (current != null && current.isValid()) {
+								current.release();
+							}
+							this.writeLockActive.set(false);
+							this.currentWritingThread.set(-1);
+							return null;
+						} catch (IOException e) {
+							throw new RuntimeIOException(e.getMessage(), e.getCause());
+						}
+					} else {
+						try {
+							if (current != null && current.isValid()) {
+								current.release();
+							}
+							return null;
+						} catch (IOException e) {
+							throw new RuntimeIOException(e.getMessage(), e.getCause());
+						}
+					}
+				} else {
+					return current;
+				}
+			});
+		}
+
+
+		private void convertLock() {
 			final long lockStamp = this.internalLock.writeLock();
 			try {
 				while (this.fileLock.get() != null) {
 					Thread.sleep(5);
 				}
-				this.fileLock.updateAndGet(current -> {
-					try {
-						this.writeLockActive.set(true);
-						return this.localFileChannel.lock(0, Long.MAX_VALUE, false);
-					} catch (IOException e) {
-						throw new RuntimeIOException(e);
-					}
-				});
-			} catch (InterruptedException e) {
+				if (this.writeLockActive.get()) {
+					this.writeToRead();
+				} else {
+					this.readToWrite();
+				}
+			} catch (@NotNull InterruptedException | RuntimeInterruptedException e) {
 				Thread.currentThread().interrupt();
 			} finally {
 				this.internalLock.unlockWrite(lockStamp);
 			}
 		}
 
-		private void unlockWrite() {
+		private void writeToRead() {
 			this.fileLock.updateAndGet(current -> {
-				try {
-					if (current != null && current.isValid()) {
-						current.release();
+				if (this.lockHoldCount.get() == 0 || this.fileLock.get() == null) {
+					throw new IllegalMonitorStateException("Lock ist not held");
+				} else if (this.lockHoldCount.get() == 1) {
+					try {
+						if (current != null && current.isValid()) {
+							current.release();
+						}
+						this.writeLockActive.set(false);
+						this.currentWritingThread.set(-1);
+						return this.localFileChannel.lock(0, Long.MAX_VALUE, true);
+					} catch (IOException e) {
+						throw new RuntimeIOException(e.getMessage(), e.getCause());
 					}
-					this.writeLockActive.set(false);
-					return null;
-				} catch (IOException e) {
-					throw new RuntimeIOException(e);
+				} else {
+					throw new IllegalMonitorStateException("Lock could not be converted, lock ist still being held");
+				}
+			});
+		}
+
+		private void readToWrite() {
+			this.fileLock.updateAndGet(current -> {
+				if (this.lockHoldCount.get() == 0 || this.fileLock.get() == null) {
+					throw new IllegalMonitorStateException("Lock ist not held");
+				} else if (this.lockHoldCount.get() > 0 && this.fileLock.get() != null) {
+					try {
+						while (this.lockHoldCount.get() > 1) {
+							Thread.sleep(5);
+						}
+						if (current != null && current.isValid()) {
+							current.release();
+						}
+						this.writeLockActive.set(true);
+						this.currentWritingThread.set(Thread.currentThread().getId());
+						return this.localFileChannel.lock(0, Long.MAX_VALUE, false);
+					} catch (IOException e) {
+						throw new RuntimeIOException(e.getMessage(), e.getCause());
+					} catch (InterruptedException e) {
+						throw new RuntimeInterruptedException(e.getMessage());
+					}
+				} else {
+					throw new IllegalMonitorStateException("Lock could not be converted, lock is still being held");
 				}
 			});
 		}
 
 
 		private void close() throws IOException {
-			if (this.instances.get() == 1) {
-				openChannels.remove(this);
-				System.out.println(openChannels.size());
-				this.localFileChannel.close();
-			} else {
-				this.instances.decrementAndGet();
+			final long lockStamp = ReadWriteLockableChannel.factoryLock.writeLock();
+			try {
+				if (this.instanceCount.decrementAndGet() == 0) {
+					ReadWriteLockableChannel.openChannels.remove(this.getFilePath());
+					this.localFileChannel.close();
+				}
+			} finally {
+				ReadWriteLockableChannel.factoryLock.unlockWrite(lockStamp);
 			}
 		}
 	}
@@ -330,9 +446,10 @@ public class ExtendedFileLock implements AutoCloseable {
 	@EqualsAndHashCode
 	private static class ReadLock implements ReadWriteFileLock {
 
-		private final @NotNull ExtendedFileLock extendedFileLock;
 
-		private final @NotNull AtomicInteger lockedCount = new AtomicInteger();
+		private final @NotNull ExtendedFileLock extendedFileLock;
+		private final @NotNull AtomicInteger lockHoldCount = new AtomicInteger();
+
 
 		@Contract(pure = true)
 		ReadLock(final @NotNull ExtendedFileLock extendedFileLock) {
@@ -341,27 +458,35 @@ public class ExtendedFileLock implements AutoCloseable {
 
 
 		@Override
-		public synchronized void lock() {
-			this.lockedCount.updateAndGet(current -> {
-				if (current == 0) {
-					this.extendedFileLock.readWriteLockableChannel.lockRead();
-					return 1;
-				} else {
-					return current + 1;
-				}
-			});
+		public void lock() throws IOException {
+			try {
+				this.lockHoldCount.updateAndGet(current -> {
+					if (current == 0) {
+						this.extendedFileLock.readWriteLockableChannel.lockRead();
+						return 1;
+					} else {
+						return current + 1;
+					}
+				});
+			} catch (RuntimeIOException e) {
+				throw new IOException(e.getMessage(), e.getCause());
+			}
 		}
 
 		@Override
-		public synchronized void unlock() {
-			this.lockedCount.updateAndGet(current -> {
-				if (current == 1) {
-					this.extendedFileLock.readWriteLockableChannel.unlockRead();
-					return 0;
-				} else {
-					return current - 1;
-				}
-			});
+		public void unlock() throws IOException {
+			try {
+				this.lockHoldCount.updateAndGet(current -> {
+					if (current == 1) {
+						this.extendedFileLock.readWriteLockableChannel.unlockRead();
+						return 0;
+					} else {
+						return current - 1;
+					}
+				});
+			} catch (RuntimeIOException e) {
+				throw new IOException(e.getMessage(), e.getCause());
+			}
 		}
 
 		@Override
@@ -411,18 +536,30 @@ public class ExtendedFileLock implements AutoCloseable {
 			return new BufferedReader(Channels.newReader(this.extendedFileLock.getFileChannel(), csName), buffer_size);
 		}
 
+		@Override
 		@Contract("-> new")
 		public @NotNull BufferedInputStream createBufferedInputStream() {
 			return new BufferedInputStream(Channels.newInputStream(this.extendedFileLock.getFileChannel()));
 		}
 
+		@Override
 		@Contract("-> new")
 		public @NotNull BufferedOutputStream createBufferedOutputStream() {
 			return new BufferedOutputStream(Channels.newOutputStream(this.extendedFileLock.getFileChannel()));
 		}
 
+		@Override
 		public void truncateChannel(final long size) throws IOException {
 			this.extendedFileLock.truncateChannel(size);
+		}
+
+		@Override
+		public void convertLock() throws IOException {
+			try {
+				this.extendedFileLock.convertLock();
+			} catch (RuntimeIOException e) {
+				throw new IOException(e.getMessage(), e.getCause());
+			}
 		}
 
 
@@ -439,9 +576,10 @@ public class ExtendedFileLock implements AutoCloseable {
 	@EqualsAndHashCode
 	private static class WriteLock implements ReadWriteFileLock {
 
-		private final @NotNull ExtendedFileLock extendedFileLock;
 
-		private final @NotNull AtomicInteger lockedCount = new AtomicInteger();
+		private final @NotNull ExtendedFileLock extendedFileLock;
+		private final @NotNull AtomicInteger lockHoldCount = new AtomicInteger();
+
 
 		@Contract(pure = true)
 		WriteLock(final @NotNull ExtendedFileLock extendedFileLock) {
@@ -450,19 +588,27 @@ public class ExtendedFileLock implements AutoCloseable {
 
 
 		@Override
-		public synchronized void lock() {
-			this.lockedCount.updateAndGet(current -> {
-				this.extendedFileLock.readWriteLockableChannel.lockWrite();
-				return 1;
-			});
+		public void lock() throws IOException {
+			try {
+				this.lockHoldCount.updateAndGet(current -> {
+					this.extendedFileLock.readWriteLockableChannel.lockWrite();
+					return 1;
+				});
+			} catch (RuntimeIOException e) {
+				throw new IOException(e.getMessage(), e.getCause());
+			}
 		}
 
 		@Override
-		public synchronized void unlock() {
-			this.lockedCount.updateAndGet(current -> {
-				this.extendedFileLock.readWriteLockableChannel.unlockWrite();
-				return 0;
-			});
+		public void unlock() throws IOException {
+			try {
+				this.lockHoldCount.updateAndGet(current -> {
+					this.extendedFileLock.readWriteLockableChannel.unlockWrite();
+					return 0;
+				});
+			} catch (RuntimeIOException e) {
+				throw new IOException(e.getMessage(), e.getCause());
+			}
 		}
 
 
@@ -513,24 +659,43 @@ public class ExtendedFileLock implements AutoCloseable {
 			return new BufferedReader(Channels.newReader(this.extendedFileLock.getFileChannel(), csName), buffer_size);
 		}
 
+		@Override
 		@Contract("-> new")
 		public @NotNull BufferedInputStream createBufferedInputStream() {
 			return new BufferedInputStream(Channels.newInputStream(this.extendedFileLock.getFileChannel()));
 		}
 
+		@Override
 		@Contract("-> new")
 		public @NotNull BufferedOutputStream createBufferedOutputStream() {
 			return new BufferedOutputStream(Channels.newOutputStream(this.extendedFileLock.getFileChannel()));
 		}
 
+		@Override
 		public void truncateChannel(final long size) throws IOException {
 			this.extendedFileLock.truncateChannel(size);
+		}
+
+		@Override
+		public void convertLock() throws IOException {
+			try {
+				this.extendedFileLock.convertLock();
+			} catch (RuntimeIOException e) {
+				throw new IOException(e.getMessage(), e.getCause());
+			}
 		}
 
 
 		@Override
 		public void close() throws IOException {
 			this.extendedFileLock.close();
+		}
+	}
+
+	private static class RuntimeInterruptedException extends RuntimeException {
+
+		public RuntimeInterruptedException(final @NotNull String message) {
+			super(message);
 		}
 	}
 }
