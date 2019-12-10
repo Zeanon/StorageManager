@@ -4,31 +4,32 @@ import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.interfaces.Config;
-import de.zeanon.storage.internal.base.interfaces.DataMap;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.base.settings.Comment;
-import de.zeanon.storage.internal.files.raw.ThunderFile;
-import de.zeanon.storage.internal.files.section.ThunderConfigSection;
-import de.zeanon.storage.internal.utility.datafiles.ThunderUtils;
+import de.zeanon.storage.internal.files.raw.TomlFile;
+import de.zeanon.storage.internal.files.section.TomlConfigSection;
+import de.zeanon.storage.internal.utility.datafiles.TomlUtils;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-/**
- * Extended ThunderFile with added methods for Config purposes
- *
- * @author Zeanon
- * @version 2.1.0
- */
+@Getter
+@Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings({"unused", "UnusedReturnValue"})
-public class ThunderConfig extends ThunderFile implements Config {
+@SuppressWarnings({"WeakerAccess", "unused"})
+public class TomlConfig extends TomlFile implements Config {
+
+
+	private CommentSetting commentSetting;
 
 
 	/**
@@ -40,17 +41,15 @@ public class ThunderConfig extends ThunderFile implements Config {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
-	protected ThunderConfig(final @NotNull File file,
-							final @Nullable InputStream inputStream,
-							final @NotNull ReloadSetting reloadSetting,
-							final @NotNull CommentSetting commentSetting,
-							final int bufferSize,
-							final boolean bigMap,
-							final boolean concurrentData,
-							final boolean synchronizedData,
-							final @NotNull Class<? extends DataMap> map,
-							final @NotNull Class<? extends List> list) {
-		super(file, inputStream, reloadSetting, commentSetting, bufferSize, bigMap, concurrentData, synchronizedData, map, list);
+	protected TomlConfig(final @NotNull File file,
+						 final @Nullable InputStream inputStream,
+						 final @NotNull ReloadSetting reloadSetting,
+						 final @NotNull CommentSetting commentSetting,
+						 final boolean synchronizedData,
+						 final @NotNull Class<? extends Map> map,
+						 final @NotNull Class<? extends List> list) {
+		super(file, inputStream, reloadSetting, synchronizedData, map, list);
+		this.commentSetting = commentSetting;
 	}
 
 
@@ -59,7 +58,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getHeader(this.fileData());
+			return TomlUtils.getHeader(this.fileData());
 		} else {
 			//noinspection unchecked
 			return this.provider().newList();
@@ -72,7 +71,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			final @NotNull String tempData = this.fileData().toString();
-			ThunderUtils.setHeader(this.fileData(), header);
+			TomlUtils.setHeader(this.fileData(), header);
 			if (!this.fileData().toString().equals(tempData)) {
 				this.save();
 			}
@@ -83,7 +82,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getHeader(this.fileData(), key);
+			return TomlUtils.getHeader(this.fileData(), key);
 		} else {
 			//noinspection unchecked
 			return this.provider().newList();
@@ -94,7 +93,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getHeaderUseArray(this.fileData(), key);
+			return TomlUtils.getHeaderUseArray(this.fileData(), key);
 		} else {
 			//noinspection unchecked
 			return this.provider().newList();
@@ -112,7 +111,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			final @NotNull String tempData = this.fileData().toString();
-			ThunderUtils.setHeader(this.fileData(), key, header);
+			TomlUtils.setHeader(this.fileData(), key, header);
 			if (!this.fileData().toString().equals(tempData)) {
 				this.save();
 			}
@@ -130,7 +129,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			final @NotNull String tempData = this.fileData().toString();
-			ThunderUtils.setHeaderUseArray(this.fileData(), key, header);
+			TomlUtils.setHeaderUseArray(this.fileData(), key, header);
 			if (!this.fileData().toString().equals(tempData)) {
 				this.save();
 			}
@@ -143,7 +142,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getFooter(this.fileData());
+			return TomlUtils.getFooter(this.fileData());
 		} else {
 			//noinspection unchecked
 			return this.provider().newList();
@@ -156,7 +155,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			final @NotNull String tempData = this.fileData().toString();
-			ThunderUtils.setFooter(this.fileData(), footer);
+			TomlUtils.setFooter(this.fileData(), footer);
 			if (!this.fileData().toString().equals(tempData)) {
 				this.save();
 			}
@@ -167,7 +166,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getFooter(this.fileData(), key);
+			return TomlUtils.getFooter(this.fileData(), key);
 		} else {
 			//noinspection unchecked
 			return this.provider().newList();
@@ -178,7 +177,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getFooterUseArray(this.fileData(), key);
+			return TomlUtils.getFooterUseArray(this.fileData(), key);
 		} else {
 			//noinspection unchecked
 			return this.provider().newList();
@@ -196,7 +195,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			final @NotNull String tempData = this.fileData().toString();
-			ThunderUtils.setFooter(this.fileData(), key, footer);
+			TomlUtils.setFooter(this.fileData(), key, footer);
 			if (!this.fileData().toString().equals(tempData)) {
 				this.save();
 			}
@@ -214,7 +213,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
 			@NotNull String tempData = this.fileData().toString();
-			ThunderUtils.setFooterUseArray(this.fileData(), key, footer);
+			TomlUtils.setFooterUseArray(this.fileData(), key, footer);
 			if (!this.fileData().toString().equals(tempData)) {
 				this.save();
 			}
@@ -226,7 +225,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.fileData(), true);
+			return TomlUtils.getComments(this.fileData(), true);
 		} else {
 			//noinspection unchecked
 			return this.provider().newList();
@@ -237,7 +236,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.fileData(), key, true);
+			return TomlUtils.getComments(this.fileData(), key, true);
 		} else {
 			//noinspection unchecked
 			return this.provider().newList();
@@ -248,7 +247,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getCommentsUseArray(this.fileData(), key, true);
+			return TomlUtils.getCommentsUseArray(this.fileData(), key, true);
 		} else {
 			//noinspection unchecked
 			return this.provider().newList();
@@ -259,7 +258,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.fileData(), false);
+			return TomlUtils.getComments(this.fileData(), false);
 		} else {
 			//noinspection unchecked
 			return this.provider().newList();
@@ -270,7 +269,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getComments(this.fileData(), key, false);
+			return TomlUtils.getComments(this.fileData(), key, false);
 		} else {
 			//noinspection unchecked
 			return this.provider().newList();
@@ -281,7 +280,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			return ThunderUtils.getCommentsUseArray(this.fileData(), key, false);
+			return TomlUtils.getCommentsUseArray(this.fileData(), key, false);
 		} else {
 			//noinspection unchecked
 			return this.provider().newList();
@@ -296,8 +295,8 @@ public class ThunderConfig extends ThunderFile implements Config {
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull ThunderConfigSection getSection(final @NotNull String sectionKey) {
-		return new LocalSection(sectionKey, this);
+	public @NotNull TomlConfigSection getSection(final @NotNull String sectionKey) {
+		return new TomlConfig.LocalSection(sectionKey, this);
 	}
 
 	/**
@@ -308,21 +307,21 @@ public class ThunderConfig extends ThunderFile implements Config {
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull ThunderConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new LocalSection(sectionKey, this);
+	public @NotNull TomlConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
+		return new TomlConfig.LocalSection(sectionKey, this);
 	}
 
 
-	private static class LocalSection extends ThunderConfigSection {
+	private static class LocalSection extends TomlConfigSection {
 
 		private LocalSection(final @NotNull String sectionKey,
-							 final @NotNull ThunderConfig thunderConfig) {
-			super(sectionKey, thunderConfig);
+							 final @NotNull TomlConfig tomlConfig) {
+			super(sectionKey, tomlConfig);
 		}
 
 		private LocalSection(final @NotNull String[] sectionKey,
-							 final @NotNull ThunderConfig thunderConfig) {
-			super(sectionKey, thunderConfig);
+							 final @NotNull TomlConfig tomlConfig) {
+			super(sectionKey, tomlConfig);
 		}
 	}
 }

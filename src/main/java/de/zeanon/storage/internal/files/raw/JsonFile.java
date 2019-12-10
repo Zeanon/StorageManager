@@ -40,7 +40,7 @@ import org.json.JSONTokener;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
+public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
 
 
 	/**
@@ -182,6 +182,13 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		return new LocalSection(sectionKey, this);
 	}
 
+	/**
+	 * Get a Section with a defined SectionKey
+	 *
+	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 *
+	 * @return the Section using the given sectionKey
+	 */
 	@Override
 	public @NotNull JsonFileSection getSectionUseArray(@NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
@@ -245,7 +252,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		}
 	}
 
-	private static class LocalFileData extends StandardFileData<Map, List> {
+	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> {
 
 		private LocalFileData(final @NotNull Provider<Map, List> provider, final boolean synchronize) {
 			super(provider, synchronize);

@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 @Accessors(fluent = true, chain = false)
 @SuppressWarnings({"unused", "DefaultAnnotationParam"})
-public class StandardFileData<M extends Map, L extends List> implements FileData<M, Map.Entry<String, Object>, L>, Comparable<StandardFileData> {
+public class StandardFileData<M extends Map, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<StandardFileData> {
 
 
 	private final @NotNull Provider<M, L> provider;
@@ -54,7 +54,7 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 */
 	@Override
 	@Contract("-> new")
-	public @NotNull List<Map.Entry<String, Object>> entryList() {
+	public @NotNull List<E> entryList() {
 		//noinspection unchecked
 		return this.internalEntryList(this.dataMap);
 	}
@@ -66,7 +66,7 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 */
 	@Override
 	@Contract("-> new")
-	public @NotNull List<Map.Entry<String, Object>> blockEntryList() {
+	public @NotNull List<E> blockEntryList() {
 		//noinspection unchecked
 		return provider.newList(new Class[]{Set.class}, this.dataMap.entrySet());
 	}
@@ -81,7 +81,7 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 */
 	@Override
 	@Contract("_ -> new")
-	public @Nullable List<Map.Entry<String, Object>> entryList(final @NotNull String key) {
+	public @Nullable List<E> entryList(final @NotNull String key) {
 		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -100,7 +100,7 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 */
 	@Override
 	@Contract("_ -> new")
-	public @Nullable List<Map.Entry<String, Object>> blockEntryList(final @NotNull String key) {
+	public @Nullable List<E> blockEntryList(final @NotNull String key) {
 		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -120,7 +120,7 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 */
 	@Override
 	@Contract("_ -> new")
-	public @Nullable List<Map.Entry<String, Object>> entryListUseArray(final @NotNull String... key) {
+	public @Nullable List<E> entryListUseArray(final @NotNull String... key) {
 		final @Nullable Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -139,7 +139,7 @@ public class StandardFileData<M extends Map, L extends List> implements FileData
 	 */
 	@Override
 	@Contract("_ -> new")
-	public @Nullable List<Map.Entry<String, Object>> blockEntryListUseArray(final @NotNull String... key) {
+	public @Nullable List<E> blockEntryListUseArray(final @NotNull String... key) {
 		final @Nullable Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked

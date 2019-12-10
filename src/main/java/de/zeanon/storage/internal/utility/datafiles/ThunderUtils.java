@@ -34,15 +34,15 @@ public class ThunderUtils {
 	 */
 	public static @NotNull List<String> getHeader(final @NotNull ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> fileData) {
 		//noinspection unchecked
-		final @NotNull List<String> returnList = fileData.provider().newList();
+		final @NotNull List<String> result = fileData.provider().newList();
 		for (final @NotNull DataMap.TripletNode<String, Object> entry : fileData.blockEntryList()) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
-				returnList.add(entry.getKey());
+				result.add(entry.getKey());
 			} else {
-				return returnList;
+				return result;
 			}
 		}
-		return returnList;
+		return result;
 	}
 
 	/**
@@ -101,9 +101,9 @@ public class ThunderUtils {
 	 */
 	public static @NotNull List<String> getFooter(final @NotNull ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> fileData) {
 		//noinspection unchecked
-		final @NotNull List<String> returnList = fileData.provider().newList();
+		final @NotNull List<String> result = fileData.provider().newList();
 		final @NotNull List<DataMap.TripletNode<String, Object>> entryList = fileData.blockEntryList();
-		return ThunderUtils.internalGetFooter(returnList, entryList);
+		return ThunderUtils.internalGetFooter(result, entryList);
 	}
 
 	/**
@@ -166,15 +166,15 @@ public class ThunderUtils {
 	public static @Nullable List<String> getHeader(final @NotNull ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> fileData, final @NotNull String key) {
 		if (fileData.containsKey(key)) {
 			//noinspection unchecked
-			final @NotNull List<String> returnList = fileData.provider().newList();
+			final @NotNull List<String> result = fileData.provider().newList();
 			for (final @NotNull DataMap.TripletNode<String, Object> entry : fileData.blockEntryList(key)) {
 				if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
-					returnList.add(entry.getKey());
+					result.add(entry.getKey());
 				} else {
-					return returnList;
+					return result;
 				}
 			}
-			return returnList;
+			return result;
 		} else {
 			return null;
 		}
@@ -183,15 +183,15 @@ public class ThunderUtils {
 	public static @Nullable List<String> getHeaderUseArray(final @NotNull ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> fileData, final @NotNull String... key) {
 		if (fileData.containsKeyUseArray(key)) {
 			//noinspection unchecked
-			final @NotNull List<String> returnList = fileData.provider().newList();
+			final @NotNull List<String> result = fileData.provider().newList();
 			for (final @NotNull DataMap.TripletNode<String, Object> entry : fileData.blockEntryListUseArray(key)) {
 				if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
-					returnList.add(entry.getKey());
+					result.add(entry.getKey());
 				} else {
-					return returnList;
+					return result;
 				}
 			}
-			return returnList;
+			return result;
 		} else {
 			return null;
 		}
@@ -209,8 +209,8 @@ public class ThunderUtils {
 	 */
 	public static @NotNull List<String> getFooter(final @NotNull ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> fileData, final @NotNull String key) {
 		//noinspection unchecked
-		final @NotNull List<String> returnList = fileData.provider().newList();
-		return ThunderUtils.internalGetFooter(returnList, fileData.entryList(key));
+		final @NotNull List<String> result = fileData.provider().newList();
+		return ThunderUtils.internalGetFooter(result, fileData.entryList(key));
 	}
 
 	public static @NotNull List<String> getFooterUseArray(final @NotNull ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> fileData, final @NotNull String... key) {
@@ -252,18 +252,18 @@ public class ThunderUtils {
 
 	// <Internal>
 	@Contract("_, _ -> param1")
-	private static @NotNull List<String> internalGetFooter(final @NotNull List<String> returnList, final @NotNull List<DataMap.TripletNode<String, Object>> entryList) {
+	private static @NotNull List<String> internalGetFooter(final @NotNull List<String> result, final @NotNull List<DataMap.TripletNode<String, Object>> entryList) {
 		Collections.reverse(entryList);
 		for (final @NotNull DataMap.TripletNode<String, Object> entry : entryList) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
-				returnList.add(entry.getKey());
+				result.add(entry.getKey());
 			} else {
-				Collections.reverse(returnList);
-				return returnList;
+				Collections.reverse(result);
+				return result;
 			}
 		}
-		Collections.reverse(returnList);
-		return returnList;
+		Collections.reverse(result);
+		return result;
 	}
 
 	private static void internalSetHeader(final @Nullable String[] header, final @NotNull List<DataMap.TripletNode<String, Object>> entryList, final @NotNull DataMap<String, Object> returnMap) {
@@ -306,13 +306,13 @@ public class ThunderUtils {
 
 	private static @NotNull List<String> internalGetComments(final @NotNull List<DataMap.TripletNode<String, Object>> entryList, final @NotNull Provider<? extends DataMap, ? extends List> provider) {
 		//noinspection unchecked
-		final @NotNull List<String> returnList = provider.newList();
+		final @NotNull List<String> result = provider.newList();
 		for (final @NotNull DataMap.TripletNode<String, Object> entry : entryList) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
-				returnList.add(entry.getKey());
+				result.add(entry.getKey());
 			}
 		}
-		return returnList;
+		return result;
 	}
 	// </Internal>
 }

@@ -1,16 +1,24 @@
 package de.zeanon.storage.internal.base.interfaces;
 
+import de.zeanon.storage.internal.utility.locks.ExtendedFileLock;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * Basic interface for ReadWriteAble FileLocks
+ */
 @SuppressWarnings("unused")
 public interface ReadWriteFileLock extends AutoCloseable {
 
-	void lock() throws IOException;
+	void lock();
 
-	void unlock() throws IOException;
+	boolean tryLock();
+
+	void unlock();
+
+	@NotNull ExtendedFileLock baseLock();
 
 	@NotNull FileChannel getFileChannel();
 
@@ -33,8 +41,6 @@ public interface ReadWriteFileLock extends AutoCloseable {
 	@NotNull BufferedOutputStream createBufferedOutputStream();
 
 	void truncateChannel(final long size) throws IOException;
-
-	void convertLock() throws IOException;
 
 
 	@Override

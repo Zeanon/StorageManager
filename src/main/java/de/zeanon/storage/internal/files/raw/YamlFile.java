@@ -39,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Map, List> {
+public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
 
 
 	/**
@@ -117,6 +117,13 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 		return new LocalSection(sectionKey, this);
 	}
 
+	/**
+	 * Get a Section with a defined SectionKey
+	 *
+	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 *
+	 * @return the Section using the given sectionKey
+	 */
 	@Override
 	public @NotNull YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
@@ -185,7 +192,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, List>, Ma
 		}
 	}
 
-	private static class LocalFileData extends StandardFileData<Map, List> {
+	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> {
 
 		private LocalFileData(final @NotNull Provider<Map, List> provider, final boolean synchronize) {
 			super(provider, synchronize);

@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
+public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
 
 
 	/**
@@ -93,15 +93,20 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 	 *
 	 * @return the Section using the given sectionKey
 	 */
-	@NotNull
 	@Override
-	public TomlFileSection getSection(final @NotNull String sectionKey) {
+	public @NotNull TomlFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
-	@NotNull
+	/**
+	 * Get a Section with a defined SectionKey
+	 *
+	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 *
+	 * @return the Section using the given sectionKey
+	 */
 	@Override
-	public TomlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull TomlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -161,7 +166,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, List>, Map, List> {
 		}
 	}
 
-	private static class LocalFileData extends StandardFileData<Map, List> {
+	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> {
 
 		private LocalFileData(final @NotNull Provider<Map, List> provider, final boolean synchronize) {
 			super(provider, synchronize);

@@ -119,15 +119,20 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	 *
 	 * @return the Section using the given sectionKey
 	 */
-	@NotNull
 	@Override
-	public ThunderFileSection getSection(final @NotNull String sectionKey) {
+	public @NotNull ThunderFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
-	@NotNull
+	/**
+	 * Get a Section with a defined SectionKey
+	 *
+	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 *
+	 * @return the Section using the given sectionKey
+	 */
 	@Override
-	public ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
