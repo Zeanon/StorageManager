@@ -63,7 +63,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 			this.file = file;
 			this.fileData = fileData;
 			this.reloadSetting = reloadSetting;
-			this.provider = this.fileData.provider();
+			this.provider = this.fileData().provider();
 		} else {
 			throw new FileTypeException("File '"
 										+ file.getAbsolutePath()
@@ -122,7 +122,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 			Files.delete(this.file().toPath());
 		} catch (IOException e) {
 			throw new RuntimeIOException("Could not delete '"
-										 + this.file.getAbsolutePath() + "'",
+										 + this.file().getAbsolutePath() + "'",
 										 e);
 		}
 	}
@@ -242,7 +242,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	@Override
 	public @Nullable Object get(final @NotNull String key) {
 		this.update();
-		return this.fileData.get(key);
+		return this.fileData().get(key);
 	}
 
 	@Override
@@ -307,7 +307,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		//noinspection unchecked
 		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
 		for (final @NotNull String tempKey : keys) {
-			tempMap.put(blockKey, this.fileData.get(blockKey + "." + tempKey));
+			tempMap.put(blockKey, this.fileData().get(blockKey + "." + tempKey));
 		}
 		return tempMap;
 	}
@@ -323,7 +323,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 			final @NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
-			tempMap.put(blockKey, this.fileData.getUseArray(key));
+			tempMap.put(blockKey, this.fileData().getUseArray(key));
 		}
 		return tempMap;
 	}
@@ -339,7 +339,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 			final @NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
-			tempMap.put(blockKey, this.fileData.getUseArray(key));
+			tempMap.put(blockKey, this.fileData().getUseArray(key));
 		}
 		return tempMap;
 	}
@@ -352,7 +352,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		//noinspection unchecked
 		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
 		for (final @NotNull String tempKey : keys) {
-			tempMap.put(blockKey, this.fileData.get(blockKey + "." + tempKey));
+			tempMap.put(blockKey, this.fileData().get(blockKey + "." + tempKey));
 		}
 		return tempMap;
 	}
@@ -562,218 +562,218 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 						   final @Nullable Object value) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
-		this.fileData.insert(key, value);
-		return !this.fileData.toString().equals(tempData);
+		final @NotNull String tempData = this.fileData().toString();
+		this.fileData().insert(key, value);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean insertUseArray(final @NotNull String[] key,
 								   final @Nullable Object value) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
-		this.fileData.insertUseArray(key, value);
-		return !this.fileData.toString().equals(tempData);
+		final @NotNull String tempData = this.fileData().toString();
+		this.fileData().insertUseArray(key, value);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean insertAll(final @NotNull Map<String, Object> map) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
-			this.fileData.insert(entry.getKey(), entry.getValue());
+			this.fileData().insert(entry.getKey(), entry.getValue());
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean insertAllUseArray(final @NotNull Map<String[], Object> map) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (@NotNull Map.Entry<String[], Object> entry : map.entrySet()) {
-			this.fileData.insertUseArray(entry.getKey(), entry.getValue());
+			this.fileData().insertUseArray(entry.getKey(), entry.getValue());
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean insertAll(final @NotNull Pair<String, Object>... pairs) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (@NotNull Pair<String, Object> entry : pairs) {
-			this.fileData.insert(entry.getKey(), entry.getValue());
+			this.fileData().insert(entry.getKey(), entry.getValue());
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean insertAllUseArray(final @NotNull Pair<String[], Object>... pairs) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (@NotNull Pair<String[], Object> entry : pairs) {
-			this.fileData.insertUseArray(entry.getKey(), entry.getValue());
+			this.fileData().insertUseArray(entry.getKey(), entry.getValue());
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean insertAll(final @NotNull String key,
 							  final @NotNull Map<String, Object> map) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
-			this.fileData.insert(key + "." + entry.getKey(), entry.getValue());
+			this.fileData().insert(key + "." + entry.getKey(), entry.getValue());
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean insertAllUseArray(final @NotNull String[] key,
 									  final @NotNull Map<String[], Object> map) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (final @NotNull Map.Entry<String[], Object> entry : map.entrySet()) {
 			final @NotNull String[] tempKey = new String[key.length + entry.getKey().length];
 			System.arraycopy(key, 0, tempKey, 0, key.length);
 			System.arraycopy(entry.getKey(), 0, tempKey, key.length, entry.getKey().length);
-			this.fileData.insertUseArray(tempKey, entry.getValue());
+			this.fileData().insertUseArray(tempKey, entry.getValue());
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean insertAll(final @NotNull String key,
 							  final @NotNull Pair<String, Object>... pairs) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (@NotNull Pair<String, Object> entry : pairs) {
-			this.fileData.insert(key + "." + entry.getKey(), entry.getValue());
+			this.fileData().insert(key + "." + entry.getKey(), entry.getValue());
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean insertAllUseArray(final @NotNull String[] key,
 									  final @NotNull Pair<String[], Object>... pairs) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (final @NotNull Pair<String[], Object> entry : pairs) {
 			final @NotNull String[] tempKey = new String[key.length + entry.getKey().length];
 			System.arraycopy(key, 0, tempKey, 0, key.length);
 			System.arraycopy(entry.getKey(), 0, tempKey, key.length, entry.getKey().length);
-			this.fileData.insertUseArray(tempKey, entry.getValue());
+			this.fileData().insertUseArray(tempKey, entry.getValue());
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean internalRemove(final @NotNull String key) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
-		this.fileData.remove(key);
-		return !this.fileData.toString().equals(tempData);
+		final @NotNull String tempData = this.fileData().toString();
+		this.fileData().remove(key);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean internalRemoveUseArray(final @NotNull String... key) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
-		this.fileData.removeUseArray(key);
-		return !this.fileData.toString().equals(tempData);
+		final @NotNull String tempData = this.fileData().toString();
+		this.fileData().removeUseArray(key);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean internalRemoveAll(final @NotNull String... keys) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (final @NotNull String tempKey : keys) {
-			this.fileData.remove(tempKey);
+			this.fileData().remove(tempKey);
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean internalRemoveAll(final @NotNull Collection<String> keys) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (final @NotNull String tempKey : keys) {
-			this.fileData.remove(tempKey);
+			this.fileData().remove(tempKey);
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean internalRemoveAllUseArray(final @NotNull String[]... keys) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (final String[] tempKey : keys) {
-			this.fileData.removeUseArray(tempKey);
+			this.fileData().removeUseArray(tempKey);
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean internalRemoveAllUseArray(final @NotNull Collection<String[]> keys) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (final String[] tempKey : keys) {
-			this.fileData.removeUseArray(tempKey);
+			this.fileData().removeUseArray(tempKey);
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean internalRemoveAll(final @NotNull String blockKey,
 									  final @NotNull String... keys) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (final String tempKey : keys) {
-			this.fileData.remove(blockKey + "." + tempKey);
+			this.fileData().remove(blockKey + "." + tempKey);
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean internalRemoveAll(final @NotNull String blockKey,
 									  final @NotNull Collection<String> keys) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (final String tempKey : keys) {
-			this.fileData.remove(blockKey + "." + tempKey);
+			this.fileData().remove(blockKey + "." + tempKey);
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean internalRemoveAllUseArray(final @NotNull String[] blockKey,
 											  final @NotNull String[]... keys) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (final @NotNull String[] tempKey : keys) {
 			final @NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
 			this.fileData().removeUseArray(key);
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean internalRemoveAllUseArray(final @NotNull String[] blockKey,
 											  final @NotNull Collection<String[]> keys) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData.toString();
+		final @NotNull String tempData = this.fileData().toString();
 		for (final @NotNull String[] tempKey : keys) {
 			final @NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
 			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
 			this.fileData().removeUseArray(key);
 		}
-		return !this.fileData.toString().equals(tempData);
+		return !this.fileData().toString().equals(tempData);
 	}
 
 	@Override
 	public int compareTo(final @NotNull FlatFile flatFile) {
-		return this.file.compareTo(flatFile.file);
+		return this.file().compareTo(flatFile.file());
 	}
 }

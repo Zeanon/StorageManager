@@ -112,13 +112,13 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	 * inappropriate default provided in {@code Map}.
 	 */
 	@Override
-	public boolean remove(@NotNull Object key, Object value) {
+	public boolean remove(final @NotNull Object key, final @NotNull Object value) {
 		final @NotNull Iterator<TripletNode<K, V>> tempIterator = this.localList.iterator();
 		TripletNode<K, V> tempNode;
 		long lockStamp = this.localLock.readLock();
 		try {
 			while ((tempNode = tempIterator.next()) != null) {
-				if (tempNode.getKey().equals(key)) {
+				if (tempNode.getKey().equals(key) && tempNode.getValue().equals(value)) {
 					long tempLock = this.localLock.tryConvertToWriteLock(lockStamp);
 					if (this.localLock.validate(tempLock)) {
 						lockStamp = tempLock;

@@ -18,6 +18,8 @@ public interface ReadWriteFileLock extends AutoCloseable {
 
 	void unlock();
 
+	@NotNull ReadWriteFileLock convertLock();
+
 	@NotNull ExtendedFileLock baseLock();
 
 	@NotNull FileChannel getFileChannel();

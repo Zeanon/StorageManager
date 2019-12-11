@@ -2,6 +2,7 @@ package de.zeanon.storage.internal.files.config;
 
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
+import de.zeanon.storage.internal.base.files.FlatFile;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.interfaces.Config;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
@@ -11,6 +12,7 @@ import de.zeanon.storage.internal.files.section.TomlConfigSection;
 import de.zeanon.storage.internal.utility.datafiles.TomlUtils;
 import java.io.File;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
@@ -285,6 +287,206 @@ public class TomlConfig extends TomlFile implements Config {
 			//noinspection unchecked
 			return this.provider().newList();
 		}
+	}
+
+	/**
+	 * Reload with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#reload()
+	 */
+	public void reload(final @NotNull CommentSetting commentSetting) {
+		this.setCommentSetting(commentSetting);
+		this.reload();
+	}
+
+	/**
+	 * Save with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#save()
+	 */
+	public void save(final @NotNull CommentSetting commentSetting) {
+		this.setCommentSetting(commentSetting);
+		this.save();
+	}
+
+
+	/**
+	 * Set with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#set(String, Object)
+	 */
+	public void set(final @NotNull CommentSetting commentSetting,
+					final @NotNull String key,
+					final @Nullable Object value) {
+		this.setCommentSetting(commentSetting);
+		this.set(key, value);
+	}
+
+	/**
+	 * Set with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#set(String, Object)
+	 */
+	public void setUseArray(final @NotNull CommentSetting commentSetting,
+							final @NotNull String[] key,
+							final @Nullable Object value) {
+		this.setCommentSetting(commentSetting);
+		this.setUseArray(key, value);
+	}
+
+	/**
+	 * Set with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#set(String, Object)
+	 */
+	public void setAll(final @NotNull CommentSetting commentSetting,
+					   final @NotNull Map<String, Object> dataMap) {
+		this.setCommentSetting(commentSetting);
+		this.setAll(dataMap);
+	}
+
+	/**
+	 * Set with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#set(String, Object)
+	 */
+	public void setAllUseArray(final @NotNull CommentSetting commentSetting,
+							   final @NotNull Map<String[], Object> dataMap) {
+		this.setCommentSetting(commentSetting);
+		this.setAllUseArray(dataMap);
+	}
+
+	/**
+	 * Set with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#set(String, Object)
+	 */
+	public void setAll(final @NotNull CommentSetting commentSetting,
+					   final @NotNull String key,
+					   final @NotNull Map<String, Object> dataMap) {
+		this.setCommentSetting(commentSetting);
+		this.setAll(key, dataMap);
+	}
+
+	/**
+	 * Set with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#set(String, Object)
+	 */
+	public void setAllUseArray(final @NotNull CommentSetting commentSetting,
+							   final @NotNull String[] blockKey,
+							   final @NotNull Map<String[], Object> dataMap) {
+		this.setCommentSetting(commentSetting);
+		this.setAllUseArray(blockKey, dataMap);
+	}
+
+
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void remove(final @NotNull CommentSetting commentSetting,
+					   final @NotNull String key) {
+		this.setCommentSetting(commentSetting);
+		this.remove(key);
+	}
+
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeUseArray(final @NotNull CommentSetting commentSetting,
+							   final @NotNull String[] key) {
+		this.setCommentSetting(commentSetting);
+		this.removeUseArray(key);
+	}
+
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeAll(final @NotNull CommentSetting commentSetting,
+						  final @NotNull String... keys) {
+		this.setCommentSetting(commentSetting);
+		this.removeAll(keys);
+	}
+
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeAll(final @NotNull CommentSetting commentSetting,
+						  final @NotNull Collection<String> keys) {
+		this.setCommentSetting(commentSetting);
+		this.removeAll(keys);
+	}
+
+	public void removeAllUseArray(final @NotNull CommentSetting commentSetting,
+								  final @NotNull String[]... keys) {
+		this.setCommentSetting(commentSetting);
+		this.removeAllUseArray(keys);
+	}
+
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeAllUseArray(final @NotNull CommentSetting commentSetting,
+								  final @NotNull Collection<String[]> keys) {
+		this.setCommentSetting(commentSetting);
+		this.removeAllUseArray(keys);
+	}
+
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeAll(final @NotNull CommentSetting commentSetting,
+						  final @NotNull String key,
+						  final @NotNull String... keys) {
+		this.setCommentSetting(commentSetting);
+		this.removeAll(key, keys);
+	}
+
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeAll(final @NotNull CommentSetting commentSetting,
+						  final @NotNull String key,
+						  final @NotNull Collection<String> keys) {
+		this.setCommentSetting(commentSetting);
+		this.removeAll(key, keys);
+	}
+
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeAllUseArray(final @NotNull CommentSetting commentSetting,
+								  final @NotNull String[] blockKey,
+								  final @NotNull String[]... keys) {
+		this.setCommentSetting(commentSetting);
+		this.removeAllUseArray(blockKey, keys);
+	}
+
+	/**
+	 * Remove with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#remove(String)
+	 */
+	public void removeAllUseArray(final @NotNull CommentSetting commentSetting,
+								  final @NotNull String[] key, final @NotNull Collection<String[]> keys) {
+		this.setCommentSetting(commentSetting);
+		this.removeAllUseArray(key, keys);
 	}
 
 	/**

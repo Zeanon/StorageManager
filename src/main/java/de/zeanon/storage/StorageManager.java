@@ -175,6 +175,37 @@ public abstract class StorageManager<B extends StorageManager, F extends FlatFil
 
 
 	@Contract("null -> fail; !null -> new")
+	public static @NotNull TomlConfigBuilder tomlConfig(final @NotNull File file) {
+		return new TomlConfigBuilder(file);
+	}
+
+	@Contract("null -> fail; !null -> new")
+	public static @NotNull TomlConfigBuilder tomlConfig(final @NotNull Path file) {
+		return new TomlConfigBuilder(file.toFile());
+	}
+
+	@Contract("null -> fail; !null -> new")
+	public static @NotNull TomlConfigBuilder tomlConfig(final @NotNull String name) {
+		return new TomlConfigBuilder(new File(name + "." + TomlFile.FileType.TOML));
+	}
+
+	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
+	public static @NotNull TomlConfigBuilder tomlConfig(final @NotNull String directory, final @NotNull String name) {
+		return new TomlConfigBuilder(new File(directory, name + "." + TomlFile.FileType.TOML));
+	}
+
+	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
+	public static @NotNull TomlConfigBuilder tomlConfig(final @NotNull File directory, final @NotNull String name) {
+		return new TomlConfigBuilder(new File(directory, name + "." + TomlFile.FileType.TOML));
+	}
+
+	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
+	public static @NotNull TomlConfigBuilder tomlConfig(final @NotNull Path directory, final @NotNull String name) {
+		return new TomlConfigBuilder(new File(directory.toFile(), name + "." + TomlFile.FileType.TOML));
+	}
+
+
+	@Contract("null -> fail; !null -> new")
 	public static @NotNull YamlFileBuilder yamlFile(final @NotNull File file) {
 		return new YamlFileBuilder(file);
 	}
