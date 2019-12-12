@@ -38,15 +38,17 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
 public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
 
 
 	/**
-	 * @param file           the File to be used as a backend
-	 * @param inputStream    the FileContent to be set on the creation of the File
-	 * @param reloadSetting  the ReloadSetting to be used with this instance
-	 * @param commentSetting the CommentSetting to be used with this instance
+	 * @param file             the File to be used as a backend
+	 * @param inputStream      the FileContent to be set on the creation of the File
+	 * @param reloadSetting    the ReloadSetting to be used with this instance
+	 * @param commentSetting   the CommentSetting to be used with this instance
+	 * @param synchronizedData if the saved data should be synchronized
+	 * @param map              the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
+	 * @param list             the List implementation to be used, default ist GapList
 	 *
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
@@ -66,9 +68,9 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 			//noinspection unchecked
 			this.fileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.file())).read());
 			this.lastLoaded(System.currentTimeMillis());
-		} catch (FileNotFoundException e) {
+		} catch (final @NotNull FileNotFoundException e) {
 			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
-		} catch (YamlException e) {
+		} catch (final @NotNull YamlException e) {
 			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e);
 		}
 	}
@@ -90,7 +92,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 				YamlEditor.write(this.file(), YamlUtils.parseComments(unEdited, header, this.provider()));
 				this.write(this.fileData().dataMap());
 			}
-		} catch (IOException e) {
+		} catch (final @NotNull IOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e.getCause());
 		}
 	}
@@ -135,9 +137,9 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 		try {
 			//noinspection unchecked
 			return (Map<String, Object>) new YamlReader(new FileReader(this.file())).read();
-		} catch (YamlException e) {
+		} catch (final @NotNull YamlException e) {
 			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e);
-		} catch (FileNotFoundException e) {
+		} catch (final @NotNull FileNotFoundException e) {
 			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
 		}
 	}

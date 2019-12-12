@@ -30,7 +30,7 @@ public class YamlEditor {
 
 	public static @NotNull List<String> readComments(final @NotNull File file,
 													 final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
-		return getCommentsFromLines(read(file), provider);
+		return YamlEditor.getCommentsFromLines(YamlEditor.read(file), provider);
 	}
 
 	@Contract("_ -> new")
@@ -49,31 +49,31 @@ public class YamlEditor {
 	@Contract("_, _ -> new")
 	public static @NotNull List<String> readFooter(final @NotNull File file,
 												   final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
-		return getFooterFromLines(read(file), provider);
+		return YamlEditor.getFooterFromLines(YamlEditor.read(file), provider);
 	}
 
 	@Contract("_, _ -> new")
 	public static @NotNull List<String> readHeader(final @NotNull File file,
 												   final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
-		return getHeaderFromLines(read(file), provider);
+		return YamlEditor.getHeaderFromLines(YamlEditor.read(file), provider);
 	}
 
 	@Contract("_, _ -> new")
 	public static @NotNull List<String> readKeys(final @NotNull File file,
 												 final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
-		return getKeys(read(file), provider);
+		return YamlEditor.getKeys(YamlEditor.read(file), provider);
 	}
 
 	@Contract("_, _ -> new")
 	public static @NotNull List<String> readPureComments(final @NotNull File file,
 														 final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
-		return getPureCommentsFromLines(read(file), provider);
+		return YamlEditor.getPureCommentsFromLines(YamlEditor.read(file), provider);
 	}
 
 	@Contract("_, _ -> new")
 	public static @NotNull List<String> readWithoutHeaderAndFooter(final @NotNull File file,
 																   final @NotNull Provider<? extends Map, ? extends List> provider) throws IOException {
-		return getLinesWithoutFooterAndHeaderFromLines(read(file), provider);
+		return YamlEditor.getLinesWithoutFooterAndHeaderFromLines(YamlEditor.read(file), provider);
 	}
 
 	public static void write(final @NotNull File file,
@@ -94,8 +94,8 @@ public class YamlEditor {
 	@Contract("_, _ -> param1")
 	public static @NotNull List<String> getLinesWithoutFooterAndHeaderFromLines(final @NotNull List<String> lines,
 																				final @NotNull Provider<? extends Map, ? extends List> provider) {
-		final @NotNull List<String> header = getHeaderFromLines(lines, provider);
-		final @NotNull List<String> footer = getFooterFromLines(lines, provider);
+		final @NotNull List<String> header = YamlEditor.getHeaderFromLines(lines, provider);
+		final @NotNull List<String> footer = YamlEditor.getFooterFromLines(lines, provider);
 
 		lines.removeAll(header);
 		lines.removeAll(footer);
@@ -168,9 +168,9 @@ public class YamlEditor {
 	@Contract("_, _ -> new")
 	private static @NotNull List<String> getPureCommentsFromLines(final @NotNull List<String> lines,
 																  final @NotNull Provider<? extends Map, ? extends List> provider) {
-		final @NotNull List<String> comments = getCommentsFromLines(lines, provider);
-		final @NotNull List<String> header = getHeaderFromLines(lines, provider);
-		final @NotNull List<String> footer = getFooterFromLines(lines, provider);
+		final @NotNull List<String> comments = YamlEditor.getCommentsFromLines(lines, provider);
+		final @NotNull List<String> header = YamlEditor.getHeaderFromLines(lines, provider);
+		final @NotNull List<String> footer = YamlEditor.getFooterFromLines(lines, provider);
 
 		comments.removeAll(header);
 		comments.removeAll(footer);

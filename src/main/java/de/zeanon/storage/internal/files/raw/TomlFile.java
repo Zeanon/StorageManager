@@ -34,14 +34,16 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
 public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
 
 
 	/**
-	 * @param file          the File to be used as a backend
-	 * @param inputStream   the FileContent to be set on the creation of the File
-	 * @param reloadSetting the ReloadSetting to be used with this instance
+	 * @param file             the File to be used as a backend
+	 * @param inputStream      the FileContent to be set on the creation of the File
+	 * @param reloadSetting    the ReloadSetting to be used with this instance
+	 * @param synchronizedData if the saved data should be synchronized
+	 * @param map              the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
+	 * @param list             the List implementation to be used, default ist GapList
 	 *
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
@@ -59,9 +61,9 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		try {
 			this.fileData().loadData(com.electronwill.toml.Toml.read(this.file()));
 			this.lastLoaded(System.currentTimeMillis());
-		} catch (IOException e) {
+		} catch (final @NotNull IOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
-		} catch (TomlException e) {
+		} catch (final @NotNull TomlException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}
 	}
@@ -71,7 +73,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		try {
 			//noinspection unchecked
 			Toml.write(this.fileData().dataMap(), this.file());
-		} catch (IOException e) {
+		} catch (final @NotNull IOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e.getCause());
 		}
 	}
@@ -115,9 +117,9 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	protected @NotNull Map readFile() {
 		try {
 			return Toml.read(this.file());
-		} catch (IOException e) {
+		} catch (final @NotNull IOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
-		} catch (TomlException e) {
+		} catch (final @NotNull TomlException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}
 	}

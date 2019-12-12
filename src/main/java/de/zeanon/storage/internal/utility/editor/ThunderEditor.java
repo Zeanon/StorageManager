@@ -46,7 +46,7 @@ public class ThunderEditor {
 	 * @throws ObjectNullException if a passed value is null
 	 */
 	public static void writeData(final @NotNull File file,
-								 final @NotNull ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> fileData,
+								 final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData,
 								 final @NotNull CommentSetting commentSetting) {
 		if (commentSetting == Comment.PRESERVE) {
 			ThunderEditor.initialWriteWithComments(file, fileData);
@@ -88,34 +88,34 @@ public class ThunderEditor {
 	// <Write Data>
 	// <Write Data with Comments>
 	private static void initialWriteWithComments(final @NotNull File file,
-												 final @NotNull ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> fileData) {
+												 final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData) {
 		if (!fileData.isEmpty()) {
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
 				 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
 				tempLock.lock();
 				tempLock.truncateChannel(0);
-				final @NotNull Iterator<DataMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
+				final @NotNull Iterator<DataMap.DataNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
 				ThunderEditor.topLayerWriteWithComments(writer, mapIterator.next());
 				mapIterator.forEachRemaining(entry -> {
 					writer.println();
 					ThunderEditor.topLayerWriteWithComments(writer, entry);
 				});
 				writer.flush();
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		} else {
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock()) {
 				tempLock.lock();
 				tempLock.truncateChannel(0);
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
 
 	private static void topLayerWriteWithComments(final @NotNull PrintWriter writer,
-												  final @NotNull DataMap.TripletNode<String, Object> entry) {
+												  final @NotNull DataMap.DataNode<String, Object> entry) {
 		if (entry.getValue() == LineType.COMMENT || entry.getValue() == LineType.HEADER || entry.getValue() == LineType.FOOTER) {
 			writer.print(entry.getKey().startsWith("#") ? entry.getKey() : ("#" + entry.getKey()));
 		} else if (entry.getValue() instanceof DataMap) {
@@ -146,7 +146,7 @@ public class ThunderEditor {
 	private static void internalWriteWithComments(final @NotNull DataMap<String, Object> map,
 												  final @NotNull String indentationString,
 												  final @NotNull PrintWriter writer) {
-		for (final @NotNull DataMap.TripletNode<String, Object> entry : map.entryList()) {
+		for (final @NotNull DataMap.DataNode<String, Object> entry : map.entryList()) {
 			writer.println();
 			if (entry.getValue() == LineType.COMMENT || entry.getValue() == LineType.HEADER || entry.getValue() == LineType.FOOTER) {
 				writer.print(indentationString
@@ -192,14 +192,14 @@ public class ThunderEditor {
 
 	// <Write Data without Comments>
 	private static void initialWriteWithOutComments(final @NotNull File file,
-													final @NotNull ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List> fileData) {
+													final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData) {
 		if (!fileData.isEmpty()) {
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
 				 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
 				tempLock.lock();
 				tempLock.truncateChannel(0);
-				final @NotNull Iterator<DataMap.TripletNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
-				@NotNull DataMap.TripletNode<String, Object> initialEntry = mapIterator.next();
+				final @NotNull Iterator<DataMap.DataNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
+				@NotNull DataMap.DataNode<String, Object> initialEntry = mapIterator.next();
 				while (initialEntry.getValue() == LineType.COMMENT || initialEntry.getValue() == LineType.HEADER || initialEntry.getValue() == LineType.FOOTER || initialEntry.getValue() == LineType.BLANK_LINE) {
 					initialEntry = mapIterator.next();
 				}
@@ -211,21 +211,21 @@ public class ThunderEditor {
 					}
 				});
 				writer.flush();
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		} else {
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock()) {
 				tempLock.lock();
 				tempLock.truncateChannel(0);
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
 			}
 		}
 	}
 
 	private static void topLayerWriteWithOutComments(final @NotNull PrintWriter writer,
-													 final @NotNull DataMap.TripletNode<String, Object> entry) {
+													 final @NotNull DataMap.DataNode<String, Object> entry) {
 		if (entry.getValue() instanceof DataMap) {
 			writer.print(entry.getKey()
 						 + " {");
@@ -254,7 +254,7 @@ public class ThunderEditor {
 	private static void internalWriteWithoutComments(final @NotNull DataMap<String, Object> map,
 													 final @NotNull String indentationString,
 													 final @NotNull PrintWriter writer) {
-		for (final @NotNull DataMap.TripletNode<String, Object> entry : map.entryList()) {
+		for (final @NotNull DataMap.DataNode<String, Object> entry : map.entryList()) {
 			if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.HEADER && entry.getValue() != LineType.FOOTER && entry.getValue() != LineType.BLANK_LINE) {
 				writer.println();
 				if (entry.getValue() instanceof DataMap) {
@@ -411,9 +411,9 @@ public class ThunderEditor {
 			}
 			tempMap.trimToSize();
 			return tempMap;
-		} catch (ArrayIndexOutOfBoundsException e) {
+		} catch (final @NotNull ArrayIndexOutOfBoundsException e) {
 			throw new ThunderException("Error while parsing content of '" + file.getAbsolutePath() + "'", e);
-		} catch (IOException e) {
+		} catch (final @NotNull IOException e) {
 			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e.getCause());
 		}
 	}
@@ -493,9 +493,9 @@ public class ThunderEditor {
 			}
 			tempMap.trimToSize();
 			return tempMap;
-		} catch (ArrayIndexOutOfBoundsException e) {
+		} catch (final @NotNull ArrayIndexOutOfBoundsException e) {
 			throw new ThunderException("Error while parsing content of '" + file.getAbsolutePath() + "'", e);
-		} catch (IOException e) {
+		} catch (final @NotNull IOException e) {
 			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e.getCause());
 		}
 	}
@@ -611,7 +611,6 @@ public class ThunderEditor {
 	// </Internal>
 
 
-	@SuppressWarnings("unused")
 	public enum LineType {
 
 		VALUE,

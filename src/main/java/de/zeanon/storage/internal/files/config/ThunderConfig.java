@@ -27,15 +27,20 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings({"unused", "UnusedReturnValue"})
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class ThunderConfig extends ThunderFile implements Config {
 
 
 	/**
-	 * @param file           the File to be used as a backend
-	 * @param inputStream    the FileContent to be set on the creation of the File
-	 * @param reloadSetting  the ReloadSetting to be used with this instance
-	 * @param commentSetting the CommentSetting to be used with this instance
+	 * @param file             the File to be used as a backend
+	 * @param inputStream      the FileContent to be set on the creation of the File
+	 * @param reloadSetting    the ReloadSetting to be used with this instance
+	 * @param commentSetting   the CommentSetting to be used with this instance
+	 * @param bufferSize       the bufferSize to be used with the Reader and Writer
+	 * @param concurrentData   if the saved data should be concurrent
+	 * @param synchronizedData if the saved data should be synchronized
+	 * @param map              the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
+	 * @param list             the List implementation to be used, default ist GapList
 	 *
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
@@ -213,7 +218,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
-			@NotNull String tempData = this.fileData().toString();
+			final @NotNull String tempData = this.fileData().toString();
 			ThunderUtils.setFooterUseArray(this.fileData(), key, footer);
 			if (!this.fileData().toString().equals(tempData)) {
 				this.save();

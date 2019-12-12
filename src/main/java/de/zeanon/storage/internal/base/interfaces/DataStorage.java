@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 2.4.0
  */
-@SuppressWarnings({"unused", "unchecked", "UnusedReturnValue"})
+@SuppressWarnings({"unused", "unchecked"})
 public interface DataStorage {
 
 	/**
@@ -93,6 +93,7 @@ public interface DataStorage {
 	 * @return List
 	 */
 	default @Nullable List<String> getStringList(final @NotNull String key) {
+		//noinspection unchecked
 		return (List<String>) this.get(key);
 	}
 
@@ -104,6 +105,7 @@ public interface DataStorage {
 	 * @return List
 	 */
 	default @Nullable List<String> getStringListUseArray(final @NotNull String... key) {
+		//noinspection unchecked
 		return (List<String>) this.getUseArray(key);
 	}
 
@@ -159,6 +161,7 @@ public interface DataStorage {
 	 * @return Byte-List
 	 */
 	default @Nullable List<Byte> getByteList(final @NotNull String key) {
+		//noinspection unchecked
 		return (List<Byte>) this.get(key);
 	}
 
@@ -170,6 +173,7 @@ public interface DataStorage {
 	 * @return Byte-List
 	 */
 	default @Nullable List<Byte> getByteListUseArray(final @NotNull String... key) {
+		//noinspection unchecked
 		return (List<Byte>) this.getUseArray(key);
 	}
 
@@ -203,6 +207,7 @@ public interface DataStorage {
 	 * @return Double-List
 	 */
 	default @Nullable List<Double> getDoubleList(final @NotNull String key) {
+		//noinspection unchecked
 		return (List<Double>) this.get(key);
 	}
 
@@ -214,6 +219,7 @@ public interface DataStorage {
 	 * @return Double-List
 	 */
 	default @Nullable List<Double> getDoubleListUseArray(final @NotNull String... key) {
+		//noinspection unchecked
 		return (List<Double>) this.getUseArray(key);
 	}
 
@@ -247,6 +253,7 @@ public interface DataStorage {
 	 * @return Float-List
 	 */
 	default @Nullable List<Float> getFloatList(final @NotNull String key) {
+		//noinspection unchecked
 		return (List<Float>) this.get(key);
 	}
 
@@ -258,6 +265,7 @@ public interface DataStorage {
 	 * @return Float-List
 	 */
 	default @Nullable List<Float> getFloatListUseArray(final @NotNull String... key) {
+		//noinspection unchecked
 		return (List<Float>) this.getUseArray(key);
 	}
 
@@ -291,6 +299,7 @@ public interface DataStorage {
 	 * @return Integer-List
 	 */
 	default @Nullable List<Integer> getIntegerList(final @NotNull String key) {
+		//noinspection unchecked
 		return (List<Integer>) this.get(key);
 	}
 
@@ -302,6 +311,7 @@ public interface DataStorage {
 	 * @return Integer-List
 	 */
 	default @Nullable List<Integer> getIntegerListUseArray(final @NotNull String... key) {
+		//noinspection unchecked
 		return (List<Integer>) this.getUseArray(key);
 	}
 
@@ -335,6 +345,7 @@ public interface DataStorage {
 	 * @return Short-List
 	 */
 	default @Nullable List<Short> getShortList(final @NotNull String key) {
+		//noinspection unchecked
 		return (List<Short>) this.get(key);
 	}
 
@@ -346,6 +357,7 @@ public interface DataStorage {
 	 * @return Short-List
 	 */
 	default @Nullable List<Short> getShortListUseArray(final @NotNull String... key) {
+		//noinspection unchecked
 		return (List<Short>) this.getUseArray(key);
 	}
 
@@ -379,6 +391,7 @@ public interface DataStorage {
 	 * @return Long-List
 	 */
 	default @Nullable List<Long> getLongList(final @NotNull String key) {
+		//noinspection unchecked
 		return (List<Long>) this.get(key);
 	}
 
@@ -390,6 +403,7 @@ public interface DataStorage {
 	 * @return Long-List
 	 */
 	default @Nullable List<Long> getLongListUseArray(final @NotNull String... key) {
+		//noinspection unchecked
 		return (List<Long>) this.getUseArray(key);
 	}
 
@@ -447,6 +461,7 @@ public interface DataStorage {
 	 * @return a Pair with a key of type K and a value of type V
 	 */
 	default @Nullable <K, V> Pair<K, V> getPair(final @NotNull String key) {
+		//noinspection unchecked
 		return (Pair<K, V>) this.get(key);
 	}
 
@@ -460,6 +475,7 @@ public interface DataStorage {
 	 * @return a Pair with a key of type K and a value of type V
 	 */
 	default @Nullable <K, V> Pair<K, V> getPairUseArray(final @NotNull String... key) {
+		//noinspection unchecked
 		return (Pair<K, V>) this.getUseArray(key);
 	}
 
@@ -668,7 +684,7 @@ public interface DataStorage {
 	 */
 	default void setDefault(final @NotNull String key, final @Nullable Object value) {
 		if (!this.hasKey(key)) {
-			set(key, value);
+			this.set(key, value);
 		}
 	}
 

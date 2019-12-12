@@ -20,11 +20,10 @@ import org.jetbrains.annotations.Nullable;
  */
 @EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
-@SuppressWarnings({"unused", "UnusedReturnValue"})
 public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements DataMap<K, V> {
 
 
-	protected final @NotNull IList<TripletNode<K, V>> localList;
+	private final @NotNull IList<DataNode<K, V>> localList;
 
 
 	/**
@@ -49,7 +48,7 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	@Override
 	@Contract(pure = true)
 	public boolean containsKey(final @NotNull Object key) {
-		for (final @NotNull TripletNode<K, V> TempNode : this.localList) {
+		for (final @NotNull DataMap.DataNode<K, V> TempNode : this.localList) {
 			if (TempNode.getKey().equals(key)) {
 				return true;
 			}
@@ -69,7 +68,7 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	@Override
 	@Contract(pure = true)
 	public boolean containsValue(final @NotNull Object value) {
-		for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+		for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
 			if (value.equals(tempNode.getValue())) {
 				return true;
 			}
@@ -92,7 +91,7 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 */
 	@Override
 	public @Nullable V put(final @NotNull K key, final @Nullable V value) {
-		for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+		for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
 			if (tempNode.getKey().equals(key)) {
 				return tempNode.setValue(value);
 			}
@@ -143,7 +142,7 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 * @param node mapping to be added to the map
 	 */
 	@Override
-	public void add(final @NotNull TripletNode<K, V> node) {
+	public void add(final @NotNull DataMap.DataNode<K, V> node) {
 		this.localList.add(node);
 	}
 
@@ -153,7 +152,7 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 * @param nodes mappings to be added to the map
 	 */
 	@Override
-	public void addAll(final @NotNull List<TripletNode<K, V>> nodes) {
+	public void addAll(final @NotNull List<DataNode<K, V>> nodes) {
 		this.localList.addAll(nodes);
 	}
 
@@ -188,7 +187,7 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 */
 	@Override
 	public @Nullable V get(final @NotNull Object key) {
-		for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+		for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
 			if (tempNode.getKey().equals(key)) {
 				return tempNode.getValue();
 			}
@@ -208,8 +207,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 */
 	@Override
 	public @Nullable V remove(final @NotNull Object key) {
-		final @NotNull Iterator<TripletNode<K, V>> tempIterator = this.localList.iterator();
-		TripletNode<K, V> tempNode;
+		final @NotNull Iterator<DataNode<K, V>> tempIterator = this.localList.iterator();
+		DataNode<K, V> tempNode;
 		while ((tempNode = tempIterator.next()) != null) {
 			if (tempNode.getKey().equals(key)) {
 				tempIterator.remove();
@@ -233,9 +232,6 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		this.localList.trimToSize();
 	}
 
-	@Override //NOSONAR
-	public abstract @NotNull DataMap<K, V> clone(); //NOSONAR
-
 	@Override
 	@Contract("-> new")
 	public @NotNull Set<Map.Entry<K, V>> entrySet() {
@@ -243,9 +239,12 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	}
 
 	@Override
-	public @NotNull List<TripletNode<K, V>> entryList() {
+	public @NotNull List<DataNode<K, V>> entryList() {
 		return this.localList;
 	}
+
+	@Override //NOSONAR
+	public abstract @NotNull DataMap<K, V> clone(); //NOSONAR
 
 	@Override
 	public @NotNull String toString() {
@@ -265,8 +264,7 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	@EqualsAndHashCode
 	@Getter(onMethod_ = {@Override})
 	@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
-	@SuppressWarnings("unused")
-	private static class Node<K, V> implements TripletNode<K, V> {
+	private static class Node<K, V> implements DataNode<K, V> {
 
 		/**
 		 * -- Getter --

@@ -28,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
 public class YamlConfig extends YamlFile implements Config {
 
 
@@ -38,10 +37,13 @@ public class YamlConfig extends YamlFile implements Config {
 
 
 	/**
-	 * @param file           the File to be used as a backend
-	 * @param inputStream    the FileContent to be set on the creation of the File
-	 * @param reloadSetting  the ReloadSetting to be used with this instance
-	 * @param commentSetting the CommentSetting to be used with this instance
+	 * @param file             the File to be used as a backend
+	 * @param inputStream      the FileContent to be set on the creation of the File
+	 * @param reloadSetting    the ReloadSetting to be used with this instance
+	 * @param commentSetting   the CommentSetting to be used with this instance
+	 * @param synchronizedData if the saved data should be synchronized
+	 * @param map              the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
+	 * @param list             the List implementation to be used, default ist GapList
 	 *
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
@@ -68,12 +70,12 @@ public class YamlConfig extends YamlFile implements Config {
 			try {
 				this.header = YamlEditor.readHeader(this.file(), this.provider());
 				return this.header;
-			} catch (YamlException e) {
+			} catch (final @NotNull YamlException e) {
 				throw new FileParseException("Error while getting header of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
 											 e);
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while getting header of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
@@ -101,12 +103,12 @@ public class YamlConfig extends YamlFile implements Config {
 			if (this.file().length() == 0) {
 				try {
 					YamlEditor.write(this.file(), this.header);
-				} catch (YamlException e) {
+				} catch (final @NotNull YamlException e) {
 					throw new FileParseException("Error while setting header of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
 												 e);
-				} catch (IOException e) {
+				} catch (final @NotNull IOException e) {
 					throw new RuntimeIOException("Error while setting header of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
@@ -117,17 +119,17 @@ public class YamlConfig extends YamlFile implements Config {
 					final @NotNull List<String> lines = YamlEditor.read(this.file());
 					final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.file(), this.provider());
 
-					List<String> newLines = this.header;
+					final List<String> newLines = this.header;
 					lines.removeAll(oldHeader);
 					newLines.addAll(lines);
 
 					YamlEditor.write(this.file(), newLines);
-				} catch (YamlException e) {
+				} catch (final @NotNull YamlException e) {
 					throw new FileParseException("Error while setting header of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
 												 e);
-				} catch (IOException e) {
+				} catch (final @NotNull IOException e) {
 					throw new RuntimeIOException("Error while setting header of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
@@ -140,17 +142,17 @@ public class YamlConfig extends YamlFile implements Config {
 
 			try {
 				final @NotNull List<String> lines = YamlEditor.read(this.file());
-				final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.file(), provider());
+				final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.file(), this.provider());
 
 				lines.removeAll(oldHeader);
 
 				YamlEditor.write(this.file(), lines);
-			} catch (YamlException e) {
+			} catch (final @NotNull YamlException e) {
 				throw new FileParseException("Error while setting header of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
 											 e);
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while setting header of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
@@ -168,14 +170,14 @@ public class YamlConfig extends YamlFile implements Config {
 			return this.footer;
 		} else {
 			try {
-				this.footer = YamlEditor.readFooter(this.file(), provider());
+				this.footer = YamlEditor.readFooter(this.file(), this.provider());
 				return this.footer;
-			} catch (YamlException e) {
+			} catch (final @NotNull YamlException e) {
 				throw new FileParseException("Error while getting footer of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
 											 e);
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while getting footer of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
@@ -203,12 +205,12 @@ public class YamlConfig extends YamlFile implements Config {
 			if (this.file().length() == 0) {
 				try {
 					YamlEditor.write(this.file(), this.footer);
-				} catch (YamlException e) {
+				} catch (final @NotNull YamlException e) {
 					throw new FileParseException("Error while setting footer of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
 												 e);
-				} catch (IOException e) {
+				} catch (final @NotNull IOException e) {
 					throw new RuntimeIOException("Error while setting footer of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
@@ -217,18 +219,18 @@ public class YamlConfig extends YamlFile implements Config {
 			} else {
 				try {
 					final @NotNull List<String> lines = YamlEditor.read(this.file());
-					final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.file(), provider());
+					final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.file(), this.provider());
 
 					lines.removeAll(oldFooter);
 					lines.addAll(this.footer);
 
 					YamlEditor.write(this.file(), lines);
-				} catch (YamlException e) {
+				} catch (final @NotNull YamlException e) {
 					throw new FileParseException("Error while setting footer of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
 												 e);
-				} catch (IOException e) {
+				} catch (final @NotNull IOException e) {
 					throw new RuntimeIOException("Error while setting footer of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
@@ -241,17 +243,17 @@ public class YamlConfig extends YamlFile implements Config {
 
 			try {
 				final @NotNull List<String> lines = YamlEditor.read(this.file());
-				final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.file(), provider());
+				final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.file(), this.provider());
 
 				lines.removeAll(oldFooter);
 
 				YamlEditor.write(this.file(), lines);
-			} catch (YamlException e) {
+			} catch (final @NotNull YamlException e) {
 				throw new FileParseException("Error while setting footer of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
 											 e);
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while setting footer of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
@@ -269,14 +271,14 @@ public class YamlConfig extends YamlFile implements Config {
 			return this.comments;
 		} else {
 			try {
-				this.comments = YamlEditor.readComments(this.file(), provider());
+				this.comments = YamlEditor.readComments(this.file(), this.provider());
 				return this.comments;
-			} catch (YamlException e) {
+			} catch (final @NotNull YamlException e) {
 				throw new FileParseException("Error while getting comments from '"
 											 + this.file().getAbsolutePath()
 											 + "'",
 											 e);
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while getting comments from '"
 											 + this.file().getAbsolutePath()
 											 + "'",

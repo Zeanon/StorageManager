@@ -26,7 +26,7 @@ public class Objects {
 	@NotNull
 	@Contract("null -> fail; !null -> param1")
 	public static <O> O notNull(final @Nullable O object) {
-		return notNull(object, "Checked Object  must not be null");
+		return Objects.notNull(object, "Checked Object  must not be null");
 	}
 
 

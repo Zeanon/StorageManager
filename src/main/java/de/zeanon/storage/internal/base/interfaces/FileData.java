@@ -170,14 +170,14 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	@NotNull List<E> entryList();
 
 	/**
-	 * Get a List consisting of AbstractDataMap.TripletNode objects of the top most layer of the internal DataMap
+	 * Get a List consisting of AbstractDataMap.DataNode objects of the top most layer of the internal DataMap
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
 	@NotNull List<E> blockEntryList();
 
 	/**
-	 * Get a List consisting of AbstractDataMap.TripletNode objects whereas values being instances of AbstractDataMap are also getting parsed to
+	 * Get a List consisting of AbstractDataMap.DataNode objects whereas values being instances of AbstractDataMap are also getting parsed to
 	 * their entryLists
 	 *
 	 * @param key the Key to the SubBlock the entryList should be generated from
@@ -187,7 +187,7 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	@Nullable List<E> entryList(final @NotNull String key);
 
 	/**
-	 * Get a List consisting of AbstractDataMap.TripletNode objects of only the given Block
+	 * Get a List consisting of AbstractDataMap.DataNode objects of only the given Block
 	 *
 	 * @param key the Key to the SubBlock the entryList should be generated from
 	 *
@@ -196,7 +196,7 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	@Nullable List<E> blockEntryList(final @NotNull String key);
 
 	/**
-	 * Get a List consisting of AbstractDataMap.TripletNode objects whereas values being instances of AbstractDataMap are also getting parsed to
+	 * Get a List consisting of AbstractDataMap.DataNode objects whereas values being instances of AbstractDataMap are also getting parsed to
 	 * their entryLists
 	 *
 	 * @param key the Key to the SubBlock the entryList should be generated from
@@ -206,7 +206,7 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	@Nullable List<E> entryListUseArray(final @NotNull String... key);
 
 	/**
-	 * Get a List consisting of AbstractDataMap.TripletNode objects of only the given Block
+	 * Get a List consisting of AbstractDataMap.DataNode objects of only the given Block
 	 *
 	 * @param key the Key to the SubBlock the entryList should be generated from
 	 *

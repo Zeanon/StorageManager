@@ -75,8 +75,8 @@ public abstract class Provider<M extends Map, L extends List> {
 	public @NotNull M newMap() {
 		this.mapLock.readLock().lock();
 		try {
-			return mapType.getDeclaredConstructor().newInstance();
-		} catch (@NotNull InstantiationException
+			return this.mapType.getDeclaredConstructor().newInstance();
+		} catch (final @NotNull InstantiationException
 				| InvocationTargetException
 				| NoSuchMethodException
 				| IllegalAccessException e) {
@@ -92,8 +92,8 @@ public abstract class Provider<M extends Map, L extends List> {
 	public @NotNull L newList() {
 		this.listLock.readLock().lock();
 		try {
-			return listType.getDeclaredConstructor().newInstance();
-		} catch (@NotNull InstantiationException
+			return this.listType.getDeclaredConstructor().newInstance();
+		} catch (final @NotNull InstantiationException
 				| IllegalAccessException
 				| InvocationTargetException
 				| NoSuchMethodException e) {
@@ -110,12 +110,12 @@ public abstract class Provider<M extends Map, L extends List> {
 		try {
 			this.mapLock.readLock().lock();
 			final @NotNull List<Class<?>> parameterTypes = new GapList<>();
-			for (@NotNull Object parameter : parameters) {
+			for (final @NotNull Object parameter : parameters) {
 				parameterTypes.add(parameter.getClass());
 			}
-			return mapType.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0]))
-						  .newInstance(parameters);
-		} catch (@NotNull InstantiationException
+			return this.mapType.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0]))
+							   .newInstance(parameters);
+		} catch (final @NotNull InstantiationException
 				| InvocationTargetException
 				| NoSuchMethodException
 				| IllegalAccessException e) {
@@ -132,9 +132,9 @@ public abstract class Provider<M extends Map, L extends List> {
 							 final @NotNull Object... parameters) {
 		this.mapLock.readLock().lock();
 		try {
-			return mapType.getDeclaredConstructor(parameterTypes)
-						  .newInstance(parameters);
-		} catch (@NotNull InstantiationException
+			return this.mapType.getDeclaredConstructor(parameterTypes)
+							   .newInstance(parameters);
+		} catch (final @NotNull InstantiationException
 				| InvocationTargetException
 				| NoSuchMethodException
 				| IllegalAccessException e) {
@@ -151,12 +151,12 @@ public abstract class Provider<M extends Map, L extends List> {
 		this.listLock.readLock().lock();
 		try {
 			final @NotNull List<Class<?>> parameterTypes = new GapList<>();
-			for (@NotNull Object parameter : parameters) {
+			for (final @NotNull Object parameter : parameters) {
 				parameterTypes.add(parameter.getClass());
 			}
-			return listType.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0]))
-						   .newInstance(parameters);
-		} catch (@NotNull InstantiationException
+			return this.listType.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0]))
+								.newInstance(parameters);
+		} catch (final @NotNull InstantiationException
 				| IllegalAccessException
 				| InvocationTargetException
 				| NoSuchMethodException e) {
@@ -173,9 +173,9 @@ public abstract class Provider<M extends Map, L extends List> {
 							  final @NotNull Object... parameters) {
 		this.listLock.readLock().lock();
 		try {
-			return listType.getDeclaredConstructor(parameterTypes)
-						   .newInstance(parameters);
-		} catch (@NotNull InstantiationException
+			return this.listType.getDeclaredConstructor(parameterTypes)
+								.newInstance(parameters);
+		} catch (final @NotNull InstantiationException
 				| IllegalAccessException
 				| InvocationTargetException
 				| NoSuchMethodException e) {

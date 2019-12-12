@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-@SuppressWarnings("unused")
 public interface DataMap<K, V> extends Map<K, V>, Cloneable {
 
 	/**
@@ -23,14 +22,14 @@ public interface DataMap<K, V> extends Map<K, V>, Cloneable {
 	 *
 	 * @param node mapping to be added to the map
 	 */
-	void add(final @NotNull TripletNode<K, V> node);
+	void add(final @NotNull DataMap.DataNode<K, V> node);
 
 	/**
 	 * Copies all of the mappings from the specified map to this map.
 	 *
 	 * @param nodes mappings to be added to the map
 	 */
-	void addAll(final @NotNull List<TripletNode<K, V>> nodes);
+	void addAll(final @NotNull List<DataNode<K, V>> nodes);
 
 	/**
 	 * Copies all of the mappings from the specified map to this map.
@@ -63,11 +62,11 @@ public interface DataMap<K, V> extends Map<K, V>, Cloneable {
 	 * @return a set view of the mappings contained in this map
 	 */
 	@Contract("-> new")
-	@NotNull List<TripletNode<K, V>> entryList();
+	@NotNull List<DataNode<K, V>> entryList();
 
 
-	@SuppressWarnings("UnusedReturnValue")
-	interface TripletNode<K, V> extends Map.Entry<K, V> {
+	@SuppressWarnings("unused")
+	interface DataNode<K, V> extends Map.Entry<K, V> {
 
 		@NotNull K setKey(final @NotNull K key);
 

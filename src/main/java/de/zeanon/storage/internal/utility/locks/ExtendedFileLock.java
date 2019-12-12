@@ -16,6 +16,7 @@ import java.util.concurrent.locks.StampedLock;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -176,7 +177,6 @@ public class ExtendedFileLock implements AutoCloseable {
 	 * There is at most one instance of ReadWriteLockableChannel created per File on the System
 	 */
 	@EqualsAndHashCode
-	@SuppressWarnings({"unused", "SameReturnValue"})
 	private static class ReadWriteLockableChannel {
 
 
@@ -241,11 +241,11 @@ public class ExtendedFileLock implements AutoCloseable {
 						try {
 							this.lockHoldCount.set(1);
 							return this.localFileChannel.lock(0, Long.MAX_VALUE, true);
-						} catch (IOException e) {
+						} catch (final @NotNull IOException e) {
 							throw new RuntimeIOException(e.getMessage(), e.getCause());
 						}
 					});
-				} catch (InterruptedException e) {
+				} catch (final @NotNull InterruptedException e) {
 					Thread.currentThread().interrupt();
 				} finally {
 					this.internalLock.unlockRead(lockStamp);
@@ -267,7 +267,7 @@ public class ExtendedFileLock implements AutoCloseable {
 							try {
 								this.lockHoldCount.set(1);
 								return this.localFileChannel.lock(0, Long.MAX_VALUE, true);
-							} catch (IOException e) {
+							} catch (final @NotNull IOException e) {
 								throw new RuntimeIOException(e.getMessage(), e.getCause());
 							}
 						});
@@ -289,7 +289,7 @@ public class ExtendedFileLock implements AutoCloseable {
 							current.release();
 						}
 						return null;
-					} catch (IOException e) {
+					} catch (final @NotNull IOException e) {
 						throw new RuntimeIOException(e.getMessage(), e.getCause());
 					}
 				} else {
@@ -308,17 +308,8 @@ public class ExtendedFileLock implements AutoCloseable {
 					while (this.fileLock.get() != null) {
 						Thread.sleep(5);
 					}
-					this.fileLock.updateAndGet(current -> {
-						try {
-							this.writeLockActive.set(true);
-							this.lockHoldCount.set(1);
-							this.currentWritingThread.set(Thread.currentThread().getId());
-							return this.localFileChannel.lock(0, Long.MAX_VALUE, false);
-						} catch (IOException e) {
-							throw new RuntimeIOException(e.getMessage(), e.getCause());
-						}
-					});
-				} catch (InterruptedException e) {
+					this.internalLockWrite();
+				} catch (final @NotNull InterruptedException e) {
 					Thread.currentThread().interrupt();
 				} finally {
 					this.internalLock.unlockWrite(lockStamp);
@@ -336,22 +327,26 @@ public class ExtendedFileLock implements AutoCloseable {
 					if (this.fileLock.get() != null) {
 						return false;
 					} else {
-						this.fileLock.updateAndGet(current -> {
-							try {
-								this.writeLockActive.set(true);
-								this.lockHoldCount.set(1);
-								this.currentWritingThread.set(Thread.currentThread().getId());
-								return this.localFileChannel.lock(0, Long.MAX_VALUE, false);
-							} catch (IOException e) {
-								throw new RuntimeIOException(e.getMessage(), e.getCause());
-							}
-						});
+						this.internalLockWrite();
 						return true;
 					}
 				} finally {
 					this.internalLock.unlockWrite(lockStamp);
 				}
 			}
+		}
+
+		private void internalLockWrite() {
+			this.fileLock.updateAndGet(current -> {
+				try {
+					this.writeLockActive.set(true);
+					this.lockHoldCount.set(1);
+					this.currentWritingThread.set(Thread.currentThread().getId());
+					return this.localFileChannel.lock(0, Long.MAX_VALUE, false);
+				} catch (final @NotNull IOException e) {
+					throw new RuntimeIOException(e.getMessage(), e.getCause());
+				}
+			});
 		}
 
 		private void unlockWrite() {
@@ -366,7 +361,7 @@ public class ExtendedFileLock implements AutoCloseable {
 						this.writeLockActive.set(false);
 						this.currentWritingThread.set(-1);
 						return null;
-					} catch (IOException e) {
+					} catch (final @NotNull IOException e) {
 						throw new RuntimeIOException(e.getMessage(), e.getCause());
 					}
 				} else {
@@ -387,7 +382,7 @@ public class ExtendedFileLock implements AutoCloseable {
 				} else {
 					this.readToWrite();
 				}
-			} catch (@NotNull InterruptedException | RuntimeInterruptedException e) {
+			} catch (final @NotNull InterruptedException | RuntimeInterruptedException e) {
 				Thread.currentThread().interrupt();
 			} finally {
 				this.internalLock.unlockWrite(lockStamp);
@@ -406,7 +401,7 @@ public class ExtendedFileLock implements AutoCloseable {
 						this.writeLockActive.set(false);
 						this.currentWritingThread.set(-1);
 						return this.localFileChannel.lock(0, Long.MAX_VALUE, true);
-					} catch (IOException e) {
+					} catch (final @NotNull IOException e) {
 						throw new RuntimeIOException(e.getMessage(), e.getCause());
 					}
 				} else {
@@ -430,9 +425,9 @@ public class ExtendedFileLock implements AutoCloseable {
 						this.writeLockActive.set(true);
 						this.currentWritingThread.set(Thread.currentThread().getId());
 						return this.localFileChannel.lock(0, Long.MAX_VALUE, false);
-					} catch (IOException e) {
+					} catch (final @NotNull IOException e) {
 						throw new RuntimeIOException(e.getMessage(), e.getCause());
-					} catch (InterruptedException e) {
+					} catch (final @NotNull InterruptedException e) {
 						throw new RuntimeInterruptedException(e.getMessage());
 					}
 				} else {
@@ -447,27 +442,8 @@ public class ExtendedFileLock implements AutoCloseable {
 				if (this.lockHoldCount.intValue() == 0 || this.fileLock.get() == null) {
 					throw new IllegalMonitorStateException("Lock ist not held");
 				} else if (this.lockHoldCount.decrementAndGet() == 0) {
-					if (this.writeLockActive.get()) {
-						try {
-							if (current != null && current.isValid()) {
-								current.release();
-							}
-							this.writeLockActive.set(false);
-							this.currentWritingThread.set(-1);
-							return null;
-						} catch (IOException e) {
-							throw new RuntimeIOException(e.getMessage(), e.getCause());
-						}
-					} else {
-						try {
-							if (current != null && current.isValid()) {
-								current.release();
-							}
-							return null;
-						} catch (IOException e) {
-							throw new RuntimeIOException(e.getMessage(), e.getCause());
-						}
-					}
+					this.internalUnlock(current);
+					return null;
 				} else {
 					return current;
 				}
@@ -480,27 +456,8 @@ public class ExtendedFileLock implements AutoCloseable {
 			try {
 				this.fileLock.updateAndGet(current -> {
 					if (this.lockHoldCount.intValue() > 0 && this.fileLock.get() != null && this.lockHoldCount.decrementAndGet() == 0) {
-						if (this.writeLockActive.get()) {
-							try {
-								if (current != null && current.isValid()) {
-									current.release();
-								}
-								this.writeLockActive.set(false);
-								this.currentWritingThread.set(-1);
-								return null;
-							} catch (IOException e) {
-								throw new RuntimeIOException(e.getMessage(), e.getCause());
-							}
-						} else {
-							try {
-								if (current != null && current.isValid()) {
-									current.release();
-								}
-								return null;
-							} catch (IOException e) {
-								throw new RuntimeIOException(e.getMessage(), e.getCause());
-							}
-						}
+						this.internalUnlock(current);
+						return null;
 					} else {
 						return current;
 					}
@@ -512,6 +469,28 @@ public class ExtendedFileLock implements AutoCloseable {
 				}
 			} finally {
 				ReadWriteLockableChannel.factoryLock.unlockWrite(lockStamp);
+			}
+		}
+
+		private void internalUnlock(@Nullable final FileLock current) {
+			if (this.writeLockActive.get()) {
+				try {
+					if (current != null && current.isValid()) {
+						current.release();
+					}
+					this.writeLockActive.set(false);
+					this.currentWritingThread.set(-1);
+				} catch (final @NotNull IOException e) {
+					throw new RuntimeIOException(e.getMessage(), e.getCause());
+				}
+			} else {
+				try {
+					if (current != null && current.isValid()) {
+						current.release();
+					}
+				} catch (final @NotNull IOException e) {
+					throw new RuntimeIOException(e.getMessage(), e.getCause());
+				}
 			}
 		}
 	}

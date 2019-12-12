@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,16 +24,16 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.5.0
  */
+@SuppressWarnings("DefaultAnnotationParam")
 @Getter
 @EqualsAndHashCode
 @Accessors(fluent = true, chain = false)
-@SuppressWarnings({"unused", "DefaultAnnotationParam"})
 public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<ThunderFileData> {
 
 
 	private final @NotNull Provider<M, L> provider;
 	/**
-	 * internal cache for the contents of the File
+	 * Internal cache for the contents of the File
 	 */
 	private @NotNull M dataMap;
 	@Setter
@@ -48,7 +49,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	}
 
 	/**
-	 * Get a List consisting of DataMap.TripletNode objects of the top most layer of the internal DataMap
+	 * Get a List consisting of DataMap.DataNode objects of the top most layer of the internal DataMap
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
@@ -60,7 +61,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	}
 
 	/**
-	 * Get a List consisting of DataMap.TripletNode objects whereas values being instances of DataMap are also getting parsed to
+	 * Get a List consisting of DataMap.DataNode objects whereas values being instances of DataMap are also getting parsed to
 	 * their entryLists
 	 *
 	 * @param key the Key to the SubBlock the entryList should be generated from
@@ -80,7 +81,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	}
 
 	/**
-	 * Get a List consisting of DataMap.TripletNode objects of only the given Block
+	 * Get a List consisting of DataMap.DataNode objects of only the given Block
 	 *
 	 * @param key the Key to the SubBlock the entryList should be generated from
 	 *
@@ -99,7 +100,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	}
 
 	/**
-	 * Get a List consisting of DataMap.TripletNode objects whereas values being instances of DataMap are also getting parsed to
+	 * Get a List consisting of DataMap.DataNode objects whereas values being instances of DataMap are also getting parsed to
 	 * their entryLists
 	 *
 	 * @param key the Key to the SubBlock the entryList should be generated from
@@ -119,7 +120,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	}
 
 	/**
-	 * Get a List consisting of DataMap.TripletNode objects of only the given Block
+	 * Get a List consisting of DataMap.DataNode objects of only the given Block
 	 *
 	 * @param key the Key to the SubBlock the entryList should be generated from
 	 *
@@ -138,7 +139,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	}
 
 	/**
-	 * Get a List consisting of DataMap.TripletNode objects whereas values being instances of DataMap are also getting parsed to
+	 * Get a List consisting of DataMap.DataNode objects whereas values being instances of DataMap are also getting parsed to
 	 * their entryLists
 	 *
 	 * @return the entryList of the internal dataMap
@@ -173,7 +174,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 * @param value the value to be assigned to the key
 	 */
 	@Override
-	public void insert(final @NotNull String key, @Nullable Object value) {
+	public void insert(final @NotNull String key, @Nullable final Object value) {
 		final @NotNull String[] parts = key.split("\\.");
 		this.initialInsert(value, parts);
 	}
@@ -251,7 +252,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	@Override
 	public @Nullable Object get(final @NotNull String key) {
 		final @NotNull String[] parts = key.split("\\.");
-		return this.internalGet(this.dataMap, parts);
+		return ThunderFileData.internalGet(this.dataMap, parts);
 	}
 
 	/**
@@ -265,7 +266,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 */
 	@Override
 	public @Nullable Object getUseArray(final @NotNull String... key) {
-		return this.internalGet(this.dataMap, key);
+		return ThunderFileData.internalGet(this.dataMap, key);
 	}
 
 	/**
@@ -366,9 +367,20 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		return this.dataMap.isEmpty();
 	}
 
+	private static @Nullable Object internalGet(final @NotNull DataMap map, final @NotNull String[] key) {
+		@Nullable Object tempValue = map;
+		for (final @NotNull String tempKey : key) {
+			if (tempValue instanceof DataMap) {
+				tempValue = ((DataMap) tempValue).get(tempKey);
+			} else {
+				throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "' -> could not find '" + tempKey + "'");
+			}
+		}
+		return tempValue;
+	}
 
 	// <Internal>
-	private void initialInsert(@Nullable Object value, @NotNull String[] parts) {
+	private void initialInsert(@Nullable final Object value, final @NotNull String[] parts) {
 		if (value == null) {
 			this.removeUseArray(parts);
 		} else {
@@ -401,7 +413,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		}
 	}
 
-	private void initialRemove(@NotNull String[] parts) {
+	private void initialRemove(final @NotNull String[] parts) {
 		if (parts.length == 1) {
 			this.dataMap.remove(parts[0]);
 		} else {
@@ -438,12 +450,13 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		}
 	}
 
-	private @NotNull List<DataMap.TripletNode<String, Object>> internalEntryList(final @NotNull DataMap<String, Object> map) {
-		final @NotNull List<DataMap.TripletNode<String, Object>> tempList = map.entryList();
-		for (@NotNull DataMap.TripletNode<String, Object> entry : tempList) {
+	private @NotNull List<DataMap.DataNode<String, Object>> internalEntryList(final @NotNull DataMap<String, Object> map) {
+		//noinspection unchecked
+		final @NotNull List<DataMap.DataNode<String, Object>> tempList = this.provider.newList();
+		for (final @NotNull DataMap.DataNode<String, Object> entry : map.entryList()) {
 			if (entry.getValue() instanceof DataMap) {
 				//noinspection unchecked
-				entry.setValue(this.internalEntryList((DataMap) entry.getValue()));
+				tempList.add(new Node<>(entry.getKey(), this.internalEntryList((DataMap) entry.getValue())));
 			}
 		}
 		return tempList;
@@ -462,21 +475,9 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		}
 	}
 
-	private @Nullable Object internalGet(final @NotNull DataMap map, final @NotNull String[] key) {
-		@Nullable Object tempValue = map;
-		for (final @NotNull String tempKey : key) {
-			if (tempValue instanceof DataMap) {
-				tempValue = ((DataMap) tempValue).get(tempKey);
-			} else {
-				throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "' -> could not find '" + tempKey + "'");
-			}
-		}
-		return tempValue;
-	}
-
 	private int internalSize(final @NotNull DataMap<String, Object> map) {
 		int size = 0;
-		for (@NotNull DataMap.TripletNode entry : map.entryList()) {
+		for (final @NotNull DataMap.DataNode entry : map.entryList()) {
 			if (entry.getValue() instanceof DataMap) {
 				//noinspection unchecked
 				size += this.internalSize((DataMap) entry.getValue());
@@ -512,5 +513,94 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	@Override
 	public @NotNull String toString() {
 		return this.dataMap.toString();
+	}
+
+
+	@EqualsAndHashCode
+	@Getter(onMethod_ = {@Override})
+	@Accessors(fluent = false)
+	@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
+	@SuppressWarnings({"DefaultAnnotationParam", "unused"})
+	private static class Node<K, V> implements DataMap.DataNode<K, V> {
+
+		/**
+		 * -- Getter --
+		 * Returns the key corresponding to this entry.
+		 * has been removed from the backing map (by the iterator's
+		 * <tt>remove</tt> operation), the results of this call are undefined.
+		 *
+		 * @return the key corresponding to this entry
+		 */
+		private @NotNull K key;
+
+		/**
+		 * -- Getter --
+		 * Returns the value corresponding to this entry.  If the mapping
+		 * has been removed from the backing map (by the iterator's
+		 * <tt>remove</tt> operation), the results of this call are undefined.
+		 *
+		 * @return the value corresponding to this entry
+		 */
+		private @Nullable V value;
+
+		/**
+		 * Replaces the key corresponding to this entry with the specified
+		 * key (optional operation).  (Writes through to the map.)  The
+		 * behavior of this call is undefined if the mapping has already been
+		 * removed from the map (by the iterator's <tt>remove</tt> operation).
+		 *
+		 * @param key new key to be stored in this entry
+		 *
+		 * @return old key corresponding to the entry
+		 *
+		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
+		 *                                       is not supported by the backing map
+		 * @throws ClassCastException            if the class of the specified key
+		 *                                       prevents it from being stored in the backing map
+		 * @throws NullPointerException          if the backing map does not permit
+		 *                                       null keys, and the specified key is null
+		 */
+		@Override
+		public @NotNull K setKey(final @NotNull K key) {
+			try {
+				return this.key;
+			} finally {
+				this.key = key;
+			}
+		}
+
+		/**
+		 * Replaces the value corresponding to this entry with the specified
+		 * value (optional operation).  (Writes through to the map.)  The
+		 * behavior of this call is undefined if the mapping has already been
+		 * removed from the map (by the iterator's <tt>remove</tt> operation).
+		 *
+		 * @param value new value to be stored in this entry
+		 *
+		 * @return old value corresponding to the entry
+		 *
+		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
+		 *                                       is not supported by the backing map
+		 * @throws ClassCastException            if the class of the specified value
+		 *                                       prevents it from being stored in the backing map
+		 * @throws NullPointerException          if the backing map does not permit
+		 *                                       null values, and the specified value is null
+		 * @throws IllegalArgumentException      if some property of this value
+		 *                                       prevents it from being stored in the backing map
+		 */
+		@Override
+		public @Nullable V setValue(final @Nullable V value) {
+			try {
+				return this.value;
+			} finally {
+				this.value = value;
+			}
+		}
+
+
+		@Override
+		public @NotNull String toString() {
+			return "(" + this.key + "=" + this.value + ")";
+		}
 	}
 }

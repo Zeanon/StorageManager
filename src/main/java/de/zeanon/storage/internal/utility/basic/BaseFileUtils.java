@@ -27,8 +27,8 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 2.2.0
  */
-@UtilityClass
 @SuppressWarnings({"unused", "WeakerAccess"})
+@UtilityClass
 public class BaseFileUtils {
 
 
@@ -185,7 +185,7 @@ public class BaseFileUtils {
 							if (file.isFile()) {
 								files.add(file);
 							} else if (deep && file.isDirectory()) {
-								files.addAll(listFiles(file, true));
+								files.addAll(BaseFileUtils.listFiles(file, true));
 							}
 						}
 					}
@@ -362,7 +362,7 @@ public class BaseFileUtils {
 		} else {
 			try {
 				return new BufferedInputStream(new FileInputStream(file));
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + file.getAbsolutePath()
 											 + "'",
@@ -385,7 +385,7 @@ public class BaseFileUtils {
 		} else {
 			try {
 				return new BufferedInputStream(new FileInputStream(new File(name)));
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + name
 											 + "'",
@@ -408,7 +408,7 @@ public class BaseFileUtils {
 		} else {
 			try {
 				return new BufferedInputStream(new FileInputStream(file.toFile()));
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + file.toAbsolutePath()
 											 + "'",
@@ -432,7 +432,7 @@ public class BaseFileUtils {
 		} else {
 			try {
 				return new BufferedInputStream(directory == null ? new FileInputStream(new File(name)) : new FileInputStream(new File(directory, name)));
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + (directory == null ? name : directory + "/" + name)
 											 + "'",
@@ -456,7 +456,7 @@ public class BaseFileUtils {
 		} else {
 			try {
 				return new BufferedInputStream(directory == null ? new FileInputStream(new File(name)) : new FileInputStream(new File(directory, name)));
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + (directory == null ? name : directory.getAbsolutePath() + "/" + name)
 											 + "'",
@@ -480,7 +480,7 @@ public class BaseFileUtils {
 		} else {
 			try {
 				return new BufferedInputStream(directory == null ? new FileInputStream(new File(name)) : new FileInputStream(new File(directory.toFile(), name)));
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + (directory == null ? name : directory.toAbsolutePath() + "/" + name)
 											 + "'",
@@ -506,7 +506,7 @@ public class BaseFileUtils {
 						BaseFileUtils.class.getClassLoader()
 										   .getResourceAsStream(resource),
 						"Resource does not exist"));
-			} catch (ObjectNullException e) {
+			} catch (final @NotNull ObjectNullException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + resource
 											 + "'",
@@ -529,7 +529,7 @@ public class BaseFileUtils {
 		} else {
 			try {
 				return new BufferedInputStream(url.openStream());
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + url
 											 + "'",
@@ -552,7 +552,7 @@ public class BaseFileUtils {
 		} else {
 			try {
 				return new BufferedInputStream(new URL(url).openStream());
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + url
 											 + "'",
@@ -592,7 +592,7 @@ public class BaseFileUtils {
 				 final @NotNull BufferedOutputStream outputStream = tempLock.createBufferedOutputStream()) {
 				tempLock.lock();
 				tempLock.truncateChannel(0);
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while clearing '"
 											 + file.getAbsolutePath()
 											 + "'",
@@ -603,12 +603,12 @@ public class BaseFileUtils {
 				 final @NotNull BufferedOutputStream outputStream = tempLock.createBufferedOutputStream()) {
 				tempLock.lock();
 				tempLock.truncateChannel(0);
-				final @NotNull byte[] data = new byte[bufferSize];
+				final @NotNull byte[] data = new byte[BaseFileUtils.bufferSize];
 				int count;
-				while ((count = inputStream.read(data, 0, bufferSize)) != -1) {
+				while ((count = inputStream.read(data, 0, BaseFileUtils.bufferSize)) != -1) {
 					outputStream.write(data, 0, count);
 				}
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while writing Data to '"
 											 + file.getAbsolutePath()
 											 + "'",
@@ -622,7 +622,7 @@ public class BaseFileUtils {
 		if (inputStream == null) {
 			try {
 				new RandomAccessFile(file, "rws");
-			} catch (IOException e) {
+			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while creating '"
 											 + file.getAbsolutePath()
 											 + "'"
@@ -636,13 +636,13 @@ public class BaseFileUtils {
 					 final @NotNull BufferedOutputStream outputStream = tempLock.createBufferedOutputStream()) {
 					tempLock.lock();
 					tempLock.truncateChannel(0);
-					final @NotNull byte[] data = new byte[bufferSize];
+					final @NotNull byte[] data = new byte[BaseFileUtils.bufferSize];
 					int count;
-					while ((count = inputStream.read(data, 0, bufferSize)) != -1) {
+					while ((count = inputStream.read(data, 0, BaseFileUtils.bufferSize)) != -1) {
 						outputStream.write(data, 0, count);
 					}
 					outputStream.flush();
-				} catch (IOException e) {
+				} catch (final @NotNull IOException e) {
 					throw new RuntimeIOException("Error while writing Data to '"
 												 + file.getAbsolutePath()
 												 + "'",
@@ -682,8 +682,8 @@ public class BaseFileUtils {
 	 * @return the extension of the given File
 	 */
 	public static @NotNull String getExtension(final @NotNull String filePath) {
-		char ch;
-		int len;
+		final char ch;
+		final int len;
 		if ((len = filePath.length()) == 0
 			|| (ch = filePath.charAt(len - 1)) == '/'
 			|| ch == '\\'
@@ -731,8 +731,8 @@ public class BaseFileUtils {
 	 * @return the Path without the extension
 	 */
 	public static @NotNull String removeExtension(final @NotNull String filePath) {
-		char ch;
-		int len;
+		final char ch;
+		final int len;
 		if ((len = filePath.length()) == 0
 			|| (ch = filePath.charAt(len - 1)) == '/'
 			|| ch == '\\'
@@ -771,7 +771,7 @@ public class BaseFileUtils {
 							throw new IOException();
 						}
 					}
-				} catch (IOException e) {
+				} catch (final @NotNull IOException e) {
 					throw new RuntimeIOException("Could not create '"
 												 + current.getAbsolutePath()
 												 + "'",

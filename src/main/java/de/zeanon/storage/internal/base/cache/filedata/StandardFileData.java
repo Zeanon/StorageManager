@@ -2,11 +2,13 @@ package de.zeanon.storage.internal.base.cache.filedata;
 
 import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
+import de.zeanon.storage.internal.base.interfaces.DataMap;
 import de.zeanon.storage.internal.base.interfaces.FileData;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,13 +27,13 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 @EqualsAndHashCode
 @Accessors(fluent = true, chain = false)
-@SuppressWarnings({"unused", "DefaultAnnotationParam"})
+@SuppressWarnings("DefaultAnnotationParam")
 public class StandardFileData<M extends Map, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<StandardFileData> {
 
 
 	private final @NotNull Provider<M, L> provider;
 	/**
-	 * internal cache for the contents of the File
+	 * Internal cache for the contents of the File
 	 */
 	private @NotNull M dataMap;
 	@Setter
@@ -68,7 +70,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	@Contract("-> new")
 	public @NotNull List<E> blockEntryList() {
 		//noinspection unchecked
-		return provider.newList(new Class[]{Set.class}, this.dataMap.entrySet());
+		return this.provider.newList(new Class[]{Set.class}, this.dataMap.entrySet());
 	}
 
 	/**
@@ -104,7 +106,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
-			return provider.newList(new Class[]{Set.class}, ((Map) tempObject).entrySet());
+			return this.provider.newList(new Class[]{Set.class}, ((Map) tempObject).entrySet());
 		} else {
 			return null;
 		}
@@ -143,7 +145,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		final @Nullable Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
-			return provider.newList(new Class[]{Set.class}, ((Map) tempObject).entrySet());
+			return this.provider.newList(new Class[]{Set.class}, ((Map) tempObject).entrySet());
 		} else {
 			return null;
 		}
@@ -254,7 +256,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	@Override
 	public @Nullable Object get(final @NotNull String key) {
 		final @NotNull String[] parts = key.split("\\.");
-		return this.internalGet(this.dataMap, parts);
+		return StandardFileData.internalGet(this.dataMap, parts);
 	}
 
 	/**
@@ -268,7 +270,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 */
 	@Override
 	public @Nullable Object getUseArray(final @NotNull String... key) {
-		return this.internalGet(this.dataMap, key);
+		return StandardFileData.internalGet(this.dataMap, key);
 	}
 
 	/**
@@ -369,6 +371,17 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		return this.dataMap.isEmpty();
 	}
 
+	private static @Nullable Object internalGet(final @NotNull Map map, final @NotNull String[] key) {
+		@NotNull Object tempValue = map;
+		for (final String tempKey : key) {
+			if (tempValue instanceof Map) {
+				tempValue = ((Map) tempValue).get(tempKey);
+			} else {
+				return null;
+			}
+		}
+		return tempValue;
+	}
 
 	// <Internal>
 	private void initialInsert(final @Nullable Object value,
@@ -443,11 +456,11 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 
 	private @NotNull List<Map.Entry<String, Object>> internalEntryList(final @NotNull Map<String, Object> map) {
 		//noinspection unchecked
-		final @NotNull List<Map.Entry<String, Object>> tempList = provider.newList();
-		for (@NotNull Map.Entry<String, Object> entry : tempList) {
-			if (entry.getValue() instanceof Map) {
+		final @NotNull List<Map.Entry<String, Object>> tempList = this.provider.newList();
+		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
+			if (entry.getValue() instanceof DataMap) {
 				//noinspection unchecked
-				entry.setValue(this.internalEntryList((Map<String, Object>) entry.getValue()));
+				tempList.add(new Node<>(entry.getKey(), this.internalEntryList((DataMap) entry.getValue())));
 			}
 		}
 		return tempList;
@@ -469,21 +482,9 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		}
 	}
 
-	private @Nullable Object internalGet(final @NotNull Map map, final @NotNull String[] key) {
-		@NotNull Object tempValue = map;
-		for (String tempKey : key) {
-			if (tempValue instanceof Map) {
-				tempValue = ((Map) tempValue).get(tempKey);
-			} else {
-				return null;
-			}
-		}
-		return tempValue;
-	}
-
 	private int internalSize(final @NotNull Map<String, Object> map) {
 		int size = 0;
-		for (@NotNull Map.Entry entry : map.entrySet()) {
+		for (final @NotNull Map.Entry entry : map.entrySet()) {
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
 				size += this.internalSize((Map) entry.getValue());
@@ -505,5 +506,68 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	@Override
 	public @NotNull String toString() {
 		return this.dataMap.toString();
+	}
+
+
+	@EqualsAndHashCode
+	@Getter(onMethod_ = {@Override})
+	@Accessors(fluent = false)
+	@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
+	@SuppressWarnings({"DefaultAnnotationParam", "unused"})
+	private static class Node<K, V> implements Map.Entry<K, V> {
+
+		/**
+		 * -- Getter --
+		 * Returns the key corresponding to this entry.
+		 * has been removed from the backing map (by the iterator's
+		 * <tt>remove</tt> operation), the results of this call are undefined.
+		 *
+		 * @return the key corresponding to this entry
+		 */
+		private final @NotNull K key;
+
+		/**
+		 * -- Getter --
+		 * Returns the value corresponding to this entry.  If the mapping
+		 * has been removed from the backing map (by the iterator's
+		 * <tt>remove</tt> operation), the results of this call are undefined.
+		 *
+		 * @return the value corresponding to this entry
+		 */
+		private @Nullable V value;
+
+		/**
+		 * Replaces the value corresponding to this entry with the specified
+		 * value (optional operation).  (Writes through to the map.)  The
+		 * behavior of this call is undefined if the mapping has already been
+		 * removed from the map (by the iterator's <tt>remove</tt> operation).
+		 *
+		 * @param value new value to be stored in this entry
+		 *
+		 * @return old value corresponding to the entry
+		 *
+		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
+		 *                                       is not supported by the backing map
+		 * @throws ClassCastException            if the class of the specified value
+		 *                                       prevents it from being stored in the backing map
+		 * @throws NullPointerException          if the backing map does not permit
+		 *                                       null values, and the specified value is null
+		 * @throws IllegalArgumentException      if some property of this value
+		 *                                       prevents it from being stored in the backing map
+		 */
+		@Override
+		public @Nullable V setValue(final @Nullable V value) {
+			try {
+				return this.value;
+			} finally {
+				this.value = value;
+			}
+		}
+
+
+		@Override
+		public @NotNull String toString() {
+			return "(" + this.key + "=" + this.value + ")";
+		}
 	}
 }

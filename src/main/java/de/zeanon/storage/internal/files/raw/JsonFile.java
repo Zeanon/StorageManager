@@ -39,16 +39,16 @@ import org.json.JSONTokener;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
 public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
 
 
 	/**
-	 * @param file          the File to be used as a backend
-	 * @param inputStream   the FileContent to be set on the creation of the File
-	 * @param reloadSetting the ReloadSetting to be used with this instance
-	 * @param map           the Map implementation to be used, default is HashMap or ConcurrentHashMap if synchronized
-	 * @param list          the List implementation to be used, default ist GapList
+	 * @param file             the File to be used as a backend
+	 * @param inputStream      the FileContent to be set on the creation of the File
+	 * @param reloadSetting    the ReloadSetting to be used with this instance
+	 * @param synchronizedData if the saved data should be synchronized
+	 * @param map              the Map implementation to be used, default is HashMap or ConcurrentHashMap if concurrent
+	 * @param list             the List implementation to be used, default ist GapList
 	 *
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 * @throws RuntimeIOException if the File can not be accessed properly
@@ -68,12 +68,12 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 					BaseFileUtils.createNewInputStreamFromFile(this.file()));
 			this.fileData().loadData(new JSONObject(jsonTokener).toMap());
 			this.lastLoaded(System.currentTimeMillis());
-		} catch (JSONException e) {
+		} catch (final @NotNull JSONException e) {
 			throw new FileParseException("Error while parsing '"
 										 + this.getAbsolutePath()
 										 + "'",
 										 e);
-		} catch (RuntimeIOException e) {
+		} catch (final @NotNull RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '"
 										 + this.getAbsolutePath()
 										 + "'",
@@ -100,7 +100,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		final @Nullable Object map;
 		try {
 			map = this.get(key);
-		} catch (JSONException e) {
+		} catch (final @NotNull JSONException e) {
 			return this.provider().newMap();
 		}
 
@@ -128,10 +128,10 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 			return this.provider().newMap();
 		}
 
-		@Nullable Object map;
+		@Nullable final Object map;
 		try {
 			map = this.getUseArray(key);
-		} catch (JSONException e) {
+		} catch (final @NotNull JSONException e) {
 			return this.provider().newMap();
 		}
 
@@ -151,7 +151,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 			tempLock.lock();
 			tempLock.truncateChannel(0);
 			writer.write(new JSONObject(this.fileData().dataMap()).toString(3));
-		} catch (IOException e) {
+		} catch (final @NotNull IOException e) {
 			throw new RuntimeIOException("Error while writing to "
 										 + this.file().getAbsolutePath()
 										 + "'",
@@ -190,7 +190,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull JsonFileSection getSectionUseArray(@NotNull String... sectionKey) {
+	public @NotNull JsonFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -200,7 +200,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		try {
 			return new JSONObject(new JSONTokener(
 					BaseFileUtils.createNewInputStreamFromFile(this.file()))).toMap();
-		} catch (RuntimeIOException e) {
+		} catch (final @NotNull RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '"
 										 + this.getAbsolutePath()
 										 + "'",

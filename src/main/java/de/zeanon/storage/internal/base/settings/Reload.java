@@ -12,7 +12,6 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 2.1.0
  */
-@SuppressWarnings({"unused", "EmptyMethod", "SameReturnValue"})
 public enum Reload implements ReloadSetting {
 
 

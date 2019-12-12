@@ -81,11 +81,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	public @NotNull String getCanonicalPath() {
 		try {
 			return this.file().getCanonicalPath();
-		} catch (@NotNull IOException | SecurityException e) {
+		} catch (final @NotNull IOException | SecurityException e) {
 			throw new RuntimeIOException("Could not get Canonical Path of '"
 										 + this.file().getAbsolutePath()
 										 + "'",
-										 e);
+										 e.getCause());
 		}
 	}
 
@@ -120,10 +120,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(this.file()).writeLock()) {
 			tempLock.lock();
 			Files.delete(this.file().toPath());
-		} catch (IOException e) {
+		} catch (final @NotNull IOException e) {
 			throw new RuntimeIOException("Could not delete '"
-										 + this.file().getAbsolutePath() + "'",
-										 e);
+										 + this.file().getAbsolutePath()
+										 + "'",
+										 e.getCause());
 		}
 	}
 
@@ -580,7 +581,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		final @NotNull String tempData = this.fileData().toString();
-		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
+		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			this.fileData().insert(entry.getKey(), entry.getValue());
 		}
 		return !this.fileData().toString().equals(tempData);
@@ -590,7 +591,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		final @NotNull String tempData = this.fileData().toString();
-		for (@NotNull Map.Entry<String[], Object> entry : map.entrySet()) {
+		for (final @NotNull Map.Entry<String[], Object> entry : map.entrySet()) {
 			this.fileData().insertUseArray(entry.getKey(), entry.getValue());
 		}
 		return !this.fileData().toString().equals(tempData);
@@ -600,7 +601,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		final @NotNull String tempData = this.fileData().toString();
-		for (@NotNull Pair<String, Object> entry : pairs) {
+		for (final @NotNull Pair<String, Object> entry : pairs) {
 			this.fileData().insert(entry.getKey(), entry.getValue());
 		}
 		return !this.fileData().toString().equals(tempData);
@@ -610,7 +611,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		final @NotNull String tempData = this.fileData().toString();
-		for (@NotNull Pair<String[], Object> entry : pairs) {
+		for (final @NotNull Pair<String[], Object> entry : pairs) {
 			this.fileData().insertUseArray(entry.getKey(), entry.getValue());
 		}
 		return !this.fileData().toString().equals(tempData);
@@ -621,7 +622,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		final @NotNull String tempData = this.fileData().toString();
-		for (@NotNull Map.Entry<String, Object> entry : map.entrySet()) {
+		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			this.fileData().insert(key + "." + entry.getKey(), entry.getValue());
 		}
 		return !this.fileData().toString().equals(tempData);
@@ -646,7 +647,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		final @NotNull String tempData = this.fileData().toString();
-		for (@NotNull Pair<String, Object> entry : pairs) {
+		for (final @NotNull Pair<String, Object> entry : pairs) {
 			this.fileData().insert(key + "." + entry.getKey(), entry.getValue());
 		}
 		return !this.fileData().toString().equals(tempData);

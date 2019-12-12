@@ -25,12 +25,11 @@ import org.jetbrains.annotations.Nullable;
  */
 @EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
-@SuppressWarnings("unused")
 public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implements DataMap<K, V>, ConcurrentMap<K, V> {
 
 
-	protected final @NotNull StampedLock localLock = new StampedLock();
-	protected final @NotNull IList<TripletNode<K, V>> localList;
+	private final @NotNull StampedLock localLock = new StampedLock();
+	private final @NotNull IList<DataNode<K, V>> localList;
 
 
 	/**
@@ -67,10 +66,10 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	 * inappropriate default provided in {@code Map}.
 	 */
 	@Override
-	public V putIfAbsent(@NotNull K key, V value) {
+	public V putIfAbsent(final @NotNull K key, final V value) {
 		final long lockStamp = this.localLock.readLock();
 		try {
-			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+			for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
 				if (tempNode.getKey().equals(key)) {
 					return tempNode.getValue();
 				}
@@ -113,13 +112,13 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	 */
 	@Override
 	public boolean remove(final @NotNull Object key, final @NotNull Object value) {
-		final @NotNull Iterator<TripletNode<K, V>> tempIterator = this.localList.iterator();
-		TripletNode<K, V> tempNode;
+		final @NotNull Iterator<DataNode<K, V>> tempIterator = this.localList.iterator();
+		DataNode<K, V> tempNode;
 		long lockStamp = this.localLock.readLock();
 		try {
 			while ((tempNode = tempIterator.next()) != null) {
 				if (tempNode.getKey().equals(key) && tempNode.getValue().equals(value)) {
-					long tempLock = this.localLock.tryConvertToWriteLock(lockStamp);
+					final long tempLock = this.localLock.tryConvertToWriteLock(lockStamp);
 					if (this.localLock.validate(tempLock)) {
 						lockStamp = tempLock;
 					} else {
@@ -170,7 +169,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	public boolean replace(final @NotNull K key, final @Nullable V oldValue, final @Nullable V newValue) {
 		final long lockStamp = this.localLock.readLock();
 		try {
-			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+			for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
 				if (tempNode.getKey().equals(key) && Objects.equals(tempNode.getValue(), oldValue)) {
 					if (Objects.equals(tempNode.getValue(), newValue)) {
 						return true;
@@ -222,7 +221,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	public V replace(final @NotNull K key, final @Nullable V value) {
 		final long lockStamp = this.localLock.readLock();
 		try {
-			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+			for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
 				if (tempNode.getKey().equals(key)) {
 					if (Objects.equals(tempNode.getValue(), value)) {
 						return value;
@@ -251,7 +250,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	public boolean containsKey(final @NotNull Object key) {
 		final long lockStamp = this.localLock.readLock();
 		try {
-			for (final @NotNull TripletNode<K, V> TempNode : this.localList) {
+			for (final @NotNull DataMap.DataNode<K, V> TempNode : this.localList) {
 				if (TempNode.getKey().equals(key)) {
 					return true;
 				}
@@ -276,7 +275,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	public boolean containsValue(final @NotNull Object value) {
 		final long lockStamp = this.localLock.readLock();
 		try {
-			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+			for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
 				if (value.equals(tempNode.getValue())) {
 					return true;
 				}
@@ -304,7 +303,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	public @Nullable V put(final @NotNull K key, final @Nullable V value) {
 		final long lockStamp = this.localLock.readLock();
 		try {
-			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+			for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
 				if (tempNode.getKey().equals(key)) {
 					if (Objects.equals(tempNode.getValue(), value)) {
 						return value;
@@ -326,7 +325,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	 * @param node mapping to be added to the map
 	 */
 	@Override
-	public void add(final @NotNull TripletNode<K, V> node) {
+	public void add(final @NotNull DataMap.DataNode<K, V> node) {
 		final long lockStamp = this.localLock.writeLock();
 		try {
 			this.localList.add(node);
@@ -336,12 +335,12 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	}
 
 	@Override
-	public void add(@NotNull K key, @Nullable V value) {
+	public void add(final @NotNull K key, @Nullable final V value) {
 		this.add(new ConcurrentNode<>(key, value));
 	}
 
 	@Override
-	public void addAll(@NotNull Map<? extends K, ? extends V> nodeMap) {
+	public void addAll(final @NotNull Map<? extends K, ? extends V> nodeMap) {
 		for (final @NotNull Map.Entry<? extends K, ? extends V> entry : nodeMap.entrySet()) {
 			this.add(entry.getKey(), entry.getValue());
 		}
@@ -353,7 +352,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	 * @param nodes mappings to be added to the map
 	 */
 	@Override
-	public void addAll(final @NotNull List<TripletNode<K, V>> nodes) {
+	public void addAll(final @NotNull List<DataNode<K, V>> nodes) {
 		final long lockStamp = this.localLock.writeLock();
 		try {
 			this.localList.addAll(nodes);
@@ -383,7 +382,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	public @Nullable V get(final @NotNull Object key) {
 		final long lockStamp = this.localLock.readLock();
 		try {
-			for (final @NotNull TripletNode<K, V> tempNode : this.localList) {
+			for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
 				if (tempNode.getKey().equals(key)) {
 					return tempNode.getValue();
 				}
@@ -408,11 +407,11 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	public @Nullable V remove(final @NotNull Object key) {
 		long lockStamp = this.localLock.readLock();
 		try {
-			final @NotNull Iterator<TripletNode<K, V>> tempIterator = this.localList.iterator();
-			TripletNode<K, V> tempNode;
+			final @NotNull Iterator<DataNode<K, V>> tempIterator = this.localList.iterator();
+			DataNode<K, V> tempNode;
 			while ((tempNode = tempIterator.next()) != null) {
 				if (tempNode.getKey().equals(key)) {
-					long tempLock = this.localLock.tryConvertToWriteLock(lockStamp);
+					final long tempLock = this.localLock.tryConvertToWriteLock(lockStamp);
 					if (this.localLock.validate(tempLock)) {
 						lockStamp = tempLock;
 					} else {
@@ -453,9 +452,6 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 		}
 	}
 
-	@Override //NOSONAR
-	public abstract @NotNull DataMap<K, V> clone(); //NOSONAR
-
 	/**
 	 * Returns a {@link Set} view of the mappings contained in this map.
 	 * The set is backed by the map, so changes to the map are
@@ -484,7 +480,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	}
 
 	@Override
-	public @NotNull List<TripletNode<K, V>> entryList() {
+	public @NotNull List<DataNode<K, V>> entryList() {
 		return this.localList;
 	}
 
@@ -519,6 +515,9 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 		}
 	}
 
+	@Override //NOSONAR
+	public abstract @NotNull DataMap<K, V> clone(); //NOSONAR
+
 	@Override
 	public @NotNull String toString() {
 		final long lockStamp = this.localLock.readLock();
@@ -540,7 +539,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	 */
 	@EqualsAndHashCode
 	@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
-	private static class ConcurrentNode<K, V> implements TripletNode<K, V> {
+	private static class ConcurrentNode<K, V> implements DataNode<K, V> {
 
 
 		private final @NotNull StampedLock localLock = new StampedLock();

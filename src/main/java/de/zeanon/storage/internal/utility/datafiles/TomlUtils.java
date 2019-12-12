@@ -268,7 +268,7 @@ public class TomlUtils {
 			}
 		}
 		if (header != null) {
-			for (@Nullable String comment : header) {
+			for (@Nullable final String comment : header) {
 				if (comment != null) {
 					returnMap.put(comment.startsWith("#") ? comment : "# " + comment, ThunderEditor.LineType.HEADER);
 				}
@@ -293,7 +293,7 @@ public class TomlUtils {
 			returnMap.put(entry.getKey(), entry.getValue());
 		}
 		if (footer != null) {
-			for (@Nullable String comment : footer) {
+			for (@Nullable final String comment : footer) {
 				if (comment != null) {
 					returnMap.put(comment.startsWith("#") ? comment : "# " + comment, ThunderEditor.LineType.FOOTER);
 				}
