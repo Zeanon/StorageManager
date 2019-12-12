@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.utility.basic;
 
-import de.zeanon.storage.external.lists.GapList;
+import de.zeanon.storage.external.browniescollections.GapList;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.ReadWriteFileLock;

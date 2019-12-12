@@ -1,8 +1,8 @@
 package de.zeanon.storage.internal.utility.builder;
 
 import de.zeanon.storage.StorageManager;
-import de.zeanon.storage.external.lists.BigList;
-import de.zeanon.storage.external.lists.GapList;
+import de.zeanon.storage.external.browniescollections.BigList;
+import de.zeanon.storage.external.browniescollections.GapList;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storage.internal.base.settings.Comment;

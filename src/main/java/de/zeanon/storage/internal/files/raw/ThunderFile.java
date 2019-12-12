@@ -1,7 +1,7 @@
 package de.zeanon.storage.internal.files.raw;
 
-import de.zeanon.storage.external.lists.BigList;
-import de.zeanon.storage.external.lists.GapList;
+import de.zeanon.storage.external.browniescollections.BigList;
+import de.zeanon.storage.external.browniescollections.GapList;
 import de.zeanon.storage.internal.base.cache.base.Provider;
 import de.zeanon.storage.internal.base.cache.datamap.BigDataMap;
 import de.zeanon.storage.internal.base.cache.datamap.ConcurrentBigDataMap;
@@ -40,7 +40,6 @@ import org.jetbrains.annotations.Nullable;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
 public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, DataMap.TripletNode<String, Object>, List>, DataMap, List> {
 
 
@@ -50,10 +49,16 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 
 
 	/**
-	 * @param file           the File to be used as a backend
-	 * @param inputStream    the FileContent to be set on the creation of the File
-	 * @param reloadSetting  the ReloadSetting to be used with this instance
-	 * @param commentSetting the CommentSetting to be used with this instance
+	 * @param file             the File to be used as a backend
+	 * @param inputStream      the FileContent to be set on the creation of the File
+	 * @param reloadSetting    the ReloadSetting to be used with this instance
+	 * @param commentSetting   the CommentSetting to be used with this instance
+	 * @param bufferSize       the bufferSize to be used with the Reader and Writer
+	 * @param concurrentData   if the saved data should be concurrent
+	 * @param bigData          if BigDataMap optimized for a huge amount of entries should be used
+	 * @param synchronizedData if the saved data should be synchronized
+	 * @param map              the Map implementation to be used
+	 * @param list             the List implementation should be used
 	 *
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
@@ -78,9 +83,9 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 		try {
 			this.fileData().loadData(ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize));
 			this.lastLoaded(System.currentTimeMillis());
-		} catch (RuntimeIOException e) {
+		} catch (final RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e);
-		} catch (ThunderException e) {
+		} catch (final ThunderException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}
 	}
@@ -89,7 +94,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	public void save() {
 		try {
 			ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
-		} catch (RuntimeIOException e) {
+		} catch (final RuntimeIOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
 		}
 	}
@@ -141,9 +146,9 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	protected @NotNull DataMap readFile() {
 		try {
 			return ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize);
-		} catch (RuntimeIOException e) {
+		} catch (final RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
-		} catch (ThunderException e) {
+		} catch (final ThunderException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}
 	}

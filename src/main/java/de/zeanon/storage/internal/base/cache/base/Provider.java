@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.base.cache.base;
 
-import de.zeanon.storage.external.lists.GapList;
+import de.zeanon.storage.external.browniescollections.GapList;
 import de.zeanon.storage.internal.base.exceptions.ProviderException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;

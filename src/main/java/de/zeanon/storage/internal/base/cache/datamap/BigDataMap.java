@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.base.cache.datamap;
 
-import de.zeanon.storage.external.lists.BigList;
+import de.zeanon.storage.external.browniescollections.BigList;
 import de.zeanon.storage.internal.base.cache.base.AbstractDataMap;
 import de.zeanon.storage.internal.base.interfaces.DataMap;
 import java.util.Map;

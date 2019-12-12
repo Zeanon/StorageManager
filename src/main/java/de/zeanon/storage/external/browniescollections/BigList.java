@@ -17,9 +17,9 @@
  *
  * Copied by Zeanon to reduce final jar size
  */
-package de.zeanon.storage.external.lists;
+package de.zeanon.storage.external.browniescollections;
 
-import de.zeanon.storage.external.lists.helpers.MergeSort;
+import de.zeanon.storage.external.browniescollections.helpers.MergeSort;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

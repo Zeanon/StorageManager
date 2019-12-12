@@ -17,7 +17,7 @@
  *
  * Copied by Zeanon to reduce final jar size
  */
-package de.zeanon.storage.external.lists.helpers;
+package de.zeanon.storage.external.browniescollections.helpers;
 
 
 /**

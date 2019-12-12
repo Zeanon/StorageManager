@@ -4,7 +4,7 @@
 //
 // Copied by Zeanon to reduce final jar size
 //
-package de.zeanon.storage.external.lists.helpers;
+package de.zeanon.storage.external.browniescollections.helpers;
 
 import java.util.Comparator;
 import java.util.List;

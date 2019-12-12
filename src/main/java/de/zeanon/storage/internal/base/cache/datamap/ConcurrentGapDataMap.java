@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.base.cache.datamap;
 
-import de.zeanon.storage.external.lists.GapList;
+import de.zeanon.storage.external.browniescollections.GapList;
 import de.zeanon.storage.internal.base.cache.base.ConcurrentDataMap;
 import de.zeanon.storage.internal.base.interfaces.DataMap;
 import java.util.Map;

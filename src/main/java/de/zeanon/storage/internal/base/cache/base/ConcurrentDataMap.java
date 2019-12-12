@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.base.cache.base;
 
-import de.zeanon.storage.external.lists.IList;
+import de.zeanon.storage.external.browniescollections.IList;
 import de.zeanon.storage.internal.base.interfaces.DataMap;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
