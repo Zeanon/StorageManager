@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.3.0
  */
+@SuppressWarnings("ALL")
 @EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
 public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implements DataMap<K, V>, ConcurrentMap<K, V> {

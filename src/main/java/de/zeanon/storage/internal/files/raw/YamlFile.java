@@ -38,6 +38,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@SuppressWarnings("unused")
 public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
 
 
@@ -68,10 +69,16 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 			//noinspection unchecked
 			this.fileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.file())).read());
 			this.lastLoaded(System.currentTimeMillis());
-		} catch (final @NotNull FileNotFoundException e) {
-			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
 		} catch (final @NotNull YamlException e) {
-			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e);
+			throw new FileParseException("Error while parsing '"
+										 + this.file().getAbsolutePath()
+										 + "'",
+										 e);
+		} catch (final @NotNull IOException e) {
+			throw new RuntimeIOException("Error while loading '"
+										 + this.file().getAbsolutePath()
+										 + "'",
+										 e.getCause());
 		}
 	}
 
@@ -153,15 +160,12 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 
 	public enum FileType implements de.zeanon.storage.internal.base.interfaces.FileType {
 
-		YAML("yml");
+
+		YAML();
 
 
-		private final @NotNull String extension;
+		private final @NotNull String extension = "yml";
 
-		@Contract(pure = true)
-		FileType(final @NotNull String extension) {
-			this.extension = extension;
-		}
 
 		@Contract(pure = true)
 		@Override

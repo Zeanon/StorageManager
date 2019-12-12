@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 @EqualsAndHashCode
 @Accessors(fluent = true, chain = false)
-@SuppressWarnings("DefaultAnnotationParam")
+@SuppressWarnings({"DefaultAnnotationParam", "unused"})
 public class StandardFileData<M extends Map, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<StandardFileData> {
 
 

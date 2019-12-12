@@ -28,12 +28,13 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@SuppressWarnings("unused")
 public class YamlConfig extends YamlFile implements Config {
 
 
-	private List<String> header;
-	private List<String> footer;
-	private List<String> comments;
+	private @NotNull List<String> header;
+	private @NotNull List<String> footer;
+	private @NotNull List<String> comments;
 
 
 	/**
@@ -56,6 +57,12 @@ public class YamlConfig extends YamlFile implements Config {
 						 final @NotNull Class<? extends Map> map,
 						 final @NotNull Class<? extends List> list) {
 		super(file, inputStream, reloadSetting, commentSetting, synchronizedData, map, list);
+		//noinspection unchecked
+		this.header = this.provider().newList();
+		//noinspection unchecked
+		this.footer = this.provider().newList();
+		//noinspection unchecked
+		this.comments = this.provider().newList();
 	}
 
 
@@ -79,7 +86,7 @@ public class YamlConfig extends YamlFile implements Config {
 				throw new RuntimeIOException("Error while getting header of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
-											 e);
+											 e.getCause());
 			}
 		}
 	}
@@ -112,14 +119,13 @@ public class YamlConfig extends YamlFile implements Config {
 					throw new RuntimeIOException("Error while setting header of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
-												 e);
+												 e.getCause());
 				}
 			} else {
 				try {
 					final @NotNull List<String> lines = YamlEditor.read(this.file());
 					final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.file(), this.provider());
-
-					final List<String> newLines = this.header;
+					final @NotNull List<String> newLines = this.header;
 					lines.removeAll(oldHeader);
 					newLines.addAll(lines);
 
@@ -133,7 +139,7 @@ public class YamlConfig extends YamlFile implements Config {
 					throw new RuntimeIOException("Error while setting header of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
-												 e);
+												 e.getCause());
 				}
 			}
 		} else {
@@ -156,7 +162,7 @@ public class YamlConfig extends YamlFile implements Config {
 				throw new RuntimeIOException("Error while setting header of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
-											 e);
+											 e.getCause());
 			}
 		}
 	}
@@ -181,7 +187,7 @@ public class YamlConfig extends YamlFile implements Config {
 				throw new RuntimeIOException("Error while getting footer of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
-											 e);
+											 e.getCause());
 			}
 		}
 	}
@@ -214,7 +220,7 @@ public class YamlConfig extends YamlFile implements Config {
 					throw new RuntimeIOException("Error while setting footer of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
-												 e);
+												 e.getCause());
 				}
 			} else {
 				try {
@@ -234,7 +240,7 @@ public class YamlConfig extends YamlFile implements Config {
 					throw new RuntimeIOException("Error while setting footer of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
-												 e);
+												 e.getCause());
 				}
 			}
 		} else {
@@ -257,7 +263,7 @@ public class YamlConfig extends YamlFile implements Config {
 				throw new RuntimeIOException("Error while setting footer of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
-											 e);
+											 e.getCause());
 			}
 		}
 	}
@@ -282,7 +288,7 @@ public class YamlConfig extends YamlFile implements Config {
 				throw new RuntimeIOException("Error while getting comments from '"
 											 + this.file().getAbsolutePath()
 											 + "'",
-											 e);
+											 e.getCause());
 			}
 		}
 	}

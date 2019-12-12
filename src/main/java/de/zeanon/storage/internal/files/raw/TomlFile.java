@@ -34,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@SuppressWarnings("unused")
 public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
 
 
@@ -61,10 +62,16 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		try {
 			this.fileData().loadData(com.electronwill.toml.Toml.read(this.file()));
 			this.lastLoaded(System.currentTimeMillis());
-		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
 		} catch (final @NotNull TomlException e) {
-			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
+			throw new FileParseException("Error while parsing '"
+										 + this.getAbsolutePath()
+										 + "'",
+										 e);
+		} catch (final @NotNull IOException e) {
+			throw new RuntimeIOException("Error while loading '"
+										 + this.file().getAbsolutePath()
+										 + "'",
+										 e.getCause());
 		}
 	}
 
@@ -127,15 +134,12 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 	public enum FileType implements de.zeanon.storage.internal.base.interfaces.FileType {
 
-		TOML("toml");
+
+		TOML();
 
 
-		private final @NotNull String extension;
+		private final @NotNull String extension = "toml";
 
-		@Contract(pure = true)
-		FileType(final @NotNull String extension) {
-			this.extension = extension;
-		}
 
 		@Contract(pure = true)
 		@Override

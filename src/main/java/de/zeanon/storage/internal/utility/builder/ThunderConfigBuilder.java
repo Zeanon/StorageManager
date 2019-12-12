@@ -30,21 +30,26 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, ThunderConfig, DataMap, List> {
 
+
 	private boolean bigData;
 	private boolean concurrentData;
+	@Setter(onMethod_ = {@Contract("_ -> this")})
+	private boolean autoFlush;
 	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private @NotNull CommentSetting commentSetting = Comment.PRESERVE;
 	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private int bufferSize = 8192;
 
+
 	public ThunderConfigBuilder(final @NotNull File file) {
 		super(file, GapDataMap.class, GapList.class);
 	}
 
+
 	@Override
 	@Contract("-> new")
 	public final @NotNull ThunderConfig create() {
-		return new LocalThunderConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bufferSize, this.bigData, this.concurrentData, this.synchronizedData, this.mapType, this.listType);
+		return new LocalThunderConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bufferSize, this.autoFlush, this.bigData, this.concurrentData, this.synchronizedData, this.mapType, this.listType);
 	}
 
 	@Contract("_ -> this")
@@ -76,12 +81,13 @@ public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, T
 								   final @NotNull ReloadSetting reloadSetting,
 								   final @NotNull CommentSetting commentSetting,
 								   final int bufferSize,
+								   final boolean autoFlush,
 								   final boolean bigData,
 								   final boolean concurrentData,
 								   final boolean synchronizedData,
 								   final @NotNull Class<? extends DataMap> map,
 								   final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, commentSetting, bufferSize, bigData, concurrentData, synchronizedData, map, list);
+			super(file, inputStream, reloadSetting, commentSetting, bufferSize, autoFlush, bigData, concurrentData, synchronizedData, map, list);
 		}
 	}
 }

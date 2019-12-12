@@ -39,6 +39,7 @@ import org.json.JSONTokener;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@SuppressWarnings("unused")
 public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
 
 
@@ -77,7 +78,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 			throw new RuntimeIOException("Error while loading '"
 										 + this.getAbsolutePath()
 										 + "'",
-										 e);
+										 e.getCause());
 		}
 	}
 
@@ -204,22 +205,19 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 			throw new RuntimeIOException("Error while loading '"
 										 + this.getAbsolutePath()
 										 + "'",
-										 e);
+										 e.getCause());
 		}
 	}
 
 
 	public enum FileType implements de.zeanon.storage.internal.base.interfaces.FileType {
 
-		JSON("json");
+
+		JSON();
 
 
-		private final @NotNull String extension;
+		private final @NotNull String extension = "json";
 
-		@Contract(pure = true)
-		FileType(final @NotNull String extension) {
-			this.extension = extension;
-		}
 
 		@Contract(pure = true)
 		@Override

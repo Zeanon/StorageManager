@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
+@SuppressWarnings("unused")
 public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements DataMap<K, V> {
 
 

@@ -93,22 +93,22 @@ public abstract class StorageManager<B extends StorageManager, F extends FlatFil
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull String name) {
-		return new ThunderFileBuilder(new File(name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderFileBuilder(new File(name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull String directory, final @NotNull String name) {
-		return new ThunderFileBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderFileBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull File directory, final @NotNull String name) {
-		return new ThunderFileBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderFileBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull Path directory, final @NotNull String name) {
-		return new ThunderFileBuilder(new File(directory.toFile(), name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderFileBuilder(new File(directory.toFile(), name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 
@@ -124,22 +124,22 @@ public abstract class StorageManager<B extends StorageManager, F extends FlatFil
 
 	@Contract("null -> fail; !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull String name) {
-		return new ThunderConfigBuilder(new File(name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderConfigBuilder(new File(name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull String directory, final @NotNull String name) {
-		return new ThunderConfigBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderConfigBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull File directory, final @NotNull String name) {
-		return new ThunderConfigBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderConfigBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 	@Contract("null, null -> fail; null, !null -> fail; !null, null -> fail; !null, !null -> new")
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull Path directory, final @NotNull String name) {
-		return new ThunderConfigBuilder(new File(directory.toFile(), name + "." + ThunderFile.FileType.THUNDER));
+		return new ThunderConfigBuilder(new File(directory.toFile(), name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 

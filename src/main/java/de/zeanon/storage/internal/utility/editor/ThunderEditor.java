@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
  * @version 2.8.0
  */
 @UtilityClass
+@SuppressWarnings("unused")
 public class ThunderEditor {
 
 
@@ -47,11 +48,12 @@ public class ThunderEditor {
 	 */
 	public static void writeData(final @NotNull File file,
 								 final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData,
-								 final @NotNull CommentSetting commentSetting) {
+								 final @NotNull CommentSetting commentSetting,
+								 final boolean autoFlush) {
 		if (commentSetting == Comment.PRESERVE) {
-			ThunderEditor.initialWriteWithComments(file, fileData);
+			ThunderEditor.initialWriteWithComments(file, fileData, autoFlush);
 		} else if (commentSetting == Comment.SKIP) {
-			ThunderEditor.initialWriteWithOutComments(file, fileData);
+			ThunderEditor.initialWriteWithOutComments(file, fileData, autoFlush);
 		} else {
 			throw new IllegalArgumentException("Illegal CommentSetting");
 		}
@@ -63,6 +65,7 @@ public class ThunderEditor {
 	 * @param file           the File to be read from
 	 * @param commentSetting the CommentSetting to be used
 	 * @param provider       the Provider to be used to get the Map and List implementations
+	 * @param buffer_size    the buffer size to be used with the Reader
 	 *
 	 * @return a Map containing the Data of the File
 	 *
@@ -88,10 +91,11 @@ public class ThunderEditor {
 	// <Write Data>
 	// <Write Data with Comments>
 	private static void initialWriteWithComments(final @NotNull File file,
-												 final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData) {
+												 final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData,
+												 final boolean autoFlush) {
 		if (!fileData.isEmpty()) {
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
-				 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
+				 final @NotNull PrintWriter writer = tempLock.createPrintWriter(autoFlush)) {
 				tempLock.lock();
 				tempLock.truncateChannel(0);
 				final @NotNull Iterator<DataMap.DataNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
@@ -192,10 +196,11 @@ public class ThunderEditor {
 
 	// <Write Data without Comments>
 	private static void initialWriteWithOutComments(final @NotNull File file,
-													final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData) {
+													final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData,
+													final boolean autoFlush) {
 		if (!fileData.isEmpty()) {
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
-				 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
+				 final @NotNull PrintWriter writer = tempLock.createPrintWriter(autoFlush)) {
 				tempLock.lock();
 				tempLock.truncateChannel(0);
 				final @NotNull Iterator<DataMap.DataNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();

@@ -37,6 +37,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 	 * @param reloadSetting    the ReloadSetting to be used with this instance
 	 * @param commentSetting   the CommentSetting to be used with this instance
 	 * @param bufferSize       the bufferSize to be used with the Reader and Writer
+	 * @param autoFlush        autoFlush parameter of the PrintWriter
 	 * @param concurrentData   if the saved data should be concurrent
 	 * @param synchronizedData if the saved data should be synchronized
 	 * @param map              the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
@@ -50,12 +51,13 @@ public class ThunderConfig extends ThunderFile implements Config {
 							final @NotNull ReloadSetting reloadSetting,
 							final @NotNull CommentSetting commentSetting,
 							final int bufferSize,
+							final boolean autoFlush,
 							final boolean bigMap,
 							final boolean concurrentData,
 							final boolean synchronizedData,
 							final @NotNull Class<? extends DataMap> map,
 							final @NotNull Class<? extends List> list) {
-		super(file, inputStream, reloadSetting, commentSetting, bufferSize, bigMap, concurrentData, synchronizedData, map, list);
+		super(file, inputStream, reloadSetting, commentSetting, bufferSize, autoFlush, bigMap, concurrentData, synchronizedData, map, list);
 	}
 
 

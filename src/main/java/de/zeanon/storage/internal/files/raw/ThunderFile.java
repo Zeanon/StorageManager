@@ -45,6 +45,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 
 
 	private int bufferSize;
+	private boolean autoFlush;
 	private boolean concurrentData;
 	private boolean bigData;
 
@@ -54,7 +55,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	 * @param inputStream      the FileContent to be set on the creation of the File
 	 * @param reloadSetting    the ReloadSetting to be used with this instance
 	 * @param commentSetting   the CommentSetting to be used with this instance
-	 * @param bufferSize       the bufferSize to be used with the Reader and Writer
+	 * @param bufferSize       the bufferSize to be used with the Reader
+	 * @param autoFlush        autoFlush parameter of the PrintWriter
 	 * @param concurrentData   if the saved data should be concurrent
 	 * @param bigData          if BigDataMap optimized for a huge amount of entries should be used
 	 * @param synchronizedData if the saved data should be synchronized
@@ -69,32 +71,40 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 						  final @NotNull ReloadSetting reloadSetting,
 						  final @NotNull CommentSetting commentSetting,
 						  final int bufferSize,
+						  final boolean autoFlush,
 						  final boolean concurrentData,
 						  final boolean bigData,
 						  final boolean synchronizedData,
 						  final @NotNull Class<? extends DataMap> map,
 						  final @NotNull Class<? extends List> list) {
-		super(file, FileType.THUNDER, new LocalFileData(new Collections(map, list), synchronizedData), reloadSetting, commentSetting);
+		super(file, FileType.THUNDERFILE, new LocalFileData(new Collections(map, list), synchronizedData), reloadSetting, commentSetting);
 		this.bufferSize = bufferSize;
-		this.bigData = bigData;
+		this.autoFlush = autoFlush;
 		this.concurrentData = concurrentData;
+		this.bigData = bigData;
 
 		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
 		try {
 			this.fileData().loadData(ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize));
 			this.lastLoaded(System.currentTimeMillis());
-		} catch (final @NotNull RuntimeIOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e);
 		} catch (final @NotNull ThunderException e) {
-			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
+			throw new FileParseException("Error while parsing '"
+										 + this.getAbsolutePath()
+										 + "'",
+										 e);
+		} catch (final @NotNull RuntimeIOException e) {
+			throw new RuntimeIOException("Error while loading '"
+										 + this.getAbsolutePath()
+										 + "'",
+										 e.getCause());
 		}
 	}
 
 	@Override
 	public void save() {
 		try {
-			ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting());
+			ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting(), this.getAutoFlush());
 		} catch (final @NotNull RuntimeIOException e) {
 			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
 		}
@@ -157,15 +167,12 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 
 	public enum FileType implements de.zeanon.storage.internal.base.interfaces.FileType {
 
-		THUNDER("tf");
+
+		THUNDERFILE();
 
 
-		private final @NotNull String extension;
+		private final @NotNull String extension = "tf";
 
-		@Contract(pure = true)
-		FileType(final @NotNull String extension) {
-			this.extension = extension;
-		}
 
 		@Contract(pure = true)
 		@Override

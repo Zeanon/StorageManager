@@ -24,10 +24,10 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.5.0
  */
-@SuppressWarnings("DefaultAnnotationParam")
 @Getter
 @EqualsAndHashCode
 @Accessors(fluent = true, chain = false)
+@SuppressWarnings({"unused", "DefaultAnnotationParam"})
 public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<ThunderFileData> {
 
 

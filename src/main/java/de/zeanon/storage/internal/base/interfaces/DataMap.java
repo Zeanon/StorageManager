@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+@SuppressWarnings("unused")
 public interface DataMap<K, V> extends Map<K, V>, Cloneable {
 
 	/**

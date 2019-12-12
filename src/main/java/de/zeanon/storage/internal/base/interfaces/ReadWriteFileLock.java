@@ -28,7 +28,11 @@ public interface ReadWriteFileLock extends AutoCloseable {
 
 	@NotNull PrintWriter createPrintWriter();
 
+	@NotNull PrintWriter createPrintWriter(final boolean autoFlush);
+
 	@NotNull PrintWriter createPrintWriter(final @NotNull String csName);
+
+	@NotNull PrintWriter createPrintWriter(final @NotNull String csName, final boolean autoFlush);
 
 	@NotNull BufferedReader createBufferedReader();
 

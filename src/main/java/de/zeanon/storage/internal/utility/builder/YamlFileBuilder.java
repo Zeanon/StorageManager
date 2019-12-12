@@ -37,6 +37,7 @@ public class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, M
 		super(file, HashMap.class, GapList.class);
 	}
 
+
 	@Override
 	@Contract("-> new")
 	public final @NotNull YamlFile create() {

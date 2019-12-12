@@ -79,6 +79,15 @@ public class ThunderUtils {
 		}
 	}
 
+	/**
+	 * Set the Header of a FileData
+	 *
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the Key of the SubBlock the Header shall be set to
+	 * @param header   the Header to be set
+	 *
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
+	 */
 	public static void setHeaderUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String[] key, final @Nullable String[] header) {
 		if (fileData.getUseArray(key) instanceof DataMap) {
 			final @NotNull List<DataMap.DataNode<String, Object>> entryList = fileData.blockEntryListUseArray(key);
@@ -140,6 +149,15 @@ public class ThunderUtils {
 		}
 	}
 
+	/**
+	 * Set the Footer of a FileData
+	 *
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the Key of the SubBlock the Footer shall be set to
+	 * @param footer   the Header to be set
+	 *
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
+	 */
 	public static void setFooterUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String[] key, final @Nullable String[] footer) {
 		if (fileData.getUseArray(key) instanceof DataMap) {
 			final @NotNull List<DataMap.DataNode<String, Object>> entryList = fileData.blockEntryListUseArray(key);
@@ -179,6 +197,16 @@ public class ThunderUtils {
 		}
 	}
 
+	/**
+	 * Get the Header from a give FileData
+	 *
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the Key of the SubBlock the Header shall be getted from
+	 *
+	 * @return a List containing the Header of the SubBlock
+	 *
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
+	 */
 	public static @Nullable List<String> getHeaderUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String... key) {
 		if (fileData.containsKeyUseArray(key)) {
 			//noinspection unchecked
@@ -212,6 +240,16 @@ public class ThunderUtils {
 		return ThunderUtils.internalGetFooter(result, fileData.entryList(key));
 	}
 
+	/**
+	 * Get the Footer from a give FileData
+	 *
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the key of the SubBlock the Footer shall be getted from
+	 *
+	 * @return a List containing the Footer of the SubBlock
+	 *
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
+	 */
 	public static @NotNull List<String> getFooterUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String... key) {
 		//noinspection unchecked
 		return ThunderUtils.internalGetFooter(fileData.provider().newList(), fileData.blockEntryListUseArray(key));
@@ -244,6 +282,17 @@ public class ThunderUtils {
 		return ThunderUtils.internalGetComments(deep ? fileData.entryList(key) : fileData.blockEntryList(key), fileData.provider());
 	}
 
+	/**
+	 * Get the Comments from a given FileDataBase compatible with ThunderFile
+	 *
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the key of the SubBlock the Footer shall be getted from
+	 * @param deep     defining, if it should get all comments or only the ones in the given SubBlock
+	 *
+	 * @return a List containing the Comments of the SubBlock
+	 *
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
+	 */
 	public static @NotNull List<String> getCommentsUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String[] key, final boolean deep) {
 		return ThunderUtils.internalGetComments(deep ? fileData.entryListUseArray(key) : fileData.blockEntryListUseArray(key), fileData.provider());
 	}

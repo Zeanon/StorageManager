@@ -73,6 +73,15 @@ public class TomlUtils {
 		}
 	}
 
+	/**
+	 * Set the Header of a FileData
+	 *
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the Key of the SubBlock the Header shall be set to
+	 * @param header   the Header to be set
+	 *
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
+	 */
 	public static void setHeaderUseArray(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final @NotNull String[] key, final @Nullable String[] header) {
 		if (fileData.getUseArray(key) instanceof Map) {
 			final @NotNull List<Map.Entry<String, Object>> entryList = fileData.blockEntryListUseArray(key);
@@ -134,6 +143,15 @@ public class TomlUtils {
 		}
 	}
 
+	/**
+	 * Set the Footer of a FileData
+	 *
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the Key of the SubBlock the Footer shall be set to
+	 * @param footer   the Header to be set
+	 *
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
+	 */
 	public static void setFooterUseArray(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final @NotNull String[] key, final @Nullable String[] footer) {
 		if (fileData.getUseArray(key) instanceof Map) {
 			final @NotNull List<Map.Entry<String, Object>> entryList = fileData.blockEntryListUseArray(key);
@@ -173,6 +191,16 @@ public class TomlUtils {
 		}
 	}
 
+	/**
+	 * Get the Header from a give FileData
+	 *
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the Key of the SubBlock the Header shall be getted from
+	 *
+	 * @return a List containing the Header of the SubBlock
+	 *
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
+	 */
 	public static @Nullable List<String> getHeaderUseArray(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final @NotNull String... key) {
 		if (fileData.containsKeyUseArray(key)) {
 			//noinspection unchecked
@@ -206,6 +234,16 @@ public class TomlUtils {
 		return TomlUtils.internalGetFooter(result, fileData.entryList(key));
 	}
 
+	/**
+	 * Get the Footer from a give FileData
+	 *
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the key of the SubBlock the Footer shall be getted from
+	 *
+	 * @return a List containing the Footer of the SubBlock
+	 *
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
+	 */
 	public static @NotNull List<String> getFooterUseArray(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final @NotNull String... key) {
 		//noinspection unchecked
 		return TomlUtils.internalGetFooter(fileData.provider().newList(), fileData.blockEntryListUseArray(key));
@@ -238,6 +276,17 @@ public class TomlUtils {
 		return TomlUtils.internalGetComments(deep ? fileData.entryList(key) : fileData.blockEntryList(key), fileData.provider());
 	}
 
+	/**
+	 * Get the Comments from a given FileDataBase compatible with ThunderFile
+	 *
+	 * @param fileData the FileDataBase to be used
+	 * @param key      the key of the SubBlock the Footer shall be getted from
+	 * @param deep     defining, if it should get all comments or only the ones in the given SubBlock
+	 *
+	 * @return a List containing the Comments of the SubBlock
+	 *
+	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
+	 */
 	public static @NotNull List<String> getCommentsUseArray(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final @NotNull String[] key, final boolean deep) {
 		return TomlUtils.internalGetComments(deep ? fileData.entryListUseArray(key) : fileData.blockEntryListUseArray(key), fileData.provider());
 	}

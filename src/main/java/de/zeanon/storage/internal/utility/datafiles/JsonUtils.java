@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -23,9 +24,9 @@ public class JsonUtils {
 	public static @NotNull JSONObject getJsonFromMap(final @NotNull Map<String, Object> map) {
 		final @NotNull JSONObject jsonData = new JSONObject();
 		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
-			Object value = entry.getValue();
+			@Nullable Object value = entry.getValue();
 			if (value instanceof Map<?, ?>) {
-				value = getJsonFromMap((Map<String, Object>) value);
+				value = JsonUtils.getJsonFromMap((Map<String, Object>) value);
 			}
 			jsonData.put(entry.getKey(), value);
 		}
@@ -33,24 +34,24 @@ public class JsonUtils {
 	}
 
 	public static @NotNull Map<String, Object> jsonToMap(final @NotNull JSONObject json, final @NotNull Provider<? extends Map, ? extends List> provider) {
-		final @NotNull Map<String, Object> retMap = provider.newMap();
+		final @NotNull Map<String, Object> tempMap = provider.newMap();
 		if (json != JSONObject.NULL) {
-			retMap.putAll(json.toMap());
+			tempMap.putAll(json.toMap());
 		}
-		return retMap;
+		return tempMap;
 	}
 
 	public static @NotNull List<Object> toList(final @NotNull JSONArray array, final @NotNull Provider<? extends Map, ? extends List> provider) {
 		final @NotNull List<Object> list = provider.newList();
 		for (int i = 0; i < array.length(); i++) {
-			list.add(getValue(array.get(i), provider));
+			list.add(JsonUtils.getValue(array.get(i), provider));
 		}
 		return list;
 	}
 
 	private static @NotNull Object getValue(final @NotNull Object obj, final @NotNull Provider<? extends Map, ? extends List> provider) {
 		if (obj instanceof JSONArray) {
-			return toList((JSONArray) obj, provider);
+			return JsonUtils.toList((JSONArray) obj, provider);
 		} else if (obj instanceof JSONObject) {
 			return ((JSONObject) obj).toMap();
 		} else {
