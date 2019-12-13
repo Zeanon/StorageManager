@@ -6,6 +6,7 @@ import java.io.*;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.nio.charset.CharsetEncoder;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -90,13 +91,40 @@ public class ExtendedFileLock implements AutoCloseable {
 
 
 	@Contract("-> new")
+	public @NotNull Writer createWriter() {
+		return Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), "UTF-8");
+	}
+
+	@Contract("_ -> new")
+	public @NotNull Writer createWriter(final @NotNull String csName) {
+		return Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), csName);
+	}
+
+	@Contract("_, _ -> new")
+	public @NotNull Writer createWriter(final @NotNull CharsetEncoder charsetEncoder,
+										final int minBufferCap) {
+		return Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), charsetEncoder, minBufferCap);
+	}
+
+	@Contract("-> new")
 	public @NotNull PrintWriter createPrintWriter() {
 		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), "UTF-8"));
+	}
+
+	@Contract("_ -> new")
+	public @NotNull PrintWriter createPrintWriter(final boolean autoFlush) {
+		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), "UTF-8"), autoFlush);
 	}
 
 	@Contract("null -> fail; !null -> new")
 	public @NotNull PrintWriter createPrintWriter(final @NotNull String csName) {
 		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), csName));
+	}
+
+	@Contract("_, _ -> new")
+	public @NotNull PrintWriter createPrintWriter(final @NotNull String csName,
+												  final boolean autoFlush) {
+		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), csName), autoFlush);
 	}
 
 	@Contract("-> new")
@@ -519,62 +547,81 @@ public class ExtendedFileLock implements AutoCloseable {
 
 		@Override
 		@Contract("-> new")
+		public @NotNull Writer createWriter() {
+			return this.extendedFileLock.createWriter();
+		}
+
+		@Override
+		@Contract("_ -> new")
+		public @NotNull Writer createWriter(final @NotNull String csName) {
+			return this.extendedFileLock.createWriter(csName);
+		}
+
+		@Override
+		@Contract("_, _ -> new")
+		public @NotNull Writer createWriter(final @NotNull CharsetEncoder charsetEncoder,
+											final int minBufferCap) {
+			return this.extendedFileLock.createWriter(charsetEncoder, minBufferCap);
+		}
+
+		@Override
+		@Contract("-> new")
 		public @NotNull PrintWriter createPrintWriter() {
-			return new PrintWriter(Channels.newWriter(this.extendedFileLock.getFileChannel(), "UTF-8"));
+			return this.extendedFileLock.createPrintWriter();
 		}
 
 		@Override
 		@Contract("_ -> new")
 		public @NotNull PrintWriter createPrintWriter(final boolean autoFlush) {
-			return new PrintWriter(Channels.newWriter(this.extendedFileLock.getFileChannel(), "UTF-8"), autoFlush);
+			return this.extendedFileLock.createPrintWriter(autoFlush);
 		}
 
 		@Override
 		@Contract("null -> fail; !null -> new")
 		public @NotNull PrintWriter createPrintWriter(final @NotNull String csName) {
-			return new PrintWriter(Channels.newWriter(this.extendedFileLock.getFileChannel(), csName));
+			return this.extendedFileLock.createPrintWriter(csName);
 		}
 
 		@Override
 		@Contract("null, _ -> fail; !null, _ -> new")
 		public @NotNull PrintWriter createPrintWriter(final @NotNull String csName, final boolean autoFlush) {
-			return new PrintWriter(Channels.newWriter(this.extendedFileLock.getFileChannel(), csName), autoFlush);
+			return this.extendedFileLock.createPrintWriter(csName, autoFlush);
 		}
 
 		@Override
 		@Contract("-> new")
 		public @NotNull BufferedReader createBufferedReader() {
-			return new BufferedReader(Channels.newReader(this.extendedFileLock.getFileChannel(), "UTF-8"));
+			return this.extendedFileLock.createBufferedReader();
 		}
 
 		@Override
 		@Contract("null -> fail; !null -> new")
 		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName) {
-			return new BufferedReader(Channels.newReader(this.extendedFileLock.getFileChannel(), csName));
+			return this.extendedFileLock.createBufferedReader(csName);
 		}
 
 		@Override
 		@Contract("_ -> new")
 		public @NotNull BufferedReader createBufferedReader(final int buffer_size) {
-			return new BufferedReader(Channels.newReader(this.extendedFileLock.getFileChannel(), "UTF-8"), buffer_size);
+			return this.extendedFileLock.createBufferedReader(buffer_size);
 		}
 
 		@Override
 		@Contract("null, _ -> fail; !null, _ -> new")
 		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName, final int buffer_size) {
-			return new BufferedReader(Channels.newReader(this.extendedFileLock.getFileChannel(), csName), buffer_size);
+			return this.extendedFileLock.createBufferedReader(csName, buffer_size);
 		}
 
 		@Override
 		@Contract("-> new")
 		public @NotNull BufferedInputStream createBufferedInputStream() {
-			return new BufferedInputStream(Channels.newInputStream(this.extendedFileLock.getFileChannel()));
+			return this.extendedFileLock.createBufferedInputStream();
 		}
 
 		@Override
 		@Contract("-> new")
 		public @NotNull BufferedOutputStream createBufferedOutputStream() {
-			return new BufferedOutputStream(Channels.newOutputStream(this.extendedFileLock.getFileChannel()));
+			return this.extendedFileLock.createBufferedOutputStream();
 		}
 
 		@Override
@@ -646,62 +693,81 @@ public class ExtendedFileLock implements AutoCloseable {
 
 		@Override
 		@Contract("-> new")
+		public @NotNull Writer createWriter() {
+			return this.extendedFileLock.createWriter();
+		}
+
+		@Override
+		@Contract("_ -> new")
+		public @NotNull Writer createWriter(final @NotNull String csName) {
+			return this.extendedFileLock.createWriter(csName);
+		}
+
+		@Override
+		@Contract("_, _ -> new")
+		public @NotNull Writer createWriter(final @NotNull CharsetEncoder charsetEncoder,
+											final int minBufferCap) {
+			return this.extendedFileLock.createWriter(charsetEncoder, minBufferCap);
+		}
+
+		@Override
+		@Contract("-> new")
 		public @NotNull PrintWriter createPrintWriter() {
-			return new PrintWriter(Channels.newWriter(this.extendedFileLock.getFileChannel(), "UTF-8"));
+			return this.extendedFileLock.createPrintWriter();
 		}
 
 		@Override
 		@Contract("_ -> new")
 		public @NotNull PrintWriter createPrintWriter(final boolean autoFlush) {
-			return new PrintWriter(Channels.newWriter(this.extendedFileLock.getFileChannel(), "UTF-8"), autoFlush);
+			return this.extendedFileLock.createPrintWriter(autoFlush);
 		}
 
 		@Override
 		@Contract("null -> fail; !null -> new")
 		public @NotNull PrintWriter createPrintWriter(final @NotNull String csName) {
-			return new PrintWriter(Channels.newWriter(this.extendedFileLock.getFileChannel(), csName));
+			return this.extendedFileLock.createPrintWriter(csName);
 		}
 
 		@Override
 		@Contract("null, _ -> fail; !null, _ -> new")
 		public @NotNull PrintWriter createPrintWriter(final @NotNull String csName, final boolean autoFlush) {
-			return new PrintWriter(Channels.newWriter(this.extendedFileLock.getFileChannel(), csName), autoFlush);
+			return this.extendedFileLock.createPrintWriter(csName, autoFlush);
 		}
 
 		@Override
 		@Contract("-> new")
 		public @NotNull BufferedReader createBufferedReader() {
-			return new BufferedReader(Channels.newReader(this.extendedFileLock.getFileChannel(), "UTF-8"));
+			return this.extendedFileLock.createBufferedReader();
 		}
 
 		@Override
 		@Contract("null -> fail; !null -> new")
 		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName) {
-			return new BufferedReader(Channels.newReader(this.extendedFileLock.getFileChannel(), csName));
+			return this.extendedFileLock.createBufferedReader(csName);
 		}
 
 		@Override
 		@Contract("_ -> new")
 		public @NotNull BufferedReader createBufferedReader(final int buffer_size) {
-			return new BufferedReader(Channels.newReader(this.extendedFileLock.getFileChannel(), "UTF-8"), buffer_size);
+			return this.extendedFileLock.createBufferedReader(buffer_size);
 		}
 
 		@Override
 		@Contract("null, _ -> fail; !null, _ -> new")
 		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName, final int buffer_size) {
-			return new BufferedReader(Channels.newReader(this.extendedFileLock.getFileChannel(), csName), buffer_size);
+			return this.extendedFileLock.createBufferedReader(csName, buffer_size);
 		}
 
 		@Override
 		@Contract("-> new")
 		public @NotNull BufferedInputStream createBufferedInputStream() {
-			return new BufferedInputStream(Channels.newInputStream(this.extendedFileLock.getFileChannel()));
+			return this.extendedFileLock.createBufferedInputStream();
 		}
 
 		@Override
 		@Contract("-> new")
 		public @NotNull BufferedOutputStream createBufferedOutputStream() {
-			return new BufferedOutputStream(Channels.newOutputStream(this.extendedFileLock.getFileChannel()));
+			return this.extendedFileLock.createBufferedOutputStream();
 		}
 
 		@Override

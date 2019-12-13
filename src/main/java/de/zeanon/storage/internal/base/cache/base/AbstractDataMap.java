@@ -226,6 +226,7 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	@Override
 	public void clear() {
 		this.localList.clear();
+		this.localList.trimToSize();
 	}
 
 	@Override
@@ -251,7 +252,6 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	public @NotNull String toString() {
 		return this.localList.toString();
 	}
-
 
 	/**
 	 * The EntryNodes to be stored in a AbstractDataMap

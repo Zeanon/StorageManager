@@ -3,6 +3,7 @@ package de.zeanon.storage.internal.base.interfaces;
 import de.zeanon.storage.internal.utility.locks.ExtendedFileLock;
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.nio.charset.CharsetEncoder;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -25,6 +26,12 @@ public interface ReadWriteFileLock extends AutoCloseable {
 	@NotNull FileChannel getFileChannel();
 
 	@NotNull String getFilePath();
+
+	@NotNull Writer createWriter();
+
+	@NotNull Writer createWriter(final @NotNull String csName);
+
+	@NotNull Writer createWriter(final @NotNull CharsetEncoder charsetEncoder, final int minBufferCap);
 
 	@NotNull PrintWriter createPrintWriter();
 

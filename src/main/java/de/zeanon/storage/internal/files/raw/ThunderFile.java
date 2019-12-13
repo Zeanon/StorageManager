@@ -106,7 +106,10 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 		try {
 			ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting(), this.getAutoFlush());
 		} catch (final @NotNull RuntimeIOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while writing to "
+										 + this.getAbsolutePath()
+										 + "'",
+										 e.getCause());
 		}
 	}
 

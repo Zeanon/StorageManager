@@ -438,6 +438,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 		final long lockStamp = this.localLock.writeLock();
 		try {
 			this.localList.clear();
+			this.localList.trimToSize();
 		} finally {
 			this.localLock.unlockWrite(lockStamp);
 		}

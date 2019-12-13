@@ -2,7 +2,6 @@ package de.zeanon.storage.internal.files.raw;
 
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
-import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.zeanon.storage.external.browniescollections.BigList;
 import de.zeanon.storage.external.browniescollections.GapList;
 import de.zeanon.storage.internal.base.cache.base.Provider;
@@ -12,17 +11,18 @@ import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.files.CommentEnabledFile;
 import de.zeanon.storage.internal.base.interfaces.CommentSetting;
 import de.zeanon.storage.internal.base.interfaces.ReloadSetting;
-import de.zeanon.storage.internal.base.settings.Comment;
 import de.zeanon.storage.internal.files.section.YamlFileSection;
 import de.zeanon.storage.internal.utility.basic.BaseFileUtils;
-import de.zeanon.storage.internal.utility.datafiles.YamlUtils;
 import de.zeanon.storage.internal.utility.editor.YamlEditor;
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import lombok.Cleanup;
+import java.util.concurrent.locks.StampedLock;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.Contract;
@@ -40,6 +40,9 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
 public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
+
+
+	private final @NotNull StampedLock localLock = new StampedLock();
 
 
 	/**
@@ -85,22 +88,12 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 	@Override
 	public void save() {
 		try {
-			if (this.getCommentSetting() != Comment.PRESERVE) {
-				this.write(this.fileData().dataMap());
-			} else {
-				final @NotNull List<String> unEdited = YamlEditor.read(this.file());
-				final @NotNull List<String> header = YamlEditor.readHeader(this.file(), this.provider());
-				final @NotNull List<String> footer = YamlEditor.readFooter(this.file(), this.provider());
-				this.write(this.fileData().dataMap());
-				header.addAll(YamlEditor.read(this.file()));
-				if (!header.containsAll(footer)) {
-					header.addAll(footer);
-				}
-				YamlEditor.write(this.file(), YamlUtils.parseComments(unEdited, header, this.provider()));
-				this.write(this.fileData().dataMap());
-			}
-		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e.getCause());
+			YamlEditor.writeData(this.file(), this.fileData().dataMap(), this.getCommentSetting(), this.provider());
+		} catch (final @NotNull RuntimeIOException e) {
+			throw new RuntimeIOException("Error while writing to "
+										 + this.getAbsolutePath()
+										 + "'",
+										 e.getCause());
 		}
 	}
 
@@ -141,20 +134,17 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 
 	@Override
 	protected @NotNull Map readFile() {
-		try {
+		final long lockStamp = this.localLock.readLock();
+		try (final FileReader tempReader = new FileReader(this.file())) {
 			//noinspection unchecked
-			return (Map<String, Object>) new YamlReader(new FileReader(this.file())).read();
+			return (Map<String, Object>) new YamlReader(tempReader).read();
 		} catch (final @NotNull YamlException e) {
 			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e);
-		} catch (final @NotNull FileNotFoundException e) {
+		} catch (final @NotNull IOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
+		} finally {
+			this.localLock.unlockRead(lockStamp);
 		}
-	}
-
-	private void write(final @NotNull Map fileData) throws IOException {
-		final @NotNull @Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.file()));
-		writer.getConfig().writeConfig.setKeepBeanPropertyOrder(true);
-		writer.write(fileData);
 	}
 
 
