@@ -382,7 +382,7 @@ public class ThunderEditor {
 																			final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull List<String> lines;
-			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, "r").readLock();
+			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
 				 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
 				tempLock.lock();
 				lines = reader.lines().collect(Collectors.toList());
@@ -466,7 +466,7 @@ public class ThunderEditor {
 																			   final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull List<String> lines;
-			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, "r").readLock();
+			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
 				 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
 				tempLock.lock();
 				lines = reader.lines().collect(Collectors.toList());

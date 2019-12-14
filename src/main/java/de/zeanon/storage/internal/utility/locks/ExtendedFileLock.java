@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 
-	private static final long serialVersionUID = 110;
+	private static final long serialVersionUID = 721278232016156889L;
 
 
 	private final @NotNull ReadWriteLockableChannel readWriteLockableChannel;
@@ -40,14 +40,14 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 	@Contract(pure = true)
 	public ExtendedFileLock(final @NotNull File file) throws IOException {
-		this.readWriteLockableChannel = ReadWriteLockableChannel.getOrCreateChannel(file, "rws");
+		this.readWriteLockableChannel = ReadWriteLockableChannel.getOrCreateChannel(file, true);
 		this.writeLock = new WriteLock(this);
 		this.readLock = new ReadLock(this);
 	}
 
 	@Contract(pure = true)
-	public ExtendedFileLock(final @NotNull File file, final @NotNull String mode) throws IOException {
-		this.readWriteLockableChannel = ReadWriteLockableChannel.getOrCreateChannel(file, mode);
+	public ExtendedFileLock(final @NotNull File file, final boolean writeMetaData) throws IOException {
+		this.readWriteLockableChannel = ReadWriteLockableChannel.getOrCreateChannel(file, writeMetaData);
 		this.writeLock = new WriteLock(this);
 		this.readLock = new ReadLock(this);
 	}
@@ -83,6 +83,9 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		this.readWriteLockableChannel.convertLock();
 	}
 
+	public @NotNull RandomAccessFile getRandomAccessFile() {
+		return this.readWriteLockableChannel.getRandomAccessFile();
+	}
 
 	public @NotNull FileChannel getFileChannel() {
 		return this.readWriteLockableChannel.getFileChannel();
@@ -183,39 +186,49 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 	private static class ReadWriteLockableChannel implements Serializable {
 
 
-		private static final long serialVersionUID = 110;
+		private static final long serialVersionUID = 115260807719631111L;
 
 
 		private static final transient @NotNull ConcurrentMap<String, ReadWriteLockableChannel> openChannels = new ConcurrentHashMap<>();
 		private static final transient @NotNull StampedLock factoryLock = new StampedLock();
 
 
-		private final transient @NotNull FileChannel localFileChannel;
-
-		private final @NotNull StampedLock internalLock = new StampedLock();
 		private final @NotNull String absolutePath;
+		private final boolean writeMetaData;
 
-		private final @NotNull AtomicReference<FileLock> fileLock = new AtomicReference<>();
-		private final @NotNull AtomicBoolean writeLockActive = new AtomicBoolean();
+		private final transient @NotNull AtomicReference<FileLock> fileLock = new AtomicReference<>();
+		private final transient @NotNull AtomicBoolean writeLockActive = new AtomicBoolean();
+		private final transient @NotNull StampedLock internalLock = new StampedLock();
 
-		private final @NotNull AtomicLong currentWritingThread = new AtomicLong(-1);
-		private final @NotNull AtomicInteger instanceCount = new AtomicInteger();
-		private final @NotNull AtomicInteger lockHoldCount = new AtomicInteger();
+		private final transient @NotNull AtomicLong currentWritingThread = new AtomicLong(-1);
+		private final transient @NotNull AtomicInteger instanceCount = new AtomicInteger();
+		private final transient @NotNull AtomicInteger lockHoldCount = new AtomicInteger();
+
+		private transient @NotNull RandomAccessFile localRandomAccessFile;
 
 
 		@Contract(pure = true)
-		private ReadWriteLockableChannel(final @NotNull File file, final @NotNull String mode) throws FileNotFoundException {
-			this.localFileChannel = new RandomAccessFile(file, mode).getChannel();
+		private ReadWriteLockableChannel(final @NotNull File file, final boolean writeMetaData) throws FileNotFoundException {
+			this.localRandomAccessFile = new RandomAccessFile(file, writeMetaData ? "rws" : "rwd");
 			this.absolutePath = file.getAbsolutePath();
+			this.writeMetaData = writeMetaData;
 			this.instanceCount.incrementAndGet();
 		}
 
+		public @NotNull Object readResolve() {
+			try {
+				return ReadWriteLockableChannel.getOrCreateChannel(new File(this.absolutePath), this.writeMetaData);
+			} catch (IOException e) {
+				throw new RuntimeIOException(e);
+			}
+		}
+
 		@Contract(pure = true)
-		private static @NotNull ReadWriteLockableChannel getOrCreateChannel(final @NotNull File file, final @NotNull String mode) throws IOException {
+		private static @NotNull ReadWriteLockableChannel getOrCreateChannel(final @NotNull File file, final boolean writeMetaData) throws IOException {
 			final long lockStamp = ReadWriteLockableChannel.factoryLock.readLock();
 			try {
 				if (!ReadWriteLockableChannel.openChannels.containsKey(file.getAbsolutePath())) {
-					ReadWriteLockableChannel.openChannels.putIfAbsent(file.getAbsolutePath(), new ReadWriteLockableChannel(file, mode));
+					ReadWriteLockableChannel.openChannels.putIfAbsent(file.getAbsolutePath(), new ReadWriteLockableChannel(file, writeMetaData));
 				}
 				return ReadWriteLockableChannel.openChannels.get(file.getAbsolutePath());
 			} finally {
@@ -223,17 +236,20 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 			}
 		}
 
+		@Contract(pure = true)
+		private @NotNull RandomAccessFile getRandomAccessFile() {
+			return this.localRandomAccessFile;
+		}
 
 		@Contract(pure = true)
 		private @NotNull FileChannel getFileChannel() {
-			return this.localFileChannel;
+			return this.localRandomAccessFile.getChannel();
 		}
 
 		@Contract(pure = true)
 		private @NotNull String getFilePath() {
 			return this.absolutePath;
 		}
-
 
 		private void lockRead() {
 			if (!this.writeLockActive.get() && this.lockHoldCount.intValue() > 0) {
@@ -247,7 +263,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 					this.fileLock.updateAndGet(current -> {
 						try {
 							this.lockHoldCount.set(1);
-							return this.localFileChannel.lock(0, Long.MAX_VALUE, true);
+							return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, true);
 						} catch (final @NotNull IOException e) {
 							throw new RuntimeIOException(e.getMessage(), e.getCause());
 						}
@@ -273,7 +289,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 						this.fileLock.updateAndGet(current -> {
 							try {
 								this.lockHoldCount.set(1);
-								return this.localFileChannel.lock(0, Long.MAX_VALUE, true);
+								return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, true);
 							} catch (final @NotNull IOException e) {
 								throw new RuntimeIOException(e.getMessage(), e.getCause());
 							}
@@ -304,7 +320,6 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 				}
 			});
 		}
-
 
 		private void lockWrite() {
 			if (this.writeLockActive.get() && this.lockHoldCount.intValue() > 0 && this.currentWritingThread.longValue() == Thread.currentThread().getId()) {
@@ -349,7 +364,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 					this.writeLockActive.set(true);
 					this.lockHoldCount.set(1);
 					this.currentWritingThread.set(Thread.currentThread().getId());
-					return this.localFileChannel.lock(0, Long.MAX_VALUE, false);
+					return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, false);
 				} catch (final @NotNull IOException e) {
 					throw new RuntimeIOException(e.getMessage(), e.getCause());
 				}
@@ -376,7 +391,6 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 				}
 			});
 		}
-
 
 		private void convertLock() {
 			final long lockStamp = this.internalLock.writeLock();
@@ -407,7 +421,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 						}
 						this.writeLockActive.set(false);
 						this.currentWritingThread.set(-1);
-						return this.localFileChannel.lock(0, Long.MAX_VALUE, true);
+						return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, true);
 					} catch (final @NotNull IOException e) {
 						throw new RuntimeIOException(e.getMessage(), e.getCause());
 					}
@@ -431,7 +445,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 						}
 						this.writeLockActive.set(true);
 						this.currentWritingThread.set(Thread.currentThread().getId());
-						return this.localFileChannel.lock(0, Long.MAX_VALUE, false);
+						return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, false);
 					} catch (final @NotNull IOException e) {
 						throw new RuntimeIOException(e.getMessage(), e.getCause());
 					} catch (final @NotNull InterruptedException e) { //NOSONAR
@@ -442,7 +456,6 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 				}
 			});
 		}
-
 
 		private void unlock() {
 			this.fileLock.updateAndGet(current -> {
@@ -457,7 +470,6 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 			});
 		}
 
-
 		private void close() throws IOException {
 			final long lockStamp = ReadWriteLockableChannel.factoryLock.writeLock();
 			try {
@@ -471,7 +483,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 				});
 				if (this.instanceCount.decrementAndGet() == 0) {
 					ReadWriteLockableChannel.openChannels.remove(this.getFilePath());
-					this.localFileChannel.close();
+					this.localRandomAccessFile.getChannel().close();
 				}
 			} finally {
 				ReadWriteLockableChannel.factoryLock.unlockWrite(lockStamp);
@@ -544,6 +556,10 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 			return this.extendedFileLock;
 		}
 
+		@Override
+		public @NotNull RandomAccessFile getRandomAccessFile() {
+			return this.extendedFileLock.getRandomAccessFile();
+		}
 
 		@Override
 		public @NotNull FileChannel getFileChannel() {
@@ -693,6 +709,11 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 
 		@Override
+		public @NotNull RandomAccessFile getRandomAccessFile() {
+			return this.extendedFileLock.getRandomAccessFile();
+		}
+
+		@Override
 		public @NotNull FileChannel getFileChannel() {
 			return this.extendedFileLock.getFileChannel();
 		}
@@ -799,6 +820,8 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 	 * Class to throw a InterruptedException from an Unary Operator
 	 */
 	private static class RuntimeInterruptedException extends RuntimeException {
+
+		private static final long serialVersionUID = -5207822674700149137L;
 
 		public RuntimeInterruptedException(final @NotNull String message) {
 			super(message);

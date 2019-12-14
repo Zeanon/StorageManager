@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class GapDataMap<K, V> extends AbstractDataMap<K, V> {
 
 
-	private static final long serialVersionUID = 150;
+	private static final long serialVersionUID = 521676275044874030L;
 
 
 	public GapDataMap() {

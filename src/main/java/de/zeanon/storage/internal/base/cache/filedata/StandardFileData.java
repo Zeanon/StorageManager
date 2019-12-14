@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 public class StandardFileData<M extends Map, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<StandardFileData>, Serializable {
 
 
-	private static final long serialVersionUID = 260;
+	private static final long serialVersionUID = 785462429090408444L;
 
 
 	private final @NotNull CollectionsProvider<M, L> collectionsProvider;

@@ -183,6 +183,8 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 
 	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> {
 
+		private static final long serialVersionUID = 244477712346401950L;
+
 		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) {
 			super(collectionsProvider, synchronize);
 		}

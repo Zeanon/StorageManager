@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public class CollectionsProvider<M extends Map, L extends List> implements Serializable {
 
 
-	private static final long serialVersionUID = 140;
+	private static final long serialVersionUID = 474999389806011522L;
 	/**
 	 * Lock access to the mapType so no new MapType is set while a new instance is generated
 	 */

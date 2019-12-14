@@ -167,6 +167,8 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> {
 
+		private static final long serialVersionUID = -9141241112197467155L;
+
 		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) {
 			super(collectionsProvider, synchronize);
 		}

@@ -203,6 +203,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 
 	private static class LocalFileData extends ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> {
 
+		private static final long serialVersionUID = -4787829380861376534L;
+
 		private LocalFileData(final @NotNull CollectionsProvider<DataMap, List> collectionsProvider, final boolean synchronize) {
 			super(collectionsProvider, synchronize);
 		}

@@ -54,7 +54,7 @@ public class YamlEditor {
 	@Contract("null, _ -> fail; _, _ -> new")
 	public static @NotNull List<String> read(final @NotNull File file,
 											 final int buffer_size) throws IOException {
-		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, "r").readLock();
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
 			 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
 			tempLock.lock();
 			return reader.lines().collect(Collectors.toList());

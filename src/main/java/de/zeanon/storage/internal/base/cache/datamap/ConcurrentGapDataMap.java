@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class ConcurrentGapDataMap<K, V> extends ConcurrentDataMap<K, V> {
 
 
-	private static final long serialVersionUID = 150;
+	private static final long serialVersionUID = 139403182835736065L;
 
 
 	public ConcurrentGapDataMap() {

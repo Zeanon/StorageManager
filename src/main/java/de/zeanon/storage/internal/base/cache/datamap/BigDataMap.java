@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class BigDataMap<K, V> extends AbstractDataMap<K, V> {
 
 
-	private static final long serialVersionUID = 150;
+	private static final long serialVersionUID = 417278632326876576L;
 
 
 	public BigDataMap() {

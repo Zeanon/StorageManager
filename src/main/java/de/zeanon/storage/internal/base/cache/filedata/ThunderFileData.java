@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<ThunderFileData>, Serializable {
 
 
-	private static final long serialVersionUID = 160;
+	private static final long serialVersionUID = 746673400911930709L;
 
 
 	private final @NotNull CollectionsProvider<M, L> collectionsProvider;

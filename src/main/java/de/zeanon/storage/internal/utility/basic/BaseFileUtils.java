@@ -90,7 +90,7 @@ public class BaseFileUtils {
 	 */
 	public static @NotNull Collection<File> listFolders(final @NotNull File directory,
 														final boolean deep) throws IOException {
-		try (final @NotNull ReadWriteFileLock localLock = new ExtendedFileLock(directory, "r").readLock()) {
+		try (final @NotNull ReadWriteFileLock localLock = new ExtendedFileLock(directory, false).readLock()) {
 			localLock.lock();
 			final @NotNull Collection<File> files = new GapList<>();
 			if (directory.isDirectory()) {
@@ -132,7 +132,7 @@ public class BaseFileUtils {
 	 */
 	public static @NotNull Collection<File> listFileAndFolders(final @NotNull File directory,
 															   final boolean deep) throws IOException {
-		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, "r").readLock()) {
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, false).readLock()) {
 			tempLock.lock();
 			final @NotNull Collection<File> files = new GapList<>();
 			if (directory.isDirectory()) {
@@ -174,7 +174,7 @@ public class BaseFileUtils {
 	 */
 	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
 													  final boolean deep) throws IOException {
-		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, "r").readLock()) {
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, false).readLock()) {
 			tempLock.lock();
 			final @NotNull Collection<File> files = new GapList<>();
 			if (directory.isDirectory()) {
@@ -248,7 +248,7 @@ public class BaseFileUtils {
 	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
 													  final boolean deep,
 													  final @NotNull String... extensions) throws IOException {
-		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, "r").readLock()) {
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, false).readLock()) {
 			tempLock.lock();
 			final @NotNull Collection<File> files = new GapList<>();
 			if (directory.isDirectory()) {
@@ -323,7 +323,7 @@ public class BaseFileUtils {
 	public static @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 																final boolean deep,
 																final @NotNull String... extensions) throws IOException {
-		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, "r").readLock()) {
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, false).readLock()) {
 			tempLock.lock();
 			final @NotNull Collection<File> files = new GapList<>();
 			if (directory.isDirectory()) {
