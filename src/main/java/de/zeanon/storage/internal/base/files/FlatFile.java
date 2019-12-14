@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.base.files;
 
-import de.zeanon.storage.internal.base.cache.base.Provider;
+import de.zeanon.storage.internal.base.cache.base.CollectionsProvider;
 import de.zeanon.storage.internal.base.exceptions.FileTypeException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storage.internal.base.interfaces.*;
@@ -39,7 +39,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	private final @NotNull File file;
 	private final @NotNull FileType fileType;
 	private final @NotNull D fileData;
-	private final @NotNull Provider<M, L> provider;
+	private final @NotNull CollectionsProvider<M, L> collectionsProvider;
 	@Setter(AccessLevel.PROTECTED)
 	private volatile long lastLoaded;
 	/**
@@ -63,7 +63,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 			this.file = file;
 			this.fileData = fileData;
 			this.reloadSetting = reloadSetting;
-			this.provider = this.fileData().provider();
+			this.collectionsProvider = this.fileData().collectionsProvider();
 		} else {
 			throw new FileTypeException("File '"
 										+ file.getAbsolutePath()
@@ -257,7 +257,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		//noinspection unchecked
-		final @NotNull Map<String, Object> tempMap = this.provider().newMap();
+		final @NotNull Map<String, Object> tempMap = this.collectionsProvider().newMap();
 		for (final @NotNull String key : keys) {
 			tempMap.put(key, this.fileData().get(key));
 		}
@@ -269,7 +269,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		//noinspection unchecked
-		final @NotNull Map<String[], Object> tempMap = this.provider().newMap();
+		final @NotNull Map<String[], Object> tempMap = this.collectionsProvider().newMap();
 		for (final @NotNull String[] key : keys) {
 			tempMap.put(key, this.fileData().getUseArray(key));
 		}
@@ -281,7 +281,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		//noinspection unchecked
-		final @NotNull Map<String, Object> tempMap = this.provider().newMap();
+		final @NotNull Map<String, Object> tempMap = this.collectionsProvider().newMap();
 		for (final @NotNull String key : keys) {
 			tempMap.put(key, this.fileData().get(key));
 		}
@@ -293,7 +293,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		//noinspection unchecked
-		final @NotNull Map<String[], Object> tempMap = this.provider().newMap();
+		final @NotNull Map<String[], Object> tempMap = this.collectionsProvider().newMap();
 		for (final @NotNull String[] key : keys) {
 			tempMap.put(key, this.fileData().getUseArray(key));
 		}
@@ -306,7 +306,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		//noinspection unchecked
-		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
+		final @NotNull Map<String, Object> tempMap = this.collectionsProvider.newMap();
 		for (final @NotNull String tempKey : keys) {
 			tempMap.put(blockKey, this.fileData().get(blockKey + "." + tempKey));
 		}
@@ -319,7 +319,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		//noinspection unchecked
-		final @NotNull Map<String[], Object> tempMap = this.provider.newMap();
+		final @NotNull Map<String[], Object> tempMap = this.collectionsProvider.newMap();
 		for (final @NotNull String[] tempKey : keys) {
 			final @NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
@@ -335,7 +335,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		//noinspection unchecked
-		final @NotNull Map<String[], Object> tempMap = this.provider.newMap();
+		final @NotNull Map<String[], Object> tempMap = this.collectionsProvider.newMap();
 		for (final @NotNull String[] tempKey : keys) {
 			final @NotNull String[] key = new String[blockKey.length + tempKey.length];
 			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
@@ -351,7 +351,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		//noinspection unchecked
-		final @NotNull Map<String, Object> tempMap = this.provider.newMap();
+		final @NotNull Map<String, Object> tempMap = this.collectionsProvider.newMap();
 		for (final @NotNull String tempKey : keys) {
 			tempMap.put(blockKey, this.fileData().get(blockKey + "." + tempKey));
 		}

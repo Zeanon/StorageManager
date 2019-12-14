@@ -2,7 +2,7 @@ package de.zeanon.storage.internal.files.raw;
 
 import de.zeanon.storage.external.browniescollections.BigList;
 import de.zeanon.storage.external.browniescollections.GapList;
-import de.zeanon.storage.internal.base.cache.base.Provider;
+import de.zeanon.storage.internal.base.cache.base.CollectionsProvider;
 import de.zeanon.storage.internal.base.cache.filedata.StandardFileData;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
@@ -60,7 +60,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 					   final boolean synchronizedData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, FileType.JSON, new LocalFileData(new Collections(map, list), synchronizedData), reloadSetting);
+		super(file, FileType.JSON, new LocalFileData(new CollectionsProvider<>(map, list), synchronizedData), reloadSetting);
 
 		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
@@ -95,20 +95,20 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		this.update();
 
 		if (!this.hasKey(key)) {
-			return this.provider().newMap();
+			return this.collectionsProvider().newMap();
 		}
 
 		final @Nullable Object map;
 		try {
 			map = this.get(key);
 		} catch (final @NotNull JSONException e) {
-			return this.provider().newMap();
+			return this.collectionsProvider().newMap();
 		}
 
 		if (map instanceof Map) {
 			return (Map<?, ?>) this.fileData().get(key);
 		} else if (map instanceof JSONObject) {
-			return JsonUtils.jsonToMap((JSONObject) map, this.provider());
+			return JsonUtils.jsonToMap((JSONObject) map, this.collectionsProvider());
 		} else {
 			return null;
 		}
@@ -126,20 +126,20 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		this.update();
 
 		if (!this.hasKeyUseArray(key)) {
-			return this.provider().newMap();
+			return this.collectionsProvider().newMap();
 		}
 
 		@Nullable final Object map;
 		try {
 			map = this.getUseArray(key);
 		} catch (final @NotNull JSONException e) {
-			return this.provider().newMap();
+			return this.collectionsProvider().newMap();
 		}
 
 		if (map instanceof Map) {
 			return (Map<?, ?>) this.fileData().getUseArray(key);
 		} else if (map instanceof JSONObject) {
-			return JsonUtils.jsonToMap((JSONObject) map, this.provider());
+			return JsonUtils.jsonToMap((JSONObject) map, this.collectionsProvider());
 		} else {
 			return null;
 		}
@@ -162,12 +162,12 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 	@Override
 	public void bigList(final boolean bigList) {
-		this.provider().setListType(bigList ? BigList.class : GapList.class);
+		this.collectionsProvider().setListType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
 	public void concurrentData(final boolean concurrentData) {
-		this.provider().setMapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
+		this.collectionsProvider().setMapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 
 	/**
@@ -232,13 +232,6 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		}
 	}
 
-	private static class Collections extends Provider<Map, List> {
-
-		private Collections(final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
-			super(map, list);
-		}
-	}
-
 	private static class LocalSection extends JsonFileSection {
 
 		private LocalSection(final @NotNull String sectionKey, final @NotNull JsonFile jsonFile) {
@@ -252,8 +245,8 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> {
 
-		private LocalFileData(final @NotNull Provider<Map, List> provider, final boolean synchronize) {
-			super(provider, synchronize);
+		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) {
+			super(collectionsProvider, synchronize);
 		}
 	}
 }

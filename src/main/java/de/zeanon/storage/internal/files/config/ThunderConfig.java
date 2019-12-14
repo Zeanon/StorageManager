@@ -69,7 +69,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 			return ThunderUtils.getHeader(this.fileData());
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -93,7 +93,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 			return ThunderUtils.getHeader(this.fileData(), key);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -104,7 +104,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 			return ThunderUtils.getHeaderUseArray(this.fileData(), key);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -153,7 +153,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 			return ThunderUtils.getFooter(this.fileData());
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -177,7 +177,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 			return ThunderUtils.getFooter(this.fileData(), key);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -188,7 +188,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 			return ThunderUtils.getFooterUseArray(this.fileData(), key);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -236,7 +236,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 			return ThunderUtils.getComments(this.fileData(), true);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -247,7 +247,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 			return ThunderUtils.getComments(this.fileData(), key, true);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -258,7 +258,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 			return ThunderUtils.getCommentsUseArray(this.fileData(), key, true);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -269,7 +269,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 			return ThunderUtils.getComments(this.fileData(), false);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -280,7 +280,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 			return ThunderUtils.getComments(this.fileData(), key, false);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -291,7 +291,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 			return ThunderUtils.getCommentsUseArray(this.fileData(), key, false);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 

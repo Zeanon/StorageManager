@@ -2,12 +2,12 @@ package de.zeanon.storage.internal.base.cache.base;
 
 import de.zeanon.storage.external.browniescollections.GapList;
 import de.zeanon.storage.internal.base.exceptions.ProviderException;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.Contract;
@@ -21,21 +21,22 @@ import org.jetbrains.annotations.NotNull;
  * @param <L> the basic List<Type to be used
  *
  * @author Zeanon
- * @version 1.3.0
+ * @version 1.4.0
  */
-@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
+@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
 @SuppressWarnings("unused")
-public abstract class Provider<M extends Map, L extends List> {
+public class CollectionsProvider<M extends Map, L extends List> implements Serializable {
 
 
+	private static final long serialVersionUID = 140;
 	/**
 	 * Lock access to the mapType so no new MapType is set while a new instance is generated
 	 */
-	private final @NotNull ReadWriteLock mapLock = new ReentrantReadWriteLock(true);
+	private final transient @NotNull ReadWriteLock mapLock = new ReentrantReadWriteLock(true);
 	/**
 	 * Lock access to the listType so no new ListType is set while a new instance is generated
 	 */
-	private final @NotNull ReadWriteLock listLock = new ReentrantReadWriteLock(true);
+	private final transient @NotNull ReadWriteLock listLock = new ReentrantReadWriteLock(true);
 
 
 	/**

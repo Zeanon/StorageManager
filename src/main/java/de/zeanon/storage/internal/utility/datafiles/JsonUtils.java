@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.utility.datafiles;
 
-import de.zeanon.storage.internal.base.cache.base.Provider;
+import de.zeanon.storage.internal.base.cache.base.CollectionsProvider;
 import java.util.List;
 import java.util.Map;
 import lombok.experimental.UtilityClass;
@@ -33,25 +33,25 @@ public class JsonUtils {
 		return jsonData;
 	}
 
-	public static @NotNull Map<String, Object> jsonToMap(final @NotNull JSONObject json, final @NotNull Provider<? extends Map, ? extends List> provider) {
-		final @NotNull Map<String, Object> tempMap = provider.newMap();
+	public static @NotNull Map<String, Object> jsonToMap(final @NotNull JSONObject json, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
+		final @NotNull Map<String, Object> tempMap = collectionsProvider.newMap();
 		if (json != JSONObject.NULL) {
 			tempMap.putAll(json.toMap());
 		}
 		return tempMap;
 	}
 
-	public static @NotNull List<Object> toList(final @NotNull JSONArray array, final @NotNull Provider<? extends Map, ? extends List> provider) {
-		final @NotNull List<Object> list = provider.newList();
+	public static @NotNull List<Object> toList(final @NotNull JSONArray array, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
+		final @NotNull List<Object> list = collectionsProvider.newList();
 		for (int i = 0; i < array.length(); i++) {
-			list.add(JsonUtils.getValue(array.get(i), provider));
+			list.add(JsonUtils.getValue(array.get(i), collectionsProvider));
 		}
 		return list;
 	}
 
-	private static @NotNull Object getValue(final @NotNull Object obj, final @NotNull Provider<? extends Map, ? extends List> provider) {
+	private static @NotNull Object getValue(final @NotNull Object obj, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		if (obj instanceof JSONArray) {
-			return JsonUtils.toList((JSONArray) obj, provider);
+			return JsonUtils.toList((JSONArray) obj, collectionsProvider);
 		} else if (obj instanceof JSONObject) {
 			return ((JSONObject) obj).toMap();
 		} else {

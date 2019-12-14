@@ -4,7 +4,7 @@ import com.electronwill.toml.Toml;
 import com.electronwill.toml.TomlException;
 import de.zeanon.storage.external.browniescollections.BigList;
 import de.zeanon.storage.external.browniescollections.GapList;
-import de.zeanon.storage.internal.base.cache.base.Provider;
+import de.zeanon.storage.internal.base.cache.base.CollectionsProvider;
 import de.zeanon.storage.internal.base.cache.filedata.StandardFileData;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
@@ -55,7 +55,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 					   final boolean synchronizedData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, FileType.TOML, new LocalFileData(new Collections(map, list), synchronizedData), reloadSetting);
+		super(file, FileType.TOML, new LocalFileData(new CollectionsProvider<>(map, list), synchronizedData), reloadSetting);
 
 		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
@@ -87,12 +87,12 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 	@Override
 	public void bigList(final boolean bigList) {
-		this.provider().setListType(bigList ? BigList.class : GapList.class);
+		this.collectionsProvider().setListType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
 	public void concurrentData(final boolean concurrentData) {
-		this.provider().setMapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
+		this.collectionsProvider().setMapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 
 	/**
@@ -154,13 +154,6 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		}
 	}
 
-	private static class Collections extends Provider<Map, List> {
-
-		private Collections(final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
-			super(map, list);
-		}
-	}
-
 	private static class LocalSection extends TomlFileSection {
 
 		private LocalSection(final @NotNull String sectionKey, final @NotNull TomlFile tomlFile) {
@@ -174,8 +167,8 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> {
 
-		private LocalFileData(final @NotNull Provider<Map, List> provider, final boolean synchronize) {
-			super(provider, synchronize);
+		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) {
+			super(collectionsProvider, synchronize);
 		}
 	}
 }

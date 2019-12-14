@@ -58,11 +58,11 @@ public class YamlConfig extends YamlFile implements Config {
 						 final @NotNull Class<? extends List> list) {
 		super(file, inputStream, reloadSetting, commentSetting, synchronizedData, map, list);
 		//noinspection unchecked
-		this.header = this.provider().newList();
+		this.header = this.collectionsProvider().newList();
 		//noinspection unchecked
-		this.footer = this.provider().newList();
+		this.footer = this.collectionsProvider().newList();
 		//noinspection unchecked
-		this.comments = this.provider().newList();
+		this.comments = this.collectionsProvider().newList();
 	}
 
 
@@ -70,12 +70,12 @@ public class YamlConfig extends YamlFile implements Config {
 	public @NotNull List<String> getHeader() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		} else if (!this.shouldReload()) {
 			return this.header;
 		} else {
 			try {
-				this.header = YamlEditor.readHeader(this.file(), this.provider());
+				this.header = YamlEditor.readHeader(this.file(), this.collectionsProvider());
 				return this.header;
 			} catch (final @NotNull YamlException e) {
 				throw new FileParseException("Error while getting header of '"
@@ -95,7 +95,7 @@ public class YamlConfig extends YamlFile implements Config {
 	public void setHeader(final @Nullable String... header) {
 		if (header != null && header.length > 0) {
 			//noinspection unchecked
-			final @NotNull List<String> tmp = this.provider().newList();
+			final @NotNull List<String> tmp = this.collectionsProvider().newList();
 			for (final @Nullable String line : header) {
 				if (line == null) {
 					tmp.add("#");
@@ -124,7 +124,7 @@ public class YamlConfig extends YamlFile implements Config {
 			} else {
 				try {
 					final @NotNull List<String> lines = YamlEditor.read(this.file());
-					final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.file(), this.provider());
+					final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.file(), this.collectionsProvider());
 					final @NotNull List<String> newLines = this.header;
 					lines.removeAll(oldHeader);
 					newLines.addAll(lines);
@@ -144,11 +144,11 @@ public class YamlConfig extends YamlFile implements Config {
 			}
 		} else {
 			//noinspection unchecked
-			this.header = this.provider().newList();
+			this.header = this.collectionsProvider().newList();
 
 			try {
 				final @NotNull List<String> lines = YamlEditor.read(this.file());
-				final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.file(), this.provider());
+				final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.file(), this.collectionsProvider());
 
 				lines.removeAll(oldHeader);
 
@@ -171,12 +171,12 @@ public class YamlConfig extends YamlFile implements Config {
 	public @NotNull List<String> getFooter() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		} else if (!this.shouldReload()) {
 			return this.footer;
 		} else {
 			try {
-				this.footer = YamlEditor.readFooter(this.file(), this.provider());
+				this.footer = YamlEditor.readFooter(this.file(), this.collectionsProvider());
 				return this.footer;
 			} catch (final @NotNull YamlException e) {
 				throw new FileParseException("Error while getting footer of '"
@@ -196,7 +196,7 @@ public class YamlConfig extends YamlFile implements Config {
 	public void setFooter(final @Nullable String... footer) {
 		if (footer != null && footer.length > 0) {
 			//noinspection unchecked
-			final @NotNull List<String> tmp = this.provider().newList();
+			final @NotNull List<String> tmp = this.collectionsProvider().newList();
 			for (final @Nullable String line : footer) {
 				if (line == null) {
 					tmp.add("#");
@@ -225,7 +225,7 @@ public class YamlConfig extends YamlFile implements Config {
 			} else {
 				try {
 					final @NotNull List<String> lines = YamlEditor.read(this.file());
-					final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.file(), this.provider());
+					final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.file(), this.collectionsProvider());
 
 					lines.removeAll(oldFooter);
 					lines.addAll(this.footer);
@@ -245,11 +245,11 @@ public class YamlConfig extends YamlFile implements Config {
 			}
 		} else {
 			//noinspection unchecked
-			this.footer = this.provider().newList();
+			this.footer = this.collectionsProvider().newList();
 
 			try {
 				final @NotNull List<String> lines = YamlEditor.read(this.file());
-				final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.file(), this.provider());
+				final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.file(), this.collectionsProvider());
 
 				lines.removeAll(oldFooter);
 
@@ -272,12 +272,12 @@ public class YamlConfig extends YamlFile implements Config {
 	public @NotNull List<String> getComments() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		} else if (!this.shouldReload()) {
 			return this.comments;
 		} else {
 			try {
-				this.comments = YamlEditor.readComments(this.file(), this.provider());
+				this.comments = YamlEditor.readComments(this.file(), this.collectionsProvider());
 				return this.comments;
 			} catch (final @NotNull YamlException e) {
 				throw new FileParseException("Error while getting comments from '"

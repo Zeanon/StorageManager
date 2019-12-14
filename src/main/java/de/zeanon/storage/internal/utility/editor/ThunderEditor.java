@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.utility.editor;
 
-import de.zeanon.storage.internal.base.cache.base.Provider;
+import de.zeanon.storage.internal.base.cache.base.CollectionsProvider;
 import de.zeanon.storage.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
@@ -62,10 +62,10 @@ public class ThunderEditor {
 	/**
 	 * Read the Data of a File
 	 *
-	 * @param file           the File to be read from
-	 * @param commentSetting the CommentSetting to be used
-	 * @param provider       the Provider to be used to get the Map and List implementations
-	 * @param buffer_size    the buffer size to be used with the Reader
+	 * @param file                the File to be read from
+	 * @param commentSetting      the CommentSetting to be used
+	 * @param collectionsProvider the Provider to be used to get the Map and List implementations
+	 * @param buffer_size         the buffer size to be used with the Reader
 	 *
 	 * @return a Map containing the Data of the File
 	 *
@@ -74,13 +74,13 @@ public class ThunderEditor {
 	 * @throws ObjectNullException if a passed value is null
 	 */
 	public static @NotNull DataMap<String, Object> readData(final @NotNull File file,
-															final @NotNull Provider<? extends DataMap, ? extends List> provider,
+															final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
 															final @NotNull CommentSetting commentSetting,
 															final int buffer_size) throws ThunderException {
 		if (commentSetting == Comment.PRESERVE) {
-			return ThunderEditor.initialReadWithComments(file, provider, buffer_size);
+			return ThunderEditor.initialReadWithComments(file, collectionsProvider, buffer_size);
 		} else if (commentSetting == Comment.SKIP) {
-			return ThunderEditor.initialReadWithOutComments(file, provider, buffer_size);
+			return ThunderEditor.initialReadWithOutComments(file, collectionsProvider, buffer_size);
 		} else {
 			throw new IllegalArgumentException("Illegal CommentSetting");
 		}
@@ -378,7 +378,7 @@ public class ThunderEditor {
 	// <Read Data>
 	// <Read Data with Comments>
 	private static @NotNull DataMap<String, Object> initialReadWithComments(final @NotNull File file,
-																			final @NotNull Provider<? extends DataMap, ? extends List> provider,
+																			final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
 																			final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull List<String> lines;
@@ -389,7 +389,7 @@ public class ThunderEditor {
 			}
 
 			//noinspection unchecked
-			final @NotNull DataMap<String, Object> tempMap = provider.newMap();
+			final @NotNull DataMap<String, Object> tempMap = collectionsProvider.newMap();
 
 			@NotNull String tempLine;
 			@Nullable String tempKey = null;
@@ -409,9 +409,9 @@ public class ThunderEditor {
 					} else if (tempKey == null) {
 						throw new ThunderException("Error at '" + file.getAbsolutePath() + "' -> '" + tempLine + "' -> Key must not be null");
 					}
-					tempMap.add(tempKey, ThunderEditor.internalReadWithComments(file.getAbsolutePath(), lines, provider));
+					tempMap.add(tempKey, ThunderEditor.internalReadWithComments(file.getAbsolutePath(), lines, collectionsProvider));
 				} else {
-					tempKey = ThunderEditor.readKey(file.getAbsolutePath(), lines, tempMap, tempLine, provider, tempKey);
+					tempKey = ThunderEditor.readKey(file.getAbsolutePath(), lines, tempMap, tempLine, collectionsProvider, tempKey);
 				}
 			}
 			tempMap.trimToSize();
@@ -425,9 +425,9 @@ public class ThunderEditor {
 
 	private static @NotNull DataMap<String, Object> internalReadWithComments(final @NotNull String filePath,
 																			 final @NotNull List<String> lines,
-																			 final @NotNull Provider<? extends DataMap, ? extends List> provider) throws ThunderException {
+																			 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderException {
 		//noinspection unchecked
-		final @NotNull DataMap<String, Object> tempMap = provider.newMap();
+		final @NotNull DataMap<String, Object> tempMap = collectionsProvider.newMap();
 
 		@NotNull String tempLine;
 		@Nullable String tempKey = null;
@@ -451,9 +451,9 @@ public class ThunderEditor {
 				} else if (tempKey == null) {
 					throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 				}
-				tempMap.add(tempKey, ThunderEditor.internalReadWithComments(filePath, lines, provider));
+				tempMap.add(tempKey, ThunderEditor.internalReadWithComments(filePath, lines, collectionsProvider));
 			} else {
-				tempKey = ThunderEditor.readKey(filePath, lines, tempMap, tempLine, provider, tempKey);
+				tempKey = ThunderEditor.readKey(filePath, lines, tempMap, tempLine, collectionsProvider, tempKey);
 			}
 		}
 		throw new ThunderException("Error at '" + filePath + "' -> Block does not close");
@@ -462,7 +462,7 @@ public class ThunderEditor {
 
 	// <Read Data without Comments>
 	private static @NotNull DataMap<String, Object> initialReadWithOutComments(final @NotNull File file,
-																			   final @NotNull Provider<? extends DataMap, ? extends List> provider,
+																			   final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
 																			   final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull List<String> lines;
@@ -473,7 +473,7 @@ public class ThunderEditor {
 			}
 
 			//noinspection unchecked
-			final @NotNull DataMap<String, Object> tempMap = provider.newMap();
+			final @NotNull DataMap<String, Object> tempMap = collectionsProvider.newMap();
 
 			@NotNull String tempLine;
 			@Nullable String tempKey = null;
@@ -490,9 +490,9 @@ public class ThunderEditor {
 						} else if (tempKey == null) {
 							throw new ThunderException("Error at '" + file.getAbsolutePath() + "' - > '" + tempLine + "' -> Key must not be null");
 						}
-						tempMap.add(tempKey, ThunderEditor.internalReadWithOutComments(file.getAbsolutePath(), lines, provider));
+						tempMap.add(tempKey, ThunderEditor.internalReadWithOutComments(file.getAbsolutePath(), lines, collectionsProvider));
 					} else {
-						tempKey = ThunderEditor.readKey(file.getAbsolutePath(), lines, tempMap, tempLine, provider, tempKey);
+						tempKey = ThunderEditor.readKey(file.getAbsolutePath(), lines, tempMap, tempLine, collectionsProvider, tempKey);
 					}
 				}
 			}
@@ -507,9 +507,9 @@ public class ThunderEditor {
 
 	private static @NotNull DataMap<String, Object> internalReadWithOutComments(final @NotNull String filePath,
 																				final @NotNull List<String> lines,
-																				final @NotNull Provider<? extends DataMap, ? extends List> provider) throws ThunderException {
+																				final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderException {
 		//noinspection unchecked
-		final @NotNull DataMap<String, Object> tempMap = provider.newMap();
+		final @NotNull DataMap<String, Object> tempMap = collectionsProvider.newMap();
 
 		@NotNull String tempLine;
 		@Nullable String tempKey = null;
@@ -530,9 +530,9 @@ public class ThunderEditor {
 					} else if (tempKey == null) {
 						throw new ThunderException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 					}
-					tempMap.add(tempKey, ThunderEditor.internalReadWithOutComments(filePath, lines, provider));
+					tempMap.add(tempKey, ThunderEditor.internalReadWithOutComments(filePath, lines, collectionsProvider));
 				} else {
-					tempKey = ThunderEditor.readKey(filePath, lines, tempMap, tempLine, provider, tempKey);
+					tempKey = ThunderEditor.readKey(filePath, lines, tempMap, tempLine, collectionsProvider, tempKey);
 				}
 			}
 		}
@@ -544,7 +544,7 @@ public class ThunderEditor {
 											final @NotNull List<String> lines,
 											final @NotNull DataMap<String, Object> tempMap,
 											final @NotNull String tempLine,
-											final @NotNull Provider<? extends DataMap, ? extends List> provider,
+											final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
 											@Nullable String tempKey) throws ThunderException {
 		if (tempLine.contains("=")) {
 			final @NotNull String[] line = tempLine.split("=", 2);
@@ -562,14 +562,14 @@ public class ThunderEditor {
 					} else {
 						final @NotNull String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
 						//noinspection unchecked
-						final @NotNull List<String> list = provider.newList();
+						final @NotNull List<String> list = collectionsProvider.newList();
 						for (final @NotNull String value : listArray) {
 							list.add(value.trim());
 						}
 						tempMap.add(line[0], list);
 					}
 				} else {
-					tempMap.add(line[0], ThunderEditor.readList(filePath, lines, provider));
+					tempMap.add(line[0], ThunderEditor.readList(filePath, lines, collectionsProvider));
 				}
 			} else {
 				if (line[1].equalsIgnoreCase("true") || line[1].equalsIgnoreCase("false")) {
@@ -590,10 +590,10 @@ public class ThunderEditor {
 
 	private static @NotNull List<String> readList(final @NotNull String filePath,
 												  final @NotNull List<String> lines,
-												  final @NotNull Provider<? extends DataMap, ? extends List> provider) throws ThunderException {
+												  final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderException {
 		@NotNull String tempLine;
 		//noinspection unchecked
-		final @NotNull List<String> tempList = provider.newList();
+		final @NotNull List<String> tempList = collectionsProvider.newList();
 		while (!lines.isEmpty()) {
 			tempLine = lines.get(0).trim();
 			lines.remove(0);

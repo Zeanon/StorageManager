@@ -1,6 +1,6 @@
 package de.zeanon.storage.internal.base.interfaces;
 
-import de.zeanon.storage.internal.base.cache.base.Provider;
+import de.zeanon.storage.internal.base.cache.base.CollectionsProvider;
 import de.zeanon.storage.internal.base.exceptions.ObjectNullException;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,7 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	/**
 	 *
 	 */
-	@NotNull Provider<M, L> provider();
+	@NotNull CollectionsProvider<M, L> collectionsProvider();
 
 	/**
 	 * Map a value to a given key

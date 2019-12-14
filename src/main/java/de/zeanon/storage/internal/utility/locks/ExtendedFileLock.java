@@ -24,15 +24,18 @@ import org.jetbrains.annotations.Nullable;
  * Lock that implements a ReadWriteLock behaviour for files
  *
  * @author Zeanon
- * @version 1.0.0
+ * @version 1.1.0
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class ExtendedFileLock implements AutoCloseable {
+public class ExtendedFileLock implements AutoCloseable, Serializable {
+
+
+	private static final long serialVersionUID = 110;
 
 
 	private final @NotNull ReadWriteLockableChannel readWriteLockableChannel;
-	private final @NotNull WriteLock writeLock;
-	private final @NotNull ReadLock readLock;
+	private final transient @NotNull WriteLock writeLock;
+	private final transient @NotNull ReadLock readLock;
 
 
 	@Contract(pure = true)
@@ -95,12 +98,12 @@ public class ExtendedFileLock implements AutoCloseable {
 		return Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), "UTF-8");
 	}
 
-	@Contract("_ -> new")
+	@Contract("null -> fail; !null -> new")
 	public @NotNull Writer createWriter(final @NotNull String csName) {
 		return Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), csName);
 	}
 
-	@Contract("_, _ -> new")
+	@Contract("null, _ -> fail; !null, _ -> new")
 	public @NotNull Writer createWriter(final @NotNull CharsetEncoder charsetEncoder,
 										final int minBufferCap) {
 		return Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), charsetEncoder, minBufferCap);
@@ -121,7 +124,7 @@ public class ExtendedFileLock implements AutoCloseable {
 		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), csName));
 	}
 
-	@Contract("_, _ -> new")
+	@Contract("null, _ -> fail; !null, _ -> new")
 	public @NotNull PrintWriter createPrintWriter(final @NotNull String csName,
 												  final boolean autoFlush) {
 		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), csName), autoFlush);
@@ -143,7 +146,8 @@ public class ExtendedFileLock implements AutoCloseable {
 	}
 
 	@Contract("null, _ -> fail; !null, _ -> new")
-	public @NotNull BufferedReader createBufferedReader(final @NotNull String csName, final int buffer_size) {
+	public @NotNull BufferedReader createBufferedReader(final @NotNull String csName,
+														final int buffer_size) {
 		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), csName), buffer_size);
 	}
 
@@ -171,17 +175,24 @@ public class ExtendedFileLock implements AutoCloseable {
 	/**
 	 * Local inner class representing a ReadWriteLockable FileChannel
 	 * There is at most one instance of ReadWriteLockableChannel created per File on the System
+	 *
+	 * @author Zeanon
+	 * @version 1.1.0
 	 */
 	@EqualsAndHashCode
-	private static class ReadWriteLockableChannel {
+	private static class ReadWriteLockableChannel implements Serializable {
 
 
-		private static final @NotNull ConcurrentMap<String, ReadWriteLockableChannel> openChannels = new ConcurrentHashMap<>();
-		private static final @NotNull StampedLock factoryLock = new StampedLock();
+		private static final long serialVersionUID = 110;
 
+
+		private static final transient @NotNull ConcurrentMap<String, ReadWriteLockableChannel> openChannels = new ConcurrentHashMap<>();
+		private static final transient @NotNull StampedLock factoryLock = new StampedLock();
+
+
+		private final transient @NotNull FileChannel localFileChannel;
 
 		private final @NotNull StampedLock internalLock = new StampedLock();
-		private final @NotNull FileChannel localFileChannel;
 		private final @NotNull String absolutePath;
 
 		private final @NotNull AtomicReference<FileLock> fileLock = new AtomicReference<>();
@@ -552,13 +563,13 @@ public class ExtendedFileLock implements AutoCloseable {
 		}
 
 		@Override
-		@Contract("_ -> new")
+		@Contract("null -> fail; !null -> new")
 		public @NotNull Writer createWriter(final @NotNull String csName) {
 			return this.extendedFileLock.createWriter(csName);
 		}
 
 		@Override
-		@Contract("_, _ -> new")
+		@Contract("null, _ -> fail; !null, _ -> new")
 		public @NotNull Writer createWriter(final @NotNull CharsetEncoder charsetEncoder,
 											final int minBufferCap) {
 			return this.extendedFileLock.createWriter(charsetEncoder, minBufferCap);
@@ -608,7 +619,8 @@ public class ExtendedFileLock implements AutoCloseable {
 
 		@Override
 		@Contract("null, _ -> fail; !null, _ -> new")
-		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName, final int buffer_size) {
+		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName,
+															final int buffer_size) {
 			return this.extendedFileLock.createBufferedReader(csName, buffer_size);
 		}
 
@@ -698,13 +710,13 @@ public class ExtendedFileLock implements AutoCloseable {
 		}
 
 		@Override
-		@Contract("_ -> new")
+		@Contract("null -> fail; !null -> new")
 		public @NotNull Writer createWriter(final @NotNull String csName) {
 			return this.extendedFileLock.createWriter(csName);
 		}
 
 		@Override
-		@Contract("_, _ -> new")
+		@Contract("null, _ -> fail; !null, _ -> new")
 		public @NotNull Writer createWriter(final @NotNull CharsetEncoder charsetEncoder,
 											final int minBufferCap) {
 			return this.extendedFileLock.createWriter(charsetEncoder, minBufferCap);

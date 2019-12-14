@@ -4,7 +4,7 @@ import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import de.zeanon.storage.external.browniescollections.BigList;
 import de.zeanon.storage.external.browniescollections.GapList;
-import de.zeanon.storage.internal.base.cache.base.Provider;
+import de.zeanon.storage.internal.base.cache.base.CollectionsProvider;
 import de.zeanon.storage.internal.base.cache.filedata.StandardFileData;
 import de.zeanon.storage.internal.base.exceptions.FileParseException;
 import de.zeanon.storage.internal.base.exceptions.RuntimeIOException;
@@ -64,7 +64,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 					   final boolean synchronizedData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, FileType.YAML, new LocalFileData(new Collections(map, list), synchronizedData), reloadSetting, commentSetting);
+		super(file, FileType.YAML, new LocalFileData(new CollectionsProvider<>(map, list), synchronizedData), reloadSetting, commentSetting);
 
 		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
@@ -88,7 +88,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 	@Override
 	public void save() {
 		try {
-			YamlEditor.writeData(this.file(), this.fileData().dataMap(), this.getCommentSetting(), this.provider());
+			YamlEditor.writeData(this.file(), this.fileData().dataMap(), this.getCommentSetting(), this.collectionsProvider());
 		} catch (final @NotNull RuntimeIOException e) {
 			throw new RuntimeIOException("Error while writing to "
 										 + this.getAbsolutePath()
@@ -99,12 +99,12 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 
 	@Override
 	public void bigList(final boolean bigList) {
-		this.provider().setListType(bigList ? BigList.class : GapList.class);
+		this.collectionsProvider().setListType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
 	public void concurrentData(final boolean concurrentData) {
-		this.provider().setMapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
+		this.collectionsProvider().setMapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 	@Override
 	protected @NotNull Map readFile() {
 		final long lockStamp = this.localLock.readLock();
-		try (final FileReader tempReader = new FileReader(this.file())) {
+		try (final @NotNull FileReader tempReader = new FileReader(this.file())) {
 			//noinspection unchecked
 			return (Map<String, Object>) new YamlReader(tempReader).read();
 		} catch (final @NotNull YamlException e) {
@@ -170,13 +170,6 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 		}
 	}
 
-	private static class Collections extends Provider<Map, List> {
-
-		private Collections(final @NotNull Class<? extends Map> map, final @NotNull Class<? extends List> list) {
-			super(map, list);
-		}
-	}
-
 	private static class LocalSection extends YamlFileSection {
 
 		private LocalSection(final @NotNull String sectionKey, final @NotNull YamlFile yamlFile) {
@@ -190,8 +183,8 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 
 	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> {
 
-		private LocalFileData(final @NotNull Provider<Map, List> provider, final boolean synchronize) {
-			super(provider, synchronize);
+		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) {
+			super(collectionsProvider, synchronize);
 		}
 	}
 }

@@ -2,7 +2,7 @@ package de.zeanon.storage.internal.files.raw;
 
 import de.zeanon.storage.external.browniescollections.BigList;
 import de.zeanon.storage.external.browniescollections.GapList;
-import de.zeanon.storage.internal.base.cache.base.Provider;
+import de.zeanon.storage.internal.base.cache.base.CollectionsProvider;
 import de.zeanon.storage.internal.base.cache.datamap.BigDataMap;
 import de.zeanon.storage.internal.base.cache.datamap.ConcurrentBigDataMap;
 import de.zeanon.storage.internal.base.cache.datamap.ConcurrentGapDataMap;
@@ -77,7 +77,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 						  final boolean synchronizedData,
 						  final @NotNull Class<? extends DataMap> map,
 						  final @NotNull Class<? extends List> list) {
-		super(file, FileType.THUNDERFILE, new LocalFileData(new Collections(map, list), synchronizedData), reloadSetting, commentSetting);
+		super(file, FileType.THUNDERFILE, new LocalFileData(new CollectionsProvider<>(map, list), synchronizedData), reloadSetting, commentSetting);
 		this.bufferSize = bufferSize;
 		this.autoFlush = autoFlush;
 		this.concurrentData = concurrentData;
@@ -86,7 +86,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
 		try {
-			this.fileData().loadData(ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize));
+			this.fileData().loadData(ThunderEditor.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize));
 			this.lastLoaded(System.currentTimeMillis());
 		} catch (final @NotNull ThunderException e) {
 			throw new FileParseException("Error while parsing '"
@@ -115,20 +115,20 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 
 	public void bigData(final boolean bigData) {
 		this.bigData = bigData;
-		this.provider().setMapType(this.concurrentData ? (this.bigData ? ConcurrentBigDataMap.class : ConcurrentGapDataMap.class)
-													   : (this.bigData ? BigDataMap.class : GapDataMap.class));
+		this.collectionsProvider().setMapType(this.concurrentData ? (this.bigData ? ConcurrentBigDataMap.class : ConcurrentGapDataMap.class)
+																  : (this.bigData ? BigDataMap.class : GapDataMap.class));
 	}
 
 	@Override
 	public void bigList(final boolean bigList) {
-		this.provider().setListType(bigList ? BigList.class : GapList.class);
+		this.collectionsProvider().setListType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
 	public void concurrentData(final boolean concurrentData) {
 		this.concurrentData = concurrentData;
-		this.provider().setMapType(this.concurrentData ? (this.bigData ? ConcurrentBigDataMap.class : ConcurrentGapDataMap.class)
-													   : (this.bigData ? BigDataMap.class : GapDataMap.class));
+		this.collectionsProvider().setMapType(this.concurrentData ? (this.bigData ? ConcurrentBigDataMap.class : ConcurrentGapDataMap.class)
+																  : (this.bigData ? BigDataMap.class : GapDataMap.class));
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	@Override
 	protected @NotNull DataMap readFile() {
 		try {
-			return ThunderEditor.readData(this.file(), this.provider(), this.getCommentSetting(), this.bufferSize);
+			return ThunderEditor.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize);
 		} catch (final @NotNull RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
 		} catch (final @NotNull ThunderException e) {
@@ -190,13 +190,6 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 		}
 	}
 
-	private static class Collections extends Provider<DataMap, List> {
-
-		private Collections(final @NotNull Class<? extends DataMap> map, final @NotNull Class<? extends List> list) {
-			super(map, list);
-		}
-	}
-
 	private static class LocalSection extends ThunderFileSection {
 
 		private LocalSection(final @NotNull String sectionKey, final @NotNull ThunderFile thunderFile) {
@@ -210,8 +203,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 
 	private static class LocalFileData extends ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> {
 
-		private LocalFileData(final @NotNull Provider<DataMap, List> provider, final boolean synchronize) {
-			super(provider, synchronize);
+		private LocalFileData(final @NotNull CollectionsProvider<DataMap, List> collectionsProvider, final boolean synchronize) {
+			super(collectionsProvider, synchronize);
 		}
 	}
 }

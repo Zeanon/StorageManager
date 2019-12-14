@@ -21,11 +21,14 @@ import org.jetbrains.annotations.NotNull;
  * @param <V> the type of mapped values
  *
  * @author Zeanon
- * @version 1.3.0
+ * @version 1.5.0
  */
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class ConcurrentBigDataMap<K, V> extends ConcurrentDataMap<K, V> {
+
+
+	private static final long serialVersionUID = 150;
 
 
 	public ConcurrentBigDataMap() {
@@ -51,7 +54,7 @@ public class ConcurrentBigDataMap<K, V> extends ConcurrentDataMap<K, V> {
 	}
 
 	private void writeNodes(final @NotNull ObjectOutputStream outputStream) throws IOException {
-		for (final DataMap.DataNode<K, V> entry : this.entryList()) {
+		for (final @NotNull DataMap.DataNode<K, V> entry : this.entryList()) {
 			outputStream.writeObject(entry.getKey());
 			outputStream.writeObject(entry.getValue());
 		}
@@ -62,8 +65,8 @@ public class ConcurrentBigDataMap<K, V> extends ConcurrentDataMap<K, V> {
 		this.clear();
 		final int mappings = inputStream.readInt();
 		if (mappings < 0) {
-			throw new InvalidObjectException("Illegal mappings count: " +
-											 mappings);
+			throw new InvalidObjectException("Illegal mappings count: "
+											 + mappings);
 		} else if (mappings > 0) {
 			for (int i = 0; i < mappings; i++) {
 				//noinspection unchecked

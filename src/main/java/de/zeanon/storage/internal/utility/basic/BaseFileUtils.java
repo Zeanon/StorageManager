@@ -635,7 +635,6 @@ public class BaseFileUtils {
 				try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
 					 final @NotNull BufferedOutputStream outputStream = tempLock.createBufferedOutputStream()) {
 					tempLock.lock();
-					tempLock.truncateChannel(0);
 					final @NotNull byte[] data = new byte[BaseFileUtils.bufferSize];
 					int count;
 					while ((count = inputStream.read(data, 0, BaseFileUtils.bufferSize)) != -1) {

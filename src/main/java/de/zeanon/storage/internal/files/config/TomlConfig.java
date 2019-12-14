@@ -66,7 +66,7 @@ public class TomlConfig extends TomlFile implements Config {
 			return TomlUtils.getHeader(this.fileData());
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -90,7 +90,7 @@ public class TomlConfig extends TomlFile implements Config {
 			return TomlUtils.getHeader(this.fileData(), key);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -101,7 +101,7 @@ public class TomlConfig extends TomlFile implements Config {
 			return TomlUtils.getHeaderUseArray(this.fileData(), key);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -150,7 +150,7 @@ public class TomlConfig extends TomlFile implements Config {
 			return TomlUtils.getFooter(this.fileData());
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -174,7 +174,7 @@ public class TomlConfig extends TomlFile implements Config {
 			return TomlUtils.getFooter(this.fileData(), key);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -185,7 +185,7 @@ public class TomlConfig extends TomlFile implements Config {
 			return TomlUtils.getFooterUseArray(this.fileData(), key);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -233,7 +233,7 @@ public class TomlConfig extends TomlFile implements Config {
 			return TomlUtils.getComments(this.fileData(), true);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -244,7 +244,7 @@ public class TomlConfig extends TomlFile implements Config {
 			return TomlUtils.getComments(this.fileData(), key, true);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -255,7 +255,7 @@ public class TomlConfig extends TomlFile implements Config {
 			return TomlUtils.getCommentsUseArray(this.fileData(), key, true);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -266,7 +266,7 @@ public class TomlConfig extends TomlFile implements Config {
 			return TomlUtils.getComments(this.fileData(), false);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -277,7 +277,7 @@ public class TomlConfig extends TomlFile implements Config {
 			return TomlUtils.getComments(this.fileData(), key, false);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
@@ -288,7 +288,7 @@ public class TomlConfig extends TomlFile implements Config {
 			return TomlUtils.getCommentsUseArray(this.fileData(), key, false);
 		} else {
 			//noinspection unchecked
-			return this.provider().newList();
+			return this.collectionsProvider().newList();
 		}
 	}
 
