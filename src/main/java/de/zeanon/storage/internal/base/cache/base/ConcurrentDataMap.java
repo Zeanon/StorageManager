@@ -648,7 +648,12 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 
 		@Override
 		public @NotNull String toString() {
-			return "(" + this.key + "=" + this.value + ")";
+			final long lockStamp = this.localLock.readLock();
+			try {
+				return "(" + this.key + "=" + this.value + ")";
+			} finally {
+				this.localLock.unlockRead(lockStamp);
+			}
 		}
 	}
 }

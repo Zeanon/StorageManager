@@ -263,8 +263,6 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * @param key the key to look for
 	 *
 	 * @return the Value mapped to the given key
-	 *
-	 * @throws ObjectNullException if the given key does not exist
 	 */
 	@Override
 	@Contract("null -> fail")
@@ -279,8 +277,6 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * @param key the key to look for
 	 *
 	 * @return the Value mapped to the given key
-	 *
-	 * @throws ObjectNullException if the given key does not exist
 	 */
 	@Override
 	@Contract("null -> fail")

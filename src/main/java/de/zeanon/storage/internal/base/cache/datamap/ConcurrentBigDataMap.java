@@ -1,7 +1,6 @@
 package de.zeanon.storage.internal.base.cache.datamap;
 
 import de.zeanon.storage.external.browniescollections.BigList;
-import de.zeanon.storage.external.browniescollections.GapList;
 import de.zeanon.storage.internal.base.cache.base.ConcurrentDataMap;
 import de.zeanon.storage.internal.base.interfaces.DataMap;
 import java.io.IOException;
@@ -36,7 +35,7 @@ public class ConcurrentBigDataMap<K, V> extends ConcurrentDataMap<K, V> {
 	}
 
 	public ConcurrentBigDataMap(final @NotNull Map<K, V> map) {
-		super(new GapList<>());
+		super(new BigList<>());
 		this.addAll(map);
 	}
 

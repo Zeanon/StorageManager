@@ -259,8 +259,6 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 * @param key the key to look for
 	 *
 	 * @return the Value mapped to the given key
-	 *
-	 * @throws ObjectNullException if the given key does not exist
 	 */
 	@Override
 	@Contract("null -> fail")
@@ -275,8 +273,6 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 * @param key the key to look for
 	 *
 	 * @return the Value mapped to the given key
-	 *
-	 * @throws ObjectNullException if the given key does not exist
 	 */
 	@Override
 	@Contract("null -> fail")
