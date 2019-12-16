@@ -26,7 +26,6 @@
             <roles>
                 <role>Lead Developer</role>
                 <role>Performance improvements</role>
-                <role>Cool Guy</role>
             </roles>
             <timezone>Germany</timezone>
         </developer>
@@ -105,15 +104,15 @@
                     <relocations>
                         <relocation>
                             <pattern>org.json</pattern>
-                            <shadedPattern>de.zeanon.storage.external.json</shadedPattern>
+                            <shadedPattern>de.zeanon.storagemanager.external.json</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.esotericsoftware</pattern>
-                            <shadedPattern>de.zeanon.storage.external.esotericsoftware</shadedPattern>
+                            <shadedPattern>de.zeanon.storagemanager.external.esotericsoftware</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.electronwill</pattern>
-                            <shadedPattern>de.zeanon.storage.external.electronwill</shadedPattern>
+                            <shadedPattern>de.zeanon.storagemanager.external.electronwill</shadedPattern>
                         </relocation>
                     </relocations>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -273,9 +272,9 @@
 
         <!-- JUnit -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13-rc-2</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.4.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
