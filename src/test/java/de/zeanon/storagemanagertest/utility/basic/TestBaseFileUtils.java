@@ -1,4 +1,4 @@
-package de.zeanon.storagemanagertest.utility.base;
+package de.zeanon.storagemanagertest.utility.basic;
 
 import de.zeanon.storagemanager.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanager.internal.utility.basic.BaseFileUtils;
@@ -9,12 +9,18 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 
+/**
+ * test1.tf should have the Contents of resource.tf
+ * test2.tf should be empty
+ * test3.tf should have the Contents of resource.tf
+ */
 class TestBaseFileUtils {
 
 	@BeforeAll
 	static void setup() {
 		TestStorageManager.clear("BaseFileUtils");
 	}
+
 
 	@Test
 	@TestOnly

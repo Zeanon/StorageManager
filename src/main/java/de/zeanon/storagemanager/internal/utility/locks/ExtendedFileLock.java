@@ -303,23 +303,27 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 				this.lockHoldCount.incrementAndGet();
 				return true;
 			} else {
-				final long lockStamp = this.internalLock.readLock();
-				try {
-					if (this.writeLockActive.get()) {
-						return false;
-					} else {
-						this.fileLock.updateAndGet(current -> {
-							try {
-								this.lockHoldCount.set(1);
-								return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, true);
-							} catch (final @NotNull IOException e) {
-								throw new RuntimeIOException(e.getMessage(), e.getCause());
-							}
-						});
-						return true;
+				final long lockStamp = this.internalLock.tryReadLock();
+				if (lockStamp != 0) {
+					try {
+						if (this.writeLockActive.get()) {
+							return false;
+						} else {
+							this.fileLock.updateAndGet(current -> {
+								try {
+									this.lockHoldCount.set(1);
+									return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, true);
+								} catch (final @NotNull IOException e) {
+									throw new RuntimeIOException(e.getMessage(), e.getCause());
+								}
+							});
+							return true;
+						}
+					} finally {
+						this.internalLock.unlockRead(lockStamp);
 					}
-				} finally {
-					this.internalLock.unlockRead(lockStamp);
+				} else {
+					return false;
 				}
 			}
 		}
@@ -366,16 +370,20 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 				this.lockHoldCount.incrementAndGet();
 				return true;
 			} else {
-				final long lockStamp = this.internalLock.writeLock();
-				try {
-					if (this.fileLock.get() != null) {
-						return false;
-					} else {
-						this.internalLockWrite();
-						return true;
+				final long lockStamp = this.internalLock.tryWriteLock();
+				if (lockStamp != 0) {
+					try {
+						if (this.fileLock.get() != null) {
+							return false;
+						} else {
+							this.internalLockWrite();
+							return true;
+						}
+					} finally {
+						this.internalLock.unlockWrite(lockStamp);
 					}
-				} finally {
-					this.internalLock.unlockWrite(lockStamp);
+				} else {
+					return false;
 				}
 			}
 		}

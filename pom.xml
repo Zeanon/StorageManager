@@ -246,14 +246,6 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- Brownies-Collections -->
-        <dependency>
-            <groupId>org.magicwerk</groupId>
-            <artifactId>brownies-collections</artifactId>
-            <version>0.9.14</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
