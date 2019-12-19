@@ -126,8 +126,12 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 						this.localLock.unlockRead(lockStamp);
 						lockStamp = this.localLock.writeLock();
 					}
-					tempIterator.remove();
-					return true;
+					if (tempNode.getKey().equals(key) && tempNode.getValue().equals(value)) {
+						tempIterator.remove();
+						return true;
+					} else {
+						return false;
+					}
 				}
 			}
 			return false;
@@ -419,8 +423,12 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 						this.localLock.unlockRead(lockStamp);
 						lockStamp = this.localLock.writeLock();
 					}
-					tempIterator.remove();
-					return tempNode.getValue();
+					if (tempNode.getKey().equals(key)) {
+						tempIterator.remove();
+						return tempNode.getValue();
+					} else {
+						return null;
+					}
 				}
 			}
 			return null;

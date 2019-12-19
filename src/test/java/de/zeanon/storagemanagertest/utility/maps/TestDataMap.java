@@ -19,13 +19,16 @@ class TestDataMap {
 		TestDataMap.testMap.add("second", true);
 		TestDataMap.testMap.add("first", false);
 		TestDataMap.testMap.add("second", true);
-		TestDataMap.testMap.put("second", false);
+		TestDataMap.testMap.add("third", true);
 	}
 
 
 	@Test
 	@TestOnly
 	void entryList() {
+		TestDataMap.testMap.put("second", false);
+		TestDataMap.testMap.remove("third");
+
 		Assertions.assertAll("EntryList",
 							 () -> Assertions.assertSame(4, TestDataMap.testMap.entryList().size()),
 							 () -> Assertions.assertEquals("first", TestDataMap.testMap.entryList().get(0).getKey()),
