@@ -132,24 +132,24 @@ public class BaseFileUtils {
 	 */
 	public static @NotNull Collection<File> listFolders(final @NotNull File directory,
 														final boolean deep) throws IOException {
-		try (final @NotNull ReadWriteFileLock localLock = new ExtendedFileLock(directory, false).readLock()) {
-			localLock.lock();
-			final @NotNull Collection<File> files = new GapList<>();
-			if (directory.isDirectory()) {
-				final @Nullable File[] fileList = directory.listFiles();
-				if (fileList != null) {
-					for (final @Nullable File file : fileList) {
-						if (file != null && file.isDirectory()) {
-							files.add(file);
-							if (deep) {
-								files.addAll(BaseFileUtils.listFolders(file, true));
-							}
+		//try (final @NotNull ReadWriteFileLock localLock = new ExtendedFileLock(directory, false).readLock()) {
+		//localLock.lock();
+		final @NotNull Collection<File> files = new GapList<>();
+		if (directory.isDirectory()) {
+			final @Nullable File[] fileList = directory.listFiles();
+			if (fileList != null) {
+				for (final @Nullable File file : fileList) {
+					if (file != null && file.isDirectory()) {
+						files.add(file);
+						if (deep) {
+							files.addAll(BaseFileUtils.listFolders(file, true));
 						}
 					}
 				}
 			}
-			return files;
 		}
+		return files;
+		//}
 	}
 
 
@@ -174,24 +174,24 @@ public class BaseFileUtils {
 	 */
 	public static @NotNull Collection<File> listFileAndFolders(final @NotNull File directory,
 															   final boolean deep) throws IOException {
-		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, false).readLock()) {
-			tempLock.lock();
-			final @NotNull Collection<File> files = new GapList<>();
-			if (directory.isDirectory()) {
-				final @Nullable File[] fileList = directory.listFiles();
-				if (fileList != null) {
-					for (final @Nullable File file : fileList) {
-						if (file != null) {
-							files.add(file);
-							if (deep && file.isDirectory()) {
-								files.addAll(BaseFileUtils.listFileAndFolders(file, true));
-							}
+		//try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, false).readLock()) {
+		//tempLock.lock();
+		final @NotNull Collection<File> files = new GapList<>();
+		if (directory.isDirectory()) {
+			final @Nullable File[] fileList = directory.listFiles();
+			if (fileList != null) {
+				for (final @Nullable File file : fileList) {
+					if (file != null) {
+						files.add(file);
+						if (deep && file.isDirectory()) {
+							files.addAll(BaseFileUtils.listFileAndFolders(file, true));
 						}
 					}
 				}
 			}
-			return files;
 		}
+		return files;
+		//}
 	}
 
 
@@ -216,25 +216,25 @@ public class BaseFileUtils {
 	 */
 	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
 													  final boolean deep) throws IOException {
-		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, false).readLock()) {
-			tempLock.lock();
-			final @NotNull Collection<File> files = new GapList<>();
-			if (directory.isDirectory()) {
-				final @Nullable File[] fileList = directory.listFiles();
-				if (fileList != null) {
-					for (final @Nullable File file : fileList) {
-						if (file != null) {
-							if (file.isFile()) {
-								files.add(file);
-							} else if (deep && file.isDirectory()) {
-								files.addAll(BaseFileUtils.listFiles(file, true));
-							}
+		//try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, false).readLock()) { //TODO
+		//tempLock.lock();
+		final @NotNull Collection<File> files = new GapList<>();
+		if (directory.isDirectory()) {
+			final @Nullable File[] fileList = directory.listFiles();
+			if (fileList != null) {
+				for (final @Nullable File file : fileList) {
+					if (file != null) {
+						if (file.isFile()) {
+							files.add(file);
+						} else if (deep && file.isDirectory()) {
+							files.addAll(BaseFileUtils.listFiles(file, true));
 						}
 					}
 				}
 			}
-			return files;
 		}
+		return files;
+		//}
 	}
 
 	/**
@@ -290,25 +290,25 @@ public class BaseFileUtils {
 	public static @NotNull Collection<File> listFiles(final @NotNull File directory,
 													  final boolean deep,
 													  final @NotNull String... extensions) throws IOException {
-		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, false).readLock()) {
-			tempLock.lock();
-			final @NotNull Collection<File> files = new GapList<>();
-			if (directory.isDirectory()) {
-				final @Nullable File[] fileList = directory.listFiles();
-				if (fileList != null) {
-					for (final @Nullable File file : fileList) {
-						if (file != null) {
-							if (Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)) {
-								files.add(file);
-							} else if (deep && file.isDirectory()) {
-								files.addAll(BaseFileUtils.listFiles(file, true, extensions));
-							}
+		//try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, false).readLock()) { //TODO
+		//tempLock.lock();
+		final @NotNull Collection<File> files = new GapList<>();
+		if (directory.isDirectory()) {
+			final @Nullable File[] fileList = directory.listFiles();
+			if (fileList != null) {
+				for (final @Nullable File file : fileList) {
+					if (file != null) {
+						if (Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)) {
+							files.add(file);
+						} else if (deep && file.isDirectory()) {
+							files.addAll(BaseFileUtils.listFiles(file, true, extensions));
 						}
 					}
 				}
 			}
-			return files;
 		}
+		return files;
+		//}
 	}
 
 
