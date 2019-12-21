@@ -3,7 +3,10 @@ package de.zeanon.storagemanagertest.utility.basic;
 import de.zeanon.storagemanager.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanager.internal.utility.basic.BaseFileUtils;
 import de.zeanon.storagemanagertest.TestStorageManager;
+import java.io.File;
+import java.io.IOException;
 import org.jetbrains.annotations.TestOnly;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,6 +24,20 @@ class TestBaseFileUtils {
 		TestStorageManager.clear("BaseFileUtils");
 	}
 
+	@TestOnly
+	@AfterAll
+	static void listFiles() {
+		boolean result;
+		try {
+			result = BaseFileUtils.listFiles(new File("src/test/resources/testresults/basefileutils")).size() == 3;
+		} catch (IOException e) {
+			e.printStackTrace();
+			result = false;
+		}
+
+		System.out.println(result);
+		Assertions.assertTrue(result);
+	}
 
 	@Test
 	@TestOnly
@@ -50,7 +67,6 @@ class TestBaseFileUtils {
 		Assertions.assertTrue(result);
 	}
 
-
 	@Test
 	@TestOnly
 	void writeOnCreation21() {
@@ -77,7 +93,6 @@ class TestBaseFileUtils {
 
 		Assertions.assertTrue(result);
 	}
-
 
 	@Test
 	@TestOnly
