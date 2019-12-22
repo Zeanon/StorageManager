@@ -161,23 +161,22 @@ public class BaseFileUtils {
 	@Contract("null, _ -> fail")
 	public static @NotNull Collection<File> listFolders(final @NotNull File directory,
 														final boolean deep) throws IOException {
-		try (final @NotNull ReadWriteFileLock localLock = new ExtendedFileLock(directory, false).readLock()) {
-			localLock.lock();
-			final @NotNull Collection<File> files = new GapList<>();
-			if (directory.isDirectory()) {
-				final @Nullable File[] fileList = directory.listFiles();
-				if (fileList != null) {
-					for (final @Nullable File file : fileList) {
-						if (file != null && file.isDirectory()) {
-							files.add(file);
-							if (deep) {
-								files.addAll(BaseFileUtils.listFolders(file, true));
-							}
+		final @NotNull Collection<File> files = new GapList<>();
+		if (directory.isDirectory()) {
+			final @Nullable File[] fileList = directory.listFiles();
+			if (fileList != null) {
+				for (final @Nullable File file : fileList) {
+					if (file != null && file.isDirectory()) {
+						files.add(file);
+						if (deep) {
+							files.addAll(BaseFileUtils.listFolders(file, true));
 						}
 					}
 				}
 			}
 			return files;
+		} else {
+			throw new IOException("File '" + directory.getAbsolutePath() + "' is no directory");
 		}
 	}
 
@@ -205,23 +204,22 @@ public class BaseFileUtils {
 	@Contract("null, _ -> fail")
 	public static @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 																final boolean deep) throws IOException {
-		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(directory, false).readLock()) {
-			tempLock.lock();
-			final @NotNull Collection<File> files = new GapList<>();
-			if (directory.isDirectory()) {
-				final @Nullable File[] fileList = directory.listFiles();
-				if (fileList != null) {
-					for (final @Nullable File file : fileList) {
-						if (file != null) {
-							files.add(file);
-							if (deep && file.isDirectory()) {
-								files.addAll(BaseFileUtils.listFilesAndFolders(file, true));
-							}
+		final @NotNull Collection<File> files = new GapList<>();
+		if (directory.isDirectory()) {
+			final @Nullable File[] fileList = directory.listFiles();
+			if (fileList != null) {
+				for (final @Nullable File file : fileList) {
+					if (file != null) {
+						files.add(file);
+						if (deep && file.isDirectory()) {
+							files.addAll(BaseFileUtils.listFilesAndFolders(file, true));
 						}
 					}
 				}
 			}
 			return files;
+		} else {
+			throw new IOException("File '" + directory.getAbsolutePath() + "' is no directory");
 		}
 	}
 
