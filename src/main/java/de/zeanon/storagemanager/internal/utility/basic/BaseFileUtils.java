@@ -26,8 +26,8 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 2.2.0
  */
-@SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
 @UtilityClass
+@SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
 public class BaseFileUtils {
 
 
