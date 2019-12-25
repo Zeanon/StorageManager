@@ -34,13 +34,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  * BigList is a list optimized for storing large number of elements.
  * It stores the elements in fixed size blocks and the blocks itself are maintained in a tree for fast access.
  * It also offers specialized methods for bulk processing of elements.
- * Also copying a BigList is efficiently possible as its implemented using a copy-on-write approach.<p>
+ * Also copying a BigList is efficiently possible as its implemented using a copy-on-write approach.
  *
  * <strong>Note that this implementation is not synchronized.</strong>
  * Due to data caching used for exploiting locality of reference, performance can decrease if BigList is
- * accessed by several threads at different positions.<p>
+ * accessed by several threads at different positions.
  * <p>
- * Note that the iterators provided are not fail-fast.<p>
+ * Note that the iterators provided are not fail-fast.
  *
  * @author Thomas Mauch
  * @version $Id: BigList.java 3408 2016-12-06 00:20:45Z origo $

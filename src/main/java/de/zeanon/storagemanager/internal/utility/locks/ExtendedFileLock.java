@@ -235,16 +235,6 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 			}
 		}
 
-
-		public @NotNull Object readResolve() {
-			try {
-				return ReadWriteLockableChannel.getOrCreateChannel(new File(this.absolutePath), this.writeMetaData);
-			} catch (IOException e) {
-				throw new RuntimeIOException(e);
-			}
-		}
-
-
 		@Contract(pure = true)
 		private static @NotNull ReadWriteLockableChannel getOrCreateChannel(final @NotNull File file, final boolean writeMetaData) throws IOException {
 			final long lockStamp = ReadWriteLockableChannel.factoryLock.readLock();
@@ -540,6 +530,11 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 					throw new RuntimeIOException(e.getMessage(), e.getCause());
 				}
 			}
+		}
+
+
+		private @NotNull Object readResolve() throws IOException {
+			return ReadWriteLockableChannel.getOrCreateChannel(new File(this.absolutePath), this.writeMetaData);
 		}
 	}
 

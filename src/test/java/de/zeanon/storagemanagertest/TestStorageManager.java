@@ -22,6 +22,9 @@ public class TestStorageManager {
 						}
 					}
 				}
+			} else {
+				result = false;
+				System.out.println("[INFO] Folder does not exist");
 			}
 			System.out.println(result ? "[INFO] Cleared Folder" : "[INFO] Failed to clear Folder");
 		} catch (RuntimeIOException e) {

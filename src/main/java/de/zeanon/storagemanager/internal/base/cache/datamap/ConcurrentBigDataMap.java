@@ -44,6 +44,7 @@ public class ConcurrentBigDataMap<K, V> extends ConcurrentDataMap<K, V> implemen
 
 
 	private void writeObject(final @NotNull ObjectOutputStream outputStream) throws IOException {
+		outputStream.defaultWriteObject();
 		outputStream.writeInt(this.size());
 		this.writeNodes(outputStream);
 	}
@@ -56,6 +57,8 @@ public class ConcurrentBigDataMap<K, V> extends ConcurrentDataMap<K, V> implemen
 	}
 
 	private void readObject(final @NotNull ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
+		inputStream.defaultReadObject();
+		this.reinitialize(new BigList<>());
 		this.clear();
 		final int mappings = inputStream.readInt();
 		if (mappings < 0) {

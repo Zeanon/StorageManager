@@ -2,8 +2,11 @@ package de.zeanon.storagemanager.internal.base.cache.base;
 
 import de.zeanon.storagemanager.external.browniescollections.IList;
 import de.zeanon.storagemanager.internal.base.interfaces.DataMap;
+import java.io.Serializable;
 import java.util.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,12 +22,18 @@ import org.jetbrains.annotations.Nullable;
  * @version 1.3.0
  */
 @EqualsAndHashCode(callSuper = true)
-@RequiredArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
 @SuppressWarnings("unused")
-public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements DataMap<K, V> {
+public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements DataMap<K, V>, Serializable {
 
 
-	private final @NotNull IList<DataNode<K, V>> localList;
+	private static final long serialVersionUID = -822922610855254342L;
+	private transient @NotNull IList<DataNode<K, V>> localList;
+
+
+	@Contract(pure = true)
+	protected AbstractDataMap(final @NotNull IList<DataNode<K, V>> localList) {
+		this.localList = localList;
+	}
 
 
 	/**
@@ -172,13 +181,13 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	/**
 	 * Returns the value to which the specified key is mapped,
 	 * or {@code null} if this map contains no mapping for the key.
-	 *
-	 * <p>More formally, if this map contains a mapping from a key
+	 * <p>
+	 * More formally, if this map contains a mapping from a key
 	 * {@code k} to a value {@code v} such that {@code (key==null ? k==null :
 	 * key.equals(k))}, then this method returns {@code v}; otherwise
 	 * it returns {@code null}.  (There can be at most one such mapping.)
-	 *
-	 * <p>A return value of {@code null} does not <i>necessarily</i>
+	 * <p>
+	 * A return value of {@code null} does not <i>necessarily</i>
 	 * indicate that the map contains no mapping for the key; it's also
 	 * possible that the map explicitly maps the key to {@code null}.
 	 * The {@link #containsKey containsKey} operation may be used to
@@ -247,6 +256,10 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 
 	@Override //NOSONAR
 	public abstract @NotNull DataMap<K, V> clone(); //NOSONAR
+
+	protected void reinitialize(final @NotNull IList<DataNode<K, V>> localList) {
+		this.localList = localList;
+	}
 
 	@Override
 	public @NotNull String toString() {

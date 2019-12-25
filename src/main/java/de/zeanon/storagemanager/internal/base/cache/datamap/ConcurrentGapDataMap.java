@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 1.5.0
  */
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings("unused")
 public class ConcurrentGapDataMap<K, V> extends ConcurrentDataMap<K, V> implements Serializable {
 
 
@@ -44,6 +44,7 @@ public class ConcurrentGapDataMap<K, V> extends ConcurrentDataMap<K, V> implemen
 
 
 	private void writeObject(final @NotNull ObjectOutputStream outputStream) throws IOException {
+		outputStream.defaultWriteObject();
 		outputStream.writeInt(this.size());
 		this.writeNodes(outputStream);
 	}
@@ -56,6 +57,8 @@ public class ConcurrentGapDataMap<K, V> extends ConcurrentDataMap<K, V> implemen
 	}
 
 	private void readObject(final @NotNull ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
+		inputStream.defaultReadObject();
+		this.reinitialize(new GapList<>());
 		this.clear();
 		final int mappings = inputStream.readInt();
 		if (mappings < 0) {

@@ -2,13 +2,12 @@ package de.zeanon.storagemanager.internal.base.cache.base;
 
 import de.zeanon.storagemanager.external.browniescollections.IList;
 import de.zeanon.storagemanager.internal.base.interfaces.DataMap;
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.StampedLock;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,24 +24,29 @@ import org.jetbrains.annotations.Nullable;
  */
 @SuppressWarnings("ALL")
 @EqualsAndHashCode(callSuper = true)
-@RequiredArgsConstructor(onConstructor_ = {@Contract(pure = true)}, access = AccessLevel.PROTECTED)
-public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implements DataMap<K, V>, ConcurrentMap<K, V> {
+public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implements DataMap<K, V>, ConcurrentMap<K, V>, Serializable {
 
 
-	private final @NotNull StampedLock localLock = new StampedLock();
-	private final @NotNull IList<DataNode<K, V>> localList;
+	private transient @NotNull StampedLock localLock = new StampedLock();
+	private transient @NotNull IList<DataNode<K, V>> localList;
+
+
+	@Contract(pure = true)
+	protected ConcurrentDataMap(final @NotNull IList<DataNode<K, V>> localList) {
+		this.localList = localList;
+	}
 
 
 	/**
 	 * If the specified key is not already associated
 	 * with a value, associate it with the given value.
 	 * This is equivalent to
-	 * <pre> {@code
+	 * {@code
 	 * if (!map.containsKey(key))
-	 *   return map.put(key, value);
+	 * return map.put(key, value);
 	 * else
-	 *   return map.get(key);
-	 * }</pre>
+	 * return map.get(key);
+	 * }
 	 * <p>
 	 * except that the action is performed atomically.
 	 *
@@ -85,12 +89,12 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	/**
 	 * Removes the entry for a key only if currently mapped to a given value.
 	 * This is equivalent to
-	 * <pre> {@code
+	 * {@code
 	 * if (map.containsKey(key) && Objects.equals(map.get(key), value)) {
-	 *   map.remove(key);
-	 *   return true;
+	 * map.remove(key);
+	 * return true;
 	 * } else
-	 *   return false;
+	 * return false;
 	 * }</pre>
 	 * <p>
 	 * except that the action is performed atomically.
@@ -143,12 +147,12 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	/**
 	 * Replaces the entry for a key only if currently mapped to a given value.
 	 * This is equivalent to
-	 * <pre> {@code
+	 * {@code
 	 * if (map.containsKey(key) && Objects.equals(map.get(key), oldValue)) {
-	 *   map.put(key, newValue);
-	 *   return true;
+	 * map.put(key, newValue);
+	 * return true;
 	 * } else
-	 *   return false;
+	 * return false;
 	 * }</pre>
 	 * <p>
 	 * except that the action is performed atomically.
@@ -193,11 +197,11 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	/**
 	 * Replaces the entry for a key only if currently mapped to some value.
 	 * This is equivalent to
-	 * <pre> {@code
+	 * {@code
 	 * if (map.containsKey(key)) {
-	 *   return map.put(key, value);
+	 * return map.put(key, value);
 	 * } else
-	 *   return null;
+	 * return null;
 	 * }</pre>
 	 * <p>
 	 * except that the action is performed atomically.
@@ -369,13 +373,13 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	/**
 	 * Returns the value to which the specified key is mapped,
 	 * or {@code null} if this map contains no mapping for the key.
-	 *
-	 * <p>More formally, if this map contains a mapping from a key
+	 * <p>
+	 * More formally, if this map contains a mapping from a key
 	 * {@code k} to a value {@code v} such that {@code (key==null ? k==null :
 	 * key.equals(k))}, then this method returns {@code v}; otherwise
 	 * it returns {@code null}.  (There can be at most one such mapping.)
-	 *
-	 * <p>A return value of {@code null} does not <i>necessarily</i>
+	 * <p>
+	 * A return value of {@code null} does not <i>necessarily</i>
 	 * indicate that the map contains no mapping for the key; it's also
 	 * possible that the map explicitly maps the key to {@code null}.
 	 * The {@link #containsKey containsKey} operation may be used to
@@ -527,6 +531,11 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 
 	@Override //NOSONAR
 	public abstract @NotNull DataMap<K, V> clone(); //NOSONAR
+
+	protected void reinitialize(final @NotNull IList<DataNode<K, V>> localList) {
+		this.localList = localList;
+		this.localLock = new StampedLock();
+	}
 
 	@Override
 	public @NotNull String toString() {

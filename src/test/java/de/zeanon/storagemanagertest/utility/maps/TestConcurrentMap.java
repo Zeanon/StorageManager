@@ -25,7 +25,7 @@ class TestConcurrentMap {
 		final @NotNull GapList<String> timeList = new GapList<>();
 
 		for (int i = 0; i < 5000000; i++) {
-			tempMap.add("key" + i, true);
+			tempMap.add("key" + i, (i % 2) == 0);
 		}
 
 		executor.submit(() -> {
