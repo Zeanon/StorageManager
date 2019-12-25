@@ -657,6 +657,7 @@ public class BaseFileUtils {
 		}
 	}
 
+
 	public static void writeToFile(final @NotNull String file,
 								   final @Nullable BufferedInputStream inputStream) {
 		BaseFileUtils.writeToFile(file, inputStream, BaseFileUtils.getBufferSize());

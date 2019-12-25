@@ -3,10 +3,7 @@ package de.zeanon.storagemanager.internal.base.cache.datamap;
 import de.zeanon.storagemanager.external.browniescollections.BigList;
 import de.zeanon.storagemanager.internal.base.cache.base.ConcurrentDataMap;
 import de.zeanon.storagemanager.internal.base.interfaces.DataMap;
-import java.io.IOException;
-import java.io.InvalidObjectException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class ConcurrentBigDataMap<K, V> extends ConcurrentDataMap<K, V> {
+public class ConcurrentBigDataMap<K, V> extends ConcurrentDataMap<K, V> implements Serializable {
 
 
 	private static final long serialVersionUID = 757613140243598365L;
@@ -47,7 +44,6 @@ public class ConcurrentBigDataMap<K, V> extends ConcurrentDataMap<K, V> {
 
 
 	private void writeObject(final @NotNull ObjectOutputStream outputStream) throws IOException {
-		outputStream.defaultWriteObject();
 		outputStream.writeInt(this.size());
 		this.writeNodes(outputStream);
 	}
@@ -60,7 +56,6 @@ public class ConcurrentBigDataMap<K, V> extends ConcurrentDataMap<K, V> {
 	}
 
 	private void readObject(final @NotNull ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
-		inputStream.defaultReadObject();
 		this.clear();
 		final int mappings = inputStream.readInt();
 		if (mappings < 0) {

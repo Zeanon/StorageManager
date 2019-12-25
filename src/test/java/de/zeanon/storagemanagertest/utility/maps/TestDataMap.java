@@ -30,7 +30,7 @@ class TestDataMap {
 		TestDataMap.testMap.remove("third");
 
 		Assertions.assertAll("EntryList",
-							 () -> Assertions.assertSame(4, TestDataMap.testMap.entryList().size()),
+							 () -> Assertions.assertSame(4, TestDataMap.testMap.size()),
 							 () -> Assertions.assertEquals("first", TestDataMap.testMap.entryList().get(0).getKey()),
 							 () -> Assertions.assertEquals(true, TestDataMap.testMap.entryList().get(0).getValue()),
 							 () -> Assertions.assertEquals("second", TestDataMap.testMap.entryList().get(1).getKey()),
