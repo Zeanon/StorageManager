@@ -86,12 +86,12 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	}
 
 	@Override
-	public void bigList(final boolean bigList) {
+	public void setBigList(final boolean bigList) {
 		this.collectionsProvider().setListType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
-	public void concurrentData(final boolean concurrentData) {
+	public void setConcurrentData(final boolean concurrentData) {
 		this.collectionsProvider().setMapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 

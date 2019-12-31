@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.StampedLock;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.Contract;
@@ -40,9 +39,6 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
 public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
-
-
-	private final @NotNull StampedLock localLock = new StampedLock();
 
 
 	/**
@@ -98,12 +94,12 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 	}
 
 	@Override
-	public void bigList(final boolean bigList) {
+	public void setBigList(final boolean bigList) {
 		this.collectionsProvider().setListType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
-	public void concurrentData(final boolean concurrentData) {
+	public void setConcurrentData(final boolean concurrentData) {
 		this.collectionsProvider().setMapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 
@@ -134,7 +130,6 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 
 	@Override
 	protected @NotNull Map readFile() {
-		final long lockStamp = this.localLock.readLock();
 		try (final @NotNull FileReader tempReader = new FileReader(this.file())) {
 			//noinspection unchecked
 			return (Map<String, Object>) new YamlReader(tempReader).read();
@@ -142,8 +137,6 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e);
 		} catch (final @NotNull IOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
-		} finally {
-			this.localLock.unlockRead(lockStamp);
 		}
 	}
 

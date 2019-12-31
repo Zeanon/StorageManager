@@ -46,6 +46,7 @@ public enum Reload implements ReloadSetting {
 		}
 	};
 
+
 	/**
 	 * @return if the File should be reloaded
 	 */

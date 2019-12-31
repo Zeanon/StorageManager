@@ -9,6 +9,8 @@ package de.zeanon.storagemanager.internal.base.exceptions;
 @SuppressWarnings("unused")
 public class ThunderException extends Exception {
 
+	private static final long serialVersionUID = 7200179831679569538L;
+
 	public ThunderException() {
 		super();
 	}

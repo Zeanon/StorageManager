@@ -189,14 +189,26 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	public void loadDataFromFileData(final @NotNull D fileData) {
+		this.fileData().loadData(fileData.dataMap());
+		this.save();
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	public void loadDataFromMap(final @NotNull M map) {
+		this.fileData().loadData(map);
+		this.save();
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
 	/**
 	 * Save the cached Data to the File
 	 */
 	public abstract void save();
 
-	public abstract void bigList(final boolean bigList);
+	public abstract void setBigList(final boolean bigList);
 
-	public abstract void concurrentData(final boolean concurrentData);
+	public abstract void setConcurrentData(final boolean concurrentData);
 
 	public void synchronizeData(final boolean synchronize) {
 		this.fileData().synchronizedData(synchronize);

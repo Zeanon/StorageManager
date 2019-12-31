@@ -38,6 +38,7 @@ public abstract class CommentEnabledSection<F extends CommentEnabledFile<? exten
 		this.commentEnabledFile = commentEnabledFile;
 	}
 
+
 	public void setCommentSetting(final @NotNull CommentSetting commentSetting) {
 		this.commentEnabledFile.setCommentSetting(commentSetting);
 	}

@@ -9,6 +9,8 @@ package de.zeanon.storagemanager.internal.base.exceptions;
 @SuppressWarnings("unused")
 public class ProviderException extends StorageManagerException {
 
+	private static final long serialVersionUID = -9209479739679169538L;
+
 	public ProviderException() {
 		super();
 	}

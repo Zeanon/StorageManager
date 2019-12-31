@@ -43,9 +43,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 	@Contract(pure = true)
 	public ExtendedFileLock(final @NotNull File file) throws IOException {
-		this.readWriteLockableChannel = ReadWriteLockableChannel.getOrCreateChannel(file, true);
-		this.writeLock = new WriteLock(this);
-		this.readLock = new ReadLock(this);
+		this(file, true);
 	}
 
 	@Contract(pure = true)
@@ -263,6 +261,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 			return this.absolutePath;
 		}
 
+
 		private void lockRead() {
 			if (!this.writeLockActive.get() && this.lockHoldCount.intValue() > 0) {
 				this.lockHoldCount.incrementAndGet();
@@ -336,6 +335,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 				}
 			});
 		}
+
 
 		private void lockWrite() {
 			if (this.writeLockActive.get() && this.lockHoldCount.intValue() > 0 && this.currentWritingThread.longValue() == Thread.currentThread().getId()) {
@@ -412,6 +412,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 			});
 		}
 
+
 		private void convertLock() {
 			final long lockStamp = this.internalLock.writeLock();
 			try {
@@ -477,18 +478,6 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 			});
 		}
 
-		private void unlock() {
-			this.fileLock.updateAndGet(current -> {
-				if (this.lockHoldCount.intValue() == 0 || this.fileLock.get() == null) {
-					throw new IllegalMonitorStateException("Lock ist not held");
-				} else if (this.lockHoldCount.decrementAndGet() == 0) {
-					this.internalUnlock(current);
-					return null;
-				} else {
-					return current;
-				}
-			});
-		}
 
 		private void close() throws IOException {
 			final long lockStamp = ReadWriteLockableChannel.factoryLock.writeLock();
@@ -508,6 +497,20 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 			} finally {
 				ReadWriteLockableChannel.factoryLock.unlockWrite(lockStamp);
 			}
+		}
+
+
+		private void unlock() {
+			this.fileLock.updateAndGet(current -> {
+				if (this.lockHoldCount.intValue() == 0 || this.fileLock.get() == null) {
+					throw new IllegalMonitorStateException("Lock ist not held");
+				} else if (this.lockHoldCount.decrementAndGet() == 0) {
+					this.internalUnlock(current);
+					return null;
+				} else {
+					return current;
+				}
+			});
 		}
 
 		private void internalUnlock(@Nullable final FileLock tempLock) {

@@ -113,19 +113,19 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 		}
 	}
 
-	public void bigData(final boolean bigData) {
+	public void setBigData(final boolean bigData) {
 		this.bigData = bigData;
 		this.collectionsProvider().setMapType(this.concurrentData ? (this.bigData ? ConcurrentBigDataMap.class : ConcurrentGapDataMap.class)
 																  : (this.bigData ? BigDataMap.class : GapDataMap.class));
 	}
 
 	@Override
-	public void bigList(final boolean bigList) {
+	public void setBigList(final boolean bigList) {
 		this.collectionsProvider().setListType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
-	public void concurrentData(final boolean concurrentData) {
+	public void setConcurrentData(final boolean concurrentData) {
 		this.concurrentData = concurrentData;
 		this.collectionsProvider().setMapType(this.concurrentData ? (this.bigData ? ConcurrentBigDataMap.class : ConcurrentGapDataMap.class)
 																  : (this.bigData ? BigDataMap.class : GapDataMap.class));

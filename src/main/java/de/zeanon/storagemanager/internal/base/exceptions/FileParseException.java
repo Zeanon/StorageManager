@@ -9,6 +9,8 @@ package de.zeanon.storagemanager.internal.base.exceptions;
 @SuppressWarnings("unused")
 public class FileParseException extends StorageManagerException {
 
+	private static final long serialVersionUID = 3209172731579069538L;
+
 	public FileParseException() {
 		super();
 	}
