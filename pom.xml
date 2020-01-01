@@ -80,7 +80,7 @@
                             <groupId>de.zeanon</groupId>
                             <artifactId>toml</artifactId>
                             <version>1.0.0</version>
-                            <file>src/main/resources/toml-1.0.jar</file>
+                            <file>src/main/resources/Toml.jar</file>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>
