@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  * Optimized FileData for ThunderFile, storing the Data in a ({@link DataMap})
  *
  * @author Zeanon
- * @version 1.6.0
+ * @version 1.7.0
  */
 @Getter
 @EqualsAndHashCode
@@ -38,15 +38,42 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	private static final long serialVersionUID = 746673400911930709L;
 
 
+	/**
+	 * The provider to be used to get new Map and List instances
+	 * <p>
+	 * -- Getter --
+	 *
+	 * @return the internal Provider to be used
+	 */
 	private final @NotNull CollectionsProvider<M, L> collectionsProvider;
 	/**
 	 * Internal cache for the contents of the File
+	 * <p>
+	 * -- Getter --
+	 *
+	 * @return the internal DataMap
 	 */
 	private transient @NotNull M dataMap;
+	/**
+	 * Defines whether the internal Map should be wrapped by {@link Collections#synchronizedMap(Map)}
+	 * <p>
+	 * -- Getter --
+	 *
+	 * @return if the Map is synchronized
+	 * <p>
+	 * -- Setter --
+	 * Define if the Map should be synchronized
+	 */
 	@Setter
 	private boolean synchronizedData;
 
 
+	/**
+	 * Initializes a new FileData
+	 *
+	 * @param collectionsProvider the internal Provider to be used
+	 * @param synchronize         whether the internal Map should be synchronized
+	 */
 	@Contract(pure = true)
 	protected ThunderFileData(final @NotNull CollectionsProvider<M, L> collectionsProvider, final boolean synchronize) {
 		this.collectionsProvider = collectionsProvider;
@@ -537,11 +564,21 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	// </Serialization>
 
 
+	/**
+	 * Compare this FileData to a given one
+	 *
+	 * @param fileData the FileData to be compared to
+	 */
 	@Override
 	public int compareTo(final @NotNull ThunderFileData fileData) {
 		return Integer.compare(this.dataMap.size(), fileData.dataMap.size());
 	}
 
+	/**
+	 * Returns a String representation of the FileData
+	 *
+	 * @return the FileData parsed to a String
+	 */
 	@Override
 	public @NotNull String toString() {
 		return this.dataMap.toString();
@@ -549,29 +586,39 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 
 
 	@EqualsAndHashCode
-	@Getter(onMethod_ = {@Override})
 	@Accessors(fluent = false)
+	@Getter(onMethod_ = {@Override})
 	@AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
 	@SuppressWarnings({"DefaultAnnotationParam", "unused"})
 	private static class Node<K, V> implements DataMap.DataNode<K, V> {
 
 		/**
+		 * The key assigned to this Node
+		 * <p>
 		 * -- Getter --
-		 * Returns the key corresponding to this entry.
+		 * Returns the key corresponding to this node. If the mapping
 		 * has been removed from the backing map (by the iterator's
 		 * <tt>remove</tt> operation), the results of this call are undefined.
 		 *
-		 * @return the key corresponding to this entry
+		 * @return the key corresponding to this node
+		 * @throws IllegalStateException implementations may, but are not
+		 * required to, throw this exception if the entry has been
+		 * removed from the backing map.
 		 */
 		private @NotNull K key;
 
 		/**
+		 * The value assigned to this Node
+		 * <p>
 		 * -- Getter --
-		 * Returns the value corresponding to this entry.  If the mapping
+		 * Returns the value corresponding to this node. If the mapping
 		 * has been removed from the backing map (by the iterator's
 		 * <tt>remove</tt> operation), the results of this call are undefined.
 		 *
-		 * @return the value corresponding to this entry
+		 * @return the value corresponding to this node
+		 * @throws IllegalStateException implementations may, but are not
+		 * required to, throw this exception if the entry has been
+		 * removed from the backing map.
 		 */
 		private @Nullable V value;
 
@@ -630,6 +677,11 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		}
 
 
+		/**
+		 * Returns a String representation of the Node
+		 *
+		 * @return the Node parsed to a String
+		 */
 		@Override
 		public @NotNull String toString() {
 			return "(" + this.key + "=" + this.value + ")";

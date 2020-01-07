@@ -135,6 +135,16 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 	}
 
 	@Contract("-> new")
+	public @NotNull Reader createReader() {
+		return Channels.newReader(this.readWriteLockableChannel.getFileChannel(), "UTF-8");
+	}
+
+	@Contract("null -> fail; !null -> new")
+	public @NotNull Reader createReader(final @NotNull String csName) {
+		return Channels.newReader(this.readWriteLockableChannel.getFileChannel(), csName);
+	}
+
+	@Contract("-> new")
 	public @NotNull BufferedReader createBufferedReader() {
 		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), "UTF-8"));
 	}
@@ -156,8 +166,18 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 	}
 
 	@Contract("-> new")
+	public @NotNull InputStream createInputStream() {
+		return Channels.newInputStream(this.readWriteLockableChannel.getFileChannel());
+	}
+
+	@Contract("-> new")
 	public @NotNull BufferedInputStream createBufferedInputStream() {
 		return new BufferedInputStream(Channels.newInputStream(this.readWriteLockableChannel.getFileChannel()));
+	}
+
+	@Contract("-> new")
+	public @NotNull OutputStream createOutputStream() {
+		return Channels.newOutputStream(this.readWriteLockableChannel.getFileChannel());
 	}
 
 	@Contract("-> new")
@@ -645,6 +665,18 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 		@Override
 		@Contract("-> new")
+		public @NotNull Reader createReader() {
+			return this.extendedFileLock.createReader();
+		}
+
+		@Override
+		@Contract("null -> fail; !null -> new")
+		public @NotNull Reader createReader(final @NotNull String csName) {
+			return this.extendedFileLock.createReader(csName);
+		}
+
+		@Override
+		@Contract("-> new")
 		public @NotNull BufferedReader createBufferedReader() {
 			return this.extendedFileLock.createBufferedReader();
 		}
@@ -670,8 +702,20 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 		@Override
 		@Contract("-> new")
+		public @NotNull InputStream createInputStream() {
+			return this.extendedFileLock.createInputStream();
+		}
+
+		@Override
+		@Contract("-> new")
 		public @NotNull BufferedInputStream createBufferedInputStream() {
 			return this.extendedFileLock.createBufferedInputStream();
+		}
+
+		@Override
+		@Contract("-> new")
+		public @NotNull OutputStream createOutputStream() {
+			return this.extendedFileLock.createOutputStream();
 		}
 
 		@Override
@@ -797,6 +841,18 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 		@Override
 		@Contract("-> new")
+		public @NotNull Reader createReader() {
+			return this.extendedFileLock.createReader();
+		}
+
+		@Override
+		@Contract("null -> fail; !null -> new")
+		public @NotNull Reader createReader(final @NotNull String csName) {
+			return this.extendedFileLock.createReader(csName);
+		}
+
+		@Override
+		@Contract("-> new")
 		public @NotNull BufferedReader createBufferedReader() {
 			return this.extendedFileLock.createBufferedReader();
 		}
@@ -815,14 +871,27 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 		@Override
 		@Contract("null, _ -> fail; !null, _ -> new")
-		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName, final int buffer_size) {
+		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName,
+															final int buffer_size) {
 			return this.extendedFileLock.createBufferedReader(csName, buffer_size);
+		}
+
+		@Override
+		@Contract("-> new")
+		public @NotNull InputStream createInputStream() {
+			return this.extendedFileLock.createInputStream();
 		}
 
 		@Override
 		@Contract("-> new")
 		public @NotNull BufferedInputStream createBufferedInputStream() {
 			return this.extendedFileLock.createBufferedInputStream();
+		}
+
+		@Override
+		@Contract("-> new")
+		public @NotNull OutputStream createOutputStream() {
+			return this.extendedFileLock.createOutputStream();
 		}
 
 		@Override

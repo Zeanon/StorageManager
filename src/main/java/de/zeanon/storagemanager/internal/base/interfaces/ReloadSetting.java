@@ -13,5 +13,10 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("EmptyMethod")
 public interface ReloadSetting {
 
+	/**
+	 * Check whether the given FlatFile should be reloaded
+	 *
+	 * @param flatFile the FlatFile to check
+	 */
 	boolean shouldReload(final @NotNull FlatFile flatFile);
 }

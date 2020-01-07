@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  * Default FileData, storing the Data in Standard maps
  *
  * @author Zeanon
- * @version 2.6.0
+ * @version 2.7.0
  */
 @Getter
 @EqualsAndHashCode
@@ -38,15 +38,42 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	private static final long serialVersionUID = 785462429090408444L;
 
 
+	/**
+	 * The provider to be used to get new Map and List instances
+	 * <p>
+	 * -- Getter --
+	 *
+	 * @return the internal Provider to be used
+	 */
 	private final @NotNull CollectionsProvider<M, L> collectionsProvider;
 	/**
 	 * Internal cache for the contents of the File
+	 * <p>
+	 * -- Getter --
+	 *
+	 * @return the internal DataMap
 	 */
 	private transient @NotNull M dataMap;
+	/**
+	 * Defines whether the internal Map should be wrapped by {@link Collections#synchronizedMap(Map)}
+	 * <p>
+	 * -- Getter --
+	 *
+	 * @return if the Map is synchronized
+	 * <p>
+	 * -- Setter --
+	 * Define if the Map should be synchronized
+	 */
 	@Setter
 	private boolean synchronizedData;
 
 
+	/**
+	 * Initializes a new FileData
+	 *
+	 * @param collectionsProvider the internal Provider to be used
+	 * @param synchronize         whether the internal Map should be synchronized
+	 */
 	@Contract(pure = true)
 	protected StandardFileData(final @NotNull CollectionsProvider<M, L> collectionsProvider, final boolean synchronize) {
 		this.collectionsProvider = collectionsProvider;
@@ -529,12 +556,22 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	// </Serialization>
 
 
+	/**
+	 * Compare this FileData to a given one
+	 *
+	 * @param fileData the FileData to be compared to
+	 */
 	@Override
 	public int compareTo(final @NotNull StandardFileData fileData) {
 		return Integer.compare(this.dataMap.size(), fileData.dataMap.size());
 	}
 
 
+	/**
+	 * Returns a String representation of the FileData
+	 *
+	 * @return the FileData parsed to a String
+	 */
 	@Override
 	public @NotNull String toString() {
 		return this.dataMap.toString();
@@ -597,6 +634,11 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		}
 
 
+		/**
+		 * Returns a String representation of the Node
+		 *
+		 * @return the Node parsed to a String
+		 */
 		@Override
 		public @NotNull String toString() {
 			return "(" + this.key + "=" + this.value + ")";

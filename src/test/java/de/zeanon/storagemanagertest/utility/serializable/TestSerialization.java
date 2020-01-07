@@ -1,6 +1,6 @@
 package de.zeanon.storagemanagertest.utility.serializable;
 
-import de.zeanon.storagemanager.internal.base.cache.base.ConcurrentDataMap;
+import de.zeanon.storagemanager.internal.base.cache.base.ConcurrentAbstractDataMap;
 import de.zeanon.storagemanager.internal.base.cache.datamap.BigDataMap;
 import de.zeanon.storagemanager.internal.base.cache.datamap.ConcurrentBigDataMap;
 import de.zeanon.storagemanager.internal.base.cache.datamap.ConcurrentGapDataMap;
@@ -95,7 +95,7 @@ class TestSerialization {
 	@Test
 	@TestOnly
 	void serialize4() throws IOException, ClassNotFoundException {
-		final @NotNull ConcurrentDataMap<String, Boolean> tempMap = new ConcurrentGapDataMap<>();
+		final @NotNull ConcurrentAbstractDataMap<String, Boolean> tempMap = new ConcurrentGapDataMap<>();
 
 		for (int i = 0; i < 5000; i++) {
 			tempMap.add("key" + i, true);
@@ -107,7 +107,7 @@ class TestSerialization {
 			serialization.writeObject(tempMap);
 		}
 
-		final @NotNull ConcurrentDataMap resultMap;
+		final @NotNull ConcurrentAbstractDataMap resultMap;
 		try (final @NotNull ObjectInputStream deserialization = new ObjectInputStream(new FileInputStream(new File("src/test/resources/testresults/serialization", "serialization4.ser")))) {
 			resultMap = (ConcurrentGapDataMap) deserialization.readObject();
 		}
@@ -118,7 +118,7 @@ class TestSerialization {
 	@Test
 	@TestOnly
 	void serialize5() throws IOException, ClassNotFoundException {
-		final @NotNull ConcurrentDataMap<String, Boolean> tempMap = new ConcurrentBigDataMap<>();
+		final @NotNull ConcurrentAbstractDataMap<String, Boolean> tempMap = new ConcurrentBigDataMap<>();
 
 		for (int i = 0; i < 5000; i++) {
 			tempMap.add("key" + i, true);
@@ -130,7 +130,7 @@ class TestSerialization {
 			serialization.writeObject(tempMap);
 		}
 
-		final @NotNull ConcurrentDataMap resultMap;
+		final @NotNull ConcurrentAbstractDataMap resultMap;
 		try (final @NotNull ObjectInputStream deserialization = new ObjectInputStream(new FileInputStream(new File("src/test/resources/testresults/serialization", "serialization5.ser")))) {
 			resultMap = (ConcurrentBigDataMap) deserialization.readObject();
 		}
@@ -141,7 +141,7 @@ class TestSerialization {
 	@Test
 	@TestOnly
 	void serialize6() throws IOException, ClassNotFoundException {
-		final @NotNull ConcurrentDataMap<String, Boolean> tempMap = new ConcurrentGapDataMap<>();
+		final @NotNull ConcurrentAbstractDataMap<String, Boolean> tempMap = new ConcurrentGapDataMap<>();
 
 		for (int i = 0; i < 5000; i++) {
 			tempMap.add("key" + i, true);
@@ -153,9 +153,9 @@ class TestSerialization {
 			serialization.writeObject(tempMap);
 		}
 
-		final @NotNull ConcurrentDataMap resultMap;
+		final @NotNull ConcurrentAbstractDataMap resultMap;
 		try (final @NotNull ObjectInputStream deserialization = new ObjectInputStream(new FileInputStream(new File("src/test/resources/testresults/serialization", "serialization6.ser")))) {
-			resultMap = (ConcurrentDataMap) deserialization.readObject();
+			resultMap = (ConcurrentAbstractDataMap) deserialization.readObject();
 		}
 
 		Assertions.assertEquals(tempMap, resultMap);

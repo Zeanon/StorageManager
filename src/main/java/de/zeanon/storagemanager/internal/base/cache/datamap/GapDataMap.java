@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <V> the type of mapped values
  *
  * @author Zeanon
- * @version 1.5.0
+ * @version 1.6.0
  */
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
@@ -27,16 +27,29 @@ public class GapDataMap<K, V> extends AbstractDataMap<K, V> implements Serializa
 	private static final long serialVersionUID = 521676275044874030L;
 
 
+	/**
+	 * Initializes an empty GapDataMap
+	 */
 	public GapDataMap() {
 		super(new GapList<>());
 	}
 
+	/**
+	 * Initializes a GapDataMap with the given entries
+	 *
+	 * @param map the initial entries
+	 */
 	public GapDataMap(final @NotNull Map<K, V> map) {
 		super(new GapList<>());
 		this.addAll(map);
 	}
 
 
+	/**
+	 * Create a copy of this GapDataMap
+	 *
+	 * @return a complete copy of this Map
+	 */
 	@Override
 	public @NotNull DataMap<K, V> clone() {
 		return new GapDataMap<>(this);

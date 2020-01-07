@@ -1,7 +1,7 @@
 package de.zeanon.storagemanager.internal.base.exceptions;
 
 /**
- * Exception indicating that there is something wrong with the Classes saved in the provider
+ * Exception indicating that there is a problem with the Classes saved in the provider
  *
  * @author Zeanon
  * @version 1.0.0

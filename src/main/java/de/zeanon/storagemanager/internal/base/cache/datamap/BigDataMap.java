@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <V> the type of mapped values
  *
  * @author Zeanon
- * @version 1.5.0
+ * @version 1.6.0
  */
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "WeakerAccess"})
@@ -27,16 +27,29 @@ public class BigDataMap<K, V> extends AbstractDataMap<K, V> implements Serializa
 	private static final long serialVersionUID = 417278632326876576L;
 
 
+	/**
+	 * Initializes an empty BigDataMap
+	 */
 	public BigDataMap() {
 		super(new BigList<>());
 	}
 
 
+	/**
+	 * Initializes a BigDataMap with the given entries
+	 *
+	 * @param map the initial entries
+	 */
 	public BigDataMap(final @NotNull Map<K, V> map) {
 		super(new BigList<>());
 		this.addAll(map);
 	}
 
+	/**
+	 * Create a copy of this BigDataMap
+	 *
+	 * @return a complete copy of this Map
+	 */
 	@Override
 	public @NotNull DataMap<K, V> clone() {
 		return new BigDataMap<>(this);

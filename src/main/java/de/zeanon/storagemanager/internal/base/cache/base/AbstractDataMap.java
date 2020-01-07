@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
  * @param <V> the type of mapped values
  *
  * @author Zeanon
- * @version 1.3.0
+ * @version 1.4.0
  */
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
@@ -27,9 +27,19 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 
 
 	private static final long serialVersionUID = -822922610855254342L;
+
+
+	/**
+	 * List that holds the internal nodes
+	 */
 	private transient @NotNull IList<DataNode<K, V>> localList;
 
 
+	/**
+	 * Generate a new ConcurrentAbstractDataMap
+	 *
+	 * @param localList the List to be used to store the internal nodes
+	 */
 	@Contract(pure = true)
 	protected AbstractDataMap(final @NotNull IList<DataNode<K, V>> localList) {
 		this.localList = localList;
@@ -238,29 +248,68 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		this.localList.trimToSize();
 	}
 
+	/**
+	 * Trim the backing List to its minimal possible size to minimize Ram usage
+	 */
 	@Override
 	public void trimToSize() {
 		this.localList.trimToSize();
 	}
 
+	/**
+	 * Returns a {@link Set} view of the mappings contained in this map.
+	 * The set is not backed by the map, so changes to the map are not
+	 * reflected in the set, and vice-versa.
+	 *
+	 * @return a set view of the mappings contained in this map
+	 */
 	@Override
 	@Contract("-> new")
 	public @NotNull Set<Map.Entry<K, V>> entrySet() {
 		return new HashSet<>(this.localList);
 	}
 
+	/**
+	 * Returns a {@link List} view of the mappings contained in this map.
+	 * The list is backed by the map, so changes to the map are
+	 * reflected in the list, and vice-versa.  If the map is modified
+	 * while an iteration over the list is in progress (except through
+	 * the iterator's own <tt>remove</tt> operation, or through the
+	 * <tt>setValue</tt> operation on a map entry returned by the
+	 * iterator) the results of the iteration are undefined.  The list
+	 * supports element removal, which removes the corresponding
+	 * mapping from the map, via the <tt>Iterator.remove</tt>,
+	 * <tt>List.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt> and
+	 * <tt>clear</tt> operations.  It does not support the
+	 * <tt>add</tt> or <tt>addAll</tt> operations.
+	 *
+	 * @return a list view of the mappings contained in this map
+	 */
 	@Override
 	public @NotNull List<DataNode<K, V>> entryList() {
 		return this.localList;
 	}
 
+	/**
+	 * Abstract clone method to be overwritten by extending classes
+	 */
 	@Override //NOSONAR
 	public abstract @NotNull DataMap<K, V> clone(); //NOSONAR
 
+	/**
+	 * Method to reinitialize the map on deserialization
+	 *
+	 * @param localList the List to be used to store the internal nodes
+	 */
 	protected void reinitialize(final @NotNull IList<DataNode<K, V>> localList) {
 		this.localList = localList;
 	}
 
+	/**
+	 * Returns a String representation of the Map
+	 *
+	 * @return the Map parsed to a String
+	 */
 	@Override
 	public @NotNull String toString() {
 		return this.localList.toString();
@@ -281,22 +330,32 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	private static class Node<K, V> implements DataNode<K, V> {
 
 		/**
+		 * The key assigned to this Node
+		 * <p>
 		 * -- Getter --
-		 * Returns the key corresponding to this entry.
+		 * Returns the key corresponding to this node. If the mapping
 		 * has been removed from the backing map (by the iterator's
 		 * <tt>remove</tt> operation), the results of this call are undefined.
 		 *
-		 * @return the key corresponding to this entry
+		 * @return the key corresponding to this node
+		 * @throws IllegalStateException implementations may, but are not
+		 * required to, throw this exception if the entry has been
+		 * removed from the backing map.
 		 */
 		private @NotNull K key;
 
 		/**
+		 * The value assigned to this Node
+		 * <p>
 		 * -- Getter --
-		 * Returns the value corresponding to this entry.  If the mapping
+		 * Returns the value corresponding to this node. If the mapping
 		 * has been removed from the backing map (by the iterator's
 		 * <tt>remove</tt> operation), the results of this call are undefined.
 		 *
-		 * @return the value corresponding to this entry
+		 * @return the value corresponding to this node
+		 * @throws IllegalStateException implementations may, but are not
+		 * required to, throw this exception if the entry has been
+		 * removed from the backing map.
 		 */
 		private @Nullable V value;
 
@@ -355,6 +414,11 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		}
 
 
+		/**
+		 * Returns a String representation of the Node
+		 *
+		 * @return the Node parsed to a String
+		 */
 		@Override
 		public @NotNull String toString() {
 			return "(" + this.key + "=" + this.value + ")";

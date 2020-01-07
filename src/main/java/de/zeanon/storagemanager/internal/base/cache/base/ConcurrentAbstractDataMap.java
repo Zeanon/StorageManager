@@ -20,19 +20,32 @@ import org.jetbrains.annotations.Nullable;
  * @param <V> the type of mapped values
  *
  * @author Zeanon
- * @version 1.3.0
+ * @version 1.4.0
  */
 @SuppressWarnings("ALL")
 @EqualsAndHashCode(callSuper = true)
-public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implements DataMap<K, V>, ConcurrentMap<K, V>, Serializable {
+public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> implements DataMap<K, V>, ConcurrentMap<K, V>, Serializable {
 
 
+	private static final long serialVersionUID = -622922610455274342L;
+
+
+	/**
+	 * Local lock to ensure internal concurrency
+	 */
 	private transient @NotNull StampedLock localLock = new StampedLock();
+	/**
+	 * List that holds the internal nodes
+	 */
 	private transient @NotNull IList<DataNode<K, V>> localList;
 
 
-	@Contract(pure = true)
-	protected ConcurrentDataMap(final @NotNull IList<DataNode<K, V>> localList) {
+	/**
+	 * Generate a new ConcurrentAbstractDataMap
+	 *
+	 * @param localList the List to be used to store the internal nodes
+	 */
+	protected ConcurrentAbstractDataMap(final @NotNull IList<DataNode<K, V>> localList) {
 		this.localList = localList;
 	}
 
@@ -71,7 +84,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	 * inappropriate default provided in {@code Map}.
 	 */
 	@Override
-	public V putIfAbsent(final @NotNull K key, final V value) {
+	public V putIfAbsent(final @NotNull K key, final @Nullable V value) {
 		final long lockStamp = this.localLock.readLock();
 		try {
 			for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
@@ -116,7 +129,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	 * inappropriate default provided in {@code Map}.
 	 */
 	@Override
-	public boolean remove(final @NotNull Object key, final @NotNull Object value) {
+	public boolean remove(final @NotNull Object key, final @Nullable Object value) {
 		final @NotNull Iterator<DataNode<K, V>> tempIterator = this.localList.iterator();
 		DataNode<K, V> tempNode;
 		long lockStamp = this.localLock.readLock();
@@ -456,6 +469,9 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 		}
 	}
 
+	/**
+	 * Trim the backing List to its minimal possible size to minimize Ram usage
+	 */
 	@Override
 	public void trimToSize() {
 		final long lockStamp = this.localLock.writeLock();
@@ -468,17 +484,8 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 
 	/**
 	 * Returns a {@link Set} view of the mappings contained in this map.
-	 * The set is backed by the map, so changes to the map are
-	 * reflected in the set, and vice-versa.  If the map is modified
-	 * while an iteration over the set is in progress (except through
-	 * the iterator's own <tt>remove</tt> operation, or through the
-	 * <tt>setValue</tt> operation on a map entry returned by the
-	 * iterator) the results of the iteration are undefined.  The set
-	 * supports element removal, which removes the corresponding
-	 * mapping from the map, via the <tt>Iterator.remove</tt>,
-	 * <tt>Set.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt> and
-	 * <tt>clear</tt> operations.  It does not support the
-	 * <tt>add</tt> or <tt>addAll</tt> operations.
+	 * The set is not backed by the map, so changes to the map are not
+	 * reflected in the set, and vice-versa.
 	 *
 	 * @return a set view of the mappings contained in this map
 	 */
@@ -493,6 +500,22 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 		}
 	}
 
+	/**
+	 * Returns a {@link List} view of the mappings contained in this map.
+	 * The list is backed by the map, so changes to the map are
+	 * reflected in the list, and vice-versa.  If the map is modified
+	 * while an iteration over the list is in progress (except through
+	 * the iterator's own <tt>remove</tt> operation, or through the
+	 * <tt>setValue</tt> operation on a map entry returned by the
+	 * iterator) the results of the iteration are undefined.  The list
+	 * supports element removal, which removes the corresponding
+	 * mapping from the map, via the <tt>Iterator.remove</tt>,
+	 * <tt>List.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt> and
+	 * <tt>clear</tt> operations.  It does not support the
+	 * <tt>add</tt> or <tt>addAll</tt> operations.
+	 *
+	 * @return a list view of the mappings contained in this map
+	 */
 	@Override
 	public @NotNull List<DataNode<K, V>> entryList() {
 		return this.localList;
@@ -500,8 +523,6 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 
 	/**
 	 * Returns the number of key-value mappings in this map.
-	 *
-	 * @return the number of key-value mappings in this map
 	 */
 	@Override
 	public int size() {
@@ -515,8 +536,6 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 
 	/**
 	 * Returns <tt>true</tt> if this map contains no key-value mappings.
-	 *
-	 * @return <tt>true</tt> if this map contains no key-value mappings
 	 */
 	@Override
 	@Contract(pure = true)
@@ -529,14 +548,27 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 		}
 	}
 
+	/**
+	 * Abstract clone method to be overwritten by extending classes
+	 */
 	@Override //NOSONAR
 	public abstract @NotNull DataMap<K, V> clone(); //NOSONAR
 
+	/**
+	 * Method to reinitialize the map on deserialization
+	 *
+	 * @param localList the List to be used to store the internal nodes
+	 */
 	protected void reinitialize(final @NotNull IList<DataNode<K, V>> localList) {
 		this.localList = localList;
 		this.localLock = new StampedLock();
 	}
 
+	/**
+	 * Returns a String representation of the Map
+	 *
+	 * @return the Map parsed to a String
+	 */
 	@Override
 	public @NotNull String toString() {
 		final long lockStamp = this.localLock.readLock();
@@ -548,7 +580,7 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	}
 
 	/**
-	 * The concurrent EntryNodes to be stored in a AbstractDataMap
+	 * The concurrent EntryNodes to be stored in a ConcurrentAbstractDataMap
 	 *
 	 * @param <K> the type of keys maintained by this map
 	 * @param <V> the type of mapped values
@@ -561,26 +593,19 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 	private static class ConcurrentNode<K, V> implements DataNode<K, V> {
 
 
+		/**
+		 * Local lock to ensure internal concurrency
+		 */
 		private final @NotNull StampedLock localLock = new StampedLock();
 
 
 		/**
-		 * -- Getter --
-		 * Returns the key corresponding to this entry.
-		 * has been removed from the backing map (by the iterator's
-		 * <tt>remove</tt> operation), the results of this call are undefined.
-		 *
-		 * @return the key corresponding to this entry
+		 * The key assigned to this Node
 		 */
 		private @NotNull K key;
 
 		/**
-		 * -- Getter --
-		 * Returns the value corresponding to this entry.  If the mapping
-		 * has been removed from the backing map (by the iterator's
-		 * <tt>remove</tt> operation), the results of this call are undefined.
-		 *
-		 * @return the value corresponding to this entry
+		 * The value assigned to this Node
 		 */
 		private @Nullable V value;
 
@@ -642,6 +667,17 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 			}
 		}
 
+		/**
+		 * Returns the key corresponding to this node. If the mapping
+		 * has been removed from the backing map (by the iterator's
+		 * <tt>remove</tt> operation), the results of this call are undefined.
+		 *
+		 * @return the key corresponding to this node
+		 *
+		 * @throws IllegalStateException implementations may, but are not
+		 *                               required to, throw this exception if the entry has been
+		 *                               removed from the backing map.
+		 */
 		@Override
 		public @NotNull K getKey() {
 			final long lockStamp = this.localLock.readLock();
@@ -652,6 +688,17 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 			}
 		}
 
+		/**
+		 * Returns the value corresponding to this node. If the mapping
+		 * has been removed from the backing map (by the iterator's
+		 * <tt>remove</tt> operation), the results of this call are undefined.
+		 *
+		 * @return the value corresponding to this node
+		 *
+		 * @throws IllegalStateException implementations may, but are not
+		 *                               required to, throw this exception if the entry has been
+		 *                               removed from the backing map.
+		 */
 		@Override
 		public @Nullable V getValue() {
 			final long lockStamp = this.localLock.readLock();
@@ -663,6 +710,11 @@ public abstract class ConcurrentDataMap<K, V> extends AbstractMap<K, V> implemen
 		}
 
 
+		/**
+		 * Returns a String representation of the Node
+		 *
+		 * @return the Node parsed to a String
+		 */
 		@Override
 		public @NotNull String toString() {
 			final long lockStamp = this.localLock.readLock();

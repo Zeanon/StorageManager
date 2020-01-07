@@ -189,12 +189,22 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Load the data from a given {@link FileData} into the cache
+	 *
+	 * @param fileData the Data to be loaded
+	 */
 	public void loadDataFromFileData(final @NotNull D fileData) {
 		this.fileData().loadData(fileData.dataMap());
 		this.save();
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Load the data from a given {@link Map} into the cache
+	 *
+	 * @param map the Data to be loaded
+	 */
 	public void loadDataFromMap(final @NotNull M map) {
 		this.fileData().loadData(map);
 		this.save();
@@ -206,20 +216,43 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 */
 	public abstract void save();
 
+	/**
+	 * Set whether a {@link de.zeanon.storagemanager.external.browniescollections.BigList} should be used as the List implementation
+	 */
 	public abstract void setBigList(final boolean bigList);
 
+	/**
+	 * Set whether the internal data should be concurrent
+	 */
 	public abstract void setConcurrentData(final boolean concurrentData);
 
+	/**
+	 * Set whether the internal data should be synchronized
+	 */
 	public void synchronizeData(final boolean synchronize) {
 		this.fileData().synchronizedData(synchronize);
 	}
 
+	/**
+	 * Checks whether the FileData contains the given key
+	 *
+	 * @param key key to check
+	 *
+	 * @return true if key exists, otherwise false
+	 */
 	@Override
 	public boolean hasKey(final @NotNull String key) {
 		this.update();
 		return this.fileData().containsKey(key);
 	}
 
+	/**
+	 * Checks whether the FileData contains the given key
+	 *
+	 * @param key key to check
+	 *
+	 * @return true if key exists, otherwise false
+	 */
 	@Override
 	public boolean hasKeyUseArray(final @NotNull String... key) {
 		this.update();
@@ -252,18 +285,39 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		}
 	}
 
+	/**
+	 * Get the value mapped to the given key
+	 *
+	 * @param key key to Object in the File
+	 *
+	 * @return the value mapped to the key or null if the key does not exist
+	 */
 	@Override
 	public @Nullable Object get(final @NotNull String key) {
 		this.update();
 		return this.fileData().get(key);
 	}
 
+	/**
+	 * Get the value mapped to the given key
+	 *
+	 * @param key key to Object in the File
+	 *
+	 * @return the value mapped to the key or null if the key does not exist
+	 */
 	@Override
 	public @Nullable Object getUseArray(final @NotNull String... key) {
 		this.update();
 		return this.fileData().getUseArray(key);
 	}
 
+	/**
+	 * Get all values mapped to the given keys
+	 *
+	 * @param keys the keys to get from
+	 *
+	 * @return the keys and their corresponding values as a Map
+	 */
 	@Override
 	public @NotNull Map<String, Object> getAll(final @NotNull String... keys) {
 		this.update();
@@ -276,6 +330,13 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return tempMap;
 	}
 
+	/**
+	 * Get all values mapped to the given keys
+	 *
+	 * @param keys the keys to get from
+	 *
+	 * @return the keys and their corresponding values as a Map
+	 */
 	@Override
 	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[]... keys) {
 		this.update();
@@ -288,6 +349,13 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return tempMap;
 	}
 
+	/**
+	 * Get all values mapped to the given keys
+	 *
+	 * @param keys the keys to get from
+	 *
+	 * @return the keys and their corresponding values as a Map
+	 */
 	@Override
 	public @NotNull Map<String, Object> getAll(final @NotNull Collection<String> keys) {
 		this.update();
@@ -300,6 +368,13 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return tempMap;
 	}
 
+	/**
+	 * Get all values mapped to the given keys
+	 *
+	 * @param keys the keys to get from
+	 *
+	 * @return the keys and their corresponding values as a Map
+	 */
 	@Override
 	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys) {
 		this.update();
@@ -312,6 +387,14 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return tempMap;
 	}
 
+	/**
+	 * Get all values mapped to the given keys
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param keys     the keys to get from
+	 *
+	 * @return the keys and their corresponding values as a Map
+	 */
 	@Override
 	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey,
 											   final @NotNull String... keys) {
@@ -325,6 +408,14 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return tempMap;
 	}
 
+	/**
+	 * Get all values mapped to the given keys
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param keys     the keys to get from
+	 *
+	 * @return the keys and their corresponding values as a Map
+	 */
 	@Override
 	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey,
 														 final @NotNull Collection<String[]> keys) {
@@ -341,6 +432,14 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return tempMap;
 	}
 
+	/**
+	 * Get all values mapped to the given keys
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param keys     the keys to get from
+	 *
+	 * @return the keys and their corresponding values as a Map
+	 */
 	@Override
 	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey,
 														 final @NotNull String[]... keys) {
@@ -357,6 +456,14 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return tempMap;
 	}
 
+	/**
+	 * Get all values mapped to the given keys
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param keys     the keys to get from
+	 *
+	 * @return the keys and their corresponding values as a Map
+	 */
 	@Override
 	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey,
 											   final @NotNull Collection<String> keys) {
@@ -370,6 +477,12 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return tempMap;
 	}
 
+	/**
+	 * Assign the given value to the given key
+	 *
+	 * @param key   the key your value should be associated with
+	 * @param value the value you want to set in your File
+	 */
 	@Override
 	public void set(final @NotNull String key,
 					final @Nullable Object value) {
@@ -379,6 +492,12 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Assign the given value to the given key
+	 *
+	 * @param key   the key your value should be associated with
+	 * @param value the value you want to set in your File
+	 */
 	@Override
 	public void setUseArray(final @NotNull String[] key,
 							final @Nullable Object value) {
@@ -388,6 +507,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param dataMap the pairs to be set
+	 */
 	@Override
 	public void setAll(final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(dataMap)) {
@@ -396,6 +520,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param dataMap the pairs to be set
+	 */
 	@Override
 	public void setAllUseArray(final @NotNull Map<String[], Object> dataMap) {
 		if (this.insertAllUseArray(dataMap)) {
@@ -404,6 +533,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param dataPairs the pairs to be set
+	 */
 	@Override
 	public void setAll(final @NotNull Pair<String, Object>... dataPairs) {
 		if (this.insertAll(dataPairs)) {
@@ -412,6 +546,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param dataPairs the pairs to be set
+	 */
 	@Override
 	public void setAllUseArray(final @NotNull Pair<String[], Object>... dataPairs) {
 		if (this.insertAllUseArray(dataPairs)) {
@@ -420,6 +559,12 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param dataMap  the pairs to be set
+	 */
 	@Override
 	public void setAll(final @NotNull String blockKey,
 					   final @NotNull Map<String, Object> dataMap) {
@@ -429,6 +574,12 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param dataMap  the pairs to be set
+	 */
 	@Override
 	public void setAllUseArray(final @NotNull String[] blockKey,
 							   final @NotNull Map<String[], Object> dataMap) {
@@ -438,6 +589,12 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param blockKey  key to the subBlock to be looked at
+	 * @param dataPairs the pairs to be set
+	 */
 	@Override
 	public void setAll(final @NotNull String blockKey,
 					   final @NotNull Pair<String, Object>... dataPairs) {
@@ -447,6 +604,12 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param blockKey  key to the subBlock to be looked at
+	 * @param dataPairs the pairs to be set
+	 */
 	@Override
 	public void setAllUseArray(final @NotNull String[] blockKey,
 							   final @NotNull Pair<String[], Object>... dataPairs) {
@@ -456,6 +619,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Remove a key and the corresponding value from the internal cache
+	 *
+	 * @param key the key to remove
+	 */
 	@Override
 	public void remove(final @NotNull String key) {
 		if (this.internalRemove(key)) {
@@ -464,6 +632,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Remove a key and the corresponding value from the internal cache
+	 *
+	 * @param key the key to remove
+	 */
 	@Override
 	public void removeUseArray(final @NotNull String... key) {
 		if (this.internalRemoveUseArray(key)) {
@@ -472,6 +645,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param keys the keys to remove
+	 */
 	@Override
 	public void removeAll(final @NotNull String... keys) {
 		if (this.internalRemoveAll(keys)) {
@@ -480,6 +658,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param keys the keys to remove
+	 */
 	@Override
 	public void removeAll(final @NotNull Collection<String> keys) {
 		if (this.internalRemoveAll(keys)) {
@@ -488,6 +671,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param keys the keys to remove
+	 */
 	@Override
 	public void removeAllUseArray(final @NotNull String[]... keys) {
 		if (this.internalRemoveAllUseArray(keys)) {
@@ -496,6 +684,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param keys the keys to remove
+	 */
 	@Override
 	public void removeAllUseArray(final @NotNull Collection<String[]> keys) {
 		if (this.internalRemoveAllUseArray(keys)) {
@@ -504,6 +697,12 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param keys     the keys to remove
+	 */
 	@Override
 	public void removeAll(final @NotNull String blockKey,
 						  final @NotNull String... keys) {
@@ -513,6 +712,12 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param keys     the keys to remove
+	 */
 	@Override
 	public void removeAll(final @NotNull String blockKey,
 						  final @NotNull Collection<String> keys) {
@@ -522,6 +727,12 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param keys     the keys to remove
+	 */
 	@Override
 	public void removeAllUseArray(final @NotNull String[] blockKey,
 								  final @NotNull String[]... keys) {
@@ -531,6 +742,12 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param keys     the keys to remove
+	 */
 	@Override
 	public void removeAllUseArray(final @NotNull String[] blockKey,
 								  final @NotNull Collection<String[]> keys) {
@@ -563,14 +780,6 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		}
 	}
 
-	/**
-	 * Insert a key-value-pair to the FileData.
-	 *
-	 * @param key   the key to be used.
-	 * @param value the value to be assigned to @param key.
-	 *
-	 * @return true if the Data contained by FileData contained after adding the key-value-pair.
-	 */
 	private boolean insert(final @NotNull String key,
 						   final @Nullable Object value) {
 		this.update();
@@ -785,6 +994,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return !this.fileData().toString().equals(tempData);
 	}
 
+	/**
+	 * Compare this FlatFile to a given one
+	 *
+	 * @param flatFile the FlatFile to be compared to
+	 */
 	@Override
 	public int compareTo(final @NotNull FlatFile flatFile) {
 		return this.file().compareTo(flatFile.file());

@@ -1,7 +1,7 @@
 package de.zeanon.storagemanager.internal.base.cache.datamap;
 
 import de.zeanon.storagemanager.external.browniescollections.GapList;
-import de.zeanon.storagemanager.internal.base.cache.base.ConcurrentDataMap;
+import de.zeanon.storagemanager.internal.base.cache.base.ConcurrentAbstractDataMap;
 import de.zeanon.storagemanager.internal.base.interfaces.DataMap;
 import java.io.*;
 import java.util.Map;
@@ -17,26 +17,39 @@ import org.jetbrains.annotations.NotNull;
  * @param <V> the type of mapped values
  *
  * @author Zeanon
- * @version 1.5.0
+ * @version 1.6.0
  */
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unused")
-public class ConcurrentGapDataMap<K, V> extends ConcurrentDataMap<K, V> implements Serializable {
+public class ConcurrentGapDataMap<K, V> extends ConcurrentAbstractDataMap<K, V> implements Serializable {
 
 
 	private static final long serialVersionUID = 139403182835736065L;
 
 
+	/**
+	 * Initializes an empty ConcurrentGapDataMap
+	 */
 	public ConcurrentGapDataMap() {
 		super(new GapList<>());
 	}
 
+	/**
+	 * Initializes a ConcurrentGapDataMap with the given entries
+	 *
+	 * @param map the initial entries
+	 */
 	public ConcurrentGapDataMap(final @NotNull Map<K, V> map) {
 		super(new GapList<>());
 		this.addAll(map);
 	}
 
 
+	/**
+	 * Create a copy of this ConcurrentGapDataMap
+	 *
+	 * @return a complete copy of this Map
+	 */
 	@Override
 	public @NotNull DataMap<K, V> clone() {
 		return new ConcurrentGapDataMap<>(this);

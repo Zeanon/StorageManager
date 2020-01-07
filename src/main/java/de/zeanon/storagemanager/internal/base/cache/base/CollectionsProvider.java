@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <L> the basic List<Type to be used
  *
  * @author Zeanon
- * @version 1.4.0
+ * @version 1.5.0
  */
 @AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
 @SuppressWarnings("unused")
@@ -35,7 +35,7 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 	@Getter
 	private volatile @NotNull Class<? extends M> mapType;
 	/**
-	 * the List implementation to be used
+	 * The List implementation to be used
 	 */
 	@Getter
 	private volatile @NotNull Class<? extends L> listType;

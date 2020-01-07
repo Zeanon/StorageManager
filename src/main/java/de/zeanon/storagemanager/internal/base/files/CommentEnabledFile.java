@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import javafx.util.Pair;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,10 +35,25 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 
 	/**
 	 * Default: {@link Comment#SKIP}
+	 * -- Getter --
+	 *
+	 * @return the assigned CommentSetting
+	 * <p>
+	 * -- Setter --
+	 * Define how comments should be handled
 	 */
 	private @NotNull CommentSetting commentSetting;
 
 
+	/**
+	 * Initializes a new CommentEnabledFile
+	 *
+	 * @param file           the backing {@link File}
+	 * @param fileType       the {@link FileType} of the backing {@link File}
+	 * @param fileData       the {@link FileData} to cache the Data
+	 * @param reloadSetting  the {@link ReloadSetting} to be used
+	 * @param commentSetting the {@link CommentSetting} to be used
+	 */
 	protected CommentEnabledFile(final @NotNull File file,
 								 final @NotNull FileType fileType,
 								 final @NotNull D fileData,
@@ -67,7 +83,6 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 		this.save();
 	}
 
-
 	/**
 	 * Set with a specific {@link CommentSetting}
 	 *
@@ -81,9 +96,9 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	}
 
 	/**
-	 * Set with a specific {@link CommentSetting}
+	 * SetUseArray with a specific {@link CommentSetting}
 	 *
-	 * @see FlatFile#set(String, Object)
+	 * @see FlatFile#setUseArray(String[], Object)
 	 */
 	public void setUseArray(final @NotNull CommentSetting commentSetting,
 							final @NotNull String[] key,
@@ -93,9 +108,9 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	}
 
 	/**
-	 * Set with a specific {@link CommentSetting}
+	 * SetAll with a specific {@link CommentSetting}
 	 *
-	 * @see FlatFile#set(String, Object)
+	 * @see FlatFile#setAll(Map)
 	 */
 	public void setAll(final @NotNull CommentSetting commentSetting,
 					   final @NotNull Map<String, Object> dataMap) {
@@ -104,9 +119,21 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	}
 
 	/**
-	 * Set with a specific {@link CommentSetting}
+	 * SetAll with a specific {@link CommentSetting}
 	 *
-	 * @see FlatFile#set(String, Object)
+	 * @see FlatFile#setAll(Pair[])
+	 */
+	@SuppressWarnings("unchecked")
+	public void setAll(final @NotNull CommentSetting commentSetting,
+					   final @NotNull Pair<String, Object>... dataPairs) {
+		this.setCommentSetting(commentSetting);
+		this.setAll(dataPairs);
+	}
+
+	/**
+	 * SetAllUseArray with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#setAllUseArray(Map)
 	 */
 	public void setAllUseArray(final @NotNull CommentSetting commentSetting,
 							   final @NotNull Map<String[], Object> dataMap) {
@@ -115,9 +142,21 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	}
 
 	/**
-	 * Set with a specific {@link CommentSetting}
+	 * SetAllUseArray with a specific {@link CommentSetting}
 	 *
-	 * @see FlatFile#set(String, Object)
+	 * @see FlatFile#setAllUseArray(Pair[])
+	 */
+	@SuppressWarnings("unchecked")
+	public void setAllUseArray(final @NotNull CommentSetting commentSetting,
+							   final @NotNull Pair<String[], Object>... dataPairs) {
+		this.setCommentSetting(commentSetting);
+		this.setAllUseArray(dataPairs);
+	}
+
+	/**
+	 * SetAll with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#setAll(String, Map)
 	 */
 	public void setAll(final @NotNull CommentSetting commentSetting,
 					   final @NotNull String key,
@@ -127,9 +166,22 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	}
 
 	/**
-	 * Set with a specific {@link CommentSetting}
+	 * SetAll with a specific {@link CommentSetting}
 	 *
-	 * @see FlatFile#set(String, Object)
+	 * @see FlatFile#setAll(String, Pair[])
+	 */
+	@SuppressWarnings("unchecked")
+	public void setAll(final @NotNull CommentSetting commentSetting,
+					   final @NotNull String key,
+					   final @NotNull Pair<String, Object>... dataPairs) {
+		this.setCommentSetting(commentSetting);
+		this.setAll(key, dataPairs);
+	}
+
+	/**
+	 * SetAllUseArray with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#setAllUseArray(String[], Map)
 	 */
 	public void setAllUseArray(final @NotNull CommentSetting commentSetting,
 							   final @NotNull String[] blockKey,
@@ -138,6 +190,18 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 		this.setAllUseArray(blockKey, dataMap);
 	}
 
+	/**
+	 * SetAllUseArray with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#setAllUseArray(String[], Pair[])
+	 */
+	@SuppressWarnings("unchecked")
+	public void setAllUseArray(final @NotNull CommentSetting commentSetting,
+							   final @NotNull String[] blockKey,
+							   final @NotNull Pair<String[], Object>... dataPairs) {
+		this.setCommentSetting(commentSetting);
+		this.setAllUseArray(blockKey, dataPairs);
+	}
 
 	/**
 	 * Remove with a specific {@link CommentSetting}
@@ -151,20 +215,20 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	}
 
 	/**
-	 * Remove with a specific {@link CommentSetting}
+	 * RemoveUseArray with a specific {@link CommentSetting}
 	 *
-	 * @see FlatFile#remove(String)
+	 * @see FlatFile#removeUseArray(String...)
 	 */
 	public void removeUseArray(final @NotNull CommentSetting commentSetting,
-							   final @NotNull String[] key) {
+							   final @NotNull String... key) {
 		this.setCommentSetting(commentSetting);
 		this.removeUseArray(key);
 	}
 
 	/**
-	 * Remove with a specific {@link CommentSetting}
+	 * RemoveAll with a specific {@link CommentSetting}
 	 *
-	 * @see FlatFile#remove(String)
+	 * @see FlatFile#removeAll(String...)
 	 */
 	public void removeAll(final @NotNull CommentSetting commentSetting,
 						  final @NotNull String... keys) {
@@ -173,9 +237,9 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	}
 
 	/**
-	 * Remove with a specific {@link CommentSetting}
+	 * RemoveAll with a specific {@link CommentSetting}
 	 *
-	 * @see FlatFile#remove(String)
+	 * @see FlatFile#removeAll(Collection)
 	 */
 	public void removeAll(final @NotNull CommentSetting commentSetting,
 						  final @NotNull Collection<String> keys) {
@@ -183,6 +247,11 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 		this.removeAll(keys);
 	}
 
+	/**
+	 * RemoveAllUseArray with a specific {@link CommentSetting}
+	 *
+	 * @see FlatFile#removeAllUseArray(String[]...)
+	 */
 	public void removeAllUseArray(final @NotNull CommentSetting commentSetting,
 								  final @NotNull String[]... keys) {
 		this.setCommentSetting(commentSetting);
@@ -190,9 +259,9 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	}
 
 	/**
-	 * Remove with a specific {@link CommentSetting}
+	 * RemoveAllUseArray with a specific {@link CommentSetting}
 	 *
-	 * @see FlatFile#remove(String)
+	 * @see FlatFile#removeAllUseArray(Collection)
 	 */
 	public void removeAllUseArray(final @NotNull CommentSetting commentSetting,
 								  final @NotNull Collection<String[]> keys) {
@@ -201,9 +270,9 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	}
 
 	/**
-	 * Remove with a specific {@link CommentSetting}
+	 * RemoveAll with a specific {@link CommentSetting}
 	 *
-	 * @see FlatFile#remove(String)
+	 * @see FlatFile#removeAll(String, String...)
 	 */
 	public void removeAll(final @NotNull CommentSetting commentSetting,
 						  final @NotNull String key,
@@ -213,9 +282,9 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	}
 
 	/**
-	 * Remove with a specific {@link CommentSetting}
+	 * RemoveAll with a specific {@link CommentSetting}
 	 *
-	 * @see FlatFile#remove(String)
+	 * @see FlatFile#removeAll(String, Collection)
 	 */
 	public void removeAll(final @NotNull CommentSetting commentSetting,
 						  final @NotNull String key,
@@ -225,9 +294,9 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	}
 
 	/**
-	 * Remove with a specific {@link CommentSetting}
+	 * RemoveAllUseArray with a specific {@link CommentSetting}
 	 *
-	 * @see FlatFile#remove(String)
+	 * @see FlatFile#removeAllUseArray(String[], String[]...)
 	 */
 	public void removeAllUseArray(final @NotNull CommentSetting commentSetting,
 								  final @NotNull String[] blockKey,
@@ -237,9 +306,9 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	}
 
 	/**
-	 * Remove with a specific {@link CommentSetting}
+	 * RemoveAllUseArray with a specific {@link CommentSetting}
 	 *
-	 * @see FlatFile#remove(String)
+	 * @see FlatFile#removeAllUseArray(String[], Collection)
 	 */
 	public void removeAllUseArray(final @NotNull CommentSetting commentSetting,
 								  final @NotNull String[] key, final @NotNull Collection<String[]> keys) {

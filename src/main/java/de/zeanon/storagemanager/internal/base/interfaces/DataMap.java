@@ -44,6 +44,9 @@ public interface DataMap<K, V> extends Map<K, V>, Cloneable {
 	 */
 	void trimToSize();
 
+	/**
+	 * Abstract clone method to be overwritten by extending classes
+	 */
 	@NotNull DataMap<K, V> clone();
 
 	/**
@@ -66,11 +69,39 @@ public interface DataMap<K, V> extends Map<K, V>, Cloneable {
 	@NotNull List<DataNode<K, V>> entryList();
 
 
+	/**
+	 * Basic Interface for DataMap Nodes
+	 *
+	 * @param <K> the type of keys maintained by this map
+	 * @param <V> the type of mapped values
+	 */
 	@SuppressWarnings("unused")
 	interface DataNode<K, V> extends Map.Entry<K, V> {
 
+		/**
+		 * Replaces the key corresponding to this entry with the specified
+		 * key (optional operation).  (Writes through to the map.)  The
+		 * behavior of this call is undefined if the mapping has already been
+		 * removed from the map (by the iterator's <tt>remove</tt> operation).
+		 *
+		 * @param key new key to be stored in this entry
+		 *
+		 * @return old key corresponding to the entry
+		 *
+		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
+		 *                                       is not supported by the backing map
+		 * @throws ClassCastException            if the class of the specified key
+		 *                                       prevents it from being stored in the backing map
+		 * @throws NullPointerException          if the backing map does not permit
+		 *                                       null keys, and the specified key is null
+		 */
 		@NotNull K setKey(final @NotNull K key);
 
+		/**
+		 * Returns a String representation of the Node
+		 *
+		 * @return the Node parsed to a String
+		 */
 		@Override
 		@NotNull String toString();
 	}
