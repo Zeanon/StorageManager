@@ -45,7 +45,7 @@
     </scm>
 
     <build>
-        <defaultGoal>clean verify -U</defaultGoal>
+        <defaultGoal>clean verify -U -Dmaven.copy.skip=true</defaultGoal>
         <finalName>${project.name}</finalName>
 
         <pluginManagement>
@@ -185,6 +185,32 @@
                     <parallel>methods</parallel>
                     <threadCount>10</threadCount>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>moveFiles</id>
+                        <phase>verify</phase>
+                        <configuration>
+                            <target unless="maven.copy.skip">
+                                <echo message="To skip, call -Dmaven.copy.skip=true"/>
+                                <copy todir="${basedir}/../SchemManager/src/main/resources/pluginresources"
+                                      flatten="true" overwrite="true"
+                                      verbose="true" failonerror="true">
+                                    <fileset dir="${basedir}/target"
+                                             includes="${project.build.finalName}.jar"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -35,11 +35,11 @@ public abstract class StorageManager<B extends StorageManager, F extends FlatFil
 
 
 	protected final @NotNull File file;
-	protected @NotNull ReloadSetting reloadSetting = Reload.INTELLIGENT;
-	protected boolean synchronizedData = false;
 	protected @Nullable BufferedInputStream inputStream;
+	protected @NotNull ReloadSetting reloadSetting = Reload.INTELLIGENT;
 	protected @NotNull Class<? extends M> mapType;
 	protected @NotNull Class<? extends L> listType;
+	protected boolean synchronizedData = false;
 
 
 	@Contract(pure = true)

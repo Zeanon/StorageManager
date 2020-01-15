@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,24 +32,26 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 
 	private final @NotNull F flatFile;
 	@Setter
-	protected @NotNull String sectionKey = "";
+	protected @NotNull String sectionKey;
 	@Setter
-	protected @NotNull String[] arraySectionKey = new String[0];
+	protected @NotNull String[] arraySectionKey;
 
 
+	@Contract(pure = true)
 	protected FlatSection(final @NotNull String sectionKey, final @NotNull F flatFile) {
-		this.setSectionKey(sectionKey);
-		this.setArraySectionKey(sectionKey.split("\\."));
+		this.sectionKey = sectionKey;
+		this.arraySectionKey = sectionKey.split("\\.");
 		this.flatFile = flatFile;
 	}
 
+	@Contract(pure = true)
 	protected FlatSection(final @NotNull String[] sectionKey, final @NotNull F flatFile) {
-		@NotNull StringBuilder tempKey = new StringBuilder(sectionKey[0]);
+		final @NotNull StringBuilder tempKey = new StringBuilder(sectionKey[0]);
 		for (int i = 1; i < sectionKey.length; i++) {
 			tempKey.append(".").append(sectionKey[i]);
 		}
-		this.setSectionKey(tempKey.toString());
-		this.setArraySectionKey(sectionKey);
+		this.sectionKey = tempKey.toString();
+		this.arraySectionKey = sectionKey;
 		this.flatFile = flatFile;
 	}
 

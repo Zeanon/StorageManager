@@ -37,8 +37,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 
 	private final @NotNull File file;
-	private final @NotNull FileType fileType;
 	private final @NotNull D fileData;
+	private final @NotNull FileType fileType;
 	private final @NotNull CollectionsProvider<M, L> collectionsProvider;
 	@Setter(AccessLevel.PROTECTED)
 	private volatile long lastLoaded;
