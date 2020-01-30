@@ -157,8 +157,16 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 */
 	boolean isEmpty();
 
+	/**
+	 * Getter for the dataMap
+	 *
+	 * @return the internally stored Data
+	 */
 	@NotNull M dataMap();
 
+	/**
+	 * Set whether the internal Data should be synchronized
+	 */
 	void synchronizedData(final boolean synchronize);
 
 	/**

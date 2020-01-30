@@ -132,6 +132,30 @@ public interface DataStorage {
 	}
 
 	/**
+	 * Get a boolean from a File
+	 *
+	 * @param key key to boolean in the File
+	 *
+	 * @return Boolean from File
+	 */
+	default @Nullable <E extends Enum<E>> E getEnum(final @NotNull Class<E> enumClass, final @NotNull String key) {
+		final @Nullable String tempObject = this.getString(key);
+		return tempObject == null ? null : Enum.valueOf(enumClass, tempObject);
+	}
+
+	/**
+	 * Get a boolean from a File
+	 *
+	 * @param key key to boolean in the File
+	 *
+	 * @return Boolean from File
+	 */
+	default @Nullable <E extends Enum<E>> E getEnumUseArray(final @NotNull Class<E> enumClass, final @NotNull String... key) {
+		final @Nullable String tempObject = this.getStringUseArray(key);
+		return tempObject == null ? null : Enum.valueOf(enumClass, tempObject);
+	}
+
+	/**
 	 * Get a byte from a File
 	 *
 	 * @param key key to byte in the File

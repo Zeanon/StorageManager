@@ -1,4 +1,4 @@
-package de.zeanon.storagemanager.internal.utility.locks;
+package de.zeanon.storagemanager.internal.utility.filelock;
 
 import de.zeanon.storagemanager.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanager.internal.base.interfaces.ReadWriteFileLock;

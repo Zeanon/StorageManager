@@ -10,7 +10,7 @@ import de.zeanon.storagemanager.internal.base.interfaces.DataMap;
 import de.zeanon.storagemanager.internal.base.interfaces.ReadWriteFileLock;
 import de.zeanon.storagemanager.internal.base.settings.Comment;
 import de.zeanon.storagemanager.internal.utility.basic.Objects;
-import de.zeanon.storagemanager.internal.utility.locks.ExtendedFileLock;
+import de.zeanon.storagemanager.internal.utility.filelock.ExtendedFileLock;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;

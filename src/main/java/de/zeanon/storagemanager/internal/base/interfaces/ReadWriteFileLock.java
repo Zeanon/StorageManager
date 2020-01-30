@@ -1,6 +1,6 @@
 package de.zeanon.storagemanager.internal.base.interfaces;
 
-import de.zeanon.storagemanager.internal.utility.locks.ExtendedFileLock;
+import de.zeanon.storagemanager.internal.utility.filelock.ExtendedFileLock;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.charset.CharsetEncoder;
@@ -150,6 +150,9 @@ public interface ReadWriteFileLock extends AutoCloseable {
 	void truncateChannel(final long size) throws IOException;
 
 
+	/**
+	 * Close the underlying channel
+	 */
 	@Override
 	void close() throws IOException;
 }

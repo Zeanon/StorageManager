@@ -12,7 +12,7 @@ import de.zeanon.storagemanager.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storagemanager.internal.files.section.JsonFileSection;
 import de.zeanon.storagemanager.internal.utility.basic.BaseFileUtils;
 import de.zeanon.storagemanager.internal.utility.datafiles.JsonUtils;
-import de.zeanon.storagemanager.internal.utility.locks.ExtendedFileLock;
+import de.zeanon.storagemanager.internal.utility.filelock.ExtendedFileLock;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

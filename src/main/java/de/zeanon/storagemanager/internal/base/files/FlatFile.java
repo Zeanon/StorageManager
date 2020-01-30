@@ -6,7 +6,7 @@ import de.zeanon.storagemanager.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanager.internal.base.interfaces.*;
 import de.zeanon.storagemanager.internal.base.settings.Reload;
 import de.zeanon.storagemanager.internal.utility.basic.BaseFileUtils;
-import de.zeanon.storagemanager.internal.utility.locks.ExtendedFileLock;
+import de.zeanon.storagemanager.internal.utility.filelock.ExtendedFileLock;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;

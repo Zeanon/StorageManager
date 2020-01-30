@@ -1,7 +1,7 @@
 package de.zeanon.storagemanagertest.utility.locks;
 
 import de.zeanon.storagemanager.internal.utility.basic.BaseFileUtils;
-import de.zeanon.storagemanager.internal.utility.locks.ExtendedFileLock;
+import de.zeanon.storagemanager.internal.utility.filelock.ExtendedFileLock;
 import de.zeanon.storagemanagertest.TestStorageManager;
 import java.io.File;
 import java.io.IOException;

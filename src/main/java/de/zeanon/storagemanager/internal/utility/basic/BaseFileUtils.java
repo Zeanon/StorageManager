@@ -4,7 +4,7 @@ import de.zeanon.storagemanager.external.browniescollections.GapList;
 import de.zeanon.storagemanager.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storagemanager.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanager.internal.base.interfaces.ReadWriteFileLock;
-import de.zeanon.storagemanager.internal.utility.locks.ExtendedFileLock;
+import de.zeanon.storagemanager.internal.utility.filelock.ExtendedFileLock;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
