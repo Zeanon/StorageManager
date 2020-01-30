@@ -33,12 +33,12 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 	 * The Map implementation to be used
 	 */
 	@Getter
-	private volatile @NotNull Class<? extends M> mapType;
+	private @NotNull Class<? extends M> mapType;
 	/**
 	 * The List implementation to be used
 	 */
 	@Getter
-	private volatile @NotNull Class<? extends L> listType;
+	private @NotNull Class<? extends L> listType;
 
 
 	public void setMapType(final @NotNull Class<? extends M> mapType) {
