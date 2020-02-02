@@ -39,7 +39,7 @@ import org.json.JSONTokener;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes"})
 public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
 
 
@@ -91,10 +91,11 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 * @return Map
 	 */
 	@Override
-	public @Nullable Map getMap(final @NotNull String key) {
+	public @Nullable <K, V> Map<K, V> getMap(final @NotNull String key) {
 		this.update();
 
 		if (!this.hasKey(key)) {
+			//noinspection unchecked
 			return this.collectionsProvider().newMap();
 		}
 
@@ -102,13 +103,16 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		try {
 			map = this.get(key);
 		} catch (final @NotNull JSONException e) {
+			//noinspection unchecked
 			return this.collectionsProvider().newMap();
 		}
 
 		if (map instanceof Map) {
-			return (Map<?, ?>) this.fileData().get(key);
+			//noinspection unchecked
+			return (Map<K, V>) this.fileData().get(key);
 		} else if (map instanceof JSONObject) {
-			return JsonUtils.jsonToMap((JSONObject) map, this.collectionsProvider());
+			//noinspection unchecked
+			return (Map<K, V>) JsonUtils.jsonToMap((JSONObject) map, this.collectionsProvider());
 		} else {
 			return null;
 		}
@@ -122,24 +126,28 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 * @return Map
 	 */
 	@Override
-	public @Nullable Map getMapUseArray(final @NotNull String... key) {
+	public @Nullable <K, V> Map<K, V> getMapUseArray(final @NotNull String... key) {
 		this.update();
 
 		if (!this.hasKeyUseArray(key)) {
+			//noinspection unchecked
 			return this.collectionsProvider().newMap();
 		}
 
-		@Nullable final Object map;
+		final @Nullable Object map;
 		try {
 			map = this.getUseArray(key);
 		} catch (final @NotNull JSONException e) {
+			//noinspection unchecked
 			return this.collectionsProvider().newMap();
 		}
 
 		if (map instanceof Map) {
-			return (Map<?, ?>) this.fileData().getUseArray(key);
+			//noinspection unchecked
+			return (Map<K, V>) this.fileData().getUseArray(key);
 		} else if (map instanceof JSONObject) {
-			return JsonUtils.jsonToMap((JSONObject) map, this.collectionsProvider());
+			//noinspection unchecked
+			return (Map<K, V>) JsonUtils.jsonToMap((JSONObject) map, this.collectionsProvider());
 		} else {
 			return null;
 		}
@@ -247,6 +255,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 		private static final long serialVersionUID = -3736783796296434140L;
 
+		@SuppressWarnings("rawtypes")
 		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) {
 			super(collectionsProvider, synchronize);
 		}

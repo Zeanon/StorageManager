@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 1.2.0
  */
 @UtilityClass
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes"})
 public class YamlUtils {
 
 

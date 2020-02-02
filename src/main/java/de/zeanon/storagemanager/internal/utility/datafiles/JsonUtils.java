@@ -17,7 +17,7 @@ import org.json.JSONObject;
  * @version 1.1.0
  */
 @UtilityClass
-@SuppressWarnings({"unchecked", "unused", "WeakerAccess"})
+@SuppressWarnings({"unchecked", "unused", "WeakerAccess", "rawtypes"})
 public class JsonUtils {
 
 

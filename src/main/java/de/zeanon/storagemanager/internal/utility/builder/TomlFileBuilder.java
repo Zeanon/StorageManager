@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes"})
 public class TomlFileBuilder extends StorageManager<TomlFileBuilder, TomlFile, Map, List> {
 
 

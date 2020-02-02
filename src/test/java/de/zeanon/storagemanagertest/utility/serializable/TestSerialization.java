@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 
+@SuppressWarnings("rawtypes")
 class TestSerialization {
 
 	@BeforeAll

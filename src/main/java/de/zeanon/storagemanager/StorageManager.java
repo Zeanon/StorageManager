@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString
 @EqualsAndHashCode
-@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
+@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess", "rawtypes"})
 public abstract class StorageManager<B extends StorageManager, F extends FlatFile, M extends Map, L extends List> {
 
 

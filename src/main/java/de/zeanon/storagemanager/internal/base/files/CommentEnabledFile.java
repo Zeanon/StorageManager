@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes"})
 public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends Map, L extends List> extends FlatFile<D, M, L> {
 
 

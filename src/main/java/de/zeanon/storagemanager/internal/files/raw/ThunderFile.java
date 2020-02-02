@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes"})
 public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List>, DataMap, List> {
 
 

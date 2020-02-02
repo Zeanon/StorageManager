@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 @EqualsAndHashCode
 @Accessors(fluent = true, chain = false)
-@SuppressWarnings({"unused", "DefaultAnnotationParam"})
+@SuppressWarnings({"unused", "DefaultAnnotationParam", "rawtypes"})
 public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<ThunderFileData>, Serializable {
 
 
@@ -209,7 +209,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 */
 	@Override
 	@Contract("null, _ -> fail")
-	public void insert(final @NotNull String key, @Nullable final Object value) {
+	public void insert(final @NotNull String key, final @Nullable Object value) {
 		final @NotNull String[] parts = key.split("\\.");
 		this.initialInsert(value, parts);
 	}
@@ -424,7 +424,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	}
 
 	@Contract("_, null -> fail")
-	private void initialInsert(@Nullable final Object value, final @NotNull String[] parts) {
+	private void initialInsert(final @Nullable Object value, final @NotNull String[] parts) {
 		if (value == null) {
 			this.removeUseArray(parts);
 		} else {

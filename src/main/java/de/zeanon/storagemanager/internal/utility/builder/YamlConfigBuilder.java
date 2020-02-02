@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 @Accessors(fluent = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes"})
 public class YamlConfigBuilder extends StorageManager<YamlConfigBuilder, YamlConfig, Map, List> {
 
 

@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 1.3.0
  */
+@SuppressWarnings("rawtypes")
 @UtilityClass
 public class ThunderUtils {
 
@@ -324,7 +325,7 @@ public class ThunderUtils {
 			}
 		}
 		if (header != null) {
-			for (@Nullable final String comment : header) {
+			for (final @Nullable String comment : header) {
 				if (comment != null) {
 					returnMap.add(comment.startsWith("#") ? comment : "# " + comment, ThunderEditor.LineType.HEADER);
 				}
@@ -345,7 +346,7 @@ public class ThunderUtils {
 		Collections.reverse(entryList);
 		returnMap.addAll(entryList);
 		if (footer != null) {
-			for (@Nullable final String comment : footer) {
+			for (final @Nullable String comment : footer) {
 				if (comment != null) {
 					returnMap.add(comment.startsWith("#") ? comment : "# " + comment, ThunderEditor.LineType.FOOTER);
 				}

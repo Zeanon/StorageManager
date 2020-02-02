@@ -357,7 +357,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	}
 
 	@Override
-	public void add(final @NotNull K key, @Nullable final V value) {
+	public void add(final @NotNull K key, final @Nullable V value) {
 		this.add(new ConcurrentNode<>(key, value));
 	}
 

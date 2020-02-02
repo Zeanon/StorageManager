@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 1.5.0
  */
 @AllArgsConstructor(onConstructor_ = {@Contract(pure = true)})
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes"})
 public class CollectionsProvider<M extends Map, L extends List> implements Serializable {
 
 

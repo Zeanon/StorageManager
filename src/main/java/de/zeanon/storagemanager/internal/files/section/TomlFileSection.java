@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes"})
 public class TomlFileSection extends FlatSection<TomlFile, Map, List> {
 
 

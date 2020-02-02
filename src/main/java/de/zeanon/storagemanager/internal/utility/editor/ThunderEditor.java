@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
  * @version 2.8.0
  */
 @UtilityClass
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes"})
 public class ThunderEditor {
 
 

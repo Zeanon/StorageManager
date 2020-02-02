@@ -533,7 +533,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 			});
 		}
 
-		private void internalUnlock(@Nullable final FileLock tempLock) {
+		private void internalUnlock(final @Nullable FileLock tempLock) {
 			if (this.writeLockActive.get()) {
 				try {
 					if (tempLock != null && tempLock.isValid()) {

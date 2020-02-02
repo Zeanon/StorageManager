@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes"})
 public class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, Map, List> {
 
 
@@ -48,8 +48,10 @@ public class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, M
 	}
 
 
+	@SuppressWarnings("rawtypes")
 	private static final class LocalJsonFile extends JsonFile {
 
+		@SuppressWarnings("rawtypes")
 		private LocalJsonFile(final @NotNull File file,
 							  final @Nullable InputStream inputStream,
 							  final @NotNull ReloadSetting reloadSetting,

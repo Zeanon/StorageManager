@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings({"unused", "WeakerAccess", "rawtypes"})
 public class TomlConfig extends TomlFile implements Config {
 
 
@@ -46,6 +46,7 @@ public class TomlConfig extends TomlFile implements Config {
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 */
+	@SuppressWarnings("rawtypes")
 	protected TomlConfig(final @NotNull File file,
 						 final @Nullable InputStream inputStream,
 						 final @NotNull ReloadSetting reloadSetting,

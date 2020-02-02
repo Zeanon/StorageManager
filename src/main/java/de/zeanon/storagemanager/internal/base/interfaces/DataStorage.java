@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 2.4.0
  */
-@SuppressWarnings({"unused", "unchecked"})
+@SuppressWarnings({"unused", "unchecked", "rawtypes"})
 public interface DataStorage {
 
 	/**
@@ -83,30 +83,6 @@ public interface DataStorage {
 	 */
 	default @Nullable String getStringUseArray(final @NotNull String... key) {
 		return Objects.toString(this.getUseArray(key));
-	}
-
-	/**
-	 * Get String List
-	 *
-	 * @param key key to String List in the File
-	 *
-	 * @return List
-	 */
-	default @Nullable List<String> getStringList(final @NotNull String key) {
-		//noinspection unchecked
-		return (List<String>) this.get(key);
-	}
-
-	/**
-	 * Get String List
-	 *
-	 * @param key key to String List in the File
-	 *
-	 * @return List
-	 */
-	default @Nullable List<String> getStringListUseArray(final @NotNull String... key) {
-		//noinspection unchecked
-		return (List<String>) this.getUseArray(key);
 	}
 
 	/**
@@ -178,30 +154,6 @@ public interface DataStorage {
 	}
 
 	/**
-	 * Get a Byte-List from a File
-	 *
-	 * @param key key to Byte-List in the File
-	 *
-	 * @return Byte-List
-	 */
-	default @Nullable List<Byte> getByteList(final @NotNull String key) {
-		//noinspection unchecked
-		return (List<Byte>) this.get(key);
-	}
-
-	/**
-	 * Get a Byte-List from a File
-	 *
-	 * @param key key to Byte-List in the File
-	 *
-	 * @return Byte-List
-	 */
-	default @Nullable List<Byte> getByteListUseArray(final @NotNull String... key) {
-		//noinspection unchecked
-		return (List<Byte>) this.getUseArray(key);
-	}
-
-	/**
 	 * Get a double from a File
 	 *
 	 * @param key key to double in the File
@@ -221,30 +173,6 @@ public interface DataStorage {
 	 */
 	default double getDoubleUseArray(final @NotNull String... key) {
 		return Objects.toDouble(this.getUseArray(key));
-	}
-
-	/**
-	 * Get a Double-List from a File
-	 *
-	 * @param key key to Double-List int the File
-	 *
-	 * @return Double-List
-	 */
-	default @Nullable List<Double> getDoubleList(final @NotNull String key) {
-		//noinspection unchecked
-		return (List<Double>) this.get(key);
-	}
-
-	/**
-	 * Get a Double-List from a File
-	 *
-	 * @param key key to Double-List int the File
-	 *
-	 * @return Double-List
-	 */
-	default @Nullable List<Double> getDoubleListUseArray(final @NotNull String... key) {
-		//noinspection unchecked
-		return (List<Double>) this.getUseArray(key);
 	}
 
 	/**
@@ -270,30 +198,6 @@ public interface DataStorage {
 	}
 
 	/**
-	 * Get a Float-List from a File
-	 *
-	 * @param key key to float in the File
-	 *
-	 * @return Float-List
-	 */
-	default @Nullable List<Float> getFloatList(final @NotNull String key) {
-		//noinspection unchecked
-		return (List<Float>) this.get(key);
-	}
-
-	/**
-	 * Get a Float-List from a File
-	 *
-	 * @param key key to float in the File
-	 *
-	 * @return Float-List
-	 */
-	default @Nullable List<Float> getFloatListUseArray(final @NotNull String... key) {
-		//noinspection unchecked
-		return (List<Float>) this.getUseArray(key);
-	}
-
-	/**
 	 * Gets an int from a File
 	 *
 	 * @param key key to int in the File
@@ -313,30 +217,6 @@ public interface DataStorage {
 	 */
 	default int getIntUseArray(final @NotNull String... key) {
 		return Objects.toInt(this.getUseArray(key));
-	}
-
-	/**
-	 * Get a Integer-List from a File
-	 *
-	 * @param key key to Integer-List in the File
-	 *
-	 * @return Integer-List
-	 */
-	default @Nullable List<Integer> getIntegerList(final @NotNull String key) {
-		//noinspection unchecked
-		return (List<Integer>) this.get(key);
-	}
-
-	/**
-	 * Get a Integer-List from a File
-	 *
-	 * @param key key to Integer-List in the File
-	 *
-	 * @return Integer-List
-	 */
-	default @Nullable List<Integer> getIntegerListUseArray(final @NotNull String... key) {
-		//noinspection unchecked
-		return (List<Integer>) this.getUseArray(key);
 	}
 
 	/**
@@ -362,30 +242,6 @@ public interface DataStorage {
 	}
 
 	/**
-	 * Gets a Short-List from a File
-	 *
-	 * @param key key to int in the File
-	 *
-	 * @return Short-List
-	 */
-	default @Nullable List<Short> getShortList(final @NotNull String key) {
-		//noinspection unchecked
-		return (List<Short>) this.get(key);
-	}
-
-	/**
-	 * Gets a Short-List from a File
-	 *
-	 * @param key key to int in the File
-	 *
-	 * @return Short-List
-	 */
-	default @Nullable List<Short> getShortListUseArray(final @NotNull String... key) {
-		//noinspection unchecked
-		return (List<Short>) this.getUseArray(key);
-	}
-
-	/**
 	 * Gets a long from a File by key
 	 *
 	 * @param key key to long in the File
@@ -408,27 +264,14 @@ public interface DataStorage {
 	}
 
 	/**
-	 * Get a Long-List from a File
+	 * Get a List from a File
 	 *
-	 * @param key key to Long-List in the File
+	 * @param key key to List in the File
 	 *
-	 * @return Long-List
+	 * @return List
 	 */
-	default @Nullable List<Long> getLongList(final @NotNull String key) {
-		//noinspection unchecked
-		return (List<Long>) this.get(key);
-	}
-
-	/**
-	 * Get a Long-List from a File
-	 *
-	 * @param key key to Long-List in the File
-	 *
-	 * @return Long-List
-	 */
-	default @Nullable List<Long> getLongListUseArray(final @NotNull String... key) {
-		//noinspection unchecked
-		return (List<Long>) this.getUseArray(key);
+	default @Nullable <E> List<E> getList(final @NotNull String key) {
+		return (List<E>) this.get(key);
 	}
 
 	/**
@@ -438,19 +281,8 @@ public interface DataStorage {
 	 *
 	 * @return List
 	 */
-	default @Nullable List getList(final @NotNull String key) {
-		return (List) this.get(key);
-	}
-
-	/**
-	 * Get a List from a File
-	 *
-	 * @param key key to List in the File
-	 *
-	 * @return List
-	 */
-	default @Nullable List getListUseArray(final @NotNull String... key) {
-		return (List) this.getUseArray(key);
+	default @Nullable <E> List<E> getListUseArray(final @NotNull String... key) {
+		return (List<E>) this.getUseArray(key);
 	}
 
 	/**
@@ -460,8 +292,8 @@ public interface DataStorage {
 	 *
 	 * @return Map
 	 */
-	default @Nullable Map getMap(final @NotNull String key) {
-		return (Map) this.get(key);
+	default @Nullable <K, V> Map<K, V> getMap(final @NotNull String key) {
+		return (Map<K, V>) this.get(key);
 	}
 
 	/**
@@ -471,8 +303,8 @@ public interface DataStorage {
 	 *
 	 * @return Map
 	 */
-	default @Nullable Map getMapUseArray(final @NotNull String... key) {
-		return (Map) this.getUseArray(key);
+	default @Nullable <K, V> Map<K, V> getMapUseArray(final @NotNull String... key) {
+		return (Map<K, V>) this.getUseArray(key);
 	}
 
 	/**

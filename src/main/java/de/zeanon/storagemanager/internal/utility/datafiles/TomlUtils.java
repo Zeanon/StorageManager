@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+@SuppressWarnings("rawtypes")
 @UtilityClass
 public class TomlUtils {
 
@@ -318,7 +319,7 @@ public class TomlUtils {
 			}
 		}
 		if (header != null) {
-			for (@Nullable final String comment : header) {
+			for (final @Nullable String comment : header) {
 				if (comment != null) {
 					returnMap.put(comment.startsWith("#") ? comment : "# " + comment, ThunderEditor.LineType.HEADER);
 				}
@@ -343,7 +344,7 @@ public class TomlUtils {
 			returnMap.put(entry.getKey(), entry.getValue());
 		}
 		if (footer != null) {
-			for (@Nullable final String comment : footer) {
+			for (final @Nullable String comment : footer) {
 				if (comment != null) {
 					returnMap.put(comment.startsWith("#") ? comment : "# " + comment, ThunderEditor.LineType.FOOTER);
 				}

@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "rawtypes"})
 public abstract class CommentEnabledSection<F extends CommentEnabledFile<? extends FileData<M, ?, L>, M, L>, M extends Map, L extends List> extends FlatSection<F, M, L> {
 
 

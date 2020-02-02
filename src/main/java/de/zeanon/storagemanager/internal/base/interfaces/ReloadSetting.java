@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Zeanon
  * @version 1.1.0
  */
-@SuppressWarnings("EmptyMethod")
+@SuppressWarnings({"EmptyMethod", "rawtypes"})
 public interface ReloadSetting {
 
 	/**

@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 1.4.0
  */
 @UtilityClass
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings({"unused", "WeakerAccess", "rawtypes"})
 public class YamlEditor {
 
 
