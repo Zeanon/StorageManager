@@ -826,7 +826,7 @@ public class BaseFileUtils {
 		if (dotInd <= sepInd) {
 			return "";
 		} else {
-			return filePath.substring(dotInd + 1).toLowerCase();
+			return filePath.substring(dotInd + 1);
 		}
 	}
 
@@ -874,7 +874,7 @@ public class BaseFileUtils {
 		if (dotInd <= sepInd) {
 			return filePath;
 		} else {
-			return filePath.substring(0, dotInd).toLowerCase();
+			return filePath.substring(0, dotInd);
 		}
 	}
 
