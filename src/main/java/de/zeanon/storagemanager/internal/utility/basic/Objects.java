@@ -1,6 +1,7 @@
 package de.zeanon.storagemanager.internal.utility.basic;
 
 import de.zeanon.storagemanager.internal.base.exceptions.ObjectNullException;
+import java.util.Collection;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -25,13 +26,13 @@ public class Objects {
 	 */
 	@NotNull
 	@Contract("null -> fail; !null -> param1")
-	public static <O> O notNull(final @Nullable O object) {
+	public <O> O notNull(final @Nullable O object) {
 		return Objects.notNull(object, "Checked Object must not be null");
 	}
 
 
 	@Contract("null, _ -> fail; !null, _ -> param1")
-	public static @NotNull <O> O notNull(final @Nullable O object, final @NotNull String message) {
+	public @NotNull <O> O notNull(final @Nullable O object, final @NotNull String message) {
 		if (object == null) {
 			throw new ObjectNullException(message);
 		} else {
@@ -53,7 +54,7 @@ public class Objects {
 	 */
 	@SuppressWarnings("unchecked")
 	@Contract("null, _ -> null")
-	public static @Nullable <T> T toDef(final @Nullable Object object, final @NotNull Class<T> def) {
+	public @Nullable <T> T toDef(final @Nullable Object object, final @NotNull Class<T> def) {
 		if (object == null) {
 			return null;
 		} else {
@@ -90,7 +91,7 @@ public class Objects {
 	 */
 	@SuppressWarnings("unchecked")
 	@Contract("null, _ -> null")
-	public static @Nullable <T> T toDef(final @Nullable Object object, final @NotNull T def) {
+	public @Nullable <T> T toDef(final @Nullable Object object, final @NotNull T def) {
 		if (object == null) {
 			return null;
 		} else {
@@ -120,7 +121,7 @@ public class Objects {
 	 * @return the given Object parsed to a boolean or false if the given Object is null
 	 */
 	@Contract("null -> false")
-	public static boolean toBoolean(final @Nullable Object object) {
+	public boolean toBoolean(final @Nullable Object object) {
 		if (object == null) {
 			return false;
 		} else if (object instanceof Boolean) {
@@ -135,7 +136,7 @@ public class Objects {
 	 *
 	 * @return the given Object parsed to a long or 0 if the given Object is null
 	 */
-	public static long toLong(final @Nullable Object object) {
+	public long toLong(final @Nullable Object object) {
 		if (object == null) {
 			return 0;
 		} else if (object instanceof Long) {
@@ -152,7 +153,7 @@ public class Objects {
 	 *
 	 * @return the given Object parsed to a double or 0 if the given Object is null
 	 */
-	public static double toDouble(final @Nullable Object object) {
+	public double toDouble(final @Nullable Object object) {
 		if (object == null) {
 			return 0;
 		} else if (object instanceof Double) {
@@ -169,7 +170,7 @@ public class Objects {
 	 *
 	 * @return the given Object parsed to a float or 0 if the given Object is null
 	 */
-	public static float toFloat(final @Nullable Object object) {
+	public float toFloat(final @Nullable Object object) {
 		if (object == null) {
 			return 0;
 		} else if (object instanceof Float) {
@@ -186,7 +187,7 @@ public class Objects {
 	 *
 	 * @return the given Object parsed to an int or 0 if the given Object is null
 	 */
-	public static int toInt(final @Nullable Object object) {
+	public int toInt(final @Nullable Object object) {
 		if (object == null) {
 			return 0;
 		} else if (object instanceof Integer) {
@@ -203,7 +204,7 @@ public class Objects {
 	 *
 	 * @return the given Object parsed to a short or 0 if the given Object is null
 	 */
-	public static short toShort(final @Nullable Object object) {
+	public short toShort(final @Nullable Object object) {
 		if (object == null) {
 			return 0;
 		} else if (object instanceof Short) {
@@ -220,7 +221,7 @@ public class Objects {
 	 *
 	 * @return the given Object parsed to a byte or 0 if the given Object is null
 	 */
-	public static byte toByte(final @Nullable Object object) {
+	public byte toByte(final @Nullable Object object) {
 		if (object == null) {
 			return 0;
 		} else if (object instanceof Byte) {
@@ -233,12 +234,16 @@ public class Objects {
 	}
 
 	@Contract("null -> false")
-	public static boolean isArray(final @Nullable Object object) {
+	public boolean isArray(final @Nullable Object object) {
 		return object instanceof Object[] || object instanceof boolean[] ||
 			   object instanceof byte[] || object instanceof short[] ||
 			   object instanceof char[] || object instanceof int[] ||
 			   object instanceof long[] || object instanceof float[] ||
 			   object instanceof double[];
+	}
+
+	public boolean containsIgnoreCase(final @Nullable Collection<String> collection, final @NotNull String string) {
+		return collection != null && collection.stream().anyMatch(string::equalsIgnoreCase);
 	}
 
 	/**
@@ -247,7 +252,8 @@ public class Objects {
 	 * @return the given Object parsed to a String or null if the Object is null
 	 */
 	@Contract("null -> null; !null -> !null")
-	public static @Nullable String toString(final @Nullable Object object) {
+	public @Nullable
+	String toString(final @Nullable Object object) {
 		if (object == null) {
 			return null;
 		} else if (object instanceof String) {
