@@ -18,7 +18,8 @@ import org.jetbrains.annotations.Nullable;
 public class TomlConfigSection extends TomlFileSection implements Config {
 
 
-	private final @NotNull TomlConfig baseFile;
+	private final @NotNull
+	TomlConfig baseFile;
 
 
 	protected TomlConfigSection(final @NotNull String sectionKey, final @NotNull TomlConfig baseFile) {
@@ -38,7 +39,8 @@ public class TomlConfigSection extends TomlFileSection implements Config {
 	}
 
 	@Override
-	public @Nullable List<String> getHeader() {
+	public @Nullable
+	List<String> getHeader() {
 		return this.baseFile.getHeader(this.getSectionKey());
 	}
 
@@ -47,7 +49,8 @@ public class TomlConfigSection extends TomlFileSection implements Config {
 		this.baseFile.setHeader(this.getSectionKey(), header);
 	}
 
-	public @Nullable List<String> getHeader(final @NotNull String blockKey) {
+	public @Nullable
+	List<String> getHeader(final @NotNull String blockKey) {
 		return this.baseFile.getHeader(this.getFinalKey(blockKey));
 	}
 
@@ -57,7 +60,8 @@ public class TomlConfigSection extends TomlFileSection implements Config {
 
 
 	@Override
-	public @NotNull List<String> getFooter() {
+	public @NotNull
+	List<String> getFooter() {
 		return this.baseFile.getFooter(this.getSectionKey());
 	}
 
@@ -66,7 +70,8 @@ public class TomlConfigSection extends TomlFileSection implements Config {
 		this.baseFile.setFooter(this.getSectionKey(), footer);
 	}
 
-	public @NotNull List<String> getFooter(final @NotNull String blockKey) {
+	public @NotNull
+	List<String> getFooter(final @NotNull String blockKey) {
 		return this.baseFile.getFooter(this.getFinalKey(blockKey));
 	}
 
@@ -76,30 +81,36 @@ public class TomlConfigSection extends TomlFileSection implements Config {
 
 
 	@Override
-	public @NotNull List<String> getComments() {
+	public @NotNull
+	List<String> getComments() {
 		return this.baseFile.getComments(this.getSectionKey());
 	}
 
-	public @NotNull List<String> getComments(final @NotNull String blockKey) {
+	public @NotNull
+	List<String> getComments(final @NotNull String blockKey) {
 		return this.baseFile.getComments(this.getFinalKey(blockKey));
 	}
 
-	public @NotNull List<String> getBlockComments() {
+	public @NotNull
+	List<String> getBlockComments() {
 		return this.baseFile.getBlockComments(this.getSectionKey());
 	}
 
-	public @NotNull List<String> getBlockComments(final @NotNull String blockKey) {
+	public @NotNull
+	List<String> getBlockComments(final @NotNull String blockKey) {
 		return this.baseFile.getBlockComments(this.getFinalKey(blockKey));
 	}
 
 
 	@Override
-	public @NotNull TomlConfigSection getSection(final @NotNull String sectionKey) {
+	public @NotNull
+	TomlConfigSection getSection(final @NotNull String sectionKey) {
 		return new TomlConfigSection(this.getFinalKey(sectionKey), this.baseFile);
 	}
 
 	@Override
-	public @NotNull TomlConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull
+	TomlConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new TomlConfigSection(this.getFinalArrayKey(sectionKey), this.baseFile);
 	}
 }

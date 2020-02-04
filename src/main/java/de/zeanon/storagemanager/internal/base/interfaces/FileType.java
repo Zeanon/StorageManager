@@ -21,7 +21,8 @@ public interface FileType {
 	 *
 	 * @return the given FilePath with the added extension
 	 */
-	default @NotNull String addExtensionTo(final @NotNull String filePath) {
+	default @NotNull
+	String addExtensionTo(final @NotNull String filePath) {
 		return (filePath + "." + this.toString());
 	}
 
@@ -30,7 +31,8 @@ public interface FileType {
 	 *
 	 * @return the given FilePath with the added extension
 	 */
-	default @NotNull Path addExtensionTo(final @NotNull Path filePath) {
+	default @NotNull
+	Path addExtensionTo(final @NotNull Path filePath) {
 		return Paths.get(filePath + "." + this.toString());
 	}
 
@@ -39,7 +41,8 @@ public interface FileType {
 	 *
 	 * @return the given File with the added extension
 	 */
-	default @NotNull File addExtensionTo(final @NotNull File file) {
+	default @NotNull
+	File addExtensionTo(final @NotNull File file) {
 		return new File(file.getAbsolutePath() + "." + this.toString());
 	}
 
@@ -67,11 +70,13 @@ public interface FileType {
 	/**
 	 * Get then extension of this FileType in LowerCase
 	 */
-	@NotNull String toLowerCase();
+	@NotNull
+	String toLowerCase();
 
 	/**
 	 * Get the extension of this FileType
 	 */
 	@Override
-	@NotNull String toString();
+	@NotNull
+	String toString();
 }

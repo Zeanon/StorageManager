@@ -19,7 +19,8 @@ public interface Config extends DataStorage {
 	 */
 	void setCommentSetting(final @NotNull CommentSetting commentSetting);
 
-	@Nullable List<String> getHeader();
+	@Nullable
+	List<String> getHeader();
 
 	default void setHeader(final @Nullable List<String> header) {
 		this.setHeader(header == null ? null : header.toArray(new String[0]));
@@ -27,7 +28,8 @@ public interface Config extends DataStorage {
 
 	void setHeader(final @Nullable String... header);
 
-	@NotNull List<String> getFooter();
+	@NotNull
+	List<String> getFooter();
 
 	default void setFooter(final @Nullable List<String> footer) {
 		this.setFooter(footer == null ? null : footer.toArray(new String[0]));
@@ -35,9 +37,11 @@ public interface Config extends DataStorage {
 
 	void setFooter(final @Nullable String... footer);
 
-	@NotNull List<String> getComments();
+	@NotNull
+	List<String> getComments();
 
-	default @Nullable List<String> getHeader(final @NotNull CommentSetting commentSetting) {
+	default @Nullable
+	List<String> getHeader(final @NotNull CommentSetting commentSetting) {
 		this.setCommentSetting(commentSetting);
 		return this.getHeader();
 	}
@@ -52,7 +56,8 @@ public interface Config extends DataStorage {
 		this.setHeader(header);
 	}
 
-	default @NotNull List<String> getFooter(final @NotNull CommentSetting commentSetting) {
+	default @NotNull
+	List<String> getFooter(final @NotNull CommentSetting commentSetting) {
 		this.setCommentSetting(commentSetting);
 		return this.getFooter();
 	}
@@ -67,7 +72,8 @@ public interface Config extends DataStorage {
 		this.setFooter(footer);
 	}
 
-	default @NotNull List<String> getComments(final @NotNull CommentSetting commentSetting) {
+	default @NotNull
+	List<String> getComments(final @NotNull CommentSetting commentSetting) {
 		this.setCommentSetting(commentSetting);
 		return this.getComments();
 	}

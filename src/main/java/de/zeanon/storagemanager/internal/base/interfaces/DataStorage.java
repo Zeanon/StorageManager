@@ -26,7 +26,8 @@ public interface DataStorage {
 	 *
 	 * @return Object from File
 	 */
-	@Nullable Object get(final @NotNull String key);
+	@Nullable
+	Object get(final @NotNull String key);
 
 	/**
 	 * Get an Object from a File
@@ -35,7 +36,8 @@ public interface DataStorage {
 	 *
 	 * @return Object from File
 	 */
-	@Nullable Object getUseArray(final @NotNull String... key);
+	@Nullable
+	Object getUseArray(final @NotNull String... key);
 
 	/**
 	 * Get an Object from the File casted to a certain type
@@ -70,7 +72,8 @@ public interface DataStorage {
 	 *
 	 * @return Returns the value
 	 */
-	default @Nullable String getString(final @NotNull String key) {
+	default @Nullable
+	String getString(final @NotNull String key) {
 		return Objects.toString(this.get(key));
 	}
 
@@ -81,7 +84,8 @@ public interface DataStorage {
 	 *
 	 * @return Returns the value
 	 */
-	default @Nullable String getStringUseArray(final @NotNull String... key) {
+	default @Nullable
+	String getStringUseArray(final @NotNull String... key) {
 		return Objects.toString(this.getUseArray(key));
 	}
 
@@ -342,7 +346,8 @@ public interface DataStorage {
 	 *
 	 * @return Map of the give keys and their values
 	 */
-	@Nullable Map<String, Object> getAll(final @NotNull String... keys);
+	@Nullable
+	Map<String, Object> getAll(final @NotNull String... keys);
 
 	/**
 	 * Returns all values of the given keys
@@ -351,7 +356,8 @@ public interface DataStorage {
 	 *
 	 * @return Map of the give keys and their values
 	 */
-	@Nullable Map<String[], Object> getAllUseArray(final @NotNull String[]... keys);
+	@Nullable
+	Map<String[], Object> getAllUseArray(final @NotNull String[]... keys);
 
 	/**
 	 * Returns all values of the given keys
@@ -360,7 +366,8 @@ public interface DataStorage {
 	 *
 	 * @return Map of the give keys and their values
 	 */
-	@Nullable Map<String, Object> getAll(final @NotNull Collection<String> keys);
+	@Nullable
+	Map<String, Object> getAll(final @NotNull Collection<String> keys);
 
 	/**
 	 * Returns all values of the given keys
@@ -369,7 +376,8 @@ public interface DataStorage {
 	 *
 	 * @return Map of the give keys and their values
 	 */
-	@Nullable Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys);
+	@Nullable
+	Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys);
 
 	/**
 	 * Returns all values of the given keys
@@ -379,7 +387,8 @@ public interface DataStorage {
 	 *
 	 * @return Map of the give keys and their values
 	 */
-	@Nullable Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull String... keys);
+	@Nullable
+	Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull String... keys);
 
 	/**
 	 * Returns all values of the given keys
@@ -389,7 +398,8 @@ public interface DataStorage {
 	 *
 	 * @return Map of the give keys and their values
 	 */
-	@Nullable Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys);
+	@Nullable
+	Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys);
 
 	/**
 	 * Returns all values of the given keys
@@ -399,7 +409,8 @@ public interface DataStorage {
 	 *
 	 * @return Map of the give keys and their values
 	 */
-	@Nullable Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys);
+	@Nullable
+	Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys);
 
 	/**
 	 * Returns all values of the given keys
@@ -409,7 +420,8 @@ public interface DataStorage {
 	 *
 	 * @return Map of the give keys and their values
 	 */
-	@Nullable Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys);
+	@Nullable
+	Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys);
 
 	/**
 	 * Sets a value to the File if the File doesn't already contain the value or returns the value if the value exists
@@ -641,7 +653,8 @@ public interface DataStorage {
 	 *
 	 * @return the Section corresponding to the given key
 	 */
-	@NotNull FlatSection getSection(final @NotNull String sectionKey);
+	@NotNull
+	FlatSection getSection(final @NotNull String sectionKey);
 
 	/**
 	 * Get a Section of the DataStorage
@@ -650,5 +663,6 @@ public interface DataStorage {
 	 *
 	 * @return the Section corresponding to the given key
 	 */
-	@NotNull FlatSection getSectionUseArray(final @NotNull String... sectionKey);
+	@NotNull
+	FlatSection getSectionUseArray(final @NotNull String... sectionKey);
 }

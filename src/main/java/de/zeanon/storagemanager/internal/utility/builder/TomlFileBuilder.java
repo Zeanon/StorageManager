@@ -31,19 +31,22 @@ public class TomlFileBuilder extends StorageManager<TomlFileBuilder, TomlFile, M
 
 	@Override
 	@Contract("-> new")
-	public final @NotNull TomlFile create() {
+	public final @NotNull
+	TomlFile create() {
 		return new LocalTomlFile(super.file, this.inputStream, this.reloadSetting, this.synchronizedData, this.mapType, this.listType);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public final @NotNull TomlFileBuilder bigList(final boolean bigList) {
+	public final @NotNull
+	TomlFileBuilder bigList(final boolean bigList) {
 		return this.listType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull TomlFileBuilder concurrentData(final boolean concurrentData) {
+	public @NotNull
+	TomlFileBuilder concurrentData(final boolean concurrentData) {
 		return this.mapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 

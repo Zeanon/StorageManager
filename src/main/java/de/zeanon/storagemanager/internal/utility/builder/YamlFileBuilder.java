@@ -30,7 +30,8 @@ public class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, M
 
 
 	@Setter(onMethod_ = {@Contract("_ -> this")})
-	private @NotNull CommentSetting commentSetting = Comment.SKIP;
+	private @NotNull
+	CommentSetting commentSetting = Comment.SKIP;
 
 
 	public YamlFileBuilder(final @NotNull File file) {
@@ -40,19 +41,22 @@ public class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, M
 
 	@Override
 	@Contract("-> new")
-	public final @NotNull YamlFile create() {
+	public final @NotNull
+	YamlFile create() {
 		return new LocalYamlFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.synchronizedData, this.mapType, this.listType);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public final @NotNull YamlFileBuilder bigList(final boolean bigList) {
+	public final @NotNull
+	YamlFileBuilder bigList(final boolean bigList) {
 		return this.listType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull YamlFileBuilder concurrentData(final boolean concurrentData) {
+	public @NotNull
+	YamlFileBuilder concurrentData(final boolean concurrentData) {
 		return this.mapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 

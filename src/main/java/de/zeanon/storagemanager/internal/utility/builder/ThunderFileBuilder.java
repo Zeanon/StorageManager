@@ -36,7 +36,8 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private boolean autoFlush;
 	@Setter(onMethod_ = {@Contract("_ -> this")})
-	private @NotNull CommentSetting commentSetting = Comment.SKIP;
+	private @NotNull
+	CommentSetting commentSetting = Comment.SKIP;
 	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private int bufferSize = 8192;
 
@@ -48,12 +49,14 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 
 	@Override
 	@Contract("-> new")
-	public final @NotNull ThunderFile create() {
+	public final @NotNull
+	ThunderFile create() {
 		return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bufferSize, this.autoFlush, this.bigData, this.concurrentData, this.synchronizedData, this.mapType, this.listType);
 	}
 
 	@Contract("_ -> this")
-	public final @NotNull ThunderFileBuilder bigData(final boolean bigData) {
+	public final @NotNull
+	ThunderFileBuilder bigData(final boolean bigData) {
 		this.bigData = bigData;
 		return this.mapType(this.concurrentData ? (this.bigData ? ConcurrentBigDataMap.class : ConcurrentGapDataMap.class)
 												: (this.bigData ? BigDataMap.class : GapDataMap.class));
@@ -61,13 +64,15 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 
 	@Override
 	@Contract("_ -> this")
-	public final @NotNull ThunderFileBuilder bigList(final boolean bigList) {
+	public final @NotNull
+	ThunderFileBuilder bigList(final boolean bigList) {
 		return this.listType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull ThunderFileBuilder concurrentData(final boolean concurrentData) {
+	public @NotNull
+	ThunderFileBuilder concurrentData(final boolean concurrentData) {
 		this.concurrentData = concurrentData;
 		return this.mapType(this.concurrentData ? (this.bigData ? ConcurrentBigDataMap.class : ConcurrentGapDataMap.class)
 												: (this.bigData ? BigDataMap.class : GapDataMap.class));

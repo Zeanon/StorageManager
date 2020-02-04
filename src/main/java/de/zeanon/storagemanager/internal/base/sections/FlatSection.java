@@ -30,11 +30,14 @@ import org.jetbrains.annotations.Nullable;
 public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>, M, L>, M extends Map, L extends List> implements DataStorage, Comparable<FlatSection> {
 
 
-	private final @NotNull F flatFile;
+	private final @NotNull
+	F flatFile;
 	@Setter
-	protected @NotNull String sectionKey;
+	protected @NotNull
+	String sectionKey;
 	@Setter
-	protected @NotNull String[] arraySectionKey;
+	protected @NotNull
+	String[] arraySectionKey;
 
 
 	@Contract(pure = true)
@@ -61,17 +64,20 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	}
 
 	@Override
-	public @Nullable Object get(final @NotNull String key) {
+	public @Nullable
+	Object get(final @NotNull String key) {
 		return this.flatFile.get(this.getFinalKey(key));
 	}
 
 	@Override
-	public @NotNull Map<String, Object> getAll(final @NotNull String... keys) {
+	public @NotNull
+	Map<String, Object> getAll(final @NotNull String... keys) {
 		return this.flatFile.getAll(keys);
 	}
 
 	@Override
-	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull String... keys) {
+	public @NotNull
+	Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull String... keys) {
 		return this.flatFile.getAll(this.getFinalKey(blockKey), keys);
 	}
 
@@ -129,37 +135,44 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	}
 
 	@Override
-	public @Nullable Object getUseArray(final @NotNull String... key) {
+	public @Nullable
+	Object getUseArray(final @NotNull String... key) {
 		return this.flatFile.getUseArray(this.getFinalArrayKey(key));
 	}
 
 	@Override
-	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[]... keys) {
+	public @NotNull
+	Map<String[], Object> getAllUseArray(final @NotNull String[]... keys) {
 		return this.flatFile.getAllUseArray(this.getArraySectionKey(), keys);
 	}
 
 	@Override
-	public @NotNull Map<String, Object> getAll(final @NotNull Collection<String> keys) {
+	public @NotNull
+	Map<String, Object> getAll(final @NotNull Collection<String> keys) {
 		return this.flatFile.getAll(keys);
 	}
 
 	@Override
-	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys) {
+	public @NotNull
+	Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys) {
 		return this.flatFile.getAllUseArray(this.getArraySectionKey(), keys);
 	}
 
 	@Override
-	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
+	public @NotNull
+	Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
 		return this.flatFile.getAllUseArray(this.getFinalArrayKey(blockKey), keys);
 	}
 
 	@Override
-	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
+	public @NotNull
+	Map<String, Object> getAll(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
 		return this.flatFile.getAll(this.getFinalKey(blockKey), keys);
 	}
 
 	@Override
-	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
+	public @NotNull
+	Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
 		return this.flatFile.getAllUseArray(this.getFinalArrayKey(blockKey), keys);
 	}
 
@@ -228,11 +241,13 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 		this.flatFile.removeAllUseArray(this.getFinalArrayKey(blockKey), keys);
 	}
 
-	protected @NotNull String getFinalKey(final @NotNull String key) {
+	protected @NotNull
+	String getFinalKey(final @NotNull String key) {
 		return this.getSectionKey() + "." + key;
 	}
 
-	protected @NotNull String[] getFinalArrayKey(final @NotNull String... key) {
+	protected @NotNull
+	String[] getFinalArrayKey(final @NotNull String... key) {
 		@NotNull String[] tempKey = new String[this.getArraySectionKey().length + key.length];
 		System.arraycopy(this.getArraySectionKey(), 0, tempKey, 0, this.getArraySectionKey().length);
 		System.arraycopy(key, 0, tempKey, this.getArraySectionKey().length, key.length);

@@ -243,7 +243,7 @@ public class Objects {
 	}
 
 	public boolean containsIgnoreCase(final @Nullable Collection<String> collection, final @NotNull String string) {
-		return collection != null && collection.stream().anyMatch(string::equalsIgnoreCase);
+		return collection != null && collection.parallelStream().anyMatch(string::equalsIgnoreCase);
 	}
 
 	/**

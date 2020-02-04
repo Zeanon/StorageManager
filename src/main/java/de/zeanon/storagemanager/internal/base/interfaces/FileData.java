@@ -30,7 +30,8 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	/**
 	 *
 	 */
-	@NotNull CollectionsProvider<M, L> collectionsProvider();
+	@NotNull
+	CollectionsProvider<M, L> collectionsProvider();
 
 	/**
 	 * Map a value to a given key
@@ -93,7 +94,8 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @throws ObjectNullException if the given key does not exist
 	 */
-	@Nullable Object get(final @NotNull String key);
+	@Nullable
+	Object get(final @NotNull String key);
 
 	/**
 	 * Get the value mapped to a specific key
@@ -104,7 +106,8 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @throws ObjectNullException if the given key does not exist
 	 */
-	@Nullable Object getUseArray(final @NotNull String... key);
+	@Nullable
+	Object getUseArray(final @NotNull String... key);
 
 	/**
 	 * @return the size of the top most layer of the internal DataMap
@@ -162,7 +165,8 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the internally stored Data
 	 */
-	@NotNull M dataMap();
+	@NotNull
+	M dataMap();
 
 	/**
 	 * Set whether the internal Data should be synchronized
@@ -175,14 +179,16 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@NotNull List<E> entryList();
+	@NotNull
+	List<E> entryList();
 
 	/**
 	 * Get a List consisting of AbstractDataMap.DataNode objects of the top most layer of the internal DataMap
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@NotNull List<E> blockEntryList();
+	@NotNull
+	List<E> blockEntryList();
 
 	/**
 	 * Get a List consisting of AbstractDataMap.DataNode objects whereas values being instances of AbstractDataMap are also getting parsed to
@@ -192,7 +198,8 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@Nullable List<E> entryList(final @NotNull String key);
+	@Nullable
+	List<E> entryList(final @NotNull String key);
 
 	/**
 	 * Get a List consisting of AbstractDataMap.DataNode objects of only the given Block
@@ -201,7 +208,8 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@Nullable List<E> blockEntryList(final @NotNull String key);
+	@Nullable
+	List<E> blockEntryList(final @NotNull String key);
 
 	/**
 	 * Get a List consisting of AbstractDataMap.DataNode objects whereas values being instances of AbstractDataMap are also getting parsed to
@@ -211,7 +219,8 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@Nullable List<E> entryListUseArray(final @NotNull String... key);
+	@Nullable
+	List<E> entryListUseArray(final @NotNull String... key);
 
 	/**
 	 * Get a List consisting of AbstractDataMap.DataNode objects of only the given Block
@@ -220,7 +229,8 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@Nullable List<E> blockEntryListUseArray(final @NotNull String... key);
+	@Nullable
+	List<E> blockEntryListUseArray(final @NotNull String... key);
 
 	/**
 	 * Returns a String representation of the FileData
@@ -228,5 +238,6 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 * @return the FileData parsed to a String
 	 */
 	@Override
-	@NotNull String toString();
+	@NotNull
+	String toString();
 }

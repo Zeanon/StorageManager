@@ -22,7 +22,8 @@ public class YamlUtils {
 
 
 	@Contract("_, _, _ -> param1")
-	public static @NotNull List<String> parseComments(final @NotNull List<String> comments, final @NotNull List<String> updated, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
+	public static @NotNull
+	List<String> parseComments(final @NotNull List<String> comments, final @NotNull List<String> updated, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		final @NotNull Map<String, List<String>> parsed = YamlUtils.assignCommentsToKey(comments, collectionsProvider);
 
 		for (final @NotNull Map.Entry<String, List<String>> entry : parsed.entrySet()) {
@@ -38,7 +39,8 @@ public class YamlUtils {
 		return updated;
 	}
 
-	private static @NotNull Map<String, List<String>> assignCommentsToKey(final @NotNull List<String> fileLines, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
+	private static @NotNull
+	Map<String, List<String>> assignCommentsToKey(final @NotNull List<String> fileLines, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		//noinspection unchecked
 		final @NotNull List<String> storage = collectionsProvider.newList();
 		final @NotNull List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines, collectionsProvider);

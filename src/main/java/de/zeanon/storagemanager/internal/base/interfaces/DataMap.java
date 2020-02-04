@@ -47,7 +47,8 @@ public interface DataMap<K, V> extends Map<K, V>, Cloneable {
 	/**
 	 * Abstract clone method to be overwritten by extending classes
 	 */
-	@NotNull DataMap<K, V> clone();
+	@NotNull
+	DataMap<K, V> clone();
 
 	/**
 	 * Returns a {@link List} view of the mappings contained in this map.
@@ -66,7 +67,8 @@ public interface DataMap<K, V> extends Map<K, V>, Cloneable {
 	 * @return a set view of the mappings contained in this map
 	 */
 	@Contract("-> new")
-	@NotNull List<DataNode<K, V>> entryList();
+	@NotNull
+	List<DataNode<K, V>> entryList();
 
 
 	/**
@@ -95,7 +97,8 @@ public interface DataMap<K, V> extends Map<K, V>, Cloneable {
 		 * @throws NullPointerException          if the backing map does not permit
 		 *                                       null keys, and the specified key is null
 		 */
-		@NotNull K setKey(final @NotNull K key);
+		@NotNull
+		K setKey(final @NotNull K key);
 
 		/**
 		 * Returns a String representation of the Node
@@ -103,6 +106,7 @@ public interface DataMap<K, V> extends Map<K, V>, Cloneable {
 		 * @return the Node parsed to a String
 		 */
 		@Override
-		@NotNull String toString();
+		@NotNull
+		String toString();
 	}
 }

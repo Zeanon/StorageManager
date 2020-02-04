@@ -45,7 +45,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 *
 	 * @return the internal Provider to be used
 	 */
-	private final @NotNull CollectionsProvider<M, L> collectionsProvider;
+	private final @NotNull
+	CollectionsProvider<M, L> collectionsProvider;
 	/**
 	 * Internal cache for the contents of the File
 	 * <p>
@@ -53,7 +54,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 *
 	 * @return the internal DataMap
 	 */
-	private transient @NotNull M dataMap;
+	private transient @NotNull
+	M dataMap;
 	/**
 	 * Defines whether the internal Map should be wrapped by {@link Collections#synchronizedMap(Map)}
 	 * <p>
@@ -90,7 +92,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 */
 	@Override
 	@Contract("-> new")
-	public @NotNull List<E> entryList() {
+	public @NotNull
+	List<E> entryList() {
 		//noinspection unchecked
 		return this.internalEntryList(this.dataMap);
 	}
@@ -102,7 +105,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 */
 	@Override
 	@Contract("-> new")
-	public @NotNull List<E> blockEntryList() {
+	public @NotNull
+	List<E> blockEntryList() {
 		//noinspection unchecked
 		return this.collectionsProvider.newList(new Class[]{Set.class}, this.dataMap.entrySet());
 	}
@@ -117,7 +121,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 */
 	@Override
 	@Contract("null -> fail")
-	public @Nullable List<E> entryList(final @NotNull String key) {
+	public @Nullable
+	List<E> entryList(final @NotNull String key) {
 		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -136,7 +141,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 */
 	@Override
 	@Contract("null -> fail")
-	public @Nullable List<E> blockEntryList(final @NotNull String key) {
+	public @Nullable
+	List<E> blockEntryList(final @NotNull String key) {
 		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -156,7 +162,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 */
 	@Override
 	@Contract("null -> fail")
-	public @Nullable List<E> entryListUseArray(final @NotNull String... key) {
+	public @Nullable
+	List<E> entryListUseArray(final @NotNull String... key) {
 		final @Nullable Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -175,7 +182,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 */
 	@Override
 	@Contract("null -> fail")
-	public @Nullable List<E> blockEntryListUseArray(final @NotNull String... key) {
+	public @Nullable
+	List<E> blockEntryListUseArray(final @NotNull String... key) {
 		final @Nullable Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -293,7 +301,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 */
 	@Override
 	@Contract("null -> fail")
-	public @Nullable Object get(final @NotNull String key) {
+	public @Nullable
+	Object get(final @NotNull String key) {
 		final @NotNull String[] parts = key.split("\\.");
 		return this.internalGet(this.dataMap, parts);
 	}
@@ -307,7 +316,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 */
 	@Override
 	@Contract("null -> fail")
-	public @Nullable Object getUseArray(final @NotNull String... key) {
+	public @Nullable
+	Object getUseArray(final @NotNull String... key) {
 		return this.internalGet(this.dataMap, key);
 	}
 
@@ -415,7 +425,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 
 
 	// <Internal>
-	private @Nullable Object internalGet(final @NotNull Map map, final @NotNull String[] key) {
+	private @Nullable
+	Object internalGet(final @NotNull Map map, final @NotNull String[] key) {
 		@NotNull Object tempValue = map;
 		for (final String tempKey : key) {
 			if (tempValue instanceof Map) {
@@ -445,10 +456,11 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		}
 	}
 
-	private @NotNull Object internalInsert(final @NotNull Map<String, Object> map,
-										   final @NotNull String[] key,
-										   final @NotNull Object value,
-										   final int keyIndex) {
+	private @NotNull
+	Object internalInsert(final @NotNull Map<String, Object> map,
+						  final @NotNull String[] key,
+						  final @NotNull Object value,
+						  final int keyIndex) {
 		if (keyIndex < key.length) {
 			final Object tempValue = map.get(key[keyIndex]);
 			//noinspection unchecked
@@ -481,9 +493,10 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	}
 
 	@Contract("_, _, _ -> param1")
-	private @NotNull Map<String, Object> internalRemove(final @NotNull Map<String, Object> map,
-														final @NotNull String[] key,
-														final int keyIndex) {
+	private @NotNull
+	Map<String, Object> internalRemove(final @NotNull Map<String, Object> map,
+									   final @NotNull String[] key,
+									   final int keyIndex) {
 		if (keyIndex < key.length - 1) {
 			final Object tempValue = map.get(key[keyIndex]);
 			if (tempValue instanceof Map) {
@@ -499,7 +512,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		return map;
 	}
 
-	private @NotNull List<Map.Entry<String, Object>> internalEntryList(final @NotNull Map<String, Object> map) {
+	private @NotNull
+	List<Map.Entry<String, Object>> internalEntryList(final @NotNull Map<String, Object> map) {
 		//noinspection unchecked
 		final @NotNull List<Map.Entry<String, Object>> tempList = this.collectionsProvider.newList();
 		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
@@ -573,7 +587,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * @return the FileData parsed to a String
 	 */
 	@Override
-	public @NotNull String toString() {
+	public @NotNull
+	String toString() {
 		return this.dataMap.toString();
 	}
 
@@ -593,7 +608,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		 *
 		 * @return the key corresponding to this entry
 		 */
-		private final @NotNull K key;
+		private final @NotNull
+		K key;
 
 		/**
 		 * -- Getter --
@@ -603,7 +619,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		 *
 		 * @return the value corresponding to this entry
 		 */
-		private @Nullable V value;
+		private @Nullable
+		V value;
 
 		/**
 		 * Replaces the value corresponding to this entry with the specified
@@ -625,7 +642,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		 *                                       prevents it from being stored in the backing map
 		 */
 		@Override
-		public @Nullable V setValue(final @Nullable V value) {
+		public @Nullable
+		V setValue(final @Nullable V value) {
 			try {
 				return this.value;
 			} finally {
@@ -640,7 +658,8 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		 * @return the Node parsed to a String
 		 */
 		@Override
-		public @NotNull String toString() {
+		public @NotNull
+		String toString() {
 			return "(" + this.key + "=" + this.value + ")";
 		}
 	}

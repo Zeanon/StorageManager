@@ -18,8 +18,10 @@ import org.jetbrains.annotations.NotNull;
 public class LagCatcher {
 
 
-	private static final @NotNull Map<String, Long> startTimes = new HashMap<>();
-	private static final @NotNull Map<String, Long> stopTimes = new HashMap<>();
+	private static final @NotNull
+	Map<String, Long> startTimes = new HashMap<>();
+	private static final @NotNull
+	Map<String, Long> stopTimes = new HashMap<>();
 
 
 	public static void runMultipleTimes(final int cycles, final @NotNull Runnable runnable) {

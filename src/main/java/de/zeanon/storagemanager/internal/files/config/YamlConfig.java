@@ -32,9 +32,12 @@ import org.jetbrains.annotations.Nullable;
 public class YamlConfig extends YamlFile implements Config {
 
 
-	private @NotNull List<String> header;
-	private @NotNull List<String> footer;
-	private @NotNull List<String> comments;
+	private @NotNull
+	List<String> header;
+	private @NotNull
+	List<String> footer;
+	private @NotNull
+	List<String> comments;
 
 
 	/**
@@ -67,7 +70,8 @@ public class YamlConfig extends YamlFile implements Config {
 
 
 	@Override
-	public @NotNull List<String> getHeader() {
+	public @NotNull
+	List<String> getHeader() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			//noinspection unchecked
 			return this.collectionsProvider().newList();
@@ -168,7 +172,8 @@ public class YamlConfig extends YamlFile implements Config {
 	}
 
 	@Override
-	public @NotNull List<String> getFooter() {
+	public @NotNull
+	List<String> getFooter() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			//noinspection unchecked
 			return this.collectionsProvider().newList();
@@ -269,7 +274,8 @@ public class YamlConfig extends YamlFile implements Config {
 	}
 
 	@Override
-	public @NotNull List<String> getComments() {
+	public @NotNull
+	List<String> getComments() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			//noinspection unchecked
 			return this.collectionsProvider().newList();

@@ -33,7 +33,8 @@ public class ThunderUtils {
 	 *
 	 * @return a List containing the Header of the FileData
 	 */
-	public static @NotNull List<String> getHeader(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData) {
+	public static @NotNull
+	List<String> getHeader(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData) {
 		//noinspection unchecked
 		final @NotNull List<String> result = fileData.collectionsProvider().newList();
 		for (final @NotNull DataMap.DataNode<String, Object> entry : fileData.blockEntryList()) {
@@ -109,7 +110,8 @@ public class ThunderUtils {
 	 *
 	 * @return a List containing the Footer of the FileData
 	 */
-	public static @NotNull List<String> getFooter(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData) {
+	public static @NotNull
+	List<String> getFooter(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData) {
 		//noinspection unchecked
 		final @NotNull List<String> result = fileData.collectionsProvider().newList();
 		final @NotNull List<DataMap.DataNode<String, Object>> entryList = fileData.blockEntryList();
@@ -182,7 +184,8 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static @Nullable List<String> getHeader(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String key) {
+	public static @Nullable
+	List<String> getHeader(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String key) {
 		if (fileData.get(key) instanceof DataMap) {
 			//noinspection unchecked
 			final @NotNull List<String> result = fileData.collectionsProvider().newList();
@@ -209,7 +212,8 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static @Nullable List<String> getHeaderUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String... key) {
+	public static @Nullable
+	List<String> getHeaderUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String... key) {
 		if (fileData.getUseArray(key) instanceof DataMap) {
 			//noinspection unchecked
 			final @NotNull List<String> result = fileData.collectionsProvider().newList();
@@ -236,7 +240,8 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static @NotNull List<String> getFooter(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String key) {
+	public static @NotNull
+	List<String> getFooter(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String key) {
 		//noinspection unchecked
 		final @NotNull List<String> result = fileData.collectionsProvider().newList();
 		return ThunderUtils.internalGetFooter(result, Objects.notNull(fileData.entryList(key)));
@@ -252,7 +257,8 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static @NotNull List<String> getFooterUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String... key) {
+	public static @NotNull
+	List<String> getFooterUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String... key) {
 		//noinspection unchecked
 		return ThunderUtils.internalGetFooter(fileData.collectionsProvider().newList(), Objects.notNull(fileData.blockEntryListUseArray(key)));
 	}
@@ -265,7 +271,8 @@ public class ThunderUtils {
 	 *
 	 * @return a List containing the Comments of the FileData
 	 */
-	public static @NotNull List<String> getComments(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final boolean deep) {
+	public static @NotNull
+	List<String> getComments(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final boolean deep) {
 		return ThunderUtils.internalGetComments(deep ? fileData.entryList() : fileData.blockEntryList(), fileData.collectionsProvider());
 	}
 
@@ -280,7 +287,8 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static @NotNull List<String> getComments(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String key, final boolean deep) {
+	public static @NotNull
+	List<String> getComments(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String key, final boolean deep) {
 		return ThunderUtils.internalGetComments(Objects.notNull(deep ? fileData.entryList(key) : fileData.blockEntryList(key)), fileData.collectionsProvider());
 	}
 
@@ -295,14 +303,16 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public static @NotNull List<String> getCommentsUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String[] key, final boolean deep) {
+	public static @NotNull
+	List<String> getCommentsUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String[] key, final boolean deep) {
 		return ThunderUtils.internalGetComments(Objects.notNull(deep ? fileData.entryListUseArray(key) : fileData.blockEntryListUseArray(key)), fileData.collectionsProvider());
 	}
 
 
 	// <Internal>
 	@Contract("_, _ -> param1")
-	private static @NotNull List<String> internalGetFooter(final @NotNull List<String> result, final @NotNull List<DataMap.DataNode<String, Object>> entryList) {
+	private static @NotNull
+	List<String> internalGetFooter(final @NotNull List<String> result, final @NotNull List<DataMap.DataNode<String, Object>> entryList) {
 		Collections.reverse(entryList);
 		for (final @NotNull DataMap.DataNode<String, Object> entry : entryList) {
 			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
@@ -354,7 +364,8 @@ public class ThunderUtils {
 		}
 	}
 
-	private static @NotNull List<String> internalGetComments(final @NotNull List<DataMap.DataNode<String, Object>> entryList, final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) {
+	private static @NotNull
+	List<String> internalGetComments(final @NotNull List<DataMap.DataNode<String, Object>> entryList, final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) {
 		//noinspection unchecked
 		final @NotNull List<String> result = collectionsProvider.newList();
 		for (final @NotNull DataMap.DataNode<String, Object> entry : entryList) {

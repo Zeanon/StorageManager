@@ -32,7 +32,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	/**
 	 * List that holds the internal nodes
 	 */
-	private transient @NotNull IList<DataNode<K, V>> localList;
+	private transient @NotNull
+	IList<DataNode<K, V>> localList;
 
 
 	/**
@@ -110,7 +111,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 * previously associated <tt>null</tt> with <tt>key</tt>.)
 	 */
 	@Override
-	public @Nullable V put(final @NotNull K key, final @Nullable V value) {
+	public @Nullable
+	V put(final @NotNull K key, final @Nullable V value) {
 		for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
 			if (tempNode.getKey().equals(key)) {
 				return tempNode.setValue(value);
@@ -206,7 +208,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 * @see #put(Object, Object)
 	 */
 	@Override
-	public @Nullable V get(final @NotNull Object key) {
+	public @Nullable
+	V get(final @NotNull Object key) {
 		for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
 			if (tempNode.getKey().equals(key)) {
 				return tempNode.getValue();
@@ -226,7 +229,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 * previously associated <tt>null</tt> with <tt>key</tt>.)
 	 */
 	@Override
-	public @Nullable V remove(final @NotNull Object key) {
+	public @Nullable
+	V remove(final @NotNull Object key) {
 		final @NotNull Iterator<DataNode<K, V>> tempIterator = this.localList.iterator();
 		DataNode<K, V> tempNode;
 		while ((tempNode = tempIterator.next()) != null) {
@@ -265,7 +269,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 */
 	@Override
 	@Contract("-> new")
-	public @NotNull Set<Map.Entry<K, V>> entrySet() {
+	public @NotNull
+	Set<Map.Entry<K, V>> entrySet() {
 		return new HashSet<>(this.localList);
 	}
 
@@ -286,7 +291,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 * @return a list view of the mappings contained in this map
 	 */
 	@Override
-	public @NotNull List<DataNode<K, V>> entryList() {
+	public @NotNull
+	List<DataNode<K, V>> entryList() {
 		return this.localList;
 	}
 
@@ -294,7 +300,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 * Abstract clone method to be overwritten by extending classes
 	 */
 	@Override //NOSONAR
-	public abstract @NotNull DataMap<K, V> clone(); //NOSONAR
+	public abstract @NotNull
+	DataMap<K, V> clone(); //NOSONAR
 
 	/**
 	 * Method to reinitialize the map on deserialization
@@ -311,7 +318,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 * @return the Map parsed to a String
 	 */
 	@Override
-	public @NotNull String toString() {
+	public @NotNull
+	String toString() {
 		return this.localList.toString();
 	}
 
@@ -342,7 +350,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		 * required to, throw this exception if the entry has been
 		 * removed from the backing map.
 		 */
-		private @NotNull K key;
+		private @NotNull
+		K key;
 
 		/**
 		 * The value assigned to this Node
@@ -357,7 +366,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		 * required to, throw this exception if the entry has been
 		 * removed from the backing map.
 		 */
-		private @Nullable V value;
+		private @Nullable
+		V value;
 
 		/**
 		 * Replaces the key corresponding to this entry with the specified
@@ -377,7 +387,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		 *                                       null keys, and the specified key is null
 		 */
 		@Override
-		public @NotNull K setKey(final @NotNull K key) {
+		public @NotNull
+		K setKey(final @NotNull K key) {
 			try {
 				return this.key;
 			} finally {
@@ -405,7 +416,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		 *                                       prevents it from being stored in the backing map
 		 */
 		@Override
-		public @Nullable V setValue(final @Nullable V value) {
+		public @Nullable
+		V setValue(final @Nullable V value) {
 			try {
 				return this.value;
 			} finally {
@@ -420,7 +432,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		 * @return the Node parsed to a String
 		 */
 		@Override
-		public @NotNull String toString() {
+		public @NotNull
+		String toString() {
 			return "(" + this.key + "=" + this.value + ")";
 		}
 	}

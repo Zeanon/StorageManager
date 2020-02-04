@@ -21,7 +21,8 @@ import org.json.JSONObject;
 public class JsonUtils {
 
 
-	public static @NotNull JSONObject getJsonFromMap(final @NotNull Map<String, Object> map) {
+	public static @NotNull
+	JSONObject getJsonFromMap(final @NotNull Map<String, Object> map) {
 		final @NotNull JSONObject jsonData = new JSONObject();
 		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
 			@Nullable Object value = entry.getValue();
@@ -33,7 +34,8 @@ public class JsonUtils {
 		return jsonData;
 	}
 
-	public static @NotNull Map<String, Object> jsonToMap(final @NotNull JSONObject json, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
+	public static @NotNull
+	Map<String, Object> jsonToMap(final @NotNull JSONObject json, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		final @NotNull Map<String, Object> tempMap = collectionsProvider.newMap();
 		if (json != JSONObject.NULL) {
 			tempMap.putAll(json.toMap());
@@ -41,7 +43,8 @@ public class JsonUtils {
 		return tempMap;
 	}
 
-	public static @NotNull List<Object> toList(final @NotNull JSONArray array, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
+	public static @NotNull
+	List<Object> toList(final @NotNull JSONArray array, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		final @NotNull List<Object> list = collectionsProvider.newList();
 		for (int i = 0; i < array.length(); i++) {
 			list.add(JsonUtils.getValue(array.get(i), collectionsProvider));
@@ -49,7 +52,8 @@ public class JsonUtils {
 		return list;
 	}
 
-	private static @NotNull Object getValue(final @NotNull Object obj, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
+	private static @NotNull
+	Object getValue(final @NotNull Object obj, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		if (obj instanceof JSONArray) {
 			return JsonUtils.toList((JSONArray) obj, collectionsProvider);
 		} else if (obj instanceof JSONObject) {

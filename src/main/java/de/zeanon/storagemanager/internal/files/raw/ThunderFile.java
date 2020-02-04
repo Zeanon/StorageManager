@@ -139,7 +139,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull ThunderFileSection getSection(final @NotNull String sectionKey) {
+	public @NotNull
+	ThunderFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -151,13 +152,15 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull
+	ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
 
 	@Override
-	protected @NotNull DataMap readFile() {
+	protected @NotNull
+	DataMap readFile() {
 		try {
 			return ThunderEditor.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize);
 		} catch (final @NotNull RuntimeIOException e) {
@@ -174,18 +177,21 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 		THUNDERFILE();
 
 
-		private final @NotNull String extension = "tf";
+		private final @NotNull
+		String extension = "tf";
 
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull String toLowerCase() {
+		public @NotNull
+		String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull String toString() {
+		public @NotNull
+		String toString() {
 			return this.extension;
 		}
 	}

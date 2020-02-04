@@ -74,10 +74,11 @@ public class ThunderEditor {
 	 * @throws ThunderException    if the Content of the File can not be parsed properly
 	 * @throws ObjectNullException if a passed value is null
 	 */
-	public static @NotNull DataMap<String, Object> readData(final @NotNull File file,
-															final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
-															final @NotNull CommentSetting commentSetting,
-															final int buffer_size) throws ThunderException {
+	public static @NotNull
+	DataMap<String, Object> readData(final @NotNull File file,
+									 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
+									 final @NotNull CommentSetting commentSetting,
+									 final int buffer_size) throws ThunderException {
 		if (commentSetting == Comment.PRESERVE) {
 			return ThunderEditor.initialReadWithComments(file, collectionsProvider, buffer_size);
 		} else if (commentSetting == Comment.SKIP) {
@@ -378,9 +379,10 @@ public class ThunderEditor {
 
 	// <Read Data>
 	// <Read Data with Comments>
-	private static @NotNull DataMap<String, Object> initialReadWithComments(final @NotNull File file,
-																			final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
-																			final int buffer_size) throws ThunderException {
+	private static @NotNull
+	DataMap<String, Object> initialReadWithComments(final @NotNull File file,
+													final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
+													final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull ListIterator<String> lines;
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
@@ -423,9 +425,10 @@ public class ThunderEditor {
 		}
 	}
 
-	private static @NotNull DataMap<String, Object> internalReadWithComments(final @NotNull String filePath,
-																			 final @NotNull ListIterator<String> lines,
-																			 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderException {
+	private static @NotNull
+	DataMap<String, Object> internalReadWithComments(final @NotNull String filePath,
+													 final @NotNull ListIterator<String> lines,
+													 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderException {
 		//noinspection unchecked
 		final @NotNull DataMap<String, Object> tempMap = collectionsProvider.newMap();
 
@@ -460,9 +463,10 @@ public class ThunderEditor {
 	// </Read Data with Comments>
 
 	// <Read Data without Comments>
-	private static @NotNull DataMap<String, Object> initialReadWithOutComments(final @NotNull File file,
-																			   final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
-																			   final int buffer_size) throws ThunderException {
+	private static @NotNull
+	DataMap<String, Object> initialReadWithOutComments(final @NotNull File file,
+													   final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
+													   final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull ListIterator<String> lines;
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
@@ -503,9 +507,10 @@ public class ThunderEditor {
 		}
 	}
 
-	private static @NotNull DataMap<String, Object> internalReadWithOutComments(final @NotNull String filePath,
-																				final @NotNull ListIterator<String> lines,
-																				final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderException {
+	private static @NotNull
+	DataMap<String, Object> internalReadWithOutComments(final @NotNull String filePath,
+														final @NotNull ListIterator<String> lines,
+														final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderException {
 		//noinspection unchecked
 		final @NotNull DataMap<String, Object> tempMap = collectionsProvider.newMap();
 
@@ -537,12 +542,13 @@ public class ThunderEditor {
 	}
 	// </Read without Comments>
 
-	private static @Nullable String readKey(final @NotNull String filePath,
-											final @NotNull ListIterator<String> lines,
-											final @NotNull DataMap<String, Object> tempMap,
-											final @NotNull String tempLine,
-											final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
-											@Nullable String tempKey) throws ThunderException {
+	private static @Nullable
+	String readKey(final @NotNull String filePath,
+				   final @NotNull ListIterator<String> lines,
+				   final @NotNull DataMap<String, Object> tempMap,
+				   final @NotNull String tempLine,
+				   final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
+				   @Nullable String tempKey) throws ThunderException {
 		if (tempLine.contains("=")) {
 			final @NotNull String[] line = tempLine.split("=", 2);
 			line[0] = line[0].trim();
@@ -586,9 +592,10 @@ public class ThunderEditor {
 		return tempKey;
 	}
 
-	private static @NotNull List<String> readList(final @NotNull String filePath,
-												  final @NotNull ListIterator<String> lines,
-												  final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderException {
+	private static @NotNull
+	List<String> readList(final @NotNull String filePath,
+						  final @NotNull ListIterator<String> lines,
+						  final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderException {
 		@NotNull String tempLine;
 		//noinspection unchecked
 		final @NotNull List<String> tempList = collectionsProvider.newList();

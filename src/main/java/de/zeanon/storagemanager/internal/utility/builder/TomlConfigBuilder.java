@@ -31,7 +31,8 @@ import org.jetbrains.annotations.Nullable;
 public class TomlConfigBuilder extends StorageManager<TomlConfigBuilder, TomlConfig, Map, List> {
 
 
-	private @NotNull CommentSetting commentSetting = Comment.PRESERVE;
+	private @NotNull
+	CommentSetting commentSetting = Comment.PRESERVE;
 
 
 	public TomlConfigBuilder(final @NotNull File file) {
@@ -41,19 +42,22 @@ public class TomlConfigBuilder extends StorageManager<TomlConfigBuilder, TomlCon
 
 	@Override
 	@Contract("-> new")
-	public final @NotNull TomlConfig create() {
+	public final @NotNull
+	TomlConfig create() {
 		return new TomlConfigBuilder.LocalTomlConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.synchronizedData, this.mapType, this.listType);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public final @NotNull TomlConfigBuilder bigList(final boolean bigList) {
+	public final @NotNull
+	TomlConfigBuilder bigList(final boolean bigList) {
 		return this.listType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull TomlConfigBuilder concurrentData(final boolean concurrentData) {
+	public @NotNull
+	TomlConfigBuilder concurrentData(final boolean concurrentData) {
 		return this.mapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 

@@ -35,25 +35,29 @@ public class YamlEditor {
 
 
 	@Contract("null, _ -> fail; _, null -> fail; _, _ -> new")
-	public static @NotNull List<String> readComments(final @NotNull File file,
-													 final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) throws IOException {
+	public static @NotNull
+	List<String> readComments(final @NotNull File file,
+							  final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) throws IOException {
 		return YamlEditor.getCommentsFromLines(YamlEditor.read(file), collectionsProvider);
 	}
 
 	@Contract("null -> fail; _ -> new")
-	public static @NotNull List<String> read(final @NotNull File file) throws IOException {
+	public static @NotNull
+	List<String> read(final @NotNull File file) throws IOException {
 		return YamlEditor.read(file, 8192);
 	}
 
 	@Contract("null, _ -> fail; _, null -> fail; _, _ -> new")
-	public static @NotNull List<String> read(final @NotNull File file,
-											 final @NotNull ReadWriteFileLock tempLock) throws IOException {
+	public static @NotNull
+	List<String> read(final @NotNull File file,
+					  final @NotNull ReadWriteFileLock tempLock) throws IOException {
 		return YamlEditor.read(file, 8192, tempLock);
 	}
 
 	@Contract("null, _ -> fail; _, _ -> new")
-	public static @NotNull List<String> read(final @NotNull File file,
-											 final int buffer_size) throws IOException {
+	public static @NotNull
+	List<String> read(final @NotNull File file,
+					  final int buffer_size) throws IOException {
 		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
 			 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
 			tempLock.lock();
@@ -62,55 +66,63 @@ public class YamlEditor {
 	}
 
 	@Contract("null, _, _ -> fail; _, _, null -> fail; _, _, _ -> new")
-	public static @NotNull List<String> read(final @NotNull File file,
-											 final int buffer_size,
-											 final @NotNull ReadWriteFileLock tempLock) throws IOException {
+	public static @NotNull
+	List<String> read(final @NotNull File file,
+					  final int buffer_size,
+					  final @NotNull ReadWriteFileLock tempLock) throws IOException {
 		try (final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
 			return reader.lines().collect(Collectors.toList());
 		}
 	}
 
 	@Contract("null, _ -> fail; _, null -> fail; _, _ -> new")
-	public static @NotNull List<String> readFooter(final @NotNull File file,
-												   final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) throws IOException {
+	public static @NotNull
+	List<String> readFooter(final @NotNull File file,
+							final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) throws IOException {
 		return YamlEditor.getFooterFromLines(YamlEditor.read(file), collectionsProvider);
 	}
 
 	@Contract("null, _, _ -> fail; _, null, _ -> fail; _, _, null -> fail; _, _, _ -> new")
-	public static @NotNull List<String> readFooter(final @NotNull File file,
-												   final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider,
-												   final @NotNull ReadWriteFileLock tempLock) throws IOException {
+	public static @NotNull
+	List<String> readFooter(final @NotNull File file,
+							final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider,
+							final @NotNull ReadWriteFileLock tempLock) throws IOException {
 		return YamlEditor.getFooterFromLines(YamlEditor.read(file, tempLock), collectionsProvider);
 	}
 
 	@Contract("null, _ -> fail; _, null -> fail; _, _ -> new")
-	public static @NotNull List<String> readHeader(final @NotNull File file,
-												   final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) throws IOException {
+	public static @NotNull
+	List<String> readHeader(final @NotNull File file,
+							final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) throws IOException {
 		return YamlEditor.getHeaderFromLines(YamlEditor.read(file), collectionsProvider);
 	}
 
 	@Contract("null, _, _ -> fail; _, null, _ -> fail; _, _, null -> fail; _, _, _ -> new")
-	public static @NotNull List<String> readHeader(final @NotNull File file,
-												   final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider,
-												   final @NotNull ReadWriteFileLock tempLock) throws IOException {
+	public static @NotNull
+	List<String> readHeader(final @NotNull File file,
+							final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider,
+							final @NotNull ReadWriteFileLock tempLock) throws IOException {
 		return YamlEditor.getHeaderFromLines(YamlEditor.read(file, tempLock), collectionsProvider);
 	}
 
 	@Contract("null, _ -> fail; _, null -> fail; _, _ -> new")
-	public static @NotNull List<String> readKeys(final @NotNull File file,
-												 final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) throws IOException {
+	public static @NotNull
+	List<String> readKeys(final @NotNull File file,
+						  final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) throws IOException {
 		return YamlEditor.getKeys(YamlEditor.read(file), collectionsProvider);
 	}
 
 	@Contract("null, _ -> fail; _, null -> fail; _, _ -> new")
-	public static @NotNull List<String> readPureComments(final @NotNull File file,
-														 final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) throws IOException {
+	public static @NotNull
+	List<String> readPureComments(final @NotNull File file,
+								  final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) throws IOException {
 		return YamlEditor.getPureCommentsFromLines(YamlEditor.read(file), collectionsProvider);
 	}
 
 	@Contract("null, _ -> fail; _, null -> fail; _, _ -> new")
-	public static @NotNull List<String> readWithoutHeaderAndFooter(final @NotNull File file,
-																   final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) throws IOException {
+	public static @NotNull
+	List<String> readWithoutHeaderAndFooter(final @NotNull File file,
+											final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) throws IOException {
 		return YamlEditor.getLinesWithoutFooterAndHeaderFromLines(YamlEditor.read(file), collectionsProvider);
 	}
 
@@ -174,8 +186,9 @@ public class YamlEditor {
 	}
 
 	@Contract("null, _ -> fail; _, null -> fail; _, _ -> param1")
-	public static @NotNull List<String> getLinesWithoutFooterAndHeaderFromLines(final @NotNull List<String> lines,
-																				final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
+	public static @NotNull
+	List<String> getLinesWithoutFooterAndHeaderFromLines(final @NotNull List<String> lines,
+														 final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		final @NotNull List<String> header = YamlEditor.getHeaderFromLines(lines, collectionsProvider);
 		final @NotNull List<String> footer = YamlEditor.getFooterFromLines(lines, collectionsProvider);
 
@@ -195,8 +208,9 @@ public class YamlEditor {
 	}
 
 	@Contract("null, _ -> fail; _, null -> fail; _, _ -> new")
-	private static @NotNull List<String> getCommentsFromLines(final @NotNull List<String> lines,
-															  final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
+	private static @NotNull
+	List<String> getCommentsFromLines(final @NotNull List<String> lines,
+									  final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		//noinspection unchecked
 		final @NotNull List<String> result = collectionsProvider.newList();
 		for (final @NotNull String line : lines) {
@@ -208,8 +222,9 @@ public class YamlEditor {
 	}
 
 	@Contract("null, _ -> fail; _, null -> fail; _, _ -> new")
-	private static @NotNull List<String> getFooterFromLines(final @NotNull List<String> lines,
-															final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
+	private static @NotNull
+	List<String> getFooterFromLines(final @NotNull List<String> lines,
+									final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		//noinspection unchecked
 		final @NotNull List<String> result = collectionsProvider.newList();
 		Collections.reverse(lines);
@@ -226,8 +241,9 @@ public class YamlEditor {
 	}
 
 	@Contract("null, _ -> fail; _, null -> fail; _, _ -> new")
-	private static @NotNull List<String> getHeaderFromLines(final @NotNull List<String> lines,
-															final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
+	private static @NotNull
+	List<String> getHeaderFromLines(final @NotNull List<String> lines,
+									final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		//noinspection unchecked
 		final @NotNull List<String> result = collectionsProvider.newList();
 		for (final @NotNull String line : lines) {
@@ -241,8 +257,9 @@ public class YamlEditor {
 	}
 
 	@Contract("null, _ -> fail; _, null -> fail; _, _ -> new")
-	private static @NotNull List<String> getKeys(final @NotNull List<String> lines,
-												 final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
+	private static @NotNull
+	List<String> getKeys(final @NotNull List<String> lines,
+						 final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		//noinspection unchecked
 		final @NotNull List<String> result = collectionsProvider.newList();
 		for (final @NotNull String line : lines) {
@@ -257,8 +274,9 @@ public class YamlEditor {
 	 * @return List of comments that don't belong to header or footer
 	 */
 	@Contract("null, _ -> fail; _, null -> fail; _, _ -> new")
-	private static @NotNull List<String> getPureCommentsFromLines(final @NotNull List<String> lines,
-																  final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
+	private static @NotNull
+	List<String> getPureCommentsFromLines(final @NotNull List<String> lines,
+										  final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		final @NotNull List<String> comments = YamlEditor.getCommentsFromLines(lines, collectionsProvider);
 		final @NotNull List<String> header = YamlEditor.getHeaderFromLines(lines, collectionsProvider);
 		final @NotNull List<String> footer = YamlEditor.getFooterFromLines(lines, collectionsProvider);

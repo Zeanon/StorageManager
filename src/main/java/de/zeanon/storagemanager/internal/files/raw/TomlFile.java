@@ -103,7 +103,8 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull TomlFileSection getSection(final @NotNull String sectionKey) {
+	public @NotNull
+	TomlFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -115,13 +116,15 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull TomlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull
+	TomlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
 
 	@Override
-	protected @NotNull Map readFile() {
+	protected @NotNull
+	Map readFile() {
 		try {
 			return Toml.read(this.file());
 		} catch (final @NotNull IOException e) {
@@ -138,18 +141,21 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		TOML();
 
 
-		private final @NotNull String extension = "toml";
+		private final @NotNull
+		String extension = "toml";
 
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull String toLowerCase() {
+		public @NotNull
+		String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull String toString() {
+		public @NotNull
+		String toString() {
 			return this.extension;
 		}
 	}
