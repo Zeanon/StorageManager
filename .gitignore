@@ -45,6 +45,10 @@ cmake-build-*/
 # File-based project format
 *.iws
 
+# UML Files
+*.plantuml
+*.puml
+
 # IntelliJ
 out/
 
