@@ -5,7 +5,7 @@
 
     <groupId>de.zeanon</groupId>
     <artifactId>storagemanager</artifactId>
-    <version>1.1.51-beta</version>
+    <version>1.1.73</version>
     <name>StorageManager</name>
     <description>Store data in a better way</description>
     <url>https://github.com/Zeanon/StorageManager</url>
@@ -26,7 +26,6 @@
             <roles>
                 <role>Lead Developer</role>
                 <role>Performance improvements</role>
-                <role>Cool Guy</role>
             </roles>
             <timezone>Germany</timezone>
         </developer>
@@ -45,15 +44,9 @@
         <url>//github.com/Zeanon/StorageManager</url>
     </scm>
 
-    <distributionManagement>
-        <repository>
-            <id>thewarking</id>
-            <url>http://thewarking.de:8081/repository/PluginUtils/</url>
-        </repository>
-    </distributionManagement>
-
     <build>
-        <defaultGoal>clean verify -U</defaultGoal>
+        <defaultGoal>clean verify -U -Dmaven.copy.skip=true</defaultGoal>
+        <finalName>${project.name}</finalName>
 
         <pluginManagement>
             <plugins>
@@ -75,6 +68,29 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <executions>
+                    <execution>
+                        <id>install-toml</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <groupId>de.zeanon</groupId>
+                            <artifactId>toml</artifactId>
+                            <version>1.0.0</version>
+                            <file>src/main/resources/Toml.jar</file>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok-maven-plugin</artifactId>
@@ -105,15 +121,15 @@
                     <relocations>
                         <relocation>
                             <pattern>org.json</pattern>
-                            <shadedPattern>de.zeanon.storage.external.json</shadedPattern>
+                            <shadedPattern>de.zeanon.storagemanager.external.json</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.esotericsoftware</pattern>
-                            <shadedPattern>de.zeanon.storage.external.esotericsoftware</shadedPattern>
+                            <shadedPattern>de.zeanon.storagemanager.external.esotericsoftware</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.electronwill</pattern>
-                            <shadedPattern>de.zeanon.storage.external.electronwill</shadedPattern>
+                            <shadedPattern>de.zeanon.storagemanager.external.electronwill</shadedPattern>
                         </relocation>
                     </relocations>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -163,42 +179,43 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.0.0-M1</version>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M4</version>
                 <configuration>
-                    <skip>true</skip>
+                    <parallel>methods</parallel>
+                    <threadCount>10</threadCount>
                 </configuration>
             </plugin>
 
             <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
                 <executions>
                     <execution>
-                        <id>default-deploy</id>
-                        <phase>deploy</phase>
+                        <id>moveFiles</id>
+                        <phase>verify</phase>
+                        <configuration>
+                            <target unless="maven.copy.skip">
+                                <echo message="To skip, call -Dmaven.copy.skip=true"/>
+                                <copy todir="${basedir}/../SchemManager/src/main/resources/dependencies"
+                                      flatten="true" overwrite="true"
+                                      verbose="true" failonerror="true">
+                                    <fileset dir="${basedir}/target"
+                                             includes="${project.build.finalName}.jar"/>
+                                </copy>
+                            </target>
+                        </configuration>
                         <goals>
-                            <goal>deploy</goal>
+                            <goal>run</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <serverId>thewarking</serverId>
-                    <nexusUrl>http://thewarking.de:8081/</nexusUrl>
-                    <skipStaging>true</skipStaging>
-                </configuration>
             </plugin>
         </plugins>
     </build>
 
     <repositories>
-        <!-- TheWarKing Repo -->
-        <repository>
-            <id>thewarking</id>
-            <url>http://thewarking.de:8081/repository/Storage/</url>
-        </repository>
-
         <!-- YamlBeans Repo -->
         <repository>
             <id>yamlbeans</id>
@@ -215,9 +232,9 @@
     <dependencies>
         <!-- TOML -->
         <dependency>
-            <groupId>de.leonhard</groupId>
+            <groupId>de.zeanon</groupId>
             <artifactId>toml</artifactId>
-            <version>1.0</version>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
 
@@ -237,14 +254,6 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- Brownies-Collections -->
-        <dependency>
-            <groupId>org.magicwerk</groupId>
-            <artifactId>brownies-collections</artifactId>
-            <version>0.9.14</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -259,6 +268,14 @@
             <artifactId>annotations</artifactId>
             <version>17.0.0</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- JUnit -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.4.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

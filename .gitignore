@@ -45,6 +45,10 @@ cmake-build-*/
 # File-based project format
 *.iws
 
+# UML Files
+*.plantuml
+*.puml
+
 # IntelliJ
 out/
 
@@ -162,6 +166,7 @@ hs_err_pid*
 
 ### Maven template
 target/
+src/test/resources/testresults/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -187,3 +192,4 @@ buildNumber.properties
 
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
+!/src/main/resources/*.jar
