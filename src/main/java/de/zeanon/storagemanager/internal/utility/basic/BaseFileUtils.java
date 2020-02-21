@@ -146,8 +146,7 @@ public class BaseFileUtils {
 	 * @return the files of the directory that are folders
 	 */
 	@Contract("null -> fail")
-	public @NotNull
-	Collection<File> listFolders(final @NotNull File directory) throws IOException {
+	public @NotNull Collection<File> listFolders(final @NotNull File directory) throws IOException {
 		return BaseFileUtils.listFolders(directory, false);
 	}
 
@@ -160,9 +159,8 @@ public class BaseFileUtils {
 	 * @return the files of the directory that are folders
 	 */
 	@Contract("null, _ -> fail")
-	public @NotNull
-	Collection<File> listFolders(final @NotNull File directory,
-								 final boolean deep) throws IOException {
+	public @NotNull Collection<File> listFolders(final @NotNull File directory,
+												 final boolean deep) throws IOException {
 		final @NotNull Collection<File> files = new GapList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
@@ -236,8 +234,7 @@ public class BaseFileUtils {
 	 * @return the files of the given directory
 	 */
 	@Contract("null -> fail;")
-	public @NotNull
-	Collection<File> listFiles(final @NotNull File directory) throws IOException {
+	public @NotNull Collection<File> listFiles(final @NotNull File directory) throws IOException {
 		return BaseFileUtils.listFiles(directory, false);
 	}
 
@@ -250,9 +247,8 @@ public class BaseFileUtils {
 	 * @return the files of the given directory
 	 */
 	@Contract("null, _ -> fail")
-	public @NotNull
-	Collection<File> listFiles(final @NotNull File directory,
-							   final boolean deep) throws IOException {
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final boolean deep) throws IOException {
 		final @NotNull Collection<File> files = new GapList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
@@ -282,9 +278,8 @@ public class BaseFileUtils {
 	 * @return the files of the given directory with the given extensions
 	 */
 	@Contract("null, _ -> fail; _, null -> fail")
-	public @NotNull
-	Collection<File> listFiles(final @NotNull File directory,
-							   final @NotNull List<String> extensions) throws IOException {
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, extensions.toArray(new String[0]));
 	}
 
@@ -297,9 +292,8 @@ public class BaseFileUtils {
 	 * @return the files of the given directory with the given extensions
 	 */
 	@Contract("null, _ -> fail; _, null -> fail")
-	public @NotNull
-	Collection<File> listFiles(final @NotNull File directory,
-							   final @NotNull String... extensions) throws IOException {
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, extensions);
 	}
 
@@ -313,10 +307,9 @@ public class BaseFileUtils {
 	 * @return the files of the given directory with the given extensions
 	 */
 	@Contract("null, _, _ -> fail; _, _, null -> fail")
-	public @NotNull
-	Collection<File> listFiles(final @NotNull File directory,
-							   final boolean deep,
-							   final @NotNull List<String> extensions) throws IOException {
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final boolean deep,
+											   final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, deep, extensions.toArray(new String[0]));
 	}
 
@@ -330,10 +323,9 @@ public class BaseFileUtils {
 	 * @return the files of the given directory with the given extensions
 	 */
 	@Contract("null, _, _ -> fail; _, _, null -> fail")
-	public @NotNull
-	Collection<File> listFiles(final @NotNull File directory,
-							   final boolean deep,
-							   final @NotNull String... extensions) throws IOException {
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final boolean deep,
+											   final @NotNull String... extensions) throws IOException {
 		final @NotNull Collection<File> files = new GapList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
@@ -364,9 +356,8 @@ public class BaseFileUtils {
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
 	@Contract("null, _ -> fail; _, null -> fail")
-	public @NotNull
-	Collection<File> listFilesAndFolders(final @NotNull File directory,
-										 final @NotNull List<String> extensions) throws IOException {
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, extensions.toArray(new String[0]));
 	}
 
@@ -379,9 +370,8 @@ public class BaseFileUtils {
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
 	@Contract("null, _ -> fail; _, null -> fail")
-	public @NotNull
-	Collection<File> listFilesAndFolders(final @NotNull File directory,
-										 final @NotNull String... extensions) throws IOException {
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, extensions);
 	}
 
@@ -395,10 +385,9 @@ public class BaseFileUtils {
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
 	@Contract("null, _, _ -> fail; _, _, null -> fail")
-	public @NotNull
-	Collection<File> listFilesAndFolders(final @NotNull File directory,
-										 final boolean deep,
-										 final @NotNull List<String> extensions) throws IOException {
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final boolean deep,
+														 final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, deep, extensions.toArray(new String[0]));
 	}
 
@@ -412,10 +401,9 @@ public class BaseFileUtils {
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
 	@Contract("null, _, _ -> fail; _, _, null -> fail")
-	public @NotNull
-	Collection<File> listFilesAndFolders(final @NotNull File directory,
-										 final boolean deep,
-										 final @NotNull String... extensions) throws IOException {
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final boolean deep,
+														 final @NotNull String... extensions) throws IOException {
 		final @NotNull Collection<File> files = new GapList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
@@ -448,8 +436,7 @@ public class BaseFileUtils {
 	 * @return BufferedInputstream containing the contents of the given File
 	 */
 	@Contract("null -> null; !null -> new")
-	public @Nullable
-	BufferedInputStream createNewInputStreamFromFile(final @Nullable File file) {
+	public @Nullable BufferedInputStream createNewInputStreamFromFile(final @Nullable File file) {
 		if (file == null) {
 			return null;
 		} else {
@@ -472,8 +459,7 @@ public class BaseFileUtils {
 	 * @return BufferedInputstream containing the contents of the given File
 	 */
 	@Contract("null -> null; !null -> new")
-	public @Nullable
-	BufferedInputStream createNewInputStreamFromFile(final @Nullable String name) {
+	public @Nullable BufferedInputStream createNewInputStreamFromFile(final @Nullable String name) {
 		if (name == null) {
 			return null;
 		} else {
@@ -496,8 +482,7 @@ public class BaseFileUtils {
 	 * @return BufferedInputstream containing the contents of the given File
 	 */
 	@Contract("null -> null; !null -> new")
-	public @Nullable
-	BufferedInputStream createNewInputStreamFromFile(final @Nullable Path file) {
+	public @Nullable BufferedInputStream createNewInputStreamFromFile(final @Nullable Path file) {
 		if (file == null) {
 			return null;
 		} else {
@@ -521,8 +506,7 @@ public class BaseFileUtils {
 	 * @return BufferedInputstream containing the contents of the given File
 	 */
 	@Contract("_, null -> null; _, !null -> new")
-	public @Nullable
-	BufferedInputStream createNewInputStreamFromFile(final @Nullable String directory, final @Nullable String name) {
+	public @Nullable BufferedInputStream createNewInputStreamFromFile(final @Nullable String directory, final @Nullable String name) {
 		if (name == null) {
 			return null;
 		} else {
@@ -546,8 +530,7 @@ public class BaseFileUtils {
 	 * @return BufferedInputstream containing the contents of the given File
 	 */
 	@Contract("_, null -> null; _, !null -> new")
-	public @Nullable
-	BufferedInputStream createNewInputStreamFromFile(final @Nullable File directory, final @Nullable String name) {
+	public @Nullable BufferedInputStream createNewInputStreamFromFile(final @Nullable File directory, final @Nullable String name) {
 		if (name == null) {
 			return null;
 		} else {
@@ -571,8 +554,7 @@ public class BaseFileUtils {
 	 * @return BufferedInputstream containing the contents of the given File
 	 */
 	@Contract("_, null -> null; _, !null -> new")
-	public @Nullable
-	BufferedInputStream createNewInputStreamFromFile(final @Nullable Path directory, final @Nullable String name) {
+	public @Nullable BufferedInputStream createNewInputStreamFromFile(final @Nullable Path directory, final @Nullable String name) {
 		if (name == null) {
 			return null;
 		} else {
@@ -595,8 +577,7 @@ public class BaseFileUtils {
 	 * @return BufferedInputStream containing the contents of the resource file
 	 */
 	@Contract("null -> null; !null -> new")
-	public @Nullable
-	BufferedInputStream createNewInputStreamFromResource(final @Nullable String resource) {
+	public @Nullable BufferedInputStream createNewInputStreamFromResource(final @Nullable String resource) {
 		if (resource == null) {
 			return null;
 		} else {
@@ -622,8 +603,7 @@ public class BaseFileUtils {
 	 * @return BufferedInputStream containing the contents of the resource file
 	 */
 	@Contract("null -> null; !null -> new")
-	public @Nullable
-	BufferedInputStream createNewInputStreamFromUrl(final @Nullable URL url) {
+	public @Nullable BufferedInputStream createNewInputStreamFromUrl(final @Nullable URL url) {
 		if (url == null) {
 			return null;
 		} else {
@@ -646,8 +626,7 @@ public class BaseFileUtils {
 	 * @return BufferedInputStream containing the contents of the resource file
 	 */
 	@Contract("null -> null; !null -> new")
-	public @Nullable
-	BufferedInputStream createNewInputStreamFromUrl(final @Nullable String url) {
+	public @Nullable BufferedInputStream createNewInputStreamFromUrl(final @Nullable String url) {
 		if (url == null) {
 			return null;
 		} else {
@@ -670,8 +649,7 @@ public class BaseFileUtils {
 	 * @return null if {@code inputStream} is null or a BufferedInputStream from the given InputStream
 	 */
 	@Contract(value = "null -> null", pure = true)
-	public @Nullable
-	BufferedInputStream createNewInputStream(final @Nullable InputStream inputStream) {
+	public @Nullable BufferedInputStream createNewInputStream(final @Nullable InputStream inputStream) {
 		if (inputStream == null) {
 			return null;
 		} else if (inputStream instanceof BufferedInputStream) {
@@ -814,8 +792,7 @@ public class BaseFileUtils {
 	 *
 	 * @return the extension of the given File
 	 */
-	public @NotNull
-	String getExtension(final @NotNull File file) {
+	public @NotNull String getExtension(final @NotNull File file) {
 		return BaseFileUtils.getExtension(file.getName());
 	}
 
@@ -826,8 +803,7 @@ public class BaseFileUtils {
 	 *
 	 * @return the extension of the given File
 	 */
-	public @NotNull
-	String getExtension(final @NotNull Path filePath) {
+	public @NotNull String getExtension(final @NotNull Path filePath) {
 		return BaseFileUtils.getExtension(filePath.toString());
 	}
 
@@ -838,8 +814,7 @@ public class BaseFileUtils {
 	 *
 	 * @return the extension of the given File
 	 */
-	public @NotNull
-	String getExtension(final @NotNull String filePath) {
+	public @NotNull String getExtension(final @NotNull String filePath) {
 		final char ch;
 		final int len;
 		if ((len = filePath.length()) == 0
@@ -865,8 +840,7 @@ public class BaseFileUtils {
 	 * @return the File without it's extension
 	 */
 	@Contract("_ -> new")
-	public @NotNull
-	File removeExtension(final @NotNull File file) {
+	public @NotNull File removeExtension(final @NotNull File file) {
 		return new File(BaseFileUtils.removeExtension(file.getAbsolutePath()));
 	}
 
@@ -877,8 +851,7 @@ public class BaseFileUtils {
 	 *
 	 * @return the Path without the extension
 	 */
-	public @NotNull
-	Path removeExtension(final @NotNull Path filePath) {
+	public @NotNull Path removeExtension(final @NotNull Path filePath) {
 		return Paths.get(BaseFileUtils.removeExtension(filePath.toString()));
 	}
 
@@ -889,8 +862,7 @@ public class BaseFileUtils {
 	 *
 	 * @return the Path without the extension
 	 */
-	public @NotNull
-	String removeExtension(final @NotNull String filePath) {
+	public @NotNull String removeExtension(final @NotNull String filePath) {
 		final char ch;
 		final int len;
 		if ((len = filePath.length()) == 0
