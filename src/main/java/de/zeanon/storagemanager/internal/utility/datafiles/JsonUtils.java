@@ -21,7 +21,7 @@ import org.json.JSONObject;
 public class JsonUtils {
 
 
-	public static @NotNull
+	public @NotNull
 	JSONObject getJsonFromMap(final @NotNull Map<String, Object> map) {
 		final @NotNull JSONObject jsonData = new JSONObject();
 		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
@@ -34,7 +34,7 @@ public class JsonUtils {
 		return jsonData;
 	}
 
-	public static @NotNull
+	public @NotNull
 	Map<String, Object> jsonToMap(final @NotNull JSONObject json, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		final @NotNull Map<String, Object> tempMap = collectionsProvider.newMap();
 		if (json != JSONObject.NULL) {
@@ -43,7 +43,7 @@ public class JsonUtils {
 		return tempMap;
 	}
 
-	public static @NotNull
+	public @NotNull
 	List<Object> toList(final @NotNull JSONArray array, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		final @NotNull List<Object> list = collectionsProvider.newList();
 		for (int i = 0; i < array.length(); i++) {
@@ -52,7 +52,7 @@ public class JsonUtils {
 		return list;
 	}
 
-	private static @NotNull
+	private @NotNull
 	Object getValue(final @NotNull Object obj, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		if (obj instanceof JSONArray) {
 			return JsonUtils.toList((JSONArray) obj, collectionsProvider);

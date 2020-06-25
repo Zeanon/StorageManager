@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
+public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> { //NOSONAR
 
 
 	/**
@@ -180,11 +180,11 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 		}
 	}
 
-	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> {
+	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> { //NOSONAR
 
 		private static final long serialVersionUID = 244477712346401950L;
 
-		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) {
+		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) { //NOSONAR
 			super(collectionsProvider, synchronize);
 		}
 	}

@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class JsonFileSection extends FlatSection<JsonFile, Map, List> {
+public class JsonFileSection extends FlatSection<JsonFile, Map, List> { //NOSONAR
 
 
 	private final @NotNull

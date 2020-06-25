@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, Map, List> {
+public class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, Map, List> { //NOSONAR
 
 
 	@Setter(onMethod_ = {@Contract("_ -> this")})

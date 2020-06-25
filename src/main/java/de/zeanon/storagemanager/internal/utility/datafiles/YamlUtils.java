@@ -22,7 +22,7 @@ public class YamlUtils {
 
 
 	@Contract("_, _, _ -> param1")
-	public static @NotNull
+	public @NotNull
 	List<String> parseComments(final @NotNull List<String> comments, final @NotNull List<String> updated, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		final @NotNull Map<String, List<String>> parsed = YamlUtils.assignCommentsToKey(comments, collectionsProvider);
 
@@ -39,7 +39,7 @@ public class YamlUtils {
 		return updated;
 	}
 
-	private static @NotNull
+	private @NotNull
 	Map<String, List<String>> assignCommentsToKey(final @NotNull List<String> fileLines, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		//noinspection unchecked
 		final @NotNull List<String> storage = collectionsProvider.newList();

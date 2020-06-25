@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class TomlFileBuilder extends StorageManager<TomlFileBuilder, TomlFile, Map, List> {
+public class TomlFileBuilder extends StorageManager<TomlFileBuilder, TomlFile, Map, List> { //NOSONAR
 
 
 	public TomlFileBuilder(final @NotNull File file) {

@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 @Accessors(fluent = true, chain = false)
 @SuppressWarnings({"DefaultAnnotationParam", "unused", "rawtypes"})
-public class StandardFileData<M extends Map, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<StandardFileData>, Serializable {
+public class StandardFileData<M extends Map, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<StandardFileData>, Serializable { //NOSONAR
 
 
 	private static final long serialVersionUID = 785462429090408444L;
@@ -426,7 +426,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 
 	// <Internal>
 	private @Nullable
-	Object internalGet(final @NotNull Map map, final @NotNull String[] key) {
+	Object internalGet(final @NotNull Map map, final @NotNull String[] key) { //NOSONAR
 		@NotNull Object tempValue = map;
 		for (final String tempKey : key) {
 			if (tempValue instanceof Map) {
@@ -543,7 +543,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 
 	private int internalSize(final @NotNull Map<String, Object> map) {
 		int size = 0;
-		for (final @NotNull Map.Entry entry : map.entrySet()) {
+		for (final @NotNull Map.Entry entry : map.entrySet()) { //NOSONAR
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
 				size += this.internalSize((Map) entry.getValue());

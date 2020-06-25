@@ -47,10 +47,10 @@ public class ThunderEditor {
 	 * @throws RuntimeIOException  if the File can not be accessed properly
 	 * @throws ObjectNullException if a passed value is null
 	 */
-	public static void writeData(final @NotNull File file,
-								 final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData,
-								 final @NotNull CommentSetting commentSetting,
-								 final boolean autoFlush) {
+	public void writeData(final @NotNull File file,
+						  final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, //NOSONAR
+						  final @NotNull CommentSetting commentSetting,
+						  final boolean autoFlush) {
 		if (commentSetting == Comment.PRESERVE) {
 			ThunderEditor.initialWriteWithComments(file, fileData, autoFlush);
 		} else if (commentSetting == Comment.SKIP) {
@@ -74,7 +74,7 @@ public class ThunderEditor {
 	 * @throws ThunderException    if the Content of the File can not be parsed properly
 	 * @throws ObjectNullException if a passed value is null
 	 */
-	public static @NotNull
+	public @NotNull
 	DataMap<String, Object> readData(final @NotNull File file,
 									 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
 									 final @NotNull CommentSetting commentSetting,
@@ -92,9 +92,9 @@ public class ThunderEditor {
 	// <Internal>
 	// <Write Data>
 	// <Write Data with Comments>
-	private static void initialWriteWithComments(final @NotNull File file,
-												 final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData,
-												 final boolean autoFlush) {
+	private void initialWriteWithComments(final @NotNull File file,
+										  final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, //NOSONAR
+										  final boolean autoFlush) {
 		if (!fileData.isEmpty()) {
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
 				 final @NotNull PrintWriter writer = tempLock.createPrintWriter(autoFlush)) {
@@ -120,8 +120,8 @@ public class ThunderEditor {
 		}
 	}
 
-	private static void topLayerWriteWithComments(final @NotNull PrintWriter writer,
-												  final @NotNull DataMap.DataNode<String, Object> entry) {
+	private void topLayerWriteWithComments(final @NotNull PrintWriter writer,
+										   final @NotNull DataMap.DataNode<String, Object> entry) {
 		if (entry.getValue() == LineType.COMMENT || entry.getValue() == LineType.HEADER || entry.getValue() == LineType.FOOTER) {
 			writer.print(entry.getKey().startsWith("#") ? entry.getKey() : ("#" + entry.getKey()));
 		} else if (entry.getValue() instanceof DataMap) {
@@ -149,9 +149,9 @@ public class ThunderEditor {
 		}
 	}
 
-	private static void internalWriteWithComments(final @NotNull DataMap<String, Object> map,
-												  final @NotNull String indentationString,
-												  final @NotNull PrintWriter writer) {
+	private void internalWriteWithComments(final @NotNull DataMap<String, Object> map,
+										   final @NotNull String indentationString,
+										   final @NotNull PrintWriter writer) {
 		for (final @NotNull DataMap.DataNode<String, Object> entry : map.entryList()) {
 			writer.println();
 			if (entry.getValue() == LineType.COMMENT || entry.getValue() == LineType.HEADER || entry.getValue() == LineType.FOOTER) {
@@ -197,9 +197,9 @@ public class ThunderEditor {
 	// </Write Data with Comments>
 
 	// <Write Data without Comments>
-	private static void initialWriteWithOutComments(final @NotNull File file,
-													final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData,
-													final boolean autoFlush) {
+	private void initialWriteWithOutComments(final @NotNull File file,
+											 final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, //NOSONAR
+											 final boolean autoFlush) {
 		if (!fileData.isEmpty()) {
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
 				 final @NotNull PrintWriter writer = tempLock.createPrintWriter(autoFlush)) {
@@ -231,8 +231,8 @@ public class ThunderEditor {
 		}
 	}
 
-	private static void topLayerWriteWithOutComments(final @NotNull PrintWriter writer,
-													 final @NotNull DataMap.DataNode<String, Object> entry) {
+	private void topLayerWriteWithOutComments(final @NotNull PrintWriter writer,
+											  final @NotNull DataMap.DataNode<String, Object> entry) {
 		if (entry.getValue() instanceof DataMap) {
 			writer.print(entry.getKey()
 						 + " {");
@@ -258,9 +258,9 @@ public class ThunderEditor {
 		}
 	}
 
-	private static void internalWriteWithoutComments(final @NotNull DataMap<String, Object> map,
-													 final @NotNull String indentationString,
-													 final @NotNull PrintWriter writer) {
+	private void internalWriteWithoutComments(final @NotNull DataMap<String, Object> map,
+											  final @NotNull String indentationString,
+											  final @NotNull PrintWriter writer) {
 		for (final @NotNull DataMap.DataNode<String, Object> entry : map.entryList()) {
 			if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.HEADER && entry.getValue() != LineType.FOOTER && entry.getValue() != LineType.BLANK_LINE) {
 				writer.println();
@@ -304,9 +304,9 @@ public class ThunderEditor {
 	// </Write Data without Comments>
 
 	// <Utilities>
-	private static void writeCollection(final @NotNull Collection list,
-										final @NotNull String indentationString,
-										final @NotNull PrintWriter writer) {
+	private void writeCollection(final @NotNull Collection list, //NOSONAR
+								 final @NotNull String indentationString,
+								 final @NotNull PrintWriter writer) {
 		for (final @Nullable Object line : list) {
 			writer.println(indentationString
 						   + (line == null ? "  -" : ("  - " + line)));
@@ -314,9 +314,9 @@ public class ThunderEditor {
 		writer.print(indentationString + "]");
 	}
 
-	private static void writeArray(final @NotNull Object array,
-								   final @NotNull String indentationString,
-								   final @NotNull PrintWriter writer) {
+	private void writeArray(final @NotNull Object array,
+							final @NotNull String indentationString,
+							final @NotNull PrintWriter writer) {
 		if (array instanceof Object[]) {
 			for (final @Nullable Object line : (Object[]) array) {
 				writer.println(indentationString
@@ -379,7 +379,7 @@ public class ThunderEditor {
 
 	// <Read Data>
 	// <Read Data with Comments>
-	private static @NotNull
+	private @NotNull
 	DataMap<String, Object> initialReadWithComments(final @NotNull File file,
 													final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
 													final int buffer_size) throws ThunderException {
@@ -425,7 +425,7 @@ public class ThunderEditor {
 		}
 	}
 
-	private static @NotNull
+	private @NotNull
 	DataMap<String, Object> internalReadWithComments(final @NotNull String filePath,
 													 final @NotNull ListIterator<String> lines,
 													 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderException {
@@ -463,7 +463,7 @@ public class ThunderEditor {
 	// </Read Data with Comments>
 
 	// <Read Data without Comments>
-	private static @NotNull
+	private @NotNull
 	DataMap<String, Object> initialReadWithOutComments(final @NotNull File file,
 													   final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
 													   final int buffer_size) throws ThunderException {
@@ -507,7 +507,7 @@ public class ThunderEditor {
 		}
 	}
 
-	private static @NotNull
+	private @NotNull
 	DataMap<String, Object> internalReadWithOutComments(final @NotNull String filePath,
 														final @NotNull ListIterator<String> lines,
 														final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderException {
@@ -542,7 +542,7 @@ public class ThunderEditor {
 	}
 	// </Read without Comments>
 
-	private static @Nullable
+	private @Nullable
 	String readKey(final @NotNull String filePath,
 				   final @NotNull ListIterator<String> lines,
 				   final @NotNull DataMap<String, Object> tempMap,
@@ -592,7 +592,7 @@ public class ThunderEditor {
 		return tempKey;
 	}
 
-	private static @NotNull
+	private @NotNull
 	List<String> readList(final @NotNull String filePath,
 						  final @NotNull ListIterator<String> lines,
 						  final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderException {

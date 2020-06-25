@@ -45,7 +45,7 @@
     </scm>
 
     <build>
-        <defaultGoal>clean verify -U -Dmaven.copy.skip=true</defaultGoal>
+        <defaultGoal>clean verify -U</defaultGoal>
         <finalName>${project.name}</finalName>
 
         <pluginManagement>
@@ -196,8 +196,7 @@
                         <id>moveFiles</id>
                         <phase>verify</phase>
                         <configuration>
-                            <target unless="maven.copy.skip">
-                                <echo message="To skip, call -Dmaven.copy.skip=true"/>
+                            <target if="maven.copy">
                                 <copy todir="${basedir}/../SchemManager/src/main/resources/dependencies"
                                       flatten="true" overwrite="true"
                                       verbose="true" failonerror="true">

@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 @ToString(callSuper = true)
 @SuppressWarnings({"unused", "unchecked", "rawtypes"})
-public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>, M, L>, M extends Map, L extends List> implements DataStorage, Comparable<FlatSection> {
+public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>, M, L>, M extends Map, L extends List> implements DataStorage, Comparable<FlatSection> { //NOSONAR
 
 
 	private final @NotNull

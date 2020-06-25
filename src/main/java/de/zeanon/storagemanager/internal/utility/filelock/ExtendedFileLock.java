@@ -228,6 +228,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 	 * @author Zeanon
 	 * @version 1.1.0
 	 */
+	@SuppressWarnings("BusyWait")
 	@EqualsAndHashCode
 	private static class ReadWriteLockableChannel implements Serializable {
 
@@ -259,12 +260,12 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		private final transient @NotNull
 		AtomicInteger lockHoldCount = new AtomicInteger();
 
-		private transient @NotNull
+		private final transient @NotNull
 		RandomAccessFile localRandomAccessFile;
 
 
 		@Contract(pure = true)
-		private ReadWriteLockableChannel(final @NotNull File file, final boolean writeMetaData) throws IOException {
+		private ReadWriteLockableChannel(final @NotNull File file, final boolean writeMetaData) throws IOException { //NOSONAR
 			try {
 				if (!file.exists()) {
 					if (file.getParentFile() != null && !file.getParentFile().exists() && !file.getParentFile().mkdirs()) {

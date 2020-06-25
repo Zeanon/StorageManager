@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, ThunderFile, DataMap, List> {
+public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, ThunderFile, DataMap, List> { //NOSONAR
 
 
 	private boolean bigData;

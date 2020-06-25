@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class YamlFileSection extends CommentEnabledSection<YamlFile, Map, List> {
+public class YamlFileSection extends CommentEnabledSection<YamlFile, Map, List> { //NOSONAR
 
 
 	private final @NotNull

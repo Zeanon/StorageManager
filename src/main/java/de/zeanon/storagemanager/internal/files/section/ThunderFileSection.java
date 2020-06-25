@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class ThunderFileSection extends CommentEnabledSection<ThunderFile, DataMap, List> {
+public class ThunderFileSection extends CommentEnabledSection<ThunderFile, DataMap, List> { //NOSONAR
 
 
 	private final @NotNull

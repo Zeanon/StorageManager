@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @Accessors(fluent = true, chain = false)
 @SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess", "DefaultAnnotationParam", "unchecked", "rawtypes"})
-public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L extends List> implements DataStorage, Comparable<FlatFile> {
+public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L extends List> implements DataStorage, Comparable<FlatFile> { //NOSONAR
 
 
 	private final @NotNull

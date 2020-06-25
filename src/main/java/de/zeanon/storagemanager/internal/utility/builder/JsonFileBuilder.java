@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, Map, List> {
+public class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, Map, List> { //NOSONAR
 
 
 	public JsonFileBuilder(final @NotNull File file) {

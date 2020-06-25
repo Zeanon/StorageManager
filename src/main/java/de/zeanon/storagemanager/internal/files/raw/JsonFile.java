@@ -40,7 +40,7 @@ import org.json.JSONTokener;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
+public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> { //NOSONAR
 
 
 	/**
@@ -256,12 +256,12 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		}
 	}
 
-	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> {
+	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> { //NOSONAR
 
 		private static final long serialVersionUID = -3736783796296434140L;
 
 		@SuppressWarnings("rawtypes")
-		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) {
+		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) { //NOSONAR
 			super(collectionsProvider, synchronize);
 		}
 	}

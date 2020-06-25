@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode(callSuper = true)
 @Setter(onMethod_ = {@Contract("_ -> this")})
 @SuppressWarnings({"unused", "rawtypes"})
-public class TomlConfigBuilder extends StorageManager<TomlConfigBuilder, TomlConfig, Map, List> {
+public class TomlConfigBuilder extends StorageManager<TomlConfigBuilder, TomlConfig, Map, List> { //NOSONAR
 
 
 	private @NotNull

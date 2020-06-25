@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 @Accessors(fluent = true, chain = false)
 @SuppressWarnings({"unused", "DefaultAnnotationParam", "rawtypes"})
-public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<ThunderFileData>, Serializable {
+public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<ThunderFileData>, Serializable { //NOSONAR
 
 
 	private static final long serialVersionUID = 746673400911930709L;
@@ -422,7 +422,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 
 	// <Internal>
 	private @Nullable
-	Object internalGet(final @NotNull DataMap map, final @NotNull String[] key) {
+	Object internalGet(final @NotNull DataMap map, final @NotNull String[] key) { //NOSONAR
 		@Nullable Object tempValue = map;
 		for (final @NotNull String tempKey : key) {
 			if (tempValue instanceof DataMap) {
@@ -489,7 +489,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 
 	@Contract("_, _, _ -> param1")
 	private @NotNull
-	DataMap internalRemove(final @NotNull DataMap map, final @NotNull String[] key, final int keyIndex) {
+	DataMap internalRemove(final @NotNull DataMap map, final @NotNull String[] key, final int keyIndex) { //NOSONAR
 		if (keyIndex < key.length - 1) {
 			final @Nullable Object tempValue = map.get(key[keyIndex]);
 			if (tempValue instanceof DataMap) {
@@ -521,7 +521,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		return tempList;
 	}
 
-	private boolean internalContainsKey(final @NotNull DataMap map, final @NotNull String[] key, final int keyIndex) {
+	private boolean internalContainsKey(final @NotNull DataMap map, final @NotNull String[] key, final int keyIndex) { //NOSONAR
 		if (keyIndex < key.length - 1) {
 			final @Nullable Object tempValue = map.get(key[keyIndex]);
 			if (tempValue instanceof DataMap) {
@@ -536,7 +536,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 
 	private int internalSize(final @NotNull DataMap<String, Object> map) {
 		int size = 0;
-		for (final @NotNull DataMap.DataNode entry : map.entryList()) {
+		for (final @NotNull DataMap.DataNode entry : map.entryList()) { //NOSONAR
 			if (entry.getValue() instanceof DataMap) {
 				//noinspection unchecked
 				size += this.internalSize((DataMap) entry.getValue());

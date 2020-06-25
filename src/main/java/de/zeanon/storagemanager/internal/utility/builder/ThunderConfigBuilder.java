@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, ThunderConfig, DataMap, List> {
+public class ThunderConfigBuilder extends StorageManager<ThunderConfigBuilder, ThunderConfig, DataMap, List> { //NOSONAR
 
 
 	private boolean bigData;

@@ -654,7 +654,7 @@ public interface DataStorage {
 	 * @return the Section corresponding to the given key
 	 */
 	@NotNull
-	FlatSection getSection(final @NotNull String sectionKey);
+	FlatSection getSection(final @NotNull String sectionKey); //NOSONAR
 
 	/**
 	 * Get a Section of the DataStorage
@@ -664,5 +664,5 @@ public interface DataStorage {
 	 * @return the Section corresponding to the given key
 	 */
 	@NotNull
-	FlatSection getSectionUseArray(final @NotNull String... sectionKey);
+	FlatSection getSectionUseArray(final @NotNull String... sectionKey); //NOSONAR
 }
