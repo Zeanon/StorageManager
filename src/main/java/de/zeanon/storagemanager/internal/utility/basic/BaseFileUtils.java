@@ -147,7 +147,7 @@ public class BaseFileUtils {
 	 */
 	@Contract("null -> fail")
 	public @NotNull Collection<File> listFolders(final @NotNull File directory) throws IOException {
-		return BaseFileUtils.listFolders(directory, false);
+		return BaseFileUtils.listFolders(directory, false, null, false);
 	}
 
 	/**
@@ -161,15 +161,83 @@ public class BaseFileUtils {
 	@Contract("null, _ -> fail")
 	public @NotNull Collection<File> listFolders(final @NotNull File directory,
 												 final boolean deep) throws IOException {
+		return BaseFileUtils.listFolders(directory, deep, null, false);
+	}
+
+	/**
+	 * List all folders in a given directory
+	 *
+	 * @param directory the directory to look into
+	 * @param regex     the String the filename has to contain
+	 *
+	 * @return the files of the directory that are folders
+	 */
+	@Contract("null, _ -> fail")
+	public @NotNull Collection<File> listFolders(final @NotNull File directory,
+												 final @Nullable String regex) throws IOException {
+		return BaseFileUtils.listFolders(directory, false, regex, false);
+	}
+
+	/**
+	 * List all folders in a given directory
+	 *
+	 * @param directory     the directory to look into
+	 * @param regex         the String the filename has to contain
+	 * @param caseSensitive defines, whether @param regex has to be casesensitive
+	 *
+	 * @return the files of the directory that are folders
+	 */
+	@Contract("null, _, _ -> fail")
+	public @NotNull Collection<File> listFolders(final @NotNull File directory,
+												 final @Nullable String regex,
+												 final boolean caseSensitive) throws IOException {
+		return BaseFileUtils.listFolders(directory, false, regex, caseSensitive);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory the directory to look into
+	 * @param deep      also look through subdirectories
+	 * @param regex     the String the filename has to contain (case insensitive)
+	 *
+	 * @return the files of the directory that are folders
+	 */
+	@Contract("null, _, _ -> fail")
+	public @NotNull Collection<File> listFolders(final @NotNull File directory,
+												 final boolean deep,
+												 final @Nullable String regex) throws IOException {
+		return BaseFileUtils.listFolders(directory, deep, regex, false);
+	}
+
+	/**
+	 * List all folders in a given directory
+	 *
+	 * @param directory     the directory to look into
+	 * @param deep          also look through subdirectories
+	 * @param regex         the String the filename has to contain
+	 * @param caseSensitive defines, whether @param regex has to be casesensitive
+	 *
+	 * @return the files of the directory that are folders
+	 */
+	@Contract("null, _, _, _ -> fail")
+	public @NotNull Collection<File> listFolders(final @NotNull File directory,
+												 final boolean deep,
+												 final @Nullable String regex,
+												 final boolean caseSensitive) throws IOException {
 		final @NotNull Collection<File> files = new GapList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
 			if (fileList != null) {
 				for (final @Nullable File file : fileList) {
-					if (file != null && file.isDirectory()) {
+					if (file != null
+						&& file.isDirectory()
+						&& (regex == null
+							|| (!caseSensitive && BaseFileUtils.removeExtension(file.getName()).toLowerCase().contains(regex.toLowerCase()))
+							|| (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(regex)))) {
 						files.add(file);
 						if (deep) {
-							files.addAll(BaseFileUtils.listFolders(file, true));
+							files.addAll(BaseFileUtils.listFolders(file, true, null, caseSensitive));
 						}
 					}
 				}
@@ -179,7 +247,6 @@ public class BaseFileUtils {
 			throw new IOException("File '" + directory.getAbsolutePath() + "' is no directory");
 		}
 	}
-
 
 	/**
 	 * List all Files in a given directory
@@ -191,7 +258,7 @@ public class BaseFileUtils {
 	@Contract("null -> fail")
 	public @NotNull
 	Collection<File> listFilesAndFolders(final @NotNull File directory) throws IOException {
-		return BaseFileUtils.listFilesAndFolders(directory, false);
+		return BaseFileUtils.listFilesAndFolders(directory, false, null, false);
 	}
 
 	/**
@@ -206,36 +273,39 @@ public class BaseFileUtils {
 	public @NotNull
 	Collection<File> listFilesAndFolders(final @NotNull File directory,
 										 final boolean deep) throws IOException {
-		final @NotNull Collection<File> files = new GapList<>();
-		if (directory.isDirectory()) {
-			final @Nullable File[] fileList = directory.listFiles();
-			if (fileList != null) {
-				for (final @Nullable File file : fileList) {
-					if (file != null) {
-						files.add(file);
-						if (deep && file.isDirectory()) {
-							files.addAll(BaseFileUtils.listFilesAndFolders(file, true));
-						}
-					}
-				}
-			}
-			return files;
-		} else {
-			throw new IOException("File '" + directory.getAbsolutePath() + "' is no directory");
-		}
+		return BaseFileUtils.listFilesAndFolders(directory, deep, null, false);
 	}
-
 
 	/**
 	 * List all Files in a given directory
 	 *
 	 * @param directory the directory to look into
+	 * @param regex     the String the filename has to contain (case insensitive)
 	 *
 	 * @return the files of the given directory
 	 */
-	@Contract("null -> fail;")
-	public @NotNull Collection<File> listFiles(final @NotNull File directory) throws IOException {
-		return BaseFileUtils.listFiles(directory, false);
+	@Contract("null, _ -> fail")
+	public @NotNull
+	Collection<File> listFilesAndFolders(final @NotNull File directory,
+										 final @Nullable String regex) throws IOException {
+		return BaseFileUtils.listFilesAndFolders(directory, false, regex, false);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory     the directory to look into
+	 * @param regex         the String the filename has to contain
+	 * @param caseSensitive defines, whether @param regex has to be casesensitive
+	 *
+	 * @return the files of the given directory
+	 */
+	@Contract("null, _, _ -> fail")
+	public @NotNull
+	Collection<File> listFilesAndFolders(final @NotNull File directory,
+										 final @Nullable String regex,
+										 final boolean caseSensitive) throws IOException {
+		return BaseFileUtils.listFilesAndFolders(directory, false, regex, caseSensitive);
 	}
 
 	/**
@@ -243,22 +313,143 @@ public class BaseFileUtils {
 	 *
 	 * @param directory the directory to look into
 	 * @param deep      also look through subdirectories
+	 * @param regex     the String the filename has to contain (case insensitive)
+	 *
+	 * @return the files of the given directory
+	 */
+	@Contract("null, _, _ -> fail")
+	public @NotNull
+	Collection<File> listFilesAndFolders(final @NotNull File directory,
+										 final boolean deep,
+										 final @Nullable String regex) throws IOException {
+		return BaseFileUtils.listFilesAndFolders(directory, deep, regex, false);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory     the directory to look into
+	 * @param deep          also look through subdirectories
+	 * @param regex         the String the filename has to contain
+	 * @param caseSensitive defines, whether @param regex has to be casesensitive
+	 *
+	 * @return the files of the given directory
+	 */
+	@Contract("null, _, _, _ -> fail")
+	public @NotNull
+	Collection<File> listFilesAndFolders(final @NotNull File directory,
+										 final boolean deep,
+										 final @Nullable String regex,
+										 final boolean caseSensitive) throws IOException {
+		final @NotNull Collection<File> files = new GapList<>();
+		if (directory.isDirectory()) {
+			final @Nullable File[] fileList = directory.listFiles();
+			if (fileList != null) {
+				for (final @Nullable File file : fileList) {
+					if (file != null
+						&& (regex == null
+							|| (!caseSensitive && BaseFileUtils.removeExtension(file.getName()).toLowerCase().contains(regex.toLowerCase()))
+							|| (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(regex)))) {
+						files.add(file);
+
+						if (deep && file.isDirectory()) {
+							files.addAll(BaseFileUtils.listFilesAndFolders(file, true, regex, caseSensitive));
+						}
+					}
+				}
+			}
+			return files;
+		} else {
+			throw new IOException("File '" + directory.getAbsolutePath() + "' is no directory");
+		}
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory the directory to look into
+	 *
+	 * @return the files of the given directory
+	 */
+	@Contract("null -> fail")
+	public @NotNull Collection<File> listFiles(final @NotNull File directory) throws IOException {
+		return BaseFileUtils.listFiles(directory, false, null, false);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory the directory to look into
+	 * @param regex     the String the filename has to contain (case insensitive)
 	 *
 	 * @return the files of the given directory
 	 */
 	@Contract("null, _ -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final boolean deep) throws IOException {
+											   final @Nullable String regex) throws IOException {
+		return BaseFileUtils.listFiles(directory, false, regex, false);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory     the directory to look into
+	 * @param regex         the String the filename has to contain
+	 * @param caseSensitive defines, whether @param regex has to be casesensitive
+	 *
+	 * @return the files of the given directory
+	 */
+	@Contract("null, _, _ -> fail")
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final @Nullable String regex,
+											   final boolean caseSensitive) throws IOException {
+		return BaseFileUtils.listFiles(directory, false, regex, caseSensitive);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory the directory to look into
+	 * @param deep      also look through subdirectories
+	 * @param regex     the String the filename has to contain (case insensitive)
+	 *
+	 * @return the files of the given directory
+	 */
+	@Contract("null, _, _-> fail")
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final boolean deep,
+											   final @Nullable String regex) throws IOException {
+		return BaseFileUtils.listFiles(directory, deep, regex, false);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory     the directory to look into
+	 * @param deep          also look through subdirectories
+	 * @param regex         the String the filename has to contain
+	 * @param caseSensitive defines, whether @param regex has to be casesensitive
+	 *
+	 * @return the files of the given directory
+	 */
+	@Contract("null, _, _, _ -> fail")
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final boolean deep,
+											   final @Nullable String regex,
+											   final boolean caseSensitive) throws IOException {
 		final @NotNull Collection<File> files = new GapList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
 			if (fileList != null) {
 				for (final @Nullable File file : fileList) {
 					if (file != null) {
-						if (file.isFile()) {
+						if (file.isFile()
+							&& (regex == null
+								|| (!caseSensitive && BaseFileUtils.removeExtension(file.getName()).toLowerCase().contains(regex.toLowerCase()))
+								|| (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(regex)))) {
 							files.add(file);
 						} else if (deep && file.isDirectory()) {
-							files.addAll(BaseFileUtils.listFiles(file, true));
+							files.addAll(BaseFileUtils.listFiles(file, true, regex, caseSensitive));
 						}
 					}
 				}
@@ -277,10 +468,10 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@Contract("null, _ -> fail; _, null -> fail")
+	@Contract("null, _,-> fail; _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final @NotNull List<String> extensions) throws IOException {
-		return BaseFileUtils.listFiles(directory, false, extensions.toArray(new String[0]));
+		return BaseFileUtils.listFiles(directory, false, null, false, extensions);
 	}
 
 	/**
@@ -291,18 +482,18 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@Contract("null, _ -> fail; _, null -> fail")
+	@Contract("null, _,-> fail; _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final @NotNull String... extensions) throws IOException {
-		return BaseFileUtils.listFiles(directory, false, extensions);
+		return BaseFileUtils.listFiles(directory, false, null, false, extensions);
 	}
 
 	/**
 	 * List all Files in a given directory
 	 *
 	 * @param directory  the directory to look into
-	 * @param extensions the file extensions to look for
 	 * @param deep       also look through subdirectories
+	 * @param extensions the file extensions to look for
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
@@ -310,21 +501,163 @@ public class BaseFileUtils {
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final boolean deep,
 											   final @NotNull List<String> extensions) throws IOException {
-		return BaseFileUtils.listFiles(directory, deep, extensions.toArray(new String[0]));
+		return BaseFileUtils.listFiles(directory, deep, null, false, extensions);
 	}
 
 	/**
 	 * List all Files in a given directory
 	 *
 	 * @param directory  the directory to look into
-	 * @param extensions the file extensions to look for
 	 * @param deep       also look through subdirectories
+	 * @param extensions the file extensions to look for
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
 	@Contract("null, _, _ -> fail; _, _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final boolean deep,
+											   final @NotNull String... extensions) throws IOException {
+		return BaseFileUtils.listFiles(directory, deep, null, false, extensions);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param regex      the String the filename has to contain (case insensitive)
+	 * @param extensions the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions
+	 */
+	@Contract("null, _, _ -> fail; _, _, null -> fail")
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final @Nullable String regex,
+											   final @NotNull List<String> extensions) throws IOException {
+		return BaseFileUtils.listFiles(directory, false, regex, false, extensions);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param regex      the String the filename has to contain (case insensitive)
+	 * @param extensions the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions
+	 */
+	@Contract("null, _, _ -> fail; _, _, null -> fail")
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final @Nullable String regex,
+											   final @NotNull String... extensions) throws IOException {
+		return BaseFileUtils.listFiles(directory, false, regex, false, extensions);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param regex      the String the filename has to contain (case insensitive)
+	 * @param extensions the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions
+	 */
+	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final @Nullable String regex,
+											   final boolean caseSensitive,
+											   final @NotNull List<String> extensions) throws IOException {
+		return BaseFileUtils.listFiles(directory, false, regex, caseSensitive, extensions);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param regex      the String the filename has to contain (case insensitive)
+	 * @param extensions the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions
+	 */
+	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final @Nullable String regex,
+											   final boolean caseSensitive,
+											   final @NotNull String... extensions) throws IOException {
+		return BaseFileUtils.listFiles(directory, false, regex, caseSensitive, extensions);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param deep       also look through subdirectories
+	 * @param regex      the String the filename has to contain (case insensitive)
+	 * @param extensions the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions
+	 */
+	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final boolean deep,
+											   final @Nullable String regex,
+											   final @NotNull List<String> extensions) throws IOException {
+		return BaseFileUtils.listFiles(directory, deep, regex, false, extensions);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param deep       also look through subdirectories
+	 * @param regex      the String the filename has to contain (case insensitive)
+	 * @param extensions the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions
+	 */
+	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final boolean deep,
+											   final @Nullable String regex,
+											   final @NotNull String... extensions) throws IOException {
+		return BaseFileUtils.listFiles(directory, deep, regex, false, extensions);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory     the directory to look into
+	 * @param deep          also look through subdirectories
+	 * @param regex         the String the filename has to contain
+	 * @param caseSensitive defines, whether @param regex has to be casesensitive
+	 * @param extensions    the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions
+	 */
+	@Contract("null, _, _, _, _ -> fail; _, _, _, _, null -> fail")
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final boolean deep,
+											   final @Nullable String regex,
+											   final boolean caseSensitive,
+											   final @NotNull List<String> extensions) throws IOException {
+		return BaseFileUtils.listFiles(directory, deep, regex, caseSensitive, extensions.toArray(new String[0]));
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory     the directory to look into
+	 * @param deep          also look through subdirectories
+	 * @param regex         the String the filename has to contain
+	 * @param caseSensitive defines, whether @param regex has to be casesensitive
+	 * @param extensions    the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions
+	 */
+	@Contract("null, _, _, _, _ -> fail; _, _, _, _, null -> fail")
+	public @NotNull Collection<File> listFiles(final @NotNull File directory,
+											   final boolean deep,
+											   final @Nullable String regex,
+											   final boolean caseSensitive,
 											   final @NotNull String... extensions) throws IOException {
 		final @NotNull Collection<File> files = new GapList<>();
 		if (directory.isDirectory()) {
@@ -332,10 +665,13 @@ public class BaseFileUtils {
 			if (fileList != null) {
 				for (final @Nullable File file : fileList) {
 					if (file != null) {
-						if (Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)) {
+						if (Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)
+							&& (regex == null
+								|| (!caseSensitive && BaseFileUtils.removeExtension(file.getName()).toLowerCase().contains(regex.toLowerCase()))
+								|| (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(regex)))) {
 							files.add(file);
 						} else if (deep && file.isDirectory()) {
-							files.addAll(BaseFileUtils.listFiles(file, true, extensions));
+							files.addAll(BaseFileUtils.listFiles(file, true, regex, caseSensitive, extensions));
 						}
 					}
 				}
@@ -358,7 +694,7 @@ public class BaseFileUtils {
 	@Contract("null, _ -> fail; _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final @NotNull List<String> extensions) throws IOException {
-		return BaseFileUtils.listFilesAndFolders(directory, false, extensions.toArray(new String[0]));
+		return BaseFileUtils.listFilesAndFolders(directory, false, null, false, extensions.toArray(new String[0]));
 	}
 
 	/**
@@ -372,37 +708,181 @@ public class BaseFileUtils {
 	@Contract("null, _ -> fail; _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final @NotNull String... extensions) throws IOException {
-		return BaseFileUtils.listFilesAndFolders(directory, false, extensions);
+		return BaseFileUtils.listFilesAndFolders(directory, false, null, false, extensions);
 	}
 
 	/**
 	 * List all Files and Folders in a given directory
 	 *
 	 * @param directory  the directory to look into
-	 * @param extensions the file extensions to look for
 	 * @param deep       also look through subdirectories
+	 * @param extensions the file extensions to look for
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	@Contract("null, _, _ -> fail; _, _, null -> fail")
+	@Contract("null, _, _, -> fail; _, _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final boolean deep,
 														 final @NotNull List<String> extensions) throws IOException {
-		return BaseFileUtils.listFilesAndFolders(directory, deep, extensions.toArray(new String[0]));
+		return BaseFileUtils.listFilesAndFolders(directory, deep, null, false, extensions.toArray(new String[0]));
 	}
 
 	/**
 	 * List all Files and Folders in a given directory
 	 *
 	 * @param directory  the directory to look into
-	 * @param extensions the file extensions to look for
 	 * @param deep       also look through subdirectories
+	 * @param extensions the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions and all folders
+	 */
+	@Contract("null, _, _, -> fail; _, _, null -> fail")
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final boolean deep,
+														 final @NotNull String... extensions) throws IOException {
+		return BaseFileUtils.listFilesAndFolders(directory, deep, null, false, extensions);
+	}
+
+	/**
+	 * List all Files and Folders in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param regex      the String the filename has to contain
+	 * @param extensions the file extensions to look for
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
 	@Contract("null, _, _ -> fail; _, _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final @Nullable String regex,
+														 final @NotNull List<String> extensions) throws IOException {
+		return BaseFileUtils.listFilesAndFolders(directory, false, regex, false, extensions.toArray(new String[0]));
+	}
+
+	/**
+	 * List all Files and Folders in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param regex      the String the filename has to contain
+	 * @param extensions the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions and all folders
+	 */
+	@Contract("null, _, _ -> fail; _, _, null -> fail")
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final @Nullable String regex,
+														 final @NotNull String... extensions) throws IOException {
+		return BaseFileUtils.listFilesAndFolders(directory, false, regex, false, extensions);
+	}
+
+	/**
+	 * List all Files and Folders in a given directory
+	 *
+	 * @param directory     the directory to look into
+	 * @param regex         the String the filename has to contain
+	 * @param caseSensitive defines, whether @param regex has to be casesensitive
+	 * @param extensions    the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions and all folders
+	 */
+	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final @Nullable String regex,
+														 final boolean caseSensitive,
+														 final @NotNull List<String> extensions) throws IOException {
+		return BaseFileUtils.listFilesAndFolders(directory, false, regex, caseSensitive, extensions.toArray(new String[0]));
+	}
+
+	/**
+	 * List all Files and Folders in a given directory
+	 *
+	 * @param directory     the directory to look into
+	 * @param regex         the String the filename has to contain
+	 * @param caseSensitive defines, whether @param regex has to be casesensitive
+	 * @param extensions    the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions and all folders
+	 */
+	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final @Nullable String regex,
+														 final boolean caseSensitive,
+														 final @NotNull String... extensions) throws IOException {
+		return BaseFileUtils.listFilesAndFolders(directory, false, regex, caseSensitive, extensions);
+	}
+
+	/**
+	 * List all Files and Folders in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param deep       also look through subdirectories
+	 * @param regex      the String the filename has to contain
+	 * @param extensions the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions and all folders
+	 */
+	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final boolean deep,
+														 final @Nullable String regex,
+														 final @NotNull List<String> extensions) throws IOException {
+		return BaseFileUtils.listFilesAndFolders(directory, deep, regex, false, extensions.toArray(new String[0]));
+	}
+
+	/**
+	 * List all Files and Folders in a given directory
+	 *
+	 * @param directory  the directory to look into
+	 * @param deep       also look through subdirectories
+	 * @param regex      the String the filename has to contain
+	 * @param extensions the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions and all folders
+	 */
+	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final boolean deep,
+														 final @Nullable String regex,
+														 final @NotNull String... extensions) throws IOException {
+		return BaseFileUtils.listFilesAndFolders(directory, deep, regex, false, extensions);
+	}
+
+	/**
+	 * List all Files and Folders in a given directory
+	 *
+	 * @param directory     the directory to look into
+	 * @param deep          also look through subdirectories
+	 * @param regex         the String the filename has to contain
+	 * @param caseSensitive defines, whether @param regex has to be casesensitive
+	 * @param extensions    the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions and all folders
+	 */
+	@Contract("null, _, _, _, _ -> fail; _, _, _, _, null -> fail")
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final boolean deep,
+														 final @Nullable String regex,
+														 final boolean caseSensitive,
+														 final @NotNull List<String> extensions) throws IOException {
+		return BaseFileUtils.listFilesAndFolders(directory, deep, regex, caseSensitive, extensions.toArray(new String[0]));
+	}
+
+	/**
+	 * List all Files and Folders in a given directory
+	 *
+	 * @param directory     the directory to look into
+	 * @param deep          also look through subdirectories
+	 * @param regex         the String the filename has to contain
+	 * @param caseSensitive defines, whether @param regex has to be casesensitive
+	 * @param extensions    the file extensions to look for
+	 *
+	 * @return the files of the given directory with the given extensions and all folders
+	 */
+	@Contract("null, _, _, _, _ -> fail; _, _, _, _, null -> fail")
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final boolean deep,
+														 final @Nullable String regex,
+														 final boolean caseSensitive,
 														 final @NotNull String... extensions) throws IOException {
 		final @NotNull Collection<File> files = new GapList<>();
 		if (directory.isDirectory()) {
@@ -410,12 +890,15 @@ public class BaseFileUtils {
 			if (fileList != null) {
 				for (final @Nullable File file : fileList) {
 					if (file != null) {
-						if (Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)) {
+						if (Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)
+							&& (regex == null
+								|| (!caseSensitive && BaseFileUtils.removeExtension(file.getName()).toLowerCase().contains(regex.toLowerCase()))
+								|| (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(regex)))) {
 							files.add(file);
 						} else if (file.isDirectory()) {
 							files.add(file);
 							if (deep) {
-								files.addAll(BaseFileUtils.listFilesAndFolders(file, true, extensions));
+								files.addAll(BaseFileUtils.listFilesAndFolders(file, true, regex, caseSensitive, extensions));
 							}
 						}
 					}
@@ -823,6 +1306,7 @@ public class BaseFileUtils {
 			|| ch == '.') {
 			return "";
 		}
+
 		final int dotInd = filePath.lastIndexOf('.');
 		final int sepInd = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
 		if (dotInd <= sepInd) {
