@@ -44,7 +44,7 @@ public class TomlConfigBuilder extends StorageManager<TomlConfigBuilder, TomlCon
 	@Contract("-> new")
 	public final @NotNull
 	TomlConfig create() {
-		return new TomlConfigBuilder.LocalTomlConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.synchronizedData, this.mapType, this.listType);
+		return new TomlConfigBuilder.LocalTomlConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.synchronizeData, this.mapType, this.listType);
 	}
 
 	@Override
@@ -68,10 +68,10 @@ public class TomlConfigBuilder extends StorageManager<TomlConfigBuilder, TomlCon
 								final @Nullable InputStream inputStream,
 								final @NotNull ReloadSetting reloadSetting,
 								final @NotNull CommentSetting commentSetting,
-								final boolean synchronizedData,
+								final boolean synchronizeData,
 								final @NotNull Class<? extends Map> map,
 								final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, commentSetting, synchronizedData, map, list);
+			super(file, inputStream, reloadSetting, commentSetting, synchronizeData, map, list);
 		}
 	}
 }

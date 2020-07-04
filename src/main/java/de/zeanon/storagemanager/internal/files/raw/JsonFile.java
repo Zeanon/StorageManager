@@ -44,12 +44,12 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 
 	/**
-	 * @param file             the File to be used as a backend
-	 * @param inputStream      the FileContent to be set on the creation of the File
-	 * @param reloadSetting    the ReloadSetting to be used with this instance
-	 * @param synchronizedData if the saved data should be synchronized
-	 * @param map              the Map implementation to be used, default is HashMap or ConcurrentHashMap if concurrent
-	 * @param list             the List implementation to be used, default ist GapList
+	 * @param file            the File to be used as a backend
+	 * @param inputStream     the FileContent to be set on the creation of the File
+	 * @param reloadSetting   the ReloadSetting to be used with this instance
+	 * @param synchronizeData if the saved data should be synchronized
+	 * @param map             the Map implementation to be used, default is HashMap or ConcurrentHashMap if concurrent
+	 * @param list            the List implementation to be used, default ist GapList
 	 *
 	 * @throws FileParseException if the Content of the File can not be parsed properly
 	 * @throws RuntimeIOException if the File can not be accessed properly
@@ -57,10 +57,10 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	protected JsonFile(final @NotNull File file,
 					   final @Nullable InputStream inputStream,
 					   final @NotNull ReloadSetting reloadSetting,
-					   final boolean synchronizedData,
+					   final boolean synchronizeData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, FileType.JSON, new LocalFileData(new CollectionsProvider<>(map, list), synchronizedData), reloadSetting);
+		super(file, FileType.JSON, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting);
 
 		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 

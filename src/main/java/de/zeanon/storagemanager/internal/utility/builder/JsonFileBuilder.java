@@ -33,7 +33,7 @@ public class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, M
 	@Contract("-> new")
 	public final @NotNull
 	JsonFile create() {
-		return new LocalJsonFile(super.file, this.inputStream, this.reloadSetting, this.synchronizedData, this.mapType, this.listType);
+		return new LocalJsonFile(super.file, this.inputStream, this.reloadSetting, this.synchronizeData, this.mapType, this.listType);
 	}
 
 	@Override
@@ -58,10 +58,10 @@ public class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, M
 		private LocalJsonFile(final @NotNull File file,
 							  final @Nullable InputStream inputStream,
 							  final @NotNull ReloadSetting reloadSetting,
-							  final boolean synchronizedData,
+							  final boolean synchronizeData,
 							  final @NotNull Class<? extends Map> map,
 							  final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, synchronizedData, map, list);
+			super(file, inputStream, reloadSetting, synchronizeData, map, list);
 		}
 	}
 }

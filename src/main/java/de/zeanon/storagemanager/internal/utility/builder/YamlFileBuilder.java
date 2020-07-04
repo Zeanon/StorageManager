@@ -43,7 +43,7 @@ public class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, M
 	@Contract("-> new")
 	public final @NotNull
 	YamlFile create() {
-		return new LocalYamlFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.synchronizedData, this.mapType, this.listType);
+		return new LocalYamlFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.synchronizeData, this.mapType, this.listType);
 	}
 
 	@Override
@@ -67,10 +67,10 @@ public class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, M
 							  final @Nullable InputStream inputStream,
 							  final @NotNull ReloadSetting reloadSetting,
 							  final @NotNull CommentSetting commentSetting,
-							  final boolean synchronizedData,
+							  final boolean synchronizeData,
 							  final @NotNull Class<? extends Map> map,
 							  final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, commentSetting, synchronizedData, map, list);
+			super(file, inputStream, reloadSetting, commentSetting, synchronizeData, map, list);
 		}
 	}
 }

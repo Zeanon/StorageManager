@@ -44,7 +44,7 @@ public abstract class StorageManager<B extends StorageManager, F extends FlatFil
 	Class<? extends M> mapType;
 	protected @NotNull
 	Class<? extends L> listType;
-	protected boolean synchronizedData = false;
+	protected boolean synchronizeData = false;
 
 
 	@Contract(pure = true)
@@ -404,8 +404,8 @@ public abstract class StorageManager<B extends StorageManager, F extends FlatFil
 
 	@Contract("_ -> this")
 	public final @NotNull
-	B synchronizedData(final boolean synchronizedData) {
-		this.synchronizedData = synchronizedData;
+	B synchronizeData(final boolean synchronizeData) {
+		this.synchronizeData = synchronizeData;
 		//noinspection unchecked
 		return (B) this;
 	}

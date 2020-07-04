@@ -51,7 +51,7 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 	@Contract("-> new")
 	public final @NotNull
 	ThunderFile create() {
-		return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bufferSize, this.autoFlush, this.bigData, this.concurrentData, this.synchronizedData, this.mapType, this.listType);
+		return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bufferSize, this.autoFlush, this.bigData, this.concurrentData, this.synchronizeData, this.mapType, this.listType);
 	}
 
 	@Contract("_ -> this")
@@ -89,10 +89,10 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 								 final boolean autoFlush,
 								 final boolean bigData,
 								 final boolean concurrentData,
-								 final boolean synchronizedData,
+								 final boolean synchronizeData,
 								 final @NotNull Class<? extends DataMap> map,
 								 final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, commentSetting, bufferSize, autoFlush, bigData, concurrentData, synchronizedData, map, list);
+			super(file, inputStream, reloadSetting, commentSetting, bufferSize, autoFlush, bigData, concurrentData, synchronizeData, map, list);
 		}
 	}
 }

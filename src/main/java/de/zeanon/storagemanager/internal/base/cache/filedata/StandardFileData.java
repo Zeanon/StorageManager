@@ -67,21 +67,21 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * Define if the Map should be synchronized
 	 */
 	@Setter
-	private boolean synchronizedData;
+	private boolean synchronizeData;
 
 
 	/**
 	 * Initializes a new FileData
 	 *
 	 * @param collectionsProvider the internal Provider to be used
-	 * @param synchronize         whether the internal Map should be synchronized
+	 * @param synchronizeData     whether the internal Map should be synchronized
 	 */
 	@Contract(pure = true)
-	protected StandardFileData(final @NotNull CollectionsProvider<M, L> collectionsProvider, final boolean synchronize) {
+	protected StandardFileData(final @NotNull CollectionsProvider<M, L> collectionsProvider, final boolean synchronizeData) {
 		this.collectionsProvider = collectionsProvider;
-		this.synchronizedData = synchronize;
+		this.synchronizeData = synchronizeData;
 		//noinspection unchecked
-		this.dataMap = this.synchronizedData ? ((M) Collections.synchronizedMap(this.collectionsProvider().newMap())) : this.collectionsProvider().newMap(); //NOSONAR
+		this.dataMap = this.synchronizeData ? ((M) Collections.synchronizedMap(this.collectionsProvider().newMap())) : this.collectionsProvider().newMap(); //NOSONAR
 	}
 
 	/**
@@ -202,10 +202,10 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	public void loadData(final @Nullable M map) {
 		if (map != null) {
 			//noinspection unchecked
-			this.dataMap = this.synchronizedData ? ((M) Collections.synchronizedMap(map)) : map;
+			this.dataMap = this.synchronizeData ? ((M) Collections.synchronizedMap(map)) : map;
 		} else {
 			//noinspection unchecked
-			this.dataMap = this.synchronizedData ? ((M) Collections.synchronizedMap(this.collectionsProvider().newMap())) : this.collectionsProvider().newMap(); //NOSONAR
+			this.dataMap = this.synchronizeData ? ((M) Collections.synchronizedMap(this.collectionsProvider().newMap())) : this.collectionsProvider().newMap(); //NOSONAR
 		}
 	}
 

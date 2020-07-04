@@ -35,13 +35,13 @@ public class TomlConfig extends TomlFile implements Config {
 
 
 	/**
-	 * @param file             the File to be used as a backend
-	 * @param inputStream      the FileContent to be set on the creation of the File
-	 * @param reloadSetting    the ReloadSetting to be used with this instance
-	 * @param commentSetting   the CommentSetting to be used with this instance
-	 * @param synchronizedData if the saved data should be synchronized
-	 * @param map              the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
-	 * @param list             the List implementation to be used, default ist GapList
+	 * @param file            the File to be used as a backend
+	 * @param inputStream     the FileContent to be set on the creation of the File
+	 * @param reloadSetting   the ReloadSetting to be used with this instance
+	 * @param commentSetting  the CommentSetting to be used with this instance
+	 * @param synchronizeData if the saved data should be synchronized
+	 * @param map             the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
+	 * @param list            the List implementation to be used, default ist GapList
 	 *
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
@@ -51,10 +51,10 @@ public class TomlConfig extends TomlFile implements Config {
 						 final @Nullable InputStream inputStream,
 						 final @NotNull ReloadSetting reloadSetting,
 						 final @NotNull CommentSetting commentSetting,
-						 final boolean synchronizedData,
+						 final boolean synchronizeData,
 						 final @NotNull Class<? extends Map> map,
 						 final @NotNull Class<? extends List> list) {
-		super(file, inputStream, reloadSetting, synchronizedData, map, list);
+		super(file, inputStream, reloadSetting, synchronizeData, map, list);
 		this.commentSetting = commentSetting;
 	}
 

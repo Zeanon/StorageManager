@@ -171,7 +171,7 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	/**
 	 * Set whether the internal Data should be synchronized
 	 */
-	void synchronizedData(final boolean synchronize);
+	void synchronizeData(final boolean synchronizeData);
 
 	/**
 	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to

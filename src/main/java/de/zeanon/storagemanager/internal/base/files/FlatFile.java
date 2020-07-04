@@ -239,7 +239,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * Set whether the internal data should be synchronized
 	 */
 	public void synchronizeData(final boolean synchronize) {
-		this.fileData().synchronizedData(synchronize);
+		this.fileData().synchronizeData(synchronize);
 	}
 
 	/**
