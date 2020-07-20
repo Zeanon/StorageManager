@@ -36,135 +36,113 @@ public interface ReadWriteFileLock extends AutoCloseable {
 	 *
 	 * @return the new Lock
 	 */
-	@NotNull
-	ReadWriteFileLock convertLock();
+	@NotNull ReadWriteFileLock convertLock();
 
 	/**
 	 * @return the ExtendedFileLock corresponding to this ReadWriteFileLock
 	 */
-	@NotNull
-	ExtendedFileLock baseLock();
+	@NotNull ExtendedFileLock baseLock();
 
 	/**
 	 * @return the RandomAccessFile corresponding to this ReadWriteFileLock
 	 */
-	@NotNull
-	RandomAccessFile getRandomAccessFile();
+	@NotNull RandomAccessFile getRandomAccessFile();
 
 	/**
 	 * @return the FileChannel corresponding to this ReadWriteFileLock
 	 */
-	@NotNull
-	FileChannel getFileChannel();
+	@NotNull FileChannel getFileChannel();
 
 	/**
 	 * @return the FilePath of the corresponding File
 	 */
-	@NotNull
-	String getFilePath();
+	@NotNull String getFilePath();
 
 	/**
 	 * @return a new Writer for the corresponding File
 	 */
-	@NotNull
-	Writer createWriter();
+	@NotNull Writer createWriter();
 
 	/**
 	 * @return a new Writer for the corresponding File
 	 */
-	@NotNull
-	Writer createWriter(final @NotNull String csName);
+	@NotNull Writer createWriter(final @NotNull String csName);
 
 	/**
 	 * @return a new Writer for the corresponding File
 	 */
-	@NotNull
-	Writer createWriter(final @NotNull CharsetEncoder charsetEncoder, final int minBufferCap);
+	@NotNull Writer createWriter(final @NotNull CharsetEncoder charsetEncoder, final int minBufferCap);
 
 	/**
 	 * @return a new PrintWriter for the corresponding File
 	 */
-	@NotNull
-	PrintWriter createPrintWriter();
+	@NotNull PrintWriter createPrintWriter();
 
 	/**
 	 * @return a new PrintWriter for the corresponding File
 	 */
-	@NotNull
-	PrintWriter createPrintWriter(final boolean autoFlush);
+	@NotNull PrintWriter createPrintWriter(final boolean autoFlush);
 
 	/**
 	 * @return a new PrintWriter for the corresponding File
 	 */
-	@NotNull
-	PrintWriter createPrintWriter(final @NotNull String csName);
+	@NotNull PrintWriter createPrintWriter(final @NotNull String csName);
 
 	/**
 	 * @return a new PrintWriter for the corresponding File
 	 */
-	@NotNull
-	PrintWriter createPrintWriter(final @NotNull String csName, final boolean autoFlush);
+	@NotNull PrintWriter createPrintWriter(final @NotNull String csName, final boolean autoFlush);
 
 	/**
 	 * @return a new Reader for the corresponding File
 	 */
-	@NotNull
-	Reader createReader();
+	@NotNull Reader createReader();
 
 	/**
 	 * @return a new Reader for the corresponding File
 	 */
-	@NotNull
-	Reader createReader(final @NotNull String csName);
+	@NotNull Reader createReader(final @NotNull String csName);
 
 	/**
 	 * @return a new BufferedReader for the corresponding File
 	 */
-	@NotNull
-	BufferedReader createBufferedReader();
+	@NotNull BufferedReader createBufferedReader();
 
 	/**
 	 * @return a new BufferedReader for the corresponding File
 	 */
-	@NotNull
-	BufferedReader createBufferedReader(final @NotNull String csName);
+	@NotNull BufferedReader createBufferedReader(final @NotNull String csName);
 
 	/**
 	 * @return a new BufferedReader for the corresponding File
 	 */
-	@NotNull
-	BufferedReader createBufferedReader(final int buffer_size);
+	@NotNull BufferedReader createBufferedReader(final int buffer_size);
 
 	/**
 	 * @return a new BufferedReader for the corresponding File
 	 */
-	@NotNull
-	BufferedReader createBufferedReader(final @NotNull String csName, final int buffer_size);
+	@NotNull BufferedReader createBufferedReader(final @NotNull String csName, final int buffer_size);
 
 
 	/**
 	 * @return a new InputStream for the corresponding File
 	 */
-	@NotNull
-	InputStream createInputStream();
+	@NotNull InputStream createInputStream();
 
 	/**
 	 * @return a new BufferedInputStream for the corresponding File
 	 */
-	@NotNull
-	BufferedInputStream createBufferedInputStream();
+	@NotNull BufferedInputStream createBufferedInputStream();
 
 	/**
 	 * @return a new InputStream for the corresponding File
 	 */
-	@NotNull
-	OutputStream createOutputStream();
+	@NotNull OutputStream createOutputStream();
 
 	/**
 	 * @return a new BufferedInputStream for the corresponding File
 	 */
-	@NotNull
-	BufferedOutputStream createBufferedOutputStream();
+	@NotNull BufferedOutputStream createBufferedOutputStream();
 
 	/**
 	 * Truncate the FileChannel of the corresponding File to the given size

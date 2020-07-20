@@ -51,8 +51,7 @@ public class ConcurrentBigDataMap<K, V> extends ConcurrentAbstractDataMap<K, V> 
 	 * @return a complete copy of this Map
 	 */
 	@Override
-	public @NotNull
-	DataMap<K, V> clone() {
+	public @NotNull DataMap<K, V> clone() {
 		return new ConcurrentBigDataMap<>(this);
 	}
 

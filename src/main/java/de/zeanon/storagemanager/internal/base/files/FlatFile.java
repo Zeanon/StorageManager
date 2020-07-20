@@ -36,14 +36,10 @@ import org.jetbrains.annotations.Nullable;
 public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L extends List> implements DataStorage, Comparable<FlatFile> { //NOSONAR
 
 
-	private final @NotNull
-	File file;
-	private final @NotNull
-	D fileData;
-	private final @NotNull
-	FileType fileType;
-	private final @NotNull
-	CollectionsProvider<M, L> collectionsProvider;
+	private final @NotNull File file;
+	private final @NotNull D fileData;
+	private final @NotNull FileType fileType;
+	private final @NotNull CollectionsProvider<M, L> collectionsProvider;
 	@Setter(AccessLevel.PROTECTED)
 	private volatile long lastLoaded;
 	/**
@@ -55,8 +51,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 */
 	@Setter
 	@Accessors(fluent = true, chain = false)
-	private @NotNull
-	ReloadSetting reloadSetting;
+	private @NotNull ReloadSetting reloadSetting;
 
 
 	protected FlatFile(final @NotNull File file,
@@ -79,13 +74,11 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 
-	public @NotNull
-	String getPath() {
+	public @NotNull String getPath() {
 		return this.file().getPath();
 	}
 
-	public @NotNull
-	String getCanonicalPath() {
+	public @NotNull String getCanonicalPath() {
 		try {
 			return this.file().getCanonicalPath();
 		} catch (final @NotNull IOException | SecurityException e) {
@@ -96,8 +89,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		}
 	}
 
-	public @NotNull
-	String getName() {
+	public @NotNull String getName() {
 		return this.file().getName();
 	}
 
@@ -176,8 +168,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.reload();
 	}
 
-	public @NotNull
-	String getAbsolutePath() {
+	public @NotNull String getAbsolutePath() {
 		return this.file().getAbsolutePath();
 	}
 
@@ -330,8 +321,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return the keys and their corresponding values as a Map
 	 */
 	@Override
-	public @NotNull
-	Map<String, Object> getAll(final @NotNull String... keys) {
+	public @NotNull Map<String, Object> getAll(final @NotNull String... keys) {
 		this.update();
 
 		//noinspection unchecked
@@ -350,8 +340,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return the keys and their corresponding values as a Map
 	 */
 	@Override
-	public @NotNull
-	Map<String[], Object> getAllUseArray(final @NotNull String[]... keys) {
+	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[]... keys) {
 		this.update();
 
 		//noinspection unchecked
@@ -370,8 +359,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return the keys and their corresponding values as a Map
 	 */
 	@Override
-	public @NotNull
-	Map<String, Object> getAll(final @NotNull Collection<String> keys) {
+	public @NotNull Map<String, Object> getAll(final @NotNull Collection<String> keys) {
 		this.update();
 
 		//noinspection unchecked
@@ -390,8 +378,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return the keys and their corresponding values as a Map
 	 */
 	@Override
-	public @NotNull
-	Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys) {
+	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull Collection<String[]> keys) {
 		this.update();
 
 		//noinspection unchecked
@@ -411,9 +398,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return the keys and their corresponding values as a Map
 	 */
 	@Override
-	public @NotNull
-	Map<String, Object> getAll(final @NotNull String blockKey,
-							   final @NotNull String... keys) {
+	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey,
+											   final @NotNull String... keys) {
 		this.update();
 
 		//noinspection unchecked
@@ -433,9 +419,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return the keys and their corresponding values as a Map
 	 */
 	@Override
-	public @NotNull
-	Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey,
-										 final @NotNull Collection<String[]> keys) {
+	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey,
+														 final @NotNull Collection<String[]> keys) {
 		this.update();
 
 		//noinspection unchecked
@@ -458,9 +443,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return the keys and their corresponding values as a Map
 	 */
 	@Override
-	public @NotNull
-	Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey,
-										 final @NotNull String[]... keys) {
+	public @NotNull Map<String[], Object> getAllUseArray(final @NotNull String[] blockKey,
+														 final @NotNull String[]... keys) {
 		this.update();
 
 		//noinspection unchecked
@@ -483,9 +467,8 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return the keys and their corresponding values as a Map
 	 */
 	@Override
-	public @NotNull
-	Map<String, Object> getAll(final @NotNull String blockKey,
-							   final @NotNull Collection<String> keys) {
+	public @NotNull Map<String, Object> getAll(final @NotNull String blockKey,
+											   final @NotNull Collection<String> keys) {
 		this.update();
 
 		//noinspection unchecked
@@ -788,8 +771,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	/**
 	 * Read the Content of the File and parse it
 	 */
-	protected abstract @NotNull
-	M readFile();
+	protected abstract @NotNull M readFile();
 
 	/**
 	 * Checks if the File needs to be reloaded and does so if true.

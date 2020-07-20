@@ -31,22 +31,19 @@ public class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, M
 
 	@Override
 	@Contract("-> new")
-	public final @NotNull
-	JsonFile create() {
+	public final @NotNull JsonFile create() {
 		return new LocalJsonFile(super.file, this.inputStream, this.reloadSetting, this.synchronizeData, this.mapType, this.listType);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull
-	JsonFileBuilder bigList(final boolean bigList) {
+	public @NotNull JsonFileBuilder bigList(final boolean bigList) {
 		return this.listType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull
-	JsonFileBuilder concurrentData(final boolean concurrentData) {
+	public @NotNull JsonFileBuilder concurrentData(final boolean concurrentData) {
 		return this.mapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 

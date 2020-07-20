@@ -1,7 +1,7 @@
 package de.zeanon.storagemanager.internal.base.exceptions;
 
 /**
- * A basic Exception thrown by the ThunderEditor if something went wrong with parsing the File
+ * A basic Exception thrown by the ThunderFileParser if something went wrong with parsing the File
  *
  * @author Zeanon
  * @version 1.0.0

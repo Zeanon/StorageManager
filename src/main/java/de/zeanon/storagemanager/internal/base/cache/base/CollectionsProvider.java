@@ -33,14 +33,12 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 	 * The Map implementation to be used
 	 */
 	@Getter
-	private @NotNull
-	Class<? extends M> mapType;
+	private @NotNull Class<? extends M> mapType;
 	/**
 	 * The List implementation to be used
 	 */
 	@Getter
-	private @NotNull
-	Class<? extends L> listType;
+	private @NotNull Class<? extends L> listType;
 
 
 	public void setMapType(final @NotNull Class<? extends M> mapType) {
@@ -55,8 +53,7 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 	/**
 	 * Get yourself a new Instance of the saved Map-Type
 	 */
-	public @NotNull
-	M newMap() {
+	public @NotNull M newMap() {
 		try {
 			return this.mapType.getDeclaredConstructor().newInstance();
 		} catch (final @NotNull InstantiationException
@@ -70,8 +67,7 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 	/**
 	 * Get yourself a new Instance of the saved List-Type
 	 */
-	public @NotNull
-	L newList() {
+	public @NotNull L newList() {
 		try {
 			return this.listType.getDeclaredConstructor().newInstance();
 		} catch (final @NotNull InstantiationException
@@ -85,8 +81,7 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 	/**
 	 * Get yourself a new Instance of the saved Map-Type with the given parameters
 	 */
-	public @NotNull
-	M newMap(final @NotNull Object... parameters) {
+	public @NotNull M newMap(final @NotNull Object... parameters) {
 		try {
 			final @NotNull List<Class<?>> parameterTypes = new GapList<>();
 			for (final @NotNull Object parameter : parameters) {
@@ -105,9 +100,8 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 	/**
 	 * Get yourself a new Instance of the saved Map-Type with the given parameters and parameter-types
 	 */
-	public @NotNull
-	M newMap(final @NotNull Class<?>[] parameterTypes,
-			 final @NotNull Object... parameters) {
+	public @NotNull M newMap(final @NotNull Class<?>[] parameterTypes,
+							 final @NotNull Object... parameters) {
 		try {
 			return this.mapType.getDeclaredConstructor(parameterTypes)
 							   .newInstance(parameters);
@@ -122,8 +116,7 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 	/**
 	 * Get yourself a new Instance of the saved List-Type with the given parameters
 	 */
-	public @NotNull
-	L newList(final @NotNull Object... parameters) {
+	public @NotNull L newList(final @NotNull Object... parameters) {
 		try {
 			final @NotNull List<Class<?>> parameterTypes = new GapList<>();
 			for (final @NotNull Object parameter : parameters) {
@@ -142,9 +135,8 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 	/**
 	 * Get yourself a new Instance of the saved List-Type with the given parameters and parameter-types
 	 */
-	public @NotNull
-	L newList(final @NotNull Class<?>[] parameterTypes,
-			  final @NotNull Object... parameters) {
+	public @NotNull L newList(final @NotNull Class<?>[] parameterTypes,
+							  final @NotNull Object... parameters) {
 		try {
 			return this.listType.getDeclaredConstructor(parameterTypes)
 								.newInstance(parameters);

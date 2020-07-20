@@ -13,7 +13,7 @@ import de.zeanon.storagemanager.internal.base.interfaces.CommentSetting;
 import de.zeanon.storagemanager.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storagemanager.internal.files.section.YamlFileSection;
 import de.zeanon.storagemanager.internal.utility.basic.BaseFileUtils;
-import de.zeanon.storagemanager.internal.utility.editor.YamlEditor;
+import de.zeanon.storagemanager.internal.utility.parser.YamlFileParser;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -84,7 +84,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 	@Override
 	public void save() {
 		try {
-			YamlEditor.writeData(this.file(), this.fileData().dataMap(), this.getCommentSetting(), this.collectionsProvider());
+			YamlFileParser.writeData(this.file(), this.fileData().dataMap(), this.getCommentSetting(), this.collectionsProvider());
 		} catch (final @NotNull RuntimeIOException e) {
 			throw new RuntimeIOException("Error while writing to "
 										 + this.getAbsolutePath()
@@ -111,8 +111,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull
-	YamlFileSection getSection(final @NotNull String sectionKey) {
+	public @NotNull YamlFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -124,15 +123,13 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull
-	YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
 
 	@Override
-	protected @NotNull
-	Map readFile() {
+	protected @NotNull Map readFile() {
 		try (final @NotNull FileReader tempReader = new FileReader(this.file())) {
 			//noinspection unchecked
 			return (Map<String, Object>) new YamlReader(tempReader).read();
@@ -150,21 +147,18 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 		YAML();
 
 
-		private final @NotNull
-		String extension = "yml";
+		private final @NotNull String extension = "yml";
 
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull
-		String toLowerCase() {
+		public @NotNull String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull
-		String toString() {
+		public @NotNull String toString() {
 			return this.extension;
 		}
 	}

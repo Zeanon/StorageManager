@@ -5,7 +5,7 @@ import de.zeanon.storagemanager.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.storagemanager.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storagemanager.internal.base.interfaces.DataMap;
 import de.zeanon.storagemanager.internal.utility.basic.Objects;
-import de.zeanon.storagemanager.internal.utility.editor.ThunderEditor;
+import de.zeanon.storagemanager.internal.utility.parser.ThunderFileParser;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -33,12 +33,11 @@ public class ThunderUtils {
 	 *
 	 * @return a List containing the Header of the FileData
 	 */
-	public @NotNull
-	List<String> getHeader(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData) { //NOSONAR
+	public @NotNull List<String> getHeader(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData) { //NOSONAR
 		//noinspection unchecked
 		final @NotNull List<String> result = fileData.collectionsProvider().newList();
 		for (final @NotNull DataMap.DataNode<String, Object> entry : fileData.blockEntryList()) {
-			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
 				result.add(entry.getKey());
 			} else {
 				return result;
@@ -110,8 +109,7 @@ public class ThunderUtils {
 	 *
 	 * @return a List containing the Footer of the FileData
 	 */
-	public @NotNull
-	List<String> getFooter(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData) { //NOSONAR
+	public @NotNull List<String> getFooter(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData) { //NOSONAR
 		//noinspection unchecked
 		final @NotNull List<String> result = fileData.collectionsProvider().newList();
 		final @NotNull List<DataMap.DataNode<String, Object>> entryList = fileData.blockEntryList();
@@ -190,7 +188,7 @@ public class ThunderUtils {
 			//noinspection unchecked
 			final @NotNull List<String> result = fileData.collectionsProvider().newList();
 			for (final @NotNull DataMap.DataNode<String, Object> entry : Objects.notNull(fileData.blockEntryList(key))) {
-				if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
+				if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
 					result.add(entry.getKey());
 				} else {
 					return result;
@@ -218,7 +216,7 @@ public class ThunderUtils {
 			//noinspection unchecked
 			final @NotNull List<String> result = fileData.collectionsProvider().newList();
 			for (final @NotNull DataMap.DataNode<String, Object> entry : Objects.notNull(fileData.blockEntryListUseArray(key))) {
-				if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
+				if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
 					result.add(entry.getKey());
 				} else {
 					return result;
@@ -240,8 +238,7 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public @NotNull
-	List<String> getFooter(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String key) { //NOSONAR
+	public @NotNull List<String> getFooter(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String key) { //NOSONAR
 		//noinspection unchecked
 		final @NotNull List<String> result = fileData.collectionsProvider().newList();
 		return ThunderUtils.internalGetFooter(result, Objects.notNull(fileData.entryList(key)));
@@ -257,8 +254,7 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public @NotNull
-	List<String> getFooterUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String... key) { //NOSONAR
+	public @NotNull List<String> getFooterUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String... key) { //NOSONAR
 		//noinspection unchecked
 		return ThunderUtils.internalGetFooter(fileData.collectionsProvider().newList(), Objects.notNull(fileData.blockEntryListUseArray(key)));
 	}
@@ -271,8 +267,7 @@ public class ThunderUtils {
 	 *
 	 * @return a List containing the Comments of the FileData
 	 */
-	public @NotNull
-	List<String> getComments(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final boolean deep) { //NOSONAR
+	public @NotNull List<String> getComments(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final boolean deep) { //NOSONAR
 		return ThunderUtils.internalGetComments(deep ? fileData.entryList() : fileData.blockEntryList(), fileData.collectionsProvider());
 	}
 
@@ -287,8 +282,7 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public @NotNull
-	List<String> getComments(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String key, final boolean deep) { //NOSONAR
+	public @NotNull List<String> getComments(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String key, final boolean deep) { //NOSONAR
 		return ThunderUtils.internalGetComments(Objects.notNull(deep ? fileData.entryList(key) : fileData.blockEntryList(key)), fileData.collectionsProvider());
 	}
 
@@ -303,19 +297,17 @@ public class ThunderUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public @NotNull
-	List<String> getCommentsUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String[] key, final boolean deep) { //NOSONAR
+	public @NotNull List<String> getCommentsUseArray(final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, final @NotNull String[] key, final boolean deep) { //NOSONAR
 		return ThunderUtils.internalGetComments(Objects.notNull(deep ? fileData.entryListUseArray(key) : fileData.blockEntryListUseArray(key)), fileData.collectionsProvider());
 	}
 
 
 	// <Internal>
 	@Contract("_, _ -> param1")
-	private @NotNull
-	List<String> internalGetFooter(final @NotNull List<String> result, final @NotNull List<DataMap.DataNode<String, Object>> entryList) {
+	private @NotNull List<String> internalGetFooter(final @NotNull List<String> result, final @NotNull List<DataMap.DataNode<String, Object>> entryList) {
 		Collections.reverse(entryList);
 		for (final @NotNull DataMap.DataNode<String, Object> entry : entryList) {
-			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
 				result.add(entry.getKey());
 			} else {
 				Collections.reverse(result);
@@ -328,7 +320,7 @@ public class ThunderUtils {
 
 	private void internalSetHeader(final @Nullable String[] header, final @NotNull List<DataMap.DataNode<String, Object>> entryList, final @NotNull DataMap<String, Object> returnMap) {
 		for (final @NotNull DataMap.DataNode<String, Object> entry : entryList) {
-			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
 				entryList.remove(entry);
 			} else {
 				break;
@@ -337,7 +329,7 @@ public class ThunderUtils {
 		if (header != null) {
 			for (final @Nullable String comment : header) {
 				if (comment != null) {
-					returnMap.add(comment.startsWith("#") ? comment : "# " + comment, ThunderEditor.LineType.HEADER);
+					returnMap.add(comment.startsWith("#") ? comment : "# " + comment, ThunderFileParser.LineType.HEADER);
 				}
 			}
 		}
@@ -347,7 +339,7 @@ public class ThunderUtils {
 	private void internalSetFooter(final @Nullable String[] footer, final @NotNull List<DataMap.DataNode<String, Object>> entryList, final @NotNull DataMap<String, Object> returnMap) {
 		Collections.reverse(entryList);
 		for (final @NotNull DataMap.DataNode<String, Object> entry : entryList) {
-			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
 				entryList.remove(entry);
 			} else {
 				break;
@@ -358,18 +350,17 @@ public class ThunderUtils {
 		if (footer != null) {
 			for (final @Nullable String comment : footer) {
 				if (comment != null) {
-					returnMap.add(comment.startsWith("#") ? comment : "# " + comment, ThunderEditor.LineType.FOOTER);
+					returnMap.add(comment.startsWith("#") ? comment : "# " + comment, ThunderFileParser.LineType.FOOTER);
 				}
 			}
 		}
 	}
 
-	private @NotNull
-	List<String> internalGetComments(final @NotNull List<DataMap.DataNode<String, Object>> entryList, final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) {
+	private @NotNull List<String> internalGetComments(final @NotNull List<DataMap.DataNode<String, Object>> entryList, final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) {
 		//noinspection unchecked
 		final @NotNull List<String> result = collectionsProvider.newList();
 		for (final @NotNull DataMap.DataNode<String, Object> entry : entryList) {
-			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
 				result.add(entry.getKey());
 			}
 		}

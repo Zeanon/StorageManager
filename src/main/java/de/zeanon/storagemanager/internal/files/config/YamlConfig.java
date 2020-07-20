@@ -8,7 +8,7 @@ import de.zeanon.storagemanager.internal.base.interfaces.Config;
 import de.zeanon.storagemanager.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storagemanager.internal.base.settings.Comment;
 import de.zeanon.storagemanager.internal.files.raw.YamlFile;
-import de.zeanon.storagemanager.internal.utility.editor.YamlEditor;
+import de.zeanon.storagemanager.internal.utility.parser.YamlFileParser;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,12 +32,9 @@ import org.jetbrains.annotations.Nullable;
 public class YamlConfig extends YamlFile implements Config {
 
 
-	private @NotNull
-	List<String> header;
-	private @NotNull
-	List<String> footer;
-	private @NotNull
-	List<String> comments;
+	private @NotNull List<String> header;
+	private @NotNull List<String> footer;
+	private @NotNull List<String> comments;
 
 
 	/**
@@ -70,8 +67,7 @@ public class YamlConfig extends YamlFile implements Config {
 
 
 	@Override
-	public @NotNull
-	List<String> getHeader() {
+	public @NotNull List<String> getHeader() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			//noinspection unchecked
 			return this.collectionsProvider().newList();
@@ -79,7 +75,7 @@ public class YamlConfig extends YamlFile implements Config {
 			return this.header;
 		} else {
 			try {
-				this.header = YamlEditor.readHeader(this.file(), this.collectionsProvider());
+				this.header = YamlFileParser.readHeader(this.file(), this.collectionsProvider());
 				return this.header;
 			} catch (final @NotNull YamlException e) {
 				throw new FileParseException("Error while getting header of '"
@@ -113,7 +109,7 @@ public class YamlConfig extends YamlFile implements Config {
 
 			if (this.file().length() == 0) {
 				try {
-					YamlEditor.write(this.file(), this.header);
+					YamlFileParser.write(this.file(), this.header);
 				} catch (final @NotNull YamlException e) {
 					throw new FileParseException("Error while setting header of '"
 												 + this.file().getAbsolutePath()
@@ -127,13 +123,13 @@ public class YamlConfig extends YamlFile implements Config {
 				}
 			} else {
 				try {
-					final @NotNull List<String> lines = YamlEditor.read(this.file());
-					final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.file(), this.collectionsProvider());
+					final @NotNull List<String> lines = YamlFileParser.read(this.file());
+					final @NotNull List<String> oldHeader = YamlFileParser.readHeader(this.file(), this.collectionsProvider());
 					final @NotNull List<String> newLines = this.header;
 					lines.removeAll(oldHeader);
 					newLines.addAll(lines);
 
-					YamlEditor.write(this.file(), newLines);
+					YamlFileParser.write(this.file(), newLines);
 				} catch (final @NotNull YamlException e) {
 					throw new FileParseException("Error while setting header of '"
 												 + this.file().getAbsolutePath()
@@ -151,12 +147,12 @@ public class YamlConfig extends YamlFile implements Config {
 			this.header = this.collectionsProvider().newList();
 
 			try {
-				final @NotNull List<String> lines = YamlEditor.read(this.file());
-				final @NotNull List<String> oldHeader = YamlEditor.readHeader(this.file(), this.collectionsProvider());
+				final @NotNull List<String> lines = YamlFileParser.read(this.file());
+				final @NotNull List<String> oldHeader = YamlFileParser.readHeader(this.file(), this.collectionsProvider());
 
 				lines.removeAll(oldHeader);
 
-				YamlEditor.write(this.file(), lines);
+				YamlFileParser.write(this.file(), lines);
 			} catch (final @NotNull YamlException e) {
 				throw new FileParseException("Error while setting header of '"
 											 + this.file().getAbsolutePath()
@@ -172,8 +168,7 @@ public class YamlConfig extends YamlFile implements Config {
 	}
 
 	@Override
-	public @NotNull
-	List<String> getFooter() {
+	public @NotNull List<String> getFooter() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			//noinspection unchecked
 			return this.collectionsProvider().newList();
@@ -181,7 +176,7 @@ public class YamlConfig extends YamlFile implements Config {
 			return this.footer;
 		} else {
 			try {
-				this.footer = YamlEditor.readFooter(this.file(), this.collectionsProvider());
+				this.footer = YamlFileParser.readFooter(this.file(), this.collectionsProvider());
 				return this.footer;
 			} catch (final @NotNull YamlException e) {
 				throw new FileParseException("Error while getting footer of '"
@@ -215,7 +210,7 @@ public class YamlConfig extends YamlFile implements Config {
 
 			if (this.file().length() == 0) {
 				try {
-					YamlEditor.write(this.file(), this.footer);
+					YamlFileParser.write(this.file(), this.footer);
 				} catch (final @NotNull YamlException e) {
 					throw new FileParseException("Error while setting footer of '"
 												 + this.file().getAbsolutePath()
@@ -229,13 +224,13 @@ public class YamlConfig extends YamlFile implements Config {
 				}
 			} else {
 				try {
-					final @NotNull List<String> lines = YamlEditor.read(this.file());
-					final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.file(), this.collectionsProvider());
+					final @NotNull List<String> lines = YamlFileParser.read(this.file());
+					final @NotNull List<String> oldFooter = YamlFileParser.readFooter(this.file(), this.collectionsProvider());
 
 					lines.removeAll(oldFooter);
 					lines.addAll(this.footer);
 
-					YamlEditor.write(this.file(), lines);
+					YamlFileParser.write(this.file(), lines);
 				} catch (final @NotNull YamlException e) {
 					throw new FileParseException("Error while setting footer of '"
 												 + this.file().getAbsolutePath()
@@ -253,12 +248,12 @@ public class YamlConfig extends YamlFile implements Config {
 			this.footer = this.collectionsProvider().newList();
 
 			try {
-				final @NotNull List<String> lines = YamlEditor.read(this.file());
-				final @NotNull List<String> oldFooter = YamlEditor.readFooter(this.file(), this.collectionsProvider());
+				final @NotNull List<String> lines = YamlFileParser.read(this.file());
+				final @NotNull List<String> oldFooter = YamlFileParser.readFooter(this.file(), this.collectionsProvider());
 
 				lines.removeAll(oldFooter);
 
-				YamlEditor.write(this.file(), lines);
+				YamlFileParser.write(this.file(), lines);
 			} catch (final @NotNull YamlException e) {
 				throw new FileParseException("Error while setting footer of '"
 											 + this.file().getAbsolutePath()
@@ -274,8 +269,7 @@ public class YamlConfig extends YamlFile implements Config {
 	}
 
 	@Override
-	public @NotNull
-	List<String> getComments() {
+	public @NotNull List<String> getComments() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			//noinspection unchecked
 			return this.collectionsProvider().newList();
@@ -283,7 +277,7 @@ public class YamlConfig extends YamlFile implements Config {
 			return this.comments;
 		} else {
 			try {
-				this.comments = YamlEditor.readComments(this.file(), this.collectionsProvider());
+				this.comments = YamlFileParser.readComments(this.file(), this.collectionsProvider());
 				return this.comments;
 			} catch (final @NotNull YamlException e) {
 				throw new FileParseException("Error while getting comments from '"

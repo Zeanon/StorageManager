@@ -5,7 +5,7 @@ import de.zeanon.storagemanager.internal.base.cache.base.CollectionsProvider;
 import de.zeanon.storagemanager.internal.base.cache.filedata.StandardFileData;
 import de.zeanon.storagemanager.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storagemanager.internal.utility.basic.Objects;
-import de.zeanon.storagemanager.internal.utility.editor.ThunderEditor;
+import de.zeanon.storagemanager.internal.utility.parser.ThunderFileParser;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -27,12 +27,11 @@ public class TomlUtils {
 	 *
 	 * @return a List containing the Header of the FileData
 	 */
-	public @NotNull
-	List<String> getHeader(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData) { //NOSONAR
+	public @NotNull List<String> getHeader(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData) { //NOSONAR
 		//noinspection unchecked
 		final @NotNull List<String> result = fileData.collectionsProvider().newList();
 		for (final @NotNull Map.Entry<String, Object> entry : fileData.blockEntryList()) {
-			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
 				result.add(entry.getKey());
 			} else {
 				return result;
@@ -104,8 +103,7 @@ public class TomlUtils {
 	 *
 	 * @return a List containing the Footer of the FileData
 	 */
-	public @NotNull
-	List<String> getFooter(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData) { //NOSONAR
+	public @NotNull List<String> getFooter(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData) { //NOSONAR
 		//noinspection unchecked
 		final @NotNull List<String> result = fileData.collectionsProvider().newList();
 		final @NotNull List<Map.Entry<String, Object>> entryList = fileData.blockEntryList();
@@ -184,7 +182,7 @@ public class TomlUtils {
 			//noinspection unchecked
 			final @NotNull List<String> result = fileData.collectionsProvider().newList();
 			for (final @NotNull Map.Entry<String, Object> entry : Objects.notNull(fileData.blockEntryList(key))) {
-				if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
+				if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
 					result.add(entry.getKey());
 				} else {
 					return result;
@@ -212,7 +210,7 @@ public class TomlUtils {
 			//noinspection unchecked
 			final @NotNull List<String> result = fileData.collectionsProvider().newList();
 			for (final @NotNull Map.Entry<String, Object> entry : Objects.notNull(fileData.blockEntryListUseArray(key))) {
-				if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
+				if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
 					result.add(entry.getKey());
 				} else {
 					return result;
@@ -234,8 +232,7 @@ public class TomlUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public @NotNull
-	List<String> getFooter(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final @NotNull String key) { //NOSONAR
+	public @NotNull List<String> getFooter(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final @NotNull String key) { //NOSONAR
 		//noinspection unchecked
 		final @NotNull List<String> result = fileData.collectionsProvider().newList();
 		return TomlUtils.internalGetFooter(result, Objects.notNull(fileData.entryList(key)));
@@ -251,8 +248,7 @@ public class TomlUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public @NotNull
-	List<String> getFooterUseArray(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final @NotNull String... key) { //NOSONAR
+	public @NotNull List<String> getFooterUseArray(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final @NotNull String... key) { //NOSONAR
 		//noinspection unchecked
 		return TomlUtils.internalGetFooter(fileData.collectionsProvider().newList(), Objects.notNull(fileData.blockEntryListUseArray(key)));
 	}
@@ -265,8 +261,7 @@ public class TomlUtils {
 	 *
 	 * @return a List containing the Comments of the FileData
 	 */
-	public @NotNull
-	List<String> getComments(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final boolean deep) { //NOSONAR
+	public @NotNull List<String> getComments(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final boolean deep) { //NOSONAR
 		return TomlUtils.internalGetComments(deep ? fileData.entryList() : fileData.blockEntryList(), fileData.collectionsProvider());
 	}
 
@@ -281,8 +276,7 @@ public class TomlUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public @NotNull
-	List<String> getComments(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final @NotNull String key, final boolean deep) { //NOSONAR
+	public @NotNull List<String> getComments(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final @NotNull String key, final boolean deep) { //NOSONAR
 		return TomlUtils.internalGetComments(Objects.notNull(deep ? fileData.entryList(key) : fileData.blockEntryList(key)), fileData.collectionsProvider());
 	}
 
@@ -297,19 +291,17 @@ public class TomlUtils {
 	 *
 	 * @throws ObjectNullException if the given FileDataBase does not contain the given key
 	 */
-	public @NotNull
-	List<String> getCommentsUseArray(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final @NotNull String[] key, final boolean deep) { //NOSONAR
+	public @NotNull List<String> getCommentsUseArray(final @NotNull StandardFileData<Map, Map.Entry<String, Object>, List> fileData, final @NotNull String[] key, final boolean deep) { //NOSONAR
 		return TomlUtils.internalGetComments(Objects.notNull(deep ? fileData.entryListUseArray(key) : fileData.blockEntryListUseArray(key)), fileData.collectionsProvider());
 	}
 
 
 	// <Internal>
 	@Contract("_, _ -> param1")
-	private @NotNull
-	List<String> internalGetFooter(final @NotNull List<String> result, final @NotNull List<Map.Entry<String, Object>> entryList) {
+	private @NotNull List<String> internalGetFooter(final @NotNull List<String> result, final @NotNull List<Map.Entry<String, Object>> entryList) {
 		Collections.reverse(entryList);
 		for (final @NotNull Map.Entry<String, Object> entry : entryList) {
-			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
 				result.add(entry.getKey());
 			} else {
 				Collections.reverse(result);
@@ -322,7 +314,7 @@ public class TomlUtils {
 
 	private void internalSetHeader(final @Nullable String[] header, final @NotNull List<Map.Entry<String, Object>> entryList, final @NotNull Map<String, Object> returnMap) {
 		for (final @NotNull Map.Entry<String, Object> entry : entryList) {
-			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
 				entryList.remove(entry);
 			} else {
 				break;
@@ -331,7 +323,7 @@ public class TomlUtils {
 		if (header != null) {
 			for (final @Nullable String comment : header) {
 				if (comment != null) {
-					returnMap.put(comment.startsWith("#") ? comment : "# " + comment, ThunderEditor.LineType.HEADER);
+					returnMap.put(comment.startsWith("#") ? comment : "# " + comment, ThunderFileParser.LineType.HEADER);
 				}
 			}
 		}
@@ -343,7 +335,7 @@ public class TomlUtils {
 	private void internalSetFooter(final @Nullable String[] footer, final @NotNull List<Map.Entry<String, Object>> entryList, final @NotNull Map<String, Object> returnMap) {
 		Collections.reverse(entryList);
 		for (final @NotNull Map.Entry<String, Object> entry : entryList) {
-			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
 				entryList.remove(entry);
 			} else {
 				break;
@@ -356,18 +348,17 @@ public class TomlUtils {
 		if (footer != null) {
 			for (final @Nullable String comment : footer) {
 				if (comment != null) {
-					returnMap.put(comment.startsWith("#") ? comment : "# " + comment, ThunderEditor.LineType.FOOTER);
+					returnMap.put(comment.startsWith("#") ? comment : "# " + comment, ThunderFileParser.LineType.FOOTER);
 				}
 			}
 		}
 	}
 
-	private @NotNull
-	List<String> internalGetComments(final @NotNull List<Map.Entry<String, Object>> entryList, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
+	private @NotNull List<String> internalGetComments(final @NotNull List<Map.Entry<String, Object>> entryList, final @NotNull CollectionsProvider<? extends Map, ? extends List> collectionsProvider) {
 		//noinspection unchecked
 		final @NotNull List<String> result = collectionsProvider.newList();
 		for (final @NotNull Map.Entry<String, Object> entry : entryList) {
-			if (entry.getValue() == ThunderEditor.LineType.COMMENT || entry.getValue() == ThunderEditor.LineType.HEADER || entry.getValue() == ThunderEditor.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
 				result.add(entry.getKey());
 			}
 		}

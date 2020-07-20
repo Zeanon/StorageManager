@@ -199,15 +199,13 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull
-	JsonFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull JsonFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
 
 	@Override
-	protected @NotNull
-	Map readFile() {
+	protected @NotNull Map readFile() {
 		try {
 			return new JSONObject(new JSONTokener(
 					BaseFileUtils.createNewInputStreamFromFile(this.file()))).toMap();
@@ -226,21 +224,18 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		JSON();
 
 
-		private final @NotNull
-		String extension = "json";
+		private final @NotNull String extension = "json";
 
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull
-		String toLowerCase() {
+		public @NotNull String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull
-		String toString() {
+		public @NotNull String toString() {
 			return this.extension;
 		}
 	}
