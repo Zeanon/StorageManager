@@ -196,8 +196,25 @@
                         <id>moveFiles</id>
                         <phase>verify</phase>
                         <configuration>
-                            <target if="maven.copy">
+                            <target if="maven.copy.schemmanager">
                                 <copy todir="${basedir}/../SchemManager/src/main/resources/dependencies"
+                                      flatten="true" overwrite="true"
+                                      verbose="true" failonerror="true">
+                                    <fileset dir="${basedir}/target"
+                                             includes="${project.build.finalName}.jar"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>moveFiles</id>
+                        <phase>verify</phase>
+                        <configuration>
+                            <target if="maven.copy.battlearena">
+                                <copy todir="${basedir}/../BattleArena/src/main/resources/dependencies"
                                       flatten="true" overwrite="true"
                                       verbose="true" failonerror="true">
                                     <fileset dir="${basedir}/target"
