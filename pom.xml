@@ -193,7 +193,7 @@
                 <version>1.8</version>
                 <executions>
                     <execution>
-                        <id>moveFiles</id>
+                        <id>moveFilesToSchemManager</id>
                         <phase>verify</phase>
                         <configuration>
                             <target if="maven.copy.schemmanager">
@@ -210,7 +210,7 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>moveFiles</id>
+                        <id>moveFilesToBattleArena</id>
                         <phase>verify</phase>
                         <configuration>
                             <target if="maven.copy.battlearena">

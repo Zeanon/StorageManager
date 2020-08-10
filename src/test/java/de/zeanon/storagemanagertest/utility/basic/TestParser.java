@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 
-public class TestParser {
+class TestParser {
 
 	@BeforeAll
 	static void setup() {
@@ -49,6 +49,7 @@ public class TestParser {
 			testFile.getBooleanUseArray("this", "is", "a", "test");
 		} catch (FileParseException e) {
 			e.getCause().printStackTrace();
+			System.out.println("This error is intended to happen!");
 			result = true;
 		}
 
