@@ -30,8 +30,7 @@ public class YamlConfigBuilder extends StorageManager<YamlConfigBuilder, YamlCon
 
 
 	@Setter(onMethod_ = {@Contract("_ -> this")})
-	private @NotNull
-	CommentSetting commentSetting = Comment.PRESERVE;
+	private @NotNull CommentSetting commentSetting = Comment.PRESERVE;
 
 
 	public YamlConfigBuilder(final @NotNull File file) {
@@ -41,22 +40,19 @@ public class YamlConfigBuilder extends StorageManager<YamlConfigBuilder, YamlCon
 
 	@Override
 	@Contract("-> new")
-	public final @NotNull
-	YamlConfig create() {
+	public final @NotNull YamlConfig create() {
 		return new LocalYamlConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.synchronizeData, this.mapType, this.listType);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public final @NotNull
-	YamlConfigBuilder bigList(final boolean bigList) {
+	public final @NotNull YamlConfigBuilder bigList(final boolean bigList) {
 		return this.listType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull
-	YamlConfigBuilder concurrentData(final boolean concurrentData) {
+	public @NotNull YamlConfigBuilder concurrentData(final boolean concurrentData) {
 		return this.mapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 

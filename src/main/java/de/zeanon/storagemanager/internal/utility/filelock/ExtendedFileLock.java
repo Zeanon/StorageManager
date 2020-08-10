@@ -36,12 +36,9 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 	private static final long serialVersionUID = 721278232016156889L;
 
 
-	private final @NotNull
-	ReadWriteLockableChannel readWriteLockableChannel;
-	private final transient @NotNull
-	WriteLock writeLock;
-	private final transient @NotNull
-	ReadLock readLock;
+	private final @NotNull ReadWriteLockableChannel readWriteLockableChannel;
+	private final transient @NotNull WriteLock writeLock;
+	private final transient @NotNull ReadLock readLock;
 
 
 	@Contract(pure = true)
@@ -60,16 +57,14 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 	/**
 	 * Get yourself the WriteLock corresponding to this FileLock
 	 */
-	public @NotNull
-	ReadWriteFileLock writeLock() {
+	public @NotNull ReadWriteFileLock writeLock() {
 		return this.writeLock;
 	}
 
 	/**
 	 * Get yourself the ReadLock corresponding to this FileLock
 	 */
-	public @NotNull
-	ReadWriteFileLock readLock() {
+	public @NotNull ReadWriteFileLock readLock() {
 		return this.readLock;
 	}
 
@@ -89,124 +84,104 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		this.readWriteLockableChannel.convertLock();
 	}
 
-	public @NotNull
-	RandomAccessFile getRandomAccessFile() {
+	public @NotNull RandomAccessFile getRandomAccessFile() {
 		return this.readWriteLockableChannel.getRandomAccessFile();
 	}
 
-	public @NotNull
-	FileChannel getFileChannel() {
+	public @NotNull FileChannel getFileChannel() {
 		return this.readWriteLockableChannel.getFileChannel();
 	}
 
-	public @NotNull
-	String getFilePath() {
+	public @NotNull String getFilePath() {
 		return this.readWriteLockableChannel.getFilePath();
 	}
 
 
 	@Contract("-> new")
-	public @NotNull
-	Writer createWriter() {
+	public @NotNull Writer createWriter() {
 		return Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), "UTF-8");
 	}
 
 	@Contract("null -> fail; !null -> new")
-	public @NotNull
-	Writer createWriter(final @NotNull String csName) {
+	public @NotNull Writer createWriter(final @NotNull String csName) {
 		return Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), csName);
 	}
 
 	@Contract("null, _ -> fail; !null, _ -> new")
-	public @NotNull
-	Writer createWriter(final @NotNull CharsetEncoder charsetEncoder,
-						final int minBufferCap) {
+	public @NotNull Writer createWriter(final @NotNull CharsetEncoder charsetEncoder,
+										final int minBufferCap) {
 		return Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), charsetEncoder, minBufferCap);
 	}
 
 	@Contract("-> new")
-	public @NotNull
-	PrintWriter createPrintWriter() {
+	public @NotNull PrintWriter createPrintWriter() {
 		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), "UTF-8"));
 	}
 
 	@Contract("_ -> new")
-	public @NotNull
-	PrintWriter createPrintWriter(final boolean autoFlush) {
+	public @NotNull PrintWriter createPrintWriter(final boolean autoFlush) {
 		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), "UTF-8"), autoFlush);
 	}
 
 	@Contract("null -> fail; !null -> new")
-	public @NotNull
-	PrintWriter createPrintWriter(final @NotNull String csName) {
+	public @NotNull PrintWriter createPrintWriter(final @NotNull String csName) {
 		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), csName));
 	}
 
 	@Contract("null, _ -> fail; !null, _ -> new")
-	public @NotNull
-	PrintWriter createPrintWriter(final @NotNull String csName,
-								  final boolean autoFlush) {
+	public @NotNull PrintWriter createPrintWriter(final @NotNull String csName,
+												  final boolean autoFlush) {
 		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), csName), autoFlush);
 	}
 
 	@Contract("-> new")
-	public @NotNull
-	Reader createReader() {
+	public @NotNull Reader createReader() {
 		return Channels.newReader(this.readWriteLockableChannel.getFileChannel(), "UTF-8");
 	}
 
 	@Contract("null -> fail; !null -> new")
-	public @NotNull
-	Reader createReader(final @NotNull String csName) {
+	public @NotNull Reader createReader(final @NotNull String csName) {
 		return Channels.newReader(this.readWriteLockableChannel.getFileChannel(), csName);
 	}
 
 	@Contract("-> new")
-	public @NotNull
-	BufferedReader createBufferedReader() {
+	public @NotNull BufferedReader createBufferedReader() {
 		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), "UTF-8"));
 	}
 
 	@Contract("null -> fail; !null -> new")
-	public @NotNull
-	BufferedReader createBufferedReader(final @NotNull String csName) {
+	public @NotNull BufferedReader createBufferedReader(final @NotNull String csName) {
 		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), csName));
 	}
 
 	@Contract("_ -> new")
-	public @NotNull
-	BufferedReader createBufferedReader(final int buffer_size) {
+	public @NotNull BufferedReader createBufferedReader(final int buffer_size) {
 		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), "UTF-8"), buffer_size);
 	}
 
 	@Contract("null, _ -> fail; !null, _ -> new")
-	public @NotNull
-	BufferedReader createBufferedReader(final @NotNull String csName,
-										final int buffer_size) {
+	public @NotNull BufferedReader createBufferedReader(final @NotNull String csName,
+														final int buffer_size) {
 		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), csName), buffer_size);
 	}
 
 	@Contract("-> new")
-	public @NotNull
-	InputStream createInputStream() {
+	public @NotNull InputStream createInputStream() {
 		return Channels.newInputStream(this.readWriteLockableChannel.getFileChannel());
 	}
 
 	@Contract("-> new")
-	public @NotNull
-	BufferedInputStream createBufferedInputStream() {
+	public @NotNull BufferedInputStream createBufferedInputStream() {
 		return new BufferedInputStream(Channels.newInputStream(this.readWriteLockableChannel.getFileChannel()));
 	}
 
 	@Contract("-> new")
-	public @NotNull
-	OutputStream createOutputStream() {
+	public @NotNull OutputStream createOutputStream() {
 		return Channels.newOutputStream(this.readWriteLockableChannel.getFileChannel());
 	}
 
 	@Contract("-> new")
-	public @NotNull
-	BufferedOutputStream createBufferedOutputStream() {
+	public @NotNull BufferedOutputStream createBufferedOutputStream() {
 		return new BufferedOutputStream(Channels.newOutputStream(this.readWriteLockableChannel.getFileChannel()));
 	}
 
@@ -236,32 +211,22 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		private static final long serialVersionUID = 115260807719631111L;
 
 
-		private static final transient @NotNull
-		ConcurrentMap<String, ReadWriteLockableChannel> openChannels = new ConcurrentHashMap<>();
-		private static final transient @NotNull
-		StampedLock factoryLock = new StampedLock();
+		private static final transient @NotNull ConcurrentMap<String, ReadWriteLockableChannel> openChannels = new ConcurrentHashMap<>();
+		private static final transient @NotNull StampedLock factoryLock = new StampedLock();
 
 
-		private final @NotNull
-		String absolutePath;
+		private final @NotNull String absolutePath;
 		private final boolean writeMetaData;
 
-		private final transient @NotNull
-		AtomicReference<FileLock> fileLock = new AtomicReference<>();
-		private final transient @NotNull
-		AtomicBoolean writeLockActive = new AtomicBoolean();
-		private final transient @NotNull
-		StampedLock internalLock = new StampedLock();
+		private final transient @NotNull AtomicReference<FileLock> fileLock = new AtomicReference<>();
+		private final transient @NotNull AtomicBoolean writeLockActive = new AtomicBoolean();
+		private final transient @NotNull StampedLock internalLock = new StampedLock();
 
-		private final transient @NotNull
-		AtomicLong currentWritingThread = new AtomicLong(-1);
-		private final transient @NotNull
-		AtomicInteger instanceCount = new AtomicInteger();
-		private final transient @NotNull
-		AtomicInteger lockHoldCount = new AtomicInteger();
+		private final transient @NotNull AtomicLong currentWritingThread = new AtomicLong(-1);
+		private final transient @NotNull AtomicInteger instanceCount = new AtomicInteger();
+		private final transient @NotNull AtomicInteger lockHoldCount = new AtomicInteger();
 
-		private final transient @NotNull
-		RandomAccessFile localRandomAccessFile;
+		private final transient @NotNull RandomAccessFile localRandomAccessFile;
 
 
 		@Contract(pure = true)
@@ -290,8 +255,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		}
 
 		@Contract(pure = true)
-		private static @NotNull
-		ReadWriteLockableChannel getOrCreateChannel(final @NotNull File file, final boolean writeMetaData) throws IOException {
+		private static @NotNull ReadWriteLockableChannel getOrCreateChannel(final @NotNull File file, final boolean writeMetaData) throws IOException {
 			final long lockStamp = ReadWriteLockableChannel.factoryLock.readLock();
 			try {
 				if (!ReadWriteLockableChannel.openChannels.containsKey(file.getAbsolutePath())) {
@@ -304,20 +268,17 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		}
 
 		@Contract(pure = true)
-		private @NotNull
-		RandomAccessFile getRandomAccessFile() {
+		private @NotNull RandomAccessFile getRandomAccessFile() {
 			return this.localRandomAccessFile;
 		}
 
 		@Contract(pure = true)
-		private @NotNull
-		FileChannel getFileChannel() {
+		private @NotNull FileChannel getFileChannel() {
 			return this.localRandomAccessFile.getChannel();
 		}
 
 		@Contract(pure = true)
-		private @NotNull
-		String getFilePath() {
+		private @NotNull String getFilePath() {
 			return this.absolutePath;
 		}
 
@@ -596,8 +557,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		}
 
 
-		private @NotNull
-		Object readResolve() throws IOException {
+		private @NotNull Object readResolve() throws IOException {
 			return ReadWriteLockableChannel.getOrCreateChannel(new File(this.absolutePath), this.writeMetaData);
 		}
 	}
@@ -610,8 +570,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 	private static class ReadLock implements ReadWriteFileLock {
 
 
-		private final @NotNull
-		ExtendedFileLock extendedFileLock;
+		private final @NotNull ExtendedFileLock extendedFileLock;
 
 
 		@Contract(pure = true)
@@ -636,155 +595,133 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		}
 
 		@Override
-		public @NotNull
-		ExtendedFileLock.WriteLock convertLock() {
+		public @NotNull ExtendedFileLock.WriteLock convertLock() {
 			this.extendedFileLock.readWriteLockableChannel.readToWrite();
 			return this.extendedFileLock.writeLock;
 		}
 
 		@Override
-		public @NotNull
-		ExtendedFileLock baseLock() {
+		public @NotNull ExtendedFileLock baseLock() {
 			return this.extendedFileLock;
 		}
 
 		@Override
-		public @NotNull
-		RandomAccessFile getRandomAccessFile() {
+		public @NotNull RandomAccessFile getRandomAccessFile() {
 			return this.extendedFileLock.getRandomAccessFile();
 		}
 
 		@Override
-		public @NotNull
-		FileChannel getFileChannel() {
+		public @NotNull FileChannel getFileChannel() {
 			return this.extendedFileLock.getFileChannel();
 		}
 
 		@Override
-		public @NotNull
-		String getFilePath() {
+		public @NotNull String getFilePath() {
 			return this.extendedFileLock.getFilePath();
 		}
 
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		Writer createWriter() {
+		public @NotNull Writer createWriter() {
 			return this.extendedFileLock.createWriter();
 		}
 
 		@Override
 		@Contract("null -> fail; !null -> new")
-		public @NotNull
-		Writer createWriter(final @NotNull String csName) {
+		public @NotNull Writer createWriter(final @NotNull String csName) {
 			return this.extendedFileLock.createWriter(csName);
 		}
 
 		@Override
 		@Contract("null, _ -> fail; !null, _ -> new")
-		public @NotNull
-		Writer createWriter(final @NotNull CharsetEncoder charsetEncoder,
-							final int minBufferCap) {
+		public @NotNull Writer createWriter(final @NotNull CharsetEncoder charsetEncoder,
+											final int minBufferCap) {
 			return this.extendedFileLock.createWriter(charsetEncoder, minBufferCap);
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		PrintWriter createPrintWriter() {
+		public @NotNull PrintWriter createPrintWriter() {
 			return this.extendedFileLock.createPrintWriter();
 		}
 
 		@Override
 		@Contract("_ -> new")
-		public @NotNull
-		PrintWriter createPrintWriter(final boolean autoFlush) {
+		public @NotNull PrintWriter createPrintWriter(final boolean autoFlush) {
 			return this.extendedFileLock.createPrintWriter(autoFlush);
 		}
 
 		@Override
 		@Contract("null -> fail; !null -> new")
-		public @NotNull
-		PrintWriter createPrintWriter(final @NotNull String csName) {
+		public @NotNull PrintWriter createPrintWriter(final @NotNull String csName) {
 			return this.extendedFileLock.createPrintWriter(csName);
 		}
 
 		@Override
 		@Contract("null, _ -> fail; !null, _ -> new")
-		public @NotNull
-		PrintWriter createPrintWriter(final @NotNull String csName, final boolean autoFlush) {
+		public @NotNull PrintWriter createPrintWriter(final @NotNull String csName, final boolean autoFlush) {
 			return this.extendedFileLock.createPrintWriter(csName, autoFlush);
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		Reader createReader() {
+		public @NotNull Reader createReader() {
 			return this.extendedFileLock.createReader();
 		}
 
 		@Override
 		@Contract("null -> fail; !null -> new")
-		public @NotNull
-		Reader createReader(final @NotNull String csName) {
+		public @NotNull Reader createReader(final @NotNull String csName) {
 			return this.extendedFileLock.createReader(csName);
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		BufferedReader createBufferedReader() {
+		public @NotNull BufferedReader createBufferedReader() {
 			return this.extendedFileLock.createBufferedReader();
 		}
 
 		@Override
 		@Contract("null -> fail; !null -> new")
-		public @NotNull
-		BufferedReader createBufferedReader(final @NotNull String csName) {
+		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName) {
 			return this.extendedFileLock.createBufferedReader(csName);
 		}
 
 		@Override
 		@Contract("_ -> new")
-		public @NotNull
-		BufferedReader createBufferedReader(final int buffer_size) {
+		public @NotNull BufferedReader createBufferedReader(final int buffer_size) {
 			return this.extendedFileLock.createBufferedReader(buffer_size);
 		}
 
 		@Override
 		@Contract("null, _ -> fail; !null, _ -> new")
-		public @NotNull
-		BufferedReader createBufferedReader(final @NotNull String csName,
-											final int buffer_size) {
+		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName,
+															final int buffer_size) {
 			return this.extendedFileLock.createBufferedReader(csName, buffer_size);
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		InputStream createInputStream() {
+		public @NotNull InputStream createInputStream() {
 			return this.extendedFileLock.createInputStream();
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		BufferedInputStream createBufferedInputStream() {
+		public @NotNull BufferedInputStream createBufferedInputStream() {
 			return this.extendedFileLock.createBufferedInputStream();
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		OutputStream createOutputStream() {
+		public @NotNull OutputStream createOutputStream() {
 			return this.extendedFileLock.createOutputStream();
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		BufferedOutputStream createBufferedOutputStream() {
+		public @NotNull BufferedOutputStream createBufferedOutputStream() {
 			return this.extendedFileLock.createBufferedOutputStream();
 		}
 
@@ -808,8 +745,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 	private static class WriteLock implements ReadWriteFileLock {
 
 
-		private final @NotNull
-		ExtendedFileLock extendedFileLock;
+		private final @NotNull ExtendedFileLock extendedFileLock;
 
 
 		@Contract(pure = true)
@@ -834,156 +770,134 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		}
 
 		@Override
-		public @NotNull
-		ExtendedFileLock.ReadLock convertLock() {
+		public @NotNull ExtendedFileLock.ReadLock convertLock() {
 			this.extendedFileLock.readWriteLockableChannel.writeToRead();
 			return this.extendedFileLock.readLock;
 		}
 
 		@Override
-		public @NotNull
-		ExtendedFileLock baseLock() {
+		public @NotNull ExtendedFileLock baseLock() {
 			return this.extendedFileLock;
 		}
 
 
 		@Override
-		public @NotNull
-		RandomAccessFile getRandomAccessFile() {
+		public @NotNull RandomAccessFile getRandomAccessFile() {
 			return this.extendedFileLock.getRandomAccessFile();
 		}
 
 		@Override
-		public @NotNull
-		FileChannel getFileChannel() {
+		public @NotNull FileChannel getFileChannel() {
 			return this.extendedFileLock.getFileChannel();
 		}
 
 		@Override
-		public @NotNull
-		String getFilePath() {
+		public @NotNull String getFilePath() {
 			return this.extendedFileLock.getFilePath();
 		}
 
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		Writer createWriter() {
+		public @NotNull Writer createWriter() {
 			return this.extendedFileLock.createWriter();
 		}
 
 		@Override
 		@Contract("null -> fail; !null -> new")
-		public @NotNull
-		Writer createWriter(final @NotNull String csName) {
+		public @NotNull Writer createWriter(final @NotNull String csName) {
 			return this.extendedFileLock.createWriter(csName);
 		}
 
 		@Override
 		@Contract("null, _ -> fail; !null, _ -> new")
-		public @NotNull
-		Writer createWriter(final @NotNull CharsetEncoder charsetEncoder,
-							final int minBufferCap) {
+		public @NotNull Writer createWriter(final @NotNull CharsetEncoder charsetEncoder,
+											final int minBufferCap) {
 			return this.extendedFileLock.createWriter(charsetEncoder, minBufferCap);
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		PrintWriter createPrintWriter() {
+		public @NotNull PrintWriter createPrintWriter() {
 			return this.extendedFileLock.createPrintWriter();
 		}
 
 		@Override
 		@Contract("_ -> new")
-		public @NotNull
-		PrintWriter createPrintWriter(final boolean autoFlush) {
+		public @NotNull PrintWriter createPrintWriter(final boolean autoFlush) {
 			return this.extendedFileLock.createPrintWriter(autoFlush);
 		}
 
 		@Override
 		@Contract("null -> fail; !null -> new")
-		public @NotNull
-		PrintWriter createPrintWriter(final @NotNull String csName) {
+		public @NotNull PrintWriter createPrintWriter(final @NotNull String csName) {
 			return this.extendedFileLock.createPrintWriter(csName);
 		}
 
 		@Override
 		@Contract("null, _ -> fail; !null, _ -> new")
-		public @NotNull
-		PrintWriter createPrintWriter(final @NotNull String csName, final boolean autoFlush) {
+		public @NotNull PrintWriter createPrintWriter(final @NotNull String csName, final boolean autoFlush) {
 			return this.extendedFileLock.createPrintWriter(csName, autoFlush);
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		Reader createReader() {
+		public @NotNull Reader createReader() {
 			return this.extendedFileLock.createReader();
 		}
 
 		@Override
 		@Contract("null -> fail; !null -> new")
-		public @NotNull
-		Reader createReader(final @NotNull String csName) {
+		public @NotNull Reader createReader(final @NotNull String csName) {
 			return this.extendedFileLock.createReader(csName);
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		BufferedReader createBufferedReader() {
+		public @NotNull BufferedReader createBufferedReader() {
 			return this.extendedFileLock.createBufferedReader();
 		}
 
 		@Override
 		@Contract("null -> fail; !null -> new")
-		public @NotNull
-		BufferedReader createBufferedReader(final @NotNull String csName) {
+		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName) {
 			return this.extendedFileLock.createBufferedReader(csName);
 		}
 
 		@Override
 		@Contract("_ -> new")
-		public @NotNull
-		BufferedReader createBufferedReader(final int buffer_size) {
+		public @NotNull BufferedReader createBufferedReader(final int buffer_size) {
 			return this.extendedFileLock.createBufferedReader(buffer_size);
 		}
 
 		@Override
 		@Contract("null, _ -> fail; !null, _ -> new")
-		public @NotNull
-		BufferedReader createBufferedReader(final @NotNull String csName,
-											final int buffer_size) {
+		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName,
+															final int buffer_size) {
 			return this.extendedFileLock.createBufferedReader(csName, buffer_size);
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		InputStream createInputStream() {
+		public @NotNull InputStream createInputStream() {
 			return this.extendedFileLock.createInputStream();
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		BufferedInputStream createBufferedInputStream() {
+		public @NotNull BufferedInputStream createBufferedInputStream() {
 			return this.extendedFileLock.createBufferedInputStream();
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		OutputStream createOutputStream() {
+		public @NotNull OutputStream createOutputStream() {
 			return this.extendedFileLock.createOutputStream();
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull
-		BufferedOutputStream createBufferedOutputStream() {
+		public @NotNull BufferedOutputStream createBufferedOutputStream() {
 			return this.extendedFileLock.createBufferedOutputStream();
 		}
 

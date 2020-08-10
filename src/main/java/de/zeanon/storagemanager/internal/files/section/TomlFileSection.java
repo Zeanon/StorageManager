@@ -23,8 +23,7 @@ import org.jetbrains.annotations.NotNull;
 public class TomlFileSection extends FlatSection<TomlFile, Map, List> { //NOSONAR
 
 
-	private final @NotNull
-	TomlFile baseFile;
+	private final @NotNull TomlFile baseFile;
 
 
 	protected TomlFileSection(final @NotNull String sectionKey, final @NotNull TomlFile baseFile) {
@@ -39,14 +38,12 @@ public class TomlFileSection extends FlatSection<TomlFile, Map, List> { //NOSONA
 
 
 	@Override
-	public @NotNull
-	TomlFileSection getSection(final @NotNull String sectionKey) {
+	public @NotNull TomlFileSection getSection(final @NotNull String sectionKey) {
 		return new TomlFileSection(this.getFinalKey(sectionKey), this.baseFile);
 	}
 
 	@Override
-	public @NotNull
-	TomlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull TomlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new TomlFileSection(this.getFinalArrayKey(sectionKey), this.baseFile);
 	}
 }

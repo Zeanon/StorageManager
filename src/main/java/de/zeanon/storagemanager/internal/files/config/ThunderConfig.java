@@ -62,8 +62,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 
 
 	@Override
-	public @NotNull
-	List<String> getHeader() {
+	public @NotNull List<String> getHeader() {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -149,8 +148,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 
 
 	@Override
-	public @NotNull
-	List<String> getFooter() {
+	public @NotNull List<String> getFooter() {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -174,8 +172,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	public @NotNull
-	List<String> getFooter(final @NotNull String key) {
+	public @NotNull List<String> getFooter(final @NotNull String key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -186,8 +183,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	public @NotNull
-	List<String> getFooterUseArray(final @NotNull String... key) {
+	public @NotNull List<String> getFooterUseArray(final @NotNull String... key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -235,8 +231,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 	}
 
 	@Override
-	public @NotNull
-	List<String> getComments() {
+	public @NotNull List<String> getComments() {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -247,8 +242,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	public @NotNull
-	List<String> getComments(final @NotNull String key) {
+	public @NotNull List<String> getComments(final @NotNull String key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -259,8 +253,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	public @NotNull
-	List<String> getCommentsUseArray(final @NotNull String... key) {
+	public @NotNull List<String> getCommentsUseArray(final @NotNull String... key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -271,8 +264,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	public @NotNull
-	List<String> getBlockComments() {
+	public @NotNull List<String> getBlockComments() {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -283,8 +275,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	public @NotNull
-	List<String> getBlockComments(final @NotNull String key) {
+	public @NotNull List<String> getBlockComments(final @NotNull String key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -295,8 +286,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	public @NotNull
-	List<String> getBlockCommentsUseArray(final @NotNull String... key) {
+	public @NotNull List<String> getBlockCommentsUseArray(final @NotNull String... key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -315,8 +305,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull
-	ThunderConfigSection getSection(final @NotNull String sectionKey) {
+	public @NotNull ThunderConfigSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -328,8 +317,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull
-	ThunderConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull ThunderConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 

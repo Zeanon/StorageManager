@@ -23,8 +23,7 @@ import org.jetbrains.annotations.NotNull;
 public class ThunderFileSection extends CommentEnabledSection<ThunderFile, DataMap, List> { //NOSONAR
 
 
-	private final @NotNull
-	ThunderFile baseFile;
+	private final @NotNull ThunderFile baseFile;
 
 
 	protected ThunderFileSection(final @NotNull String sectionKey, final @NotNull ThunderFile baseFile) {
@@ -39,14 +38,12 @@ public class ThunderFileSection extends CommentEnabledSection<ThunderFile, DataM
 
 
 	@Override
-	public @NotNull
-	ThunderFileSection getSection(final @NotNull String sectionKey) {
+	public @NotNull ThunderFileSection getSection(final @NotNull String sectionKey) {
 		return new ThunderFileSection(this.getFinalKey(sectionKey), this.baseFile);
 	}
 
 	@Override
-	public @NotNull
-	ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new ThunderFileSection(this.getFinalArrayKey(sectionKey), this.baseFile);
 	}
 }

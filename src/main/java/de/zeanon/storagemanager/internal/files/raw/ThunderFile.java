@@ -17,7 +17,7 @@ import de.zeanon.storagemanager.internal.base.interfaces.DataMap;
 import de.zeanon.storagemanager.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storagemanager.internal.files.section.ThunderFileSection;
 import de.zeanon.storagemanager.internal.utility.basic.BaseFileUtils;
-import de.zeanon.storagemanager.internal.utility.editor.ThunderEditor;
+import de.zeanon.storagemanager.internal.utility.parser.ThunderFileParser;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
@@ -86,7 +86,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
 		try {
-			this.fileData().loadData(ThunderEditor.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize));
+			this.fileData().loadData(ThunderFileParser.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize));
 			this.lastLoaded(System.currentTimeMillis());
 		} catch (final @NotNull ThunderException e) {
 			throw new FileParseException("Error while parsing '"
@@ -104,7 +104,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	@Override
 	public void save() {
 		try {
-			ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting(), this.getAutoFlush());
+			ThunderFileParser.writeData(this.file(), this.fileData(), this.getCommentSetting(), this.getAutoFlush());
 		} catch (final @NotNull RuntimeIOException e) {
 			throw new RuntimeIOException("Error while writing to "
 										 + this.getAbsolutePath()
@@ -139,8 +139,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull
-	ThunderFileSection getSection(final @NotNull String sectionKey) {
+	public @NotNull ThunderFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -152,17 +151,15 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull
-	ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
 
 	@Override
-	protected @NotNull
-	DataMap readFile() {
+	protected @NotNull DataMap readFile() {
 		try {
-			return ThunderEditor.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize);
+			return ThunderFileParser.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize);
 		} catch (final @NotNull RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
 		} catch (final @NotNull ThunderException e) {
@@ -177,21 +174,18 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 		THUNDERFILE();
 
 
-		private final @NotNull
-		String extension = "tf";
+		private final @NotNull String extension = "tf";
 
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull
-		String toLowerCase() {
+		public @NotNull String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull
-		String toString() {
+		public @NotNull String toString() {
 			return this.extension;
 		}
 	}

@@ -256,8 +256,7 @@ public class BaseFileUtils {
 	 * @return the files of the given directory
 	 */
 	@Contract("null -> fail")
-	public @NotNull
-	Collection<File> listFilesAndFolders(final @NotNull File directory) throws IOException {
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, null, false);
 	}
 
@@ -270,9 +269,8 @@ public class BaseFileUtils {
 	 * @return the files of the given directory
 	 */
 	@Contract("null, _ -> fail")
-	public @NotNull
-	Collection<File> listFilesAndFolders(final @NotNull File directory,
-										 final boolean deep) throws IOException {
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final boolean deep) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, deep, null, false);
 	}
 
@@ -285,9 +283,8 @@ public class BaseFileUtils {
 	 * @return the files of the given directory
 	 */
 	@Contract("null, _ -> fail")
-	public @NotNull
-	Collection<File> listFilesAndFolders(final @NotNull File directory,
-										 final @Nullable String sequence) throws IOException {
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final @Nullable String sequence) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, sequence, false);
 	}
 
@@ -301,10 +298,9 @@ public class BaseFileUtils {
 	 * @return the files of the given directory
 	 */
 	@Contract("null, _, _ -> fail")
-	public @NotNull
-	Collection<File> listFilesAndFolders(final @NotNull File directory,
-										 final @Nullable String sequence,
-										 final boolean caseSensitive) throws IOException {
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final @Nullable String sequence,
+														 final boolean caseSensitive) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, sequence, caseSensitive);
 	}
 
@@ -318,10 +314,9 @@ public class BaseFileUtils {
 	 * @return the files of the given directory
 	 */
 	@Contract("null, _, _ -> fail")
-	public @NotNull
-	Collection<File> listFilesAndFolders(final @NotNull File directory,
-										 final boolean deep,
-										 final @Nullable String sequence) throws IOException {
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final boolean deep,
+														 final @Nullable String sequence) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, deep, sequence, false);
 	}
 
@@ -336,11 +331,10 @@ public class BaseFileUtils {
 	 * @return the files of the given directory
 	 */
 	@Contract("null, _, _, _ -> fail")
-	public @NotNull
-	Collection<File> listFilesAndFolders(final @NotNull File directory,
-										 final boolean deep,
-										 final @Nullable String sequence,
-										 final boolean caseSensitive) throws IOException {
+	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
+														 final boolean deep,
+														 final @Nullable String sequence,
+														 final boolean caseSensitive) throws IOException {
 		final @NotNull Collection<File> files = new GapList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
