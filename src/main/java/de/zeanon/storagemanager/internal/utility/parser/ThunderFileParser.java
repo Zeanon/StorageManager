@@ -383,10 +383,9 @@ public class ThunderFileParser {
 
 	// <Read Data>
 	// <Read Data with Comments>
-	private @NotNull
-	DataMap<String, Object> initialReadWithComments(final @NotNull File file,
-													final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
-													final int buffer_size) throws ThunderParseException {
+	private @NotNull DataMap<String, Object> initialReadWithComments(final @NotNull File file,
+																	 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
+																	 final int buffer_size) throws ThunderParseException {
 		try {
 			final @NotNull ListIterator<String> lines;
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
@@ -429,9 +428,8 @@ public class ThunderFileParser {
 		}
 	}
 
-	private @NotNull
-	DataMap<String, Object> internalReadWithComments(final @NotNull ListIterator<String> lines,
-													 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderParseException {
+	private @NotNull DataMap<String, Object> internalReadWithComments(final @NotNull ListIterator<String> lines,
+																	  final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderParseException {
 		//noinspection unchecked
 		final @NotNull DataMap<String, Object> tempMap = collectionsProvider.newMap();
 
@@ -469,10 +467,9 @@ public class ThunderFileParser {
 	// </Read Data with Comments>
 
 	// <Read Data without Comments>
-	private @NotNull
-	DataMap<String, Object> initialReadWithOutComments(final @NotNull File file,
-													   final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
-													   final int buffer_size) throws ThunderParseException {
+	private @NotNull DataMap<String, Object> initialReadWithOutComments(final @NotNull File file,
+																		final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
+																		final int buffer_size) throws ThunderParseException {
 		try {
 			final @NotNull ListIterator<String> lines;
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
@@ -513,9 +510,8 @@ public class ThunderFileParser {
 		}
 	}
 
-	private @NotNull
-	DataMap<String, Object> internalReadWithOutComments(final @NotNull ListIterator<String> lines,
-														final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderParseException {
+	private @NotNull DataMap<String, Object> internalReadWithOutComments(final @NotNull ListIterator<String> lines,
+																		 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderParseException {
 		//noinspection unchecked
 		final @NotNull DataMap<String, Object> tempMap = collectionsProvider.newMap();
 
@@ -550,11 +546,10 @@ public class ThunderFileParser {
 	}
 	// </Read without Comments>
 
-	private @Nullable
-	String readKey(final @NotNull ListIterator<String> lines,
-				   final @NotNull DataMap<String, Object> tempMap,
-				   final @NotNull String tempLine,
-				   final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderParseException {
+	private @Nullable String readKey(final @NotNull ListIterator<String> lines,
+									 final @NotNull DataMap<String, Object> tempMap,
+									 final @NotNull String tempLine,
+									 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderParseException {
 		if (tempLine.contains("=")) {
 			final @NotNull String[] line = tempLine.split("=", 2);
 			line[0] = line[0].trim();
@@ -603,9 +598,8 @@ public class ThunderFileParser {
 		}
 	}
 
-	private @NotNull
-	List<String> readList(final @NotNull ListIterator<String> lines,
-						  final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderParseException {
+	private @NotNull List<String> readList(final @NotNull ListIterator<String> lines,
+										   final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderParseException {
 		@NotNull String tempLine;
 		//noinspection unchecked
 		final @NotNull List<String> tempList = collectionsProvider.newList();
