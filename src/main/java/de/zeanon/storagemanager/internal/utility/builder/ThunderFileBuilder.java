@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, ThunderFile, DataMap, List> {
+public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, ThunderFile, DataMap, List> { //NOSONAR
 
 
 	private boolean bigData;
@@ -36,8 +36,7 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private boolean autoFlush;
 	@Setter(onMethod_ = {@Contract("_ -> this")})
-	private @NotNull
-	CommentSetting commentSetting = Comment.SKIP;
+	private @NotNull CommentSetting commentSetting = Comment.SKIP;
 	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private int bufferSize = 8192;
 
@@ -49,14 +48,12 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 
 	@Override
 	@Contract("-> new")
-	public final @NotNull
-	ThunderFile create() {
-		return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bufferSize, this.autoFlush, this.bigData, this.concurrentData, this.synchronizedData, this.mapType, this.listType);
+	public final @NotNull ThunderFile create() {
+		return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bufferSize, this.autoFlush, this.bigData, this.concurrentData, this.synchronizeData, this.mapType, this.listType);
 	}
 
 	@Contract("_ -> this")
-	public final @NotNull
-	ThunderFileBuilder bigData(final boolean bigData) {
+	public final @NotNull ThunderFileBuilder bigData(final boolean bigData) {
 		this.bigData = bigData;
 		return this.mapType(this.concurrentData ? (this.bigData ? ConcurrentBigDataMap.class : ConcurrentGapDataMap.class)
 												: (this.bigData ? BigDataMap.class : GapDataMap.class));
@@ -64,15 +61,13 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 
 	@Override
 	@Contract("_ -> this")
-	public final @NotNull
-	ThunderFileBuilder bigList(final boolean bigList) {
+	public final @NotNull ThunderFileBuilder bigList(final boolean bigList) {
 		return this.listType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull
-	ThunderFileBuilder concurrentData(final boolean concurrentData) {
+	public @NotNull ThunderFileBuilder concurrentData(final boolean concurrentData) {
 		this.concurrentData = concurrentData;
 		return this.mapType(this.concurrentData ? (this.bigData ? ConcurrentBigDataMap.class : ConcurrentGapDataMap.class)
 												: (this.bigData ? BigDataMap.class : GapDataMap.class));
@@ -89,10 +84,10 @@ public class ThunderFileBuilder extends StorageManager<ThunderFileBuilder, Thund
 								 final boolean autoFlush,
 								 final boolean bigData,
 								 final boolean concurrentData,
-								 final boolean synchronizedData,
+								 final boolean synchronizeData,
 								 final @NotNull Class<? extends DataMap> map,
 								 final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, commentSetting, bufferSize, autoFlush, bigData, concurrentData, synchronizedData, map, list);
+			super(file, inputStream, reloadSetting, commentSetting, bufferSize, autoFlush, bigData, concurrentData, synchronizeData, map, list);
 		}
 	}
 }

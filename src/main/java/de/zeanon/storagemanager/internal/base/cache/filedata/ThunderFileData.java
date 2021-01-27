@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 @Accessors(fluent = true, chain = false)
 @SuppressWarnings({"unused", "DefaultAnnotationParam", "rawtypes"})
-public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<ThunderFileData>, Serializable {
+public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends List> implements FileData<M, E, L>, Comparable<ThunderFileData>, Serializable { //NOSONAR
 
 
 	private static final long serialVersionUID = 746673400911930709L;
@@ -45,8 +45,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 *
 	 * @return the internal Provider to be used
 	 */
-	private final @NotNull
-	CollectionsProvider<M, L> collectionsProvider;
+	private final @NotNull CollectionsProvider<M, L> collectionsProvider;
 	/**
 	 * Internal cache for the contents of the File
 	 * <p>
@@ -54,8 +53,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 *
 	 * @return the internal DataMap
 	 */
-	private transient @NotNull
-	M dataMap;
+	private transient @NotNull M dataMap;
 	/**
 	 * Defines whether the internal Map should be wrapped by {@link Collections#synchronizedMap(Map)}
 	 * <p>
@@ -67,21 +65,21 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 * Define if the Map should be synchronized
 	 */
 	@Setter
-	private boolean synchronizedData;
+	private boolean synchronizeData;
 
 
 	/**
 	 * Initializes a new FileData
 	 *
 	 * @param collectionsProvider the internal Provider to be used
-	 * @param synchronize         whether the internal Map should be synchronized
+	 * @param synchronizeData     whether the internal Map should be synchronized
 	 */
 	@Contract(pure = true)
-	protected ThunderFileData(final @NotNull CollectionsProvider<M, L> collectionsProvider, final boolean synchronize) {
+	protected ThunderFileData(final @NotNull CollectionsProvider<M, L> collectionsProvider, final boolean synchronizeData) {
 		this.collectionsProvider = collectionsProvider;
-		this.synchronizedData = synchronize;
+		this.synchronizeData = synchronizeData;
 		//noinspection unchecked
-		this.dataMap = this.synchronizedData ? ((M) Collections.synchronizedMap(this.collectionsProvider().newMap())) : this.collectionsProvider().newMap(); //NOSONAR
+		this.dataMap = this.synchronizeData ? ((M) Collections.synchronizedMap(this.collectionsProvider().newMap())) : this.collectionsProvider().newMap(); //NOSONAR
 	}
 
 	/**
@@ -91,8 +89,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 */
 	@Override
 	@Contract("-> new")
-	public @NotNull
-	List<E> blockEntryList() {
+	public @NotNull List<E> blockEntryList() {
 		//noinspection unchecked
 		return this.dataMap.entryList();
 	}
@@ -106,9 +103,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 * @return the entryList of the internal dataMap
 	 */
 	@Override
-	@Contract("null -> fail")
-	public @Nullable
-	List<E> entryList(final @NotNull String key) {
+	public @Nullable List<E> entryList(final @NotNull String key) {
 		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof DataMap) {
 			//noinspection unchecked
@@ -126,9 +121,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 * @return the entryList of the internal dataMap
 	 */
 	@Override
-	@Contract("null -> fail")
-	public @Nullable
-	List<E> blockEntryList(final @NotNull String key) {
+	public @Nullable List<E> blockEntryList(final @NotNull String key) {
 		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof DataMap) {
 			//noinspection unchecked
@@ -147,9 +140,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 * @return the entryList of the internal dataMap
 	 */
 	@Override
-	@Contract("null -> fail")
-	public @Nullable
-	List<E> entryListUseArray(final @NotNull String... key) {
+	public @Nullable List<E> entryListUseArray(final @NotNull String... key) {
 		final @Nullable Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof DataMap) {
 			//noinspection unchecked
@@ -168,8 +159,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 */
 	@Override
 	@Contract("null -> fail")
-	public @Nullable
-	List<E> blockEntryListUseArray(final @NotNull String... key) {
+	public @Nullable List<E> blockEntryListUseArray(final @NotNull String... key) {
 		final @Nullable Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof DataMap) {
 			//noinspection unchecked
@@ -187,8 +177,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 */
 	@Override
 	@Contract("-> new")
-	public @NotNull
-	List<E> entryList() {
+	public @NotNull List<E> entryList() {
 		//noinspection unchecked
 		return this.internalEntryList(this.dataMap);
 	}
@@ -202,10 +191,10 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	public void loadData(final @Nullable M map) {
 		if (map != null) {
 			//noinspection unchecked
-			this.dataMap = this.synchronizedData ? ((M) Collections.synchronizedMap(map)) : map;
+			this.dataMap = this.synchronizeData ? ((M) Collections.synchronizedMap(map)) : map;
 		} else {
 			//noinspection unchecked
-			this.dataMap = this.synchronizedData ? ((M) Collections.synchronizedMap(this.collectionsProvider().newMap())) : this.collectionsProvider().newMap(); //NOSONAR
+			this.dataMap = this.synchronizeData ? ((M) Collections.synchronizedMap(this.collectionsProvider().newMap())) : this.collectionsProvider().newMap(); //NOSONAR
 		}
 	}
 
@@ -216,7 +205,6 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 * @param value the value to be assigned to the key
 	 */
 	@Override
-	@Contract("null, _ -> fail")
 	public void insert(final @NotNull String key, final @Nullable Object value) {
 		final @NotNull String[] parts = key.split("\\.");
 		this.initialInsert(value, parts);
@@ -242,7 +230,6 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 * @throws ObjectNullException if the given key does not exist
 	 */
 	@Override
-	@Contract("null -> fail")
 	public void remove(final @NotNull String key) {
 		final @NotNull String[] parts = key.split("\\.");
 		this.initialRemove(parts);
@@ -269,7 +256,6 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 * @return true if the given key exists, false if not
 	 */
 	@Override
-	@Contract("null -> fail")
 	public boolean containsKey(final @NotNull String key) {
 		final @NotNull String[] parts = key.split("\\.");
 		return this.internalContainsKey(this.dataMap, parts, 0);
@@ -296,9 +282,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 * @return the Value mapped to the given key
 	 */
 	@Override
-	@Contract("null -> fail")
-	public @Nullable
-	Object get(final @NotNull String key) {
+	public @Nullable Object get(final @NotNull String key) {
 		final @NotNull String[] parts = key.split("\\.");
 		return this.internalGet(this.dataMap, parts);
 	}
@@ -312,8 +296,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 */
 	@Override
 	@Contract("null -> fail")
-	public @Nullable
-	Object getUseArray(final @NotNull String... key) {
+	public @Nullable Object getUseArray(final @NotNull String... key) {
 		return this.internalGet(this.dataMap, key);
 	}
 
@@ -331,7 +314,6 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 * @return the size of the given Block of the internal DataMap or 0 if the given block does not exist
 	 */
 	@Override
-	@Contract("null -> fail")
 	public int blockSize(final @NotNull String key) {
 		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof DataMap) {
@@ -372,7 +354,6 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 * @return the amount of all Entries from the given Block combined
 	 */
 	@Override
-	@Contract("null -> fail")
 	public int size(final @NotNull String key) {
 		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof DataMap) {
@@ -422,7 +403,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 
 	// <Internal>
 	private @Nullable
-	Object internalGet(final @NotNull DataMap map, final @NotNull String[] key) {
+	Object internalGet(final @NotNull DataMap map, final @NotNull String[] key) { //NOSONAR
 		@Nullable Object tempValue = map;
 		for (final @NotNull String tempKey : key) {
 			if (tempValue instanceof DataMap) {
@@ -451,8 +432,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		}
 	}
 
-	private @NotNull
-	Object internalInsert(final @NotNull DataMap<String, Object> map, final @NotNull String[] key, final @NotNull Object value, final int keyIndex) {
+	private @NotNull Object internalInsert(final @NotNull DataMap<String, Object> map, final @NotNull String[] key, final @NotNull Object value, final int keyIndex) {
 		if (keyIndex < key.length) {
 			final @Nullable Object tempValue = map.get(key[keyIndex]);
 			//noinspection unchecked
@@ -488,8 +468,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	}
 
 	@Contract("_, _, _ -> param1")
-	private @NotNull
-	DataMap internalRemove(final @NotNull DataMap map, final @NotNull String[] key, final int keyIndex) {
+	private @NotNull DataMap internalRemove(final @NotNull DataMap map, final @NotNull String[] key, final int keyIndex) { //NOSONAR
 		if (keyIndex < key.length - 1) {
 			final @Nullable Object tempValue = map.get(key[keyIndex]);
 			if (tempValue instanceof DataMap) {
@@ -508,8 +487,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		}
 	}
 
-	private @NotNull
-	List<DataMap.DataNode<String, Object>> internalEntryList(final @NotNull DataMap<String, Object> map) {
+	private @NotNull List<DataMap.DataNode<String, Object>> internalEntryList(final @NotNull DataMap<String, Object> map) {
 		//noinspection unchecked
 		final @NotNull List<DataMap.DataNode<String, Object>> tempList = this.collectionsProvider.newList();
 		for (final @NotNull DataMap.DataNode<String, Object> entry : map.entryList()) {
@@ -521,7 +499,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		return tempList;
 	}
 
-	private boolean internalContainsKey(final @NotNull DataMap map, final @NotNull String[] key, final int keyIndex) {
+	private boolean internalContainsKey(final @NotNull DataMap map, final @NotNull String[] key, final int keyIndex) { //NOSONAR
 		if (keyIndex < key.length - 1) {
 			final @Nullable Object tempValue = map.get(key[keyIndex]);
 			if (tempValue instanceof DataMap) {
@@ -536,7 +514,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 
 	private int internalSize(final @NotNull DataMap<String, Object> map) {
 		int size = 0;
-		for (final @NotNull DataMap.DataNode entry : map.entryList()) {
+		for (final @NotNull DataMap.DataNode entry : map.entryList()) { //NOSONAR
 			if (entry.getValue() instanceof DataMap) {
 				//noinspection unchecked
 				size += this.internalSize((DataMap) entry.getValue());
@@ -548,8 +526,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	}
 
 	@Contract("_ -> new")
-	private @NotNull
-	DataMap<String, Object> parseMap(final @NotNull Map<String, Object> map) {
+	private @NotNull DataMap<String, Object> parseMap(final @NotNull Map<String, Object> map) {
 		//noinspection unchecked
 		final @NotNull DataMap<String, Object> tempMap = this.collectionsProvider().newMap();
 		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
@@ -595,8 +572,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	 * @return the FileData parsed to a String
 	 */
 	@Override
-	public @NotNull
-	String toString() {
+	public @NotNull String toString() {
 		return this.dataMap.toString();
 	}
 
@@ -621,8 +597,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		 * required to, throw this exception if the entry has been
 		 * removed from the backing map.
 		 */
-		private @NotNull
-		K key;
+		private @NotNull K key;
 
 		/**
 		 * The value assigned to this Node
@@ -658,8 +633,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		 *                                       null keys, and the specified key is null
 		 */
 		@Override
-		public @NotNull
-		K setKey(final @NotNull K key) {
+		public @NotNull K setKey(final @NotNull K key) {
 			try {
 				return this.key;
 			} finally {
@@ -703,8 +677,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		 * @return the Node parsed to a String
 		 */
 		@Override
-		public @NotNull
-		String toString() {
+		public @NotNull String toString() {
 			return "(" + this.key + "=" + this.value + ")";
 		}
 	}

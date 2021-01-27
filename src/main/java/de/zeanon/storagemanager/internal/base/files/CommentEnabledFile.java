@@ -42,8 +42,7 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	 * -- Setter --
 	 * Define how comments should be handled
 	 */
-	private @NotNull
-	CommentSetting commentSetting;
+	private @NotNull CommentSetting commentSetting;
 
 
 	/**

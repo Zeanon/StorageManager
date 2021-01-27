@@ -28,11 +28,10 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode(callSuper = true)
 @Setter(onMethod_ = {@Contract("_ -> this")})
 @SuppressWarnings({"unused", "rawtypes"})
-public class TomlConfigBuilder extends StorageManager<TomlConfigBuilder, TomlConfig, Map, List> {
+public class TomlConfigBuilder extends StorageManager<TomlConfigBuilder, TomlConfig, Map, List> { //NOSONAR
 
 
-	private @NotNull
-	CommentSetting commentSetting = Comment.PRESERVE;
+	private @NotNull CommentSetting commentSetting = Comment.PRESERVE;
 
 
 	public TomlConfigBuilder(final @NotNull File file) {
@@ -42,22 +41,19 @@ public class TomlConfigBuilder extends StorageManager<TomlConfigBuilder, TomlCon
 
 	@Override
 	@Contract("-> new")
-	public final @NotNull
-	TomlConfig create() {
-		return new TomlConfigBuilder.LocalTomlConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.synchronizedData, this.mapType, this.listType);
+	public final @NotNull TomlConfig create() {
+		return new TomlConfigBuilder.LocalTomlConfig(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.synchronizeData, this.mapType, this.listType);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public final @NotNull
-	TomlConfigBuilder bigList(final boolean bigList) {
+	public final @NotNull TomlConfigBuilder bigList(final boolean bigList) {
 		return this.listType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull
-	TomlConfigBuilder concurrentData(final boolean concurrentData) {
+	public @NotNull TomlConfigBuilder concurrentData(final boolean concurrentData) {
 		return this.mapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 
@@ -68,10 +64,10 @@ public class TomlConfigBuilder extends StorageManager<TomlConfigBuilder, TomlCon
 								final @Nullable InputStream inputStream,
 								final @NotNull ReloadSetting reloadSetting,
 								final @NotNull CommentSetting commentSetting,
-								final boolean synchronizedData,
+								final boolean synchronizeData,
 								final @NotNull Class<? extends Map> map,
 								final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, commentSetting, synchronizedData, map, list);
+			super(file, inputStream, reloadSetting, commentSetting, synchronizeData, map, list);
 		}
 	}
 }

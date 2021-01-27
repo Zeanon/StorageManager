@@ -95,17 +95,17 @@ public class Objects {
 		if (object == null) {
 			return null;
 		} else {
-			if (def.getClass() == int.class || def.getClass() == Integer.class) {
+			if (def.getClass() == Integer.class) {
 				return (T) (Object) Objects.toInt(object);
-			} else if (def.getClass() == long.class || def.getClass() == Long.class) {
+			} else if (def.getClass() == Long.class) {
 				return (T) (Object) Objects.toLong(object);
-			} else if (def.getClass() == double.class || def.getClass() == Double.class) {
+			} else if (def.getClass() == Double.class) {
 				return (T) (Object) Objects.toDouble(object);
-			} else if (def.getClass() == float.class || def.getClass() == Float.class) {
+			} else if (def.getClass() == Float.class) {
 				return (T) (Object) Objects.toFloat(object);
-			} else if (def.getClass() == short.class || def.getClass() == Short.class) {
+			} else if (def.getClass() == Short.class) {
 				return (T) (Object) Objects.toShort(object);
-			} else if (def.getClass() == boolean.class || def.getClass() == Boolean.class) {
+			} else if (def.getClass() == Boolean.class) {
 				return (T) (Object) Objects.toBoolean(object);
 			} else if (def.getClass() == String.class) {
 				return (T) Objects.toString(object);

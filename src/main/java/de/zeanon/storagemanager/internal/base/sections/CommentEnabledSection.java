@@ -26,8 +26,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class CommentEnabledSection<F extends CommentEnabledFile<? extends FileData<M, ?, L>, M, L>, M extends Map, L extends List> extends FlatSection<F, M, L> {
 
 
-	@NotNull
-	private final F commentEnabledFile;
+	@NotNull private final F commentEnabledFile;
 
 
 	protected CommentEnabledSection(final @NotNull String sectionKey, final @NotNull F commentEnabledFile) {

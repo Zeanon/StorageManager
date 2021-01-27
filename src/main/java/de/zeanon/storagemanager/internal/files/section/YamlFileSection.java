@@ -21,11 +21,10 @@ import org.jetbrains.annotations.NotNull;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class YamlFileSection extends CommentEnabledSection<YamlFile, Map, List> {
+public class YamlFileSection extends CommentEnabledSection<YamlFile, Map, List> { //NOSONAR
 
 
-	private final @NotNull
-	YamlFile baseFile;
+	private final @NotNull YamlFile baseFile;
 
 
 	protected YamlFileSection(final @NotNull String sectionKey, final @NotNull YamlFile baseFile) {
@@ -40,14 +39,12 @@ public class YamlFileSection extends CommentEnabledSection<YamlFile, Map, List> 
 
 
 	@Override
-	public @NotNull
-	YamlFileSection getSection(final @NotNull String sectionKey) {
+	public @NotNull YamlFileSection getSection(final @NotNull String sectionKey) {
 		return new YamlFileSection(this.getFinalKey(sectionKey), this.baseFile);
 	}
 
 	@Override
-	public @NotNull
-	YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new YamlFileSection(this.getFinalArrayKey(sectionKey), this.baseFile);
 	}
 }

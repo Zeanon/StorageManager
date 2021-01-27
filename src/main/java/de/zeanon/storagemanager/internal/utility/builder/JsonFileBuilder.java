@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, Map, List> {
+public class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, Map, List> { //NOSONAR
 
 
 	public JsonFileBuilder(final @NotNull File file) {
@@ -31,22 +31,19 @@ public class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, M
 
 	@Override
 	@Contract("-> new")
-	public final @NotNull
-	JsonFile create() {
-		return new LocalJsonFile(super.file, this.inputStream, this.reloadSetting, this.synchronizedData, this.mapType, this.listType);
+	public final @NotNull JsonFile create() {
+		return new LocalJsonFile(super.file, this.inputStream, this.reloadSetting, this.synchronizeData, this.mapType, this.listType);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull
-	JsonFileBuilder bigList(final boolean bigList) {
+	public @NotNull JsonFileBuilder bigList(final boolean bigList) {
 		return this.listType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull
-	JsonFileBuilder concurrentData(final boolean concurrentData) {
+	public @NotNull JsonFileBuilder concurrentData(final boolean concurrentData) {
 		return this.mapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 
@@ -58,10 +55,10 @@ public class JsonFileBuilder extends StorageManager<JsonFileBuilder, JsonFile, M
 		private LocalJsonFile(final @NotNull File file,
 							  final @Nullable InputStream inputStream,
 							  final @NotNull ReloadSetting reloadSetting,
-							  final boolean synchronizedData,
+							  final boolean synchronizeData,
 							  final @NotNull Class<? extends Map> map,
 							  final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, synchronizedData, map, list);
+			super(file, inputStream, reloadSetting, synchronizeData, map, list);
 		}
 	}
 }

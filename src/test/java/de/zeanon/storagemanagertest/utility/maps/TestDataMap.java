@@ -11,8 +11,7 @@ import org.junit.jupiter.api.Test;
 
 class TestDataMap {
 
-	private static final @NotNull
-	DataMap<String, Boolean> testMap = new GapDataMap<>();
+	private static final @NotNull DataMap<String, Boolean> testMap = new GapDataMap<>();
 
 	@BeforeAll
 	static void setup() {

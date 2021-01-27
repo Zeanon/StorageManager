@@ -44,12 +44,5 @@ public enum Reload implements ReloadSetting {
 		public boolean shouldReload(final @Nullable FlatFile flatFile) {
 			return false;
 		}
-	};
-
-
-	/**
-	 * @return if the File should be reloaded
-	 */
-	@Override
-	public abstract boolean shouldReload(final @NotNull FlatFile flatFile);
+	}
 }

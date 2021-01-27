@@ -35,7 +35,6 @@ class TestBaseFileUtils {
 			result = false;
 		}
 
-		System.out.println(result);
 		Assertions.assertTrue(result);
 	}
 

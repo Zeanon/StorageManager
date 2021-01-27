@@ -33,13 +33,11 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	/**
 	 * Local lock to ensure internal concurrency
 	 */
-	private transient @NotNull
-	StampedLock localLock = new StampedLock();
+	private transient @NotNull StampedLock localLock = new StampedLock();
 	/**
 	 * List that holds the internal nodes
 	 */
-	private transient @NotNull
-	IList<DataNode<K, V>> localList;
+	private transient @NotNull IList<DataNode<K, V>> localList;
 
 
 	/**
@@ -496,8 +494,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	 */
 	@Override
 	@Contract("-> new")
-	public @NotNull
-	Set<Entry<K, V>> entrySet() {
+	public @NotNull Set<Entry<K, V>> entrySet() {
 		final long lockStamp = this.localLock.readLock();
 		try {
 			return new HashSet<>(this.localList);
@@ -523,8 +520,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	 * @return a list view of the mappings contained in this map
 	 */
 	@Override
-	public @NotNull
-	List<DataNode<K, V>> entryList() {
+	public @NotNull List<DataNode<K, V>> entryList() {
 		return this.localList;
 	}
 
@@ -559,8 +555,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	 * Abstract clone method to be overwritten by extending classes
 	 */
 	@Override //NOSONAR
-	public abstract @NotNull
-	DataMap<K, V> clone(); //NOSONAR
+	public abstract @NotNull DataMap<K, V> clone(); //NOSONAR
 
 	/**
 	 * Method to reinitialize the map on deserialization
@@ -578,8 +573,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	 * @return the Map parsed to a String
 	 */
 	@Override
-	public @NotNull
-	String toString() {
+	public @NotNull String toString() {
 		final long lockStamp = this.localLock.readLock();
 		try {
 			return this.localList.toString();
@@ -605,15 +599,13 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 		/**
 		 * Local lock to ensure internal concurrency
 		 */
-		private final @NotNull
-		StampedLock localLock = new StampedLock();
+		private final @NotNull StampedLock localLock = new StampedLock();
 
 
 		/**
 		 * The key assigned to this Node
 		 */
-		private @NotNull
-		K key;
+		private @NotNull K key;
 
 		/**
 		 * The value assigned to this Node
@@ -639,13 +631,13 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 		 *                                       null keys, and the specified key is null
 		 */
 		@Override
-		public @NotNull
-		K setKey(final @NotNull K key) {
+		public @NotNull K setKey(final @NotNull K key) {
 			final long lockStamp = this.localLock.writeLock();
 			try {
-				return this.key;
-			} finally {
+				K tempKey = this.key;
 				this.key = key;
+				return tempKey;
+			} finally {
 				this.localLock.unlockWrite(lockStamp);
 			}
 		}
@@ -674,9 +666,10 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 		V setValue(final @Nullable V value) {
 			final long lockStamp = this.localLock.writeLock();
 			try {
-				return this.value;
-			} finally {
+				V tempValue = this.value;
 				this.value = value;
+				return tempValue;
+			} finally {
 				this.localLock.unlockWrite(lockStamp);
 			}
 		}
@@ -693,8 +686,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 		 *                               removed from the backing map.
 		 */
 		@Override
-		public @NotNull
-		K getKey() {
+		public @NotNull K getKey() {
 			final long lockStamp = this.localLock.readLock();
 			try {
 				return this.key;
@@ -732,8 +724,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 		 * @return the Node parsed to a String
 		 */
 		@Override
-		public @NotNull
-		String toString() {
+		public @NotNull String toString() {
 			final long lockStamp = this.localLock.readLock();
 			try {
 				return "(" + this.key + "=" + this.value + ")";

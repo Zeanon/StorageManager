@@ -26,8 +26,7 @@ public interface DataStorage {
 	 *
 	 * @return Object from File
 	 */
-	@Nullable
-	Object get(final @NotNull String key);
+	@Nullable Object get(final @NotNull String key);
 
 	/**
 	 * Get an Object from a File
@@ -36,15 +35,13 @@ public interface DataStorage {
 	 *
 	 * @return Object from File
 	 */
-	@Nullable
-	Object getUseArray(final @NotNull String... key);
+	@Nullable Object getUseArray(final @NotNull String... key);
 
 	/**
 	 * Get an Object from the File casted to a certain type
 	 *
 	 * @param key key to value in the File
 	 * @param def the Class to be casted to
-	 * @param <O> ReturnType
 	 *
 	 * @return returns the value of the key casted to def
 	 */
@@ -57,7 +54,6 @@ public interface DataStorage {
 	 *
 	 * @param key key to value in the File
 	 * @param def the Class to be casted to
-	 * @param <O> ReturnType
 	 *
 	 * @return returns the value of the key casted to def
 	 */
@@ -72,8 +68,7 @@ public interface DataStorage {
 	 *
 	 * @return Returns the value
 	 */
-	default @Nullable
-	String getString(final @NotNull String key) {
+	default @Nullable String getString(final @NotNull String key) {
 		return Objects.toString(this.get(key));
 	}
 
@@ -84,8 +79,7 @@ public interface DataStorage {
 	 *
 	 * @return Returns the value
 	 */
-	default @Nullable
-	String getStringUseArray(final @NotNull String... key) {
+	default @Nullable String getStringUseArray(final @NotNull String... key) {
 		return Objects.toString(this.getUseArray(key));
 	}
 
@@ -296,7 +290,7 @@ public interface DataStorage {
 	 *
 	 * @return Map
 	 */
-	default @Nullable <K, V> Map<K, V> getMap(final @NotNull String key) {
+	default <K, V> @Nullable Map<K, V> getMap(final @NotNull String key) {
 		return (Map<K, V>) this.get(key);
 	}
 
@@ -307,7 +301,7 @@ public interface DataStorage {
 	 *
 	 * @return Map
 	 */
-	default @Nullable <K, V> Map<K, V> getMapUseArray(final @NotNull String... key) {
+	default <K, V> @Nullable Map<K, V> getMapUseArray(final @NotNull String... key) {
 		return (Map<K, V>) this.getUseArray(key);
 	}
 
@@ -653,8 +647,7 @@ public interface DataStorage {
 	 *
 	 * @return the Section corresponding to the given key
 	 */
-	@NotNull
-	FlatSection getSection(final @NotNull String sectionKey);
+	@NotNull FlatSection getSection(final @NotNull String sectionKey); //NOSONAR
 
 	/**
 	 * Get a Section of the DataStorage
@@ -663,6 +656,5 @@ public interface DataStorage {
 	 *
 	 * @return the Section corresponding to the given key
 	 */
-	@NotNull
-	FlatSection getSectionUseArray(final @NotNull String... sectionKey);
+	@NotNull FlatSection getSectionUseArray(final @NotNull String... sectionKey); //NOSONAR
 }

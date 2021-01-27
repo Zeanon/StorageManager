@@ -5,7 +5,7 @@
 
     <groupId>de.zeanon</groupId>
     <artifactId>storagemanager</artifactId>
-    <version>1.1.73</version>
+    <version>1.1.79</version>
     <name>StorageManager</name>
     <description>Store data in a better way</description>
     <url>https://github.com/Zeanon/StorageManager</url>
@@ -45,7 +45,7 @@
     </scm>
 
     <build>
-        <defaultGoal>clean verify -U -Dmaven.copy.skip=true</defaultGoal>
+        <defaultGoal>clean verify -U</defaultGoal>
         <finalName>${project.name}</finalName>
 
         <pluginManagement>
@@ -193,12 +193,29 @@
                 <version>1.8</version>
                 <executions>
                     <execution>
-                        <id>moveFiles</id>
+                        <id>moveFilesToSchemManager</id>
                         <phase>verify</phase>
                         <configuration>
-                            <target unless="maven.copy.skip">
-                                <echo message="To skip, call -Dmaven.copy.skip=true"/>
+                            <target if="maven.copy.schemmanager">
                                 <copy todir="${basedir}/../SchemManager/src/main/resources/dependencies"
+                                      flatten="true" overwrite="true"
+                                      verbose="true" failonerror="true">
+                                    <fileset dir="${basedir}/target"
+                                             includes="${project.build.finalName}.jar"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>moveFilesToBattleArena</id>
+                        <phase>verify</phase>
+                        <configuration>
+                            <target if="maven.copy.battlearena">
+                                <copy todir="${basedir}/../BattleArena/src/main/resources/dependencies"
                                       flatten="true" overwrite="true"
                                       verbose="true" failonerror="true">
                                     <fileset dir="${basedir}/target"
@@ -258,7 +275,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
+            <version>1.18.16</version>
             <scope>provided</scope>
         </dependency>
 

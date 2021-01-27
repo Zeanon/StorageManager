@@ -30,8 +30,7 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	/**
 	 *
 	 */
-	@NotNull
-	CollectionsProvider<M, L> collectionsProvider();
+	@NotNull CollectionsProvider<M, L> collectionsProvider();
 
 	/**
 	 * Map a value to a given key
@@ -165,13 +164,12 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the internally stored Data
 	 */
-	@NotNull
-	M dataMap();
+	@NotNull M dataMap();
 
 	/**
 	 * Set whether the internal Data should be synchronized
 	 */
-	void synchronizedData(final boolean synchronize);
+	void synchronizeData(final boolean synchronizeData);
 
 	/**
 	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
@@ -179,16 +177,14 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@NotNull
-	List<E> entryList();
+	@NotNull List<E> entryList();
 
 	/**
 	 * Get a List consisting of AbstractDataMap.DataNode objects of the top most layer of the internal DataMap
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@NotNull
-	List<E> blockEntryList();
+	@NotNull List<E> blockEntryList();
 
 	/**
 	 * Get a List consisting of AbstractDataMap.DataNode objects whereas values being instances of AbstractDataMap are also getting parsed to
@@ -238,6 +234,5 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 * @return the FileData parsed to a String
 	 */
 	@Override
-	@NotNull
-	String toString();
+	@NotNull String toString();
 }

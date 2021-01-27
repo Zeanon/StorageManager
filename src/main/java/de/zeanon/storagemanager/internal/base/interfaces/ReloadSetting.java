@@ -18,5 +18,5 @@ public interface ReloadSetting {
 	 *
 	 * @param flatFile the FlatFile to check
 	 */
-	boolean shouldReload(final @NotNull FlatFile flatFile);
+	boolean shouldReload(final @NotNull FlatFile flatFile); //NOSONAR
 }

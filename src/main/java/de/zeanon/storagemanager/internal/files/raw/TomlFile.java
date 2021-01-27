@@ -35,16 +35,16 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> {
+public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> { //NOSONAR
 
 
 	/**
-	 * @param file             the File to be used as a backend
-	 * @param inputStream      the FileContent to be set on the creation of the File
-	 * @param reloadSetting    the ReloadSetting to be used with this instance
-	 * @param synchronizedData if the saved data should be synchronized
-	 * @param map              the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
-	 * @param list             the List implementation to be used, default ist GapList
+	 * @param file            the File to be used as a backend
+	 * @param inputStream     the FileContent to be set on the creation of the File
+	 * @param reloadSetting   the ReloadSetting to be used with this instance
+	 * @param synchronizeData if the saved data should be synchronized
+	 * @param map             the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
+	 * @param list            the List implementation to be used, default ist GapList
 	 *
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
@@ -52,10 +52,10 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	protected TomlFile(final @NotNull File file,
 					   final @Nullable InputStream inputStream,
 					   final @NotNull ReloadSetting reloadSetting,
-					   final boolean synchronizedData,
+					   final boolean synchronizeData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, FileType.TOML, new LocalFileData(new CollectionsProvider<>(map, list), synchronizedData), reloadSetting);
+		super(file, FileType.TOML, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting);
 
 		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
@@ -103,8 +103,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull
-	TomlFileSection getSection(final @NotNull String sectionKey) {
+	public @NotNull TomlFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -116,15 +115,13 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull
-	TomlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull TomlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
 
 	@Override
-	protected @NotNull
-	Map readFile() {
+	protected @NotNull Map readFile() {
 		try {
 			return Toml.read(this.file());
 		} catch (final @NotNull IOException e) {
@@ -141,21 +138,18 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		TOML();
 
 
-		private final @NotNull
-		String extension = "toml";
+		private final @NotNull String extension = "toml";
 
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull
-		String toLowerCase() {
+		public @NotNull String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull
-		String toString() {
+		public @NotNull String toString() {
 			return this.extension;
 		}
 	}
@@ -171,11 +165,11 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		}
 	}
 
-	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> {
+	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> { //NOSONAR
 
 		private static final long serialVersionUID = -9141241112197467155L;
 
-		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) {
+		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) { //NOSONAR
 			super(collectionsProvider, synchronize);
 		}
 	}

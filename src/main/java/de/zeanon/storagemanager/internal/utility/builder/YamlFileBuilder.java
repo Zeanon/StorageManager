@@ -26,12 +26,11 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, Map, List> {
+public class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, Map, List> { //NOSONAR
 
 
 	@Setter(onMethod_ = {@Contract("_ -> this")})
-	private @NotNull
-	CommentSetting commentSetting = Comment.SKIP;
+	private @NotNull CommentSetting commentSetting = Comment.SKIP;
 
 
 	public YamlFileBuilder(final @NotNull File file) {
@@ -41,22 +40,19 @@ public class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, M
 
 	@Override
 	@Contract("-> new")
-	public final @NotNull
-	YamlFile create() {
-		return new LocalYamlFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.synchronizedData, this.mapType, this.listType);
+	public final @NotNull YamlFile create() {
+		return new LocalYamlFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.synchronizeData, this.mapType, this.listType);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public final @NotNull
-	YamlFileBuilder bigList(final boolean bigList) {
+	public final @NotNull YamlFileBuilder bigList(final boolean bigList) {
 		return this.listType(bigList ? BigList.class : GapList.class);
 	}
 
 	@Override
 	@Contract("_ -> this")
-	public @NotNull
-	YamlFileBuilder concurrentData(final boolean concurrentData) {
+	public @NotNull YamlFileBuilder concurrentData(final boolean concurrentData) {
 		return this.mapType(concurrentData ? ConcurrentHashMap.class : HashMap.class);
 	}
 
@@ -67,10 +63,10 @@ public class YamlFileBuilder extends StorageManager<YamlFileBuilder, YamlFile, M
 							  final @Nullable InputStream inputStream,
 							  final @NotNull ReloadSetting reloadSetting,
 							  final @NotNull CommentSetting commentSetting,
-							  final boolean synchronizedData,
+							  final boolean synchronizeData,
 							  final @NotNull Class<? extends Map> map,
 							  final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, commentSetting, synchronizedData, map, list);
+			super(file, inputStream, reloadSetting, commentSetting, synchronizeData, map, list);
 		}
 	}
 }

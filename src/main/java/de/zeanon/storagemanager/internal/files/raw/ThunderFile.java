@@ -17,7 +17,7 @@ import de.zeanon.storagemanager.internal.base.interfaces.DataMap;
 import de.zeanon.storagemanager.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storagemanager.internal.files.section.ThunderFileSection;
 import de.zeanon.storagemanager.internal.utility.basic.BaseFileUtils;
-import de.zeanon.storagemanager.internal.utility.editor.ThunderEditor;
+import de.zeanon.storagemanager.internal.utility.parser.ThunderFileParser;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List>, DataMap, List> {
+public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List>, DataMap, List> { //NOSONAR
 
 
 	private int bufferSize;
@@ -51,17 +51,17 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 
 
 	/**
-	 * @param file             the File to be used as a backend
-	 * @param inputStream      the FileContent to be set on the creation of the File
-	 * @param reloadSetting    the ReloadSetting to be used with this instance
-	 * @param commentSetting   the CommentSetting to be used with this instance
-	 * @param bufferSize       the bufferSize to be used with the Reader
-	 * @param autoFlush        autoFlush parameter of the PrintWriter
-	 * @param concurrentData   if the saved data should be concurrent
-	 * @param bigData          if BigDataMap optimized for a huge amount of entries should be used
-	 * @param synchronizedData if the saved data should be synchronized
-	 * @param map              the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
-	 * @param list             the List implementation to be used, default ist GapList
+	 * @param file            the File to be used as a backend
+	 * @param inputStream     the FileContent to be set on the creation of the File
+	 * @param reloadSetting   the ReloadSetting to be used with this instance
+	 * @param commentSetting  the CommentSetting to be used with this instance
+	 * @param bufferSize      the bufferSize to be used with the Reader
+	 * @param autoFlush       autoFlush parameter of the PrintWriter
+	 * @param concurrentData  if the saved data should be concurrent
+	 * @param bigData         if BigDataMap optimized for a huge amount of entries should be used
+	 * @param synchronizeData if the saved data should be synchronized
+	 * @param map             the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
+	 * @param list            the List implementation to be used, default ist GapList
 	 *
 	 * @throws RuntimeIOException if the File can not be accessed properly
 	 * @throws FileParseException if the Content of the File can not be parsed properly
@@ -74,10 +74,10 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 						  final boolean autoFlush,
 						  final boolean concurrentData,
 						  final boolean bigData,
-						  final boolean synchronizedData,
+						  final boolean synchronizeData,
 						  final @NotNull Class<? extends DataMap> map,
 						  final @NotNull Class<? extends List> list) {
-		super(file, FileType.THUNDERFILE, new LocalFileData(new CollectionsProvider<>(map, list), synchronizedData), reloadSetting, commentSetting);
+		super(file, FileType.THUNDERFILE, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting, commentSetting);
 		this.bufferSize = bufferSize;
 		this.autoFlush = autoFlush;
 		this.concurrentData = concurrentData;
@@ -86,7 +86,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
 		try {
-			this.fileData().loadData(ThunderEditor.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize));
+			this.fileData().loadData(ThunderFileParser.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize));
 			this.lastLoaded(System.currentTimeMillis());
 		} catch (final @NotNull ThunderException e) {
 			throw new FileParseException("Error while parsing '"
@@ -104,7 +104,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	@Override
 	public void save() {
 		try {
-			ThunderEditor.writeData(this.file(), this.fileData(), this.getCommentSetting(), this.getAutoFlush());
+			ThunderFileParser.writeData(this.file(), this.fileData(), this.getCommentSetting(), this.getAutoFlush());
 		} catch (final @NotNull RuntimeIOException e) {
 			throw new RuntimeIOException("Error while writing to "
 										 + this.getAbsolutePath()
@@ -139,8 +139,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull
-	ThunderFileSection getSection(final @NotNull String sectionKey) {
+	public @NotNull ThunderFileSection getSection(final @NotNull String sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
@@ -152,17 +151,15 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull
-	ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new LocalSection(sectionKey, this);
 	}
 
 
 	@Override
-	protected @NotNull
-	DataMap readFile() {
+	protected @NotNull DataMap readFile() {
 		try {
-			return ThunderEditor.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize);
+			return ThunderFileParser.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize);
 		} catch (final @NotNull RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
 		} catch (final @NotNull ThunderException e) {
@@ -177,21 +174,18 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 		THUNDERFILE();
 
 
-		private final @NotNull
-		String extension = "tf";
+		private final @NotNull String extension = "tf";
 
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull
-		String toLowerCase() {
+		public @NotNull String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull
-		String toString() {
+		public @NotNull String toString() {
 			return this.extension;
 		}
 	}
@@ -207,11 +201,11 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 		}
 	}
 
-	private static class LocalFileData extends ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> {
+	private static class LocalFileData extends ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> { //NOSONAR
 
 		private static final long serialVersionUID = -4787829380861376534L;
 
-		private LocalFileData(final @NotNull CollectionsProvider<DataMap, List> collectionsProvider, final boolean synchronize) {
+		private LocalFileData(final @NotNull CollectionsProvider<DataMap, List> collectionsProvider, final boolean synchronize) { //NOSONAR
 			super(collectionsProvider, synchronize);
 		}
 	}

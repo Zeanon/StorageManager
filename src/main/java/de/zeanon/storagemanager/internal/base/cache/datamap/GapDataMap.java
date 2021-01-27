@@ -51,8 +51,7 @@ public class GapDataMap<K, V> extends AbstractDataMap<K, V> implements Serializa
 	 * @return a complete copy of this Map
 	 */
 	@Override
-	public @NotNull
-	DataMap<K, V> clone() {
+	public @NotNull DataMap<K, V> clone() {
 		return new GapDataMap<>(this);
 	}
 
