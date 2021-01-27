@@ -513,7 +513,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 				});
 				if (this.instanceCount.decrementAndGet() == 0) {
 					ReadWriteLockableChannel.openChannels.remove(this.getFilePath());
-					this.localRandomAccessFile.getChannel().close();
+					this.localRandomAccessFile.close();
 				}
 			} finally {
 				ReadWriteLockableChannel.factoryLock.unlockWrite(lockStamp);

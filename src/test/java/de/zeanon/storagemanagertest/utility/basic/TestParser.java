@@ -49,7 +49,8 @@ class TestParser {
 			testFile.getBooleanUseArray("this", "is", "a", "test");
 		} catch (FileParseException e) {
 			e.getCause().printStackTrace();
-			System.out.println("This error is intended to happen!");
+			System.err.println("[IMPORTANT] This error is intended to happen!");
+			System.err.println("[IMPORTANT] If here is no error, something went wrong!");
 			result = true;
 		}
 

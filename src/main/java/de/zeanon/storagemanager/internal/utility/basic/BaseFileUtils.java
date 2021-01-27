@@ -54,22 +54,18 @@ public class BaseFileUtils {
 	 *
 	 * @param file the File to be created
 	 */
-	@Contract("null -> fail")
 	public boolean createFile(final @NotNull File file) {
 		return BaseFileUtils.createFileInternally(file, false);
 	}
 
-	@Contract("null -> fail")
 	public boolean createFile(final @NotNull String file) {
 		return BaseFileUtils.createFileInternally(new File(file), false);
 	}
 
-	@Contract("null, _ -> fail; _,  null -> fail")
 	public boolean createFile(final @NotNull File parent, final @NotNull String child) {
 		return BaseFileUtils.createFileInternally(new File(parent, child), false);
 	}
 
-	@Contract("null, _ -> fail; _,  null -> fail")
 	public boolean createFile(final @NotNull String parent, final @NotNull String child) {
 		return BaseFileUtils.createFileInternally(new File(parent, child), false);
 	}
@@ -80,7 +76,6 @@ public class BaseFileUtils {
 	 *
 	 * @param file the Folder to be created
 	 */
-	@Contract("null -> fail")
 	public boolean createFolder(final @NotNull File file) {
 		return BaseFileUtils.createFileInternally(file, true);
 	}
@@ -90,7 +85,6 @@ public class BaseFileUtils {
 	 *
 	 * @param file the Folder to be created
 	 */
-	@Contract("null -> fail")
 	public boolean createFolder(final @NotNull String file) {
 		return BaseFileUtils.createFileInternally(new File(file), true);
 	}
@@ -101,7 +95,6 @@ public class BaseFileUtils {
 	 * @param parent the parent directory of the file to be created
 	 * @param child  the name of the FIle to be created
 	 */
-	@Contract("null, _ -> fail; _,  null -> fail")
 	public boolean createFolder(final @NotNull File parent, final @NotNull String child) {
 		return BaseFileUtils.createFileInternally(new File(parent, child), true);
 	}
@@ -112,7 +105,6 @@ public class BaseFileUtils {
 	 * @param parent the parent directory of the file to be created
 	 * @param child  the name of the FIle to be created
 	 */
-	@Contract("null, _ -> fail; _,  null -> fail")
 	public boolean createFolder(final @NotNull String parent, final @NotNull String child) {
 		return BaseFileUtils.createFileInternally(new File(parent, child), true);
 	}
@@ -122,7 +114,6 @@ public class BaseFileUtils {
 	 *
 	 * @param file the File to be used
 	 */
-	@Contract("null -> fail")
 	public boolean createParents(final @NotNull File file) {
 		return BaseFileUtils.createFileInternally(file.getParentFile(), true);
 	}
@@ -132,7 +123,6 @@ public class BaseFileUtils {
 	 *
 	 * @param file the File to be used
 	 */
-	@Contract("null -> fail")
 	public boolean createParents(final @NotNull String file) {
 		return BaseFileUtils.createFileInternally(new File(file).getParentFile(), true);
 	}
@@ -145,7 +135,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	@Contract("null -> fail")
 	public @NotNull Collection<File> listFolders(final @NotNull File directory) throws IOException {
 		return BaseFileUtils.listFolders(directory, false, null, false);
 	}
@@ -158,7 +147,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	@Contract("null, _ -> fail")
 	public @NotNull Collection<File> listFolders(final @NotNull File directory,
 												 final boolean deep) throws IOException {
 		return BaseFileUtils.listFolders(directory, deep, null, false);
@@ -172,7 +160,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	@Contract("null, _ -> fail")
 	public @NotNull Collection<File> listFolders(final @NotNull File directory,
 												 final @Nullable String sequence) throws IOException {
 		return BaseFileUtils.listFolders(directory, false, sequence, false);
@@ -187,7 +174,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	@Contract("null, _, _ -> fail")
 	public @NotNull Collection<File> listFolders(final @NotNull File directory,
 												 final @Nullable String sequence,
 												 final boolean caseSensitive) throws IOException {
@@ -203,7 +189,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	@Contract("null, _, _ -> fail")
 	public @NotNull Collection<File> listFolders(final @NotNull File directory,
 												 final boolean deep,
 												 final @Nullable String sequence) throws IOException {
@@ -220,7 +205,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	@Contract("null, _, _, _ -> fail")
 	public @NotNull Collection<File> listFolders(final @NotNull File directory,
 												 final boolean deep,
 												 final @Nullable String sequence,
@@ -255,7 +239,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	@Contract("null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, null, false);
 	}
@@ -268,7 +251,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	@Contract("null, _ -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final boolean deep) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, deep, null, false);
@@ -282,7 +264,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	@Contract("null, _ -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final @Nullable String sequence) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, sequence, false);
@@ -297,7 +278,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	@Contract("null, _, _ -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final @Nullable String sequence,
 														 final boolean caseSensitive) throws IOException {
@@ -313,7 +293,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	@Contract("null, _, _ -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final boolean deep,
 														 final @Nullable String sequence) throws IOException {
@@ -330,7 +309,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	@Contract("null, _, _, _ -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final boolean deep,
 														 final @Nullable String sequence,
@@ -365,7 +343,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	@Contract("null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, null, false);
 	}
@@ -378,7 +355,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	@Contract("null, _ -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final @Nullable String sequence) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, sequence, false);
@@ -393,7 +369,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	@Contract("null, _, _ -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final @Nullable String sequence,
 											   final boolean caseSensitive) throws IOException {
@@ -409,7 +384,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	@Contract("null, _, _-> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final boolean deep,
 											   final @Nullable String sequence) throws IOException {
@@ -426,7 +400,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	@Contract("null, _, _, _ -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final boolean deep,
 											   final @Nullable String sequence,
@@ -462,7 +435,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@Contract("null, _,-> fail; _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, null, false, extensions);
@@ -476,7 +448,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@Contract("null, _,-> fail; _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, null, false, extensions);
@@ -491,7 +462,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@Contract("null, _, _ -> fail; _, _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final boolean deep,
 											   final @NotNull List<String> extensions) throws IOException {
@@ -507,7 +477,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@Contract("null, _, _ -> fail; _, _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final boolean deep,
 											   final @NotNull String... extensions) throws IOException {
@@ -523,7 +492,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@Contract("null, _, _ -> fail; _, _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final @Nullable String sequence,
 											   final @NotNull List<String> extensions) throws IOException {
@@ -539,7 +507,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@Contract("null, _, _ -> fail; _, _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final @Nullable String sequence,
 											   final @NotNull String... extensions) throws IOException {
@@ -555,7 +522,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final @Nullable String sequence,
 											   final boolean caseSensitive,
@@ -572,7 +538,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final @Nullable String sequence,
 											   final boolean caseSensitive,
@@ -590,7 +555,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final boolean deep,
 											   final @Nullable String sequence,
@@ -608,7 +572,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final boolean deep,
 											   final @Nullable String sequence,
@@ -627,7 +590,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@Contract("null, _, _, _, _ -> fail; _, _, _, _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final boolean deep,
 											   final @Nullable String sequence,
@@ -647,7 +609,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	@Contract("null, _, _, _, _ -> fail; _, _, _, _, null -> fail")
 	public @NotNull Collection<File> listFiles(final @NotNull File directory,
 											   final boolean deep,
 											   final @Nullable String sequence,
@@ -685,7 +646,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	@Contract("null, _ -> fail; _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, null, false, extensions.toArray(new String[0]));
@@ -699,7 +659,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	@Contract("null, _ -> fail; _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, null, false, extensions);
@@ -714,7 +673,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	@Contract("null, _, _, -> fail; _, _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final boolean deep,
 														 final @NotNull List<String> extensions) throws IOException {
@@ -730,7 +688,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	@Contract("null, _, _, -> fail; _, _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final boolean deep,
 														 final @NotNull String... extensions) throws IOException {
@@ -746,7 +703,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	@Contract("null, _, _ -> fail; _, _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final @Nullable String sequence,
 														 final @NotNull List<String> extensions) throws IOException {
@@ -762,7 +718,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	@Contract("null, _, _ -> fail; _, _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final @Nullable String sequence,
 														 final @NotNull String... extensions) throws IOException {
@@ -779,7 +734,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final @Nullable String sequence,
 														 final boolean caseSensitive,
@@ -797,7 +751,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final @Nullable String sequence,
 														 final boolean caseSensitive,
@@ -815,7 +768,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final boolean deep,
 														 final @Nullable String sequence,
@@ -833,7 +785,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	@Contract("null, _, _, _ -> fail; _, _, _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final boolean deep,
 														 final @Nullable String sequence,
@@ -852,7 +803,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	@Contract("null, _, _, _, _ -> fail; _, _, _, _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final boolean deep,
 														 final @Nullable String sequence,
@@ -872,7 +822,6 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	@Contract("null, _, _, _, _ -> fail; _, _, _, _, null -> fail")
 	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
 														 final boolean deep,
 														 final @Nullable String sequence,

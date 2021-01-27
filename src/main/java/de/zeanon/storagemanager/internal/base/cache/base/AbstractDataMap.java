@@ -68,8 +68,8 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	@Override
 	@Contract(pure = true)
 	public boolean containsKey(final @NotNull Object key) {
-		for (final @NotNull DataMap.DataNode<K, V> TempNode : this.localList) {
-			if (TempNode.getKey().equals(key)) {
+		for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
+			if (tempNode.getKey().equals(key)) {
 				return true;
 			}
 		}
@@ -207,8 +207,7 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 * @see #put(Object, Object)
 	 */
 	@Override
-	public @Nullable
-	V get(final @NotNull Object key) {
+	public @Nullable V get(final @NotNull Object key) {
 		for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
 			if (tempNode.getKey().equals(key)) {
 				return tempNode.getValue();
@@ -228,8 +227,7 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 * previously associated <tt>null</tt> with <tt>key</tt>.)
 	 */
 	@Override
-	public @Nullable
-	V remove(final @NotNull Object key) {
+	public @Nullable V remove(final @NotNull Object key) {
 		final @NotNull Iterator<DataNode<K, V>> tempIterator = this.localList.iterator();
 		DataNode<K, V> tempNode;
 		while ((tempNode = tempIterator.next()) != null) {
@@ -360,8 +358,7 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		 * required to, throw this exception if the entry has been
 		 * removed from the backing map.
 		 */
-		private @Nullable
-		V value;
+		private @Nullable V value;
 
 		/**
 		 * Replaces the key corresponding to this entry with the specified
@@ -382,11 +379,9 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		 */
 		@Override
 		public @NotNull K setKey(final @NotNull K key) {
-			try {
-				return this.key;
-			} finally {
-				this.key = key;
-			}
+			K tempKey = this.key;
+			this.key = key;
+			return tempKey;
 		}
 
 		/**
@@ -411,11 +406,9 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		@Override
 		public @Nullable
 		V setValue(final @Nullable V value) {
-			try {
-				return this.value;
-			} finally {
-				this.value = value;
-			}
+			V tempValue = this.value;
+			this.value = value;
+			return tempValue;
 		}
 
 

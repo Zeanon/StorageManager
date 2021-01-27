@@ -209,6 +209,7 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
+
                     <execution>
                         <id>moveFilesToBattleArena</id>
                         <phase>verify</phase>

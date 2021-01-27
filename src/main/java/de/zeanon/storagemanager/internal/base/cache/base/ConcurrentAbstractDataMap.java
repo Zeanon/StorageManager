@@ -634,9 +634,10 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 		public @NotNull K setKey(final @NotNull K key) {
 			final long lockStamp = this.localLock.writeLock();
 			try {
-				return this.key;
-			} finally {
+				K tempKey = this.key;
 				this.key = key;
+				return tempKey;
+			} finally {
 				this.localLock.unlockWrite(lockStamp);
 			}
 		}
@@ -665,9 +666,10 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 		V setValue(final @Nullable V value) {
 			final long lockStamp = this.localLock.writeLock();
 			try {
-				return this.value;
-			} finally {
+				V tempValue = this.value;
 				this.value = value;
+				return tempValue;
+			} finally {
 				this.localLock.unlockWrite(lockStamp);
 			}
 		}
