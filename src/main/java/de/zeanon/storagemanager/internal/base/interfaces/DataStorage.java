@@ -290,7 +290,7 @@ public interface DataStorage {
 	 *
 	 * @return Map
 	 */
-	default @Nullable <K, V> @Nullable Map<K, V> getMap(final @NotNull String key) {
+	default <K, V> @Nullable Map<K, V> getMap(final @NotNull String key) {
 		return (Map<K, V>) this.get(key);
 	}
 
@@ -301,7 +301,7 @@ public interface DataStorage {
 	 *
 	 * @return Map
 	 */
-	default @Nullable <K, V> @Nullable Map<K, V> getMapUseArray(final @NotNull String... key) {
+	default <K, V> @Nullable Map<K, V> getMapUseArray(final @NotNull String... key) {
 		return (Map<K, V>) this.getUseArray(key);
 	}
 

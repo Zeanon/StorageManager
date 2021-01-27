@@ -116,9 +116,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * @return the entryList of the internal dataMap
 	 */
 	@Override
-	@Contract("null -> fail")
-	public @Nullable
-	List<E> entryList(final @NotNull String key) {
+	public @Nullable List<E> entryList(final @NotNull String key) {
 		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -136,9 +134,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * @return the entryList of the internal dataMap
 	 */
 	@Override
-	@Contract("null -> fail")
-	public @Nullable
-	List<E> blockEntryList(final @NotNull String key) {
+	public @Nullable List<E> blockEntryList(final @NotNull String key) {
 		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -212,7 +208,6 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * @param value the value to be assigned to the key
 	 */
 	@Override
-	@Contract("null, _ -> fail")
 	public void insert(final @NotNull String key,
 					   final @Nullable Object value) {
 		final @NotNull String[] parts = key.split("\\.");
@@ -226,7 +221,6 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * @param value the value to be assigned to the key
 	 */
 	@Override
-	@Contract("null, _ -> fail")
 	public void insertUseArray(final @NotNull String[] key,
 							   final @Nullable Object value) {
 		this.initialInsert(value, key);
@@ -240,7 +234,6 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * @throws ObjectNullException if the given key does not exist
 	 */
 	@Override
-	@Contract("null -> fail")
 	public void remove(final @NotNull String key) {
 		final @NotNull String[] parts = key.split("\\.");
 		this.initialRemove(parts);
@@ -267,7 +260,6 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * @return true if the given key exists, false if not
 	 */
 	@Override
-	@Contract("null -> fail")
 	public boolean containsKey(final @NotNull String key) {
 		final @NotNull String[] parts = key.split("\\.");
 		//noinspection unchecked
@@ -296,9 +288,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * @return the Value mapped to the given key
 	 */
 	@Override
-	@Contract("null -> fail")
-	public @Nullable
-	Object get(final @NotNull String key) {
+	public @Nullable Object get(final @NotNull String key) {
 		final @NotNull String[] parts = key.split("\\.");
 		return this.internalGet(this.dataMap, parts);
 	}
@@ -312,8 +302,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 */
 	@Override
 	@Contract("null -> fail")
-	public @Nullable
-	Object getUseArray(final @NotNull String... key) {
+	public @Nullable Object getUseArray(final @NotNull String... key) {
 		return this.internalGet(this.dataMap, key);
 	}
 
@@ -331,7 +320,6 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * @return the size of the given Block of the internal DataMap
 	 */
 	@Override
-	@Contract("null -> fail")
 	public int blockSize(final @NotNull String key) {
 		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
@@ -372,7 +360,6 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * @return the amount of all Entries from the given Block combined
 	 */
 	@Override
-	@Contract("null -> fail")
 	public int size(final @NotNull String key) {
 		final @Nullable Object tempObject = this.get(key);
 		if (tempObject instanceof Map) {
