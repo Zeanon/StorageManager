@@ -10,7 +10,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -135,7 +134,7 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	public @NotNull Collection<File> listFolders(final @NotNull File directory) throws IOException {
+	public @NotNull List<File> listFolders(final @NotNull File directory) throws IOException {
 		return BaseFileUtils.listFolders(directory, false, null, false);
 	}
 
@@ -147,8 +146,8 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	public @NotNull Collection<File> listFolders(final @NotNull File directory,
-												 final boolean deep) throws IOException {
+	public @NotNull List<File> listFolders(final @NotNull File directory,
+										   final boolean deep) throws IOException {
 		return BaseFileUtils.listFolders(directory, deep, null, false);
 	}
 
@@ -160,8 +159,8 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	public @NotNull Collection<File> listFolders(final @NotNull File directory,
-												 final @Nullable String sequence) throws IOException {
+	public @NotNull List<File> listFolders(final @NotNull File directory,
+										   final @Nullable String sequence) throws IOException {
 		return BaseFileUtils.listFolders(directory, false, sequence, false);
 	}
 
@@ -174,9 +173,9 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	public @NotNull Collection<File> listFolders(final @NotNull File directory,
-												 final @Nullable String sequence,
-												 final boolean caseSensitive) throws IOException {
+	public @NotNull List<File> listFolders(final @NotNull File directory,
+										   final @Nullable String sequence,
+										   final boolean caseSensitive) throws IOException {
 		return BaseFileUtils.listFolders(directory, false, sequence, caseSensitive);
 	}
 
@@ -189,9 +188,9 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	public @NotNull Collection<File> listFolders(final @NotNull File directory,
-												 final boolean deep,
-												 final @Nullable String sequence) throws IOException {
+	public @NotNull List<File> listFolders(final @NotNull File directory,
+										   final boolean deep,
+										   final @Nullable String sequence) throws IOException {
 		return BaseFileUtils.listFolders(directory, deep, sequence, false);
 	}
 
@@ -205,23 +204,22 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the directory that are folders
 	 */
-	public @NotNull Collection<File> listFolders(final @NotNull File directory,
-												 final boolean deep,
-												 final @Nullable String sequence,
-												 final boolean caseSensitive) throws IOException {
-		final @NotNull Collection<File> files = new GapList<>();
+	public @NotNull List<File> listFolders(final @NotNull File directory,
+										   final boolean deep,
+										   final @Nullable String sequence,
+										   final boolean caseSensitive) throws IOException {
+		final @NotNull List<File> files = new GapList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
 			if (fileList != null) {
 				for (final @Nullable File file : fileList) {
-					if (file != null
-						&& file.isDirectory()
-						&& (sequence == null
+					if (file != null && file.isDirectory()) {
+						if (sequence == null
 							|| (!caseSensitive && BaseFileUtils.removeExtension(file.getName()).toLowerCase().contains(sequence.toLowerCase()))
-							|| (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(sequence)))) {
-						files.add(file);
-						if (deep) {
-							files.addAll(BaseFileUtils.listFolders(file, true, null, caseSensitive));
+							|| (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(sequence))) {
+							files.add(file);
+						} else if (deep) {
+							files.addAll(BaseFileUtils.listFolders(file, true, sequence, caseSensitive));
 						}
 					}
 				}
@@ -239,7 +237,7 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, null, false);
 	}
 
@@ -251,8 +249,8 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final boolean deep) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final boolean deep) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, deep, null, false);
 	}
 
@@ -264,8 +262,8 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final @Nullable String sequence) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final @Nullable String sequence) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, sequence, false);
 	}
 
@@ -278,9 +276,9 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final @Nullable String sequence,
-														 final boolean caseSensitive) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final @Nullable String sequence,
+												   final boolean caseSensitive) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, sequence, caseSensitive);
 	}
 
@@ -293,9 +291,9 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final boolean deep,
-														 final @Nullable String sequence) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final boolean deep,
+												   final @Nullable String sequence) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, deep, sequence, false);
 	}
 
@@ -309,22 +307,21 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final boolean deep,
-														 final @Nullable String sequence,
-														 final boolean caseSensitive) throws IOException {
-		final @NotNull Collection<File> files = new GapList<>();
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final boolean deep,
+												   final @Nullable String sequence,
+												   final boolean caseSensitive) throws IOException {
+		final @NotNull List<File> files = new GapList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
 			if (fileList != null) {
 				for (final @Nullable File file : fileList) {
-					if (file != null
-						&& (sequence == null
+					if (file != null) {
+						if (sequence == null
 							|| (!caseSensitive && BaseFileUtils.removeExtension(file.getName()).toLowerCase().contains(sequence.toLowerCase()))
-							|| (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(sequence)))) {
-						files.add(file);
-
-						if (deep && file.isDirectory()) {
+							|| (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(sequence))) {
+							files.add(file);
+						} else if (deep && file.isDirectory()) {
 							files.addAll(BaseFileUtils.listFilesAndFolders(file, true, sequence, caseSensitive));
 						}
 					}
@@ -343,7 +340,7 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, null, false);
 	}
 
@@ -355,8 +352,8 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final @Nullable String sequence) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final @Nullable String sequence) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, sequence, false);
 	}
 
@@ -369,9 +366,9 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final @Nullable String sequence,
-											   final boolean caseSensitive) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final @Nullable String sequence,
+										 final boolean caseSensitive) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, sequence, caseSensitive);
 	}
 
@@ -384,9 +381,9 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final boolean deep,
-											   final @Nullable String sequence) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final boolean deep,
+										 final @Nullable String sequence) throws IOException {
 		return BaseFileUtils.listFiles(directory, deep, sequence, false);
 	}
 
@@ -400,11 +397,11 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final boolean deep,
-											   final @Nullable String sequence,
-											   final boolean caseSensitive) throws IOException {
-		final @NotNull Collection<File> files = new GapList<>();
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final boolean deep,
+										 final @Nullable String sequence,
+										 final boolean caseSensitive) throws IOException {
+		final @NotNull List<File> files = new GapList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
 			if (fileList != null) {
@@ -435,8 +432,8 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final @NotNull List<String> extensions) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, null, false, extensions);
 	}
 
@@ -448,8 +445,8 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final @NotNull String... extensions) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, null, false, extensions);
 	}
 
@@ -462,9 +459,9 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final boolean deep,
-											   final @NotNull List<String> extensions) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final boolean deep,
+										 final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, deep, null, false, extensions);
 	}
 
@@ -477,9 +474,9 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final boolean deep,
-											   final @NotNull String... extensions) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final boolean deep,
+										 final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, deep, null, false, extensions);
 	}
 
@@ -492,9 +489,9 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final @Nullable String sequence,
-											   final @NotNull List<String> extensions) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final @Nullable String sequence,
+										 final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, sequence, false, extensions);
 	}
 
@@ -507,9 +504,9 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final @Nullable String sequence,
-											   final @NotNull String... extensions) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final @Nullable String sequence,
+										 final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, sequence, false, extensions);
 	}
 
@@ -522,10 +519,10 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final @Nullable String sequence,
-											   final boolean caseSensitive,
-											   final @NotNull List<String> extensions) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final @Nullable String sequence,
+										 final boolean caseSensitive,
+										 final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, sequence, caseSensitive, extensions);
 	}
 
@@ -538,10 +535,10 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final @Nullable String sequence,
-											   final boolean caseSensitive,
-											   final @NotNull String... extensions) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final @Nullable String sequence,
+										 final boolean caseSensitive,
+										 final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, false, sequence, caseSensitive, extensions);
 	}
 
@@ -555,10 +552,10 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final boolean deep,
-											   final @Nullable String sequence,
-											   final @NotNull List<String> extensions) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final boolean deep,
+										 final @Nullable String sequence,
+										 final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, deep, sequence, false, extensions);
 	}
 
@@ -572,10 +569,10 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final boolean deep,
-											   final @Nullable String sequence,
-											   final @NotNull String... extensions) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final boolean deep,
+										 final @Nullable String sequence,
+										 final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, deep, sequence, false, extensions);
 	}
 
@@ -590,11 +587,11 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final boolean deep,
-											   final @Nullable String sequence,
-											   final boolean caseSensitive,
-											   final @NotNull List<String> extensions) throws IOException {
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final boolean deep,
+										 final @Nullable String sequence,
+										 final boolean caseSensitive,
+										 final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFiles(directory, deep, sequence, caseSensitive, extensions.toArray(new String[0]));
 	}
 
@@ -609,12 +606,12 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions
 	 */
-	public @NotNull Collection<File> listFiles(final @NotNull File directory,
-											   final boolean deep,
-											   final @Nullable String sequence,
-											   final boolean caseSensitive,
-											   final @NotNull String... extensions) throws IOException {
-		final @NotNull Collection<File> files = new GapList<>();
+	public @NotNull List<File> listFiles(final @NotNull File directory,
+										 final boolean deep,
+										 final @Nullable String sequence,
+										 final boolean caseSensitive,
+										 final @NotNull String... extensions) throws IOException {
+		final @NotNull List<File> files = new GapList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
 			if (fileList != null) {
@@ -646,8 +643,8 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final @NotNull List<String> extensions) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, null, false, extensions.toArray(new String[0]));
 	}
 
@@ -659,8 +656,8 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final @NotNull String... extensions) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, null, false, extensions);
 	}
 
@@ -673,9 +670,9 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final boolean deep,
-														 final @NotNull List<String> extensions) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final boolean deep,
+												   final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, deep, null, false, extensions.toArray(new String[0]));
 	}
 
@@ -688,9 +685,9 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final boolean deep,
-														 final @NotNull String... extensions) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final boolean deep,
+												   final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, deep, null, false, extensions);
 	}
 
@@ -703,9 +700,9 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final @Nullable String sequence,
-														 final @NotNull List<String> extensions) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final @Nullable String sequence,
+												   final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, sequence, false, extensions.toArray(new String[0]));
 	}
 
@@ -718,9 +715,9 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final @Nullable String sequence,
-														 final @NotNull String... extensions) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final @Nullable String sequence,
+												   final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, sequence, false, extensions);
 	}
 
@@ -734,10 +731,10 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final @Nullable String sequence,
-														 final boolean caseSensitive,
-														 final @NotNull List<String> extensions) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final @Nullable String sequence,
+												   final boolean caseSensitive,
+												   final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, sequence, caseSensitive, extensions.toArray(new String[0]));
 	}
 
@@ -751,10 +748,10 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final @Nullable String sequence,
-														 final boolean caseSensitive,
-														 final @NotNull String... extensions) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final @Nullable String sequence,
+												   final boolean caseSensitive,
+												   final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, false, sequence, caseSensitive, extensions);
 	}
 
@@ -768,10 +765,10 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final boolean deep,
-														 final @Nullable String sequence,
-														 final @NotNull List<String> extensions) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final boolean deep,
+												   final @Nullable String sequence,
+												   final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, deep, sequence, false, extensions.toArray(new String[0]));
 	}
 
@@ -785,10 +782,10 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final boolean deep,
-														 final @Nullable String sequence,
-														 final @NotNull String... extensions) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final boolean deep,
+												   final @Nullable String sequence,
+												   final @NotNull String... extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, deep, sequence, false, extensions);
 	}
 
@@ -803,11 +800,11 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final boolean deep,
-														 final @Nullable String sequence,
-														 final boolean caseSensitive,
-														 final @NotNull List<String> extensions) throws IOException {
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final boolean deep,
+												   final @Nullable String sequence,
+												   final boolean caseSensitive,
+												   final @NotNull List<String> extensions) throws IOException {
 		return BaseFileUtils.listFilesAndFolders(directory, deep, sequence, caseSensitive, extensions.toArray(new String[0]));
 	}
 
@@ -822,12 +819,12 @@ public class BaseFileUtils {
 	 *
 	 * @return the files of the given directory with the given extensions and all folders
 	 */
-	public @NotNull Collection<File> listFilesAndFolders(final @NotNull File directory,
-														 final boolean deep,
-														 final @Nullable String sequence,
-														 final boolean caseSensitive,
-														 final @NotNull String... extensions) throws IOException {
-		final @NotNull Collection<File> files = new GapList<>();
+	public @NotNull List<File> listFilesAndFolders(final @NotNull File directory,
+												   final boolean deep,
+												   final @Nullable String sequence,
+												   final boolean caseSensitive,
+												   final @NotNull String... extensions) throws IOException {
+		final @NotNull List<File> files = new GapList<>();
 		if (directory.isDirectory()) {
 			final @Nullable File[] fileList = directory.listFiles();
 			if (fileList != null) {
