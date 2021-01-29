@@ -11,19 +11,19 @@ public abstract class StorageManagerException extends RuntimeException {
 
 	private static final long serialVersionUID = 2438245264764832035L;
 
-	public StorageManagerException() {
+	protected StorageManagerException() {
 		super();
 	}
 
-	public StorageManagerException(final String message) {
+	protected StorageManagerException(final String message) {
 		super(message);
 	}
 
-	public StorageManagerException(final Throwable cause) {
+	protected StorageManagerException(final Throwable cause) {
 		super(cause);
 	}
 
-	public StorageManagerException(final String message, final Throwable cause) {
+	protected StorageManagerException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 }
