@@ -12,7 +12,7 @@ I was looking for a library that I could use to store data with Bukkit like meth
 without being depended on Bukkit/BungeeCord. But there was nothing out there so I decided to write my own library.
 Of course there are a few libraries with bukkitlike methods but no one has the features that I need.
 ThunderBolt-2 for example only supports Json files but does not support nested objects.
-Now I'am publishing this library because I think libraries of high quality should be publicly available for everyone
+Now I am publishing this library because I think libraries of high quality should be publicly available for everyone
 Now it is here: **StorageManager**!<br>
 <br>
 

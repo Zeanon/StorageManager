@@ -395,7 +395,7 @@ public class ThunderFileParser {
 			}
 
 			//noinspection unchecked
-			final @NotNull DataMap<String, Object> tempMap = collectionsProvider.newMap();
+			final @NotNull DataMap<String, Object> currentMap = collectionsProvider.newMap();
 
 			@NotNull String tempLine;
 			@Nullable String tempKey = null;
@@ -405,22 +405,23 @@ public class ThunderFileParser {
 				if (tempLine.contains("}")) {
 					throw new ThunderParseException("Syntax Error at line '" + lines.previousIndex() + "' -> Block closed without being opened");
 				} else if (tempLine.isEmpty()) {
-					tempMap.add(tempLine, LineType.BLANK_LINE);
+					currentMap.add(tempLine, LineType.BLANK_LINE);
 				} else if (tempLine.startsWith("#")) {
-					tempMap.add(tempLine, LineType.COMMENT);
+					currentMap.add(tempLine, LineType.COMMENT);
 				} else if (tempLine.endsWith("{")) {
 					if (!tempLine.equals("{")) {
 						tempKey = tempLine.substring(0, tempLine.length() - 1).trim();
 					} else if (tempKey == null) {
 						throw new ThunderParseException("'" + tempLine + "' (line: " + lines.previousIndex() + ") -> Key must not be null");
 					}
-					tempMap.add(tempKey, ThunderFileParser.internalReadWithComments(lines, collectionsProvider));
+					//noinspection unchecked
+					currentMap.add(tempKey, ThunderFileParser.internalReadWithComments(lines, collectionsProvider.newMap(), collectionsProvider));
 				} else {
-					tempKey = ThunderFileParser.readKey(lines, tempMap, tempLine, collectionsProvider);
+					tempKey = ThunderFileParser.readKey(lines, currentMap, tempLine, collectionsProvider);
 				}
 			}
-			tempMap.trimToSize();
-			return tempMap;
+			currentMap.trimToSize();
+			return currentMap;
 		} catch (final @NotNull IndexOutOfBoundsException e) {
 			throw new ThunderParseException("Could not parse content", e);
 		} catch (final @NotNull IOException e) {
@@ -429,37 +430,44 @@ public class ThunderFileParser {
 	}
 
 	private @NotNull DataMap<String, Object> internalReadWithComments(final @NotNull ListIterator<String> lines,
+																	  final @NotNull DataMap<String, Object> currentMap,
 																	  final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderParseException {
-		//noinspection unchecked
-		final @NotNull DataMap<String, Object> tempMap = collectionsProvider.newMap();
-
 		@NotNull String tempLine;
 		@Nullable String tempKey = null;
 		while (lines.hasNext()) {
 			tempLine = lines.next().trim();
 
 			if (tempLine.equals("}")) {
-				tempMap.trimToSize();
-				return tempMap;
+				currentMap.trimToSize();
+				return currentMap;
 			} else if (tempLine.endsWith("}")) {
-				ThunderFileParser.readKey(lines, tempMap, tempLine.substring(0, tempLine.length() - 1), collectionsProvider);
-				tempMap.trimToSize();
-				return tempMap;
+				ThunderFileParser.readKey(lines, currentMap, tempLine.substring(0, tempLine.length() - 1), collectionsProvider);
+				currentMap.trimToSize();
+				return currentMap;
 			} else if (tempLine.contains("}")) {
 				throw new ThunderParseException("Syntax Error at line '" + lines.previousIndex() + "' -> Illegal Character placement: '}' only allowed as a single Character in line to close blocks");
 			} else if (tempLine.isEmpty()) {
-				tempMap.add(tempLine, LineType.BLANK_LINE);
+				currentMap.add(tempLine, LineType.BLANK_LINE);
 			} else if (tempLine.startsWith("#")) {
-				tempMap.add(tempLine, LineType.COMMENT);
+				currentMap.add(tempLine, LineType.COMMENT);
 			} else if (tempLine.endsWith("{")) {
 				if (!tempLine.equals("{")) {
 					tempKey = tempLine.substring(0, tempLine.length() - 1).trim();
 				} else if (tempKey == null) {
 					throw new ThunderParseException("'" + tempLine + "' (line: " + lines.previousIndex() + ") -> Key must not be null");
 				}
-				tempMap.add(tempKey, ThunderFileParser.internalReadWithComments(lines, collectionsProvider));
+				//noinspection unchecked
+				currentMap.add(tempKey, ThunderFileParser.internalReadWithComments(lines, collectionsProvider.newMap(), collectionsProvider));
+			} else if (tempLine.startsWith("{")) {
+				if (tempKey == null) {
+					throw new ThunderParseException("'" + tempLine + "' (line: " + lines.previousIndex() + ") -> Key must not be null");
+				}
+				//noinspection unchecked
+				final @NotNull DataMap<String, Object> tempMap = collectionsProvider.newMap();
+				ThunderFileParser.readKey(lines, tempMap, tempLine.substring(1).trim(), collectionsProvider);
+				currentMap.add(tempKey, ThunderFileParser.internalReadWithOutComments(lines, tempMap, collectionsProvider));
 			} else {
-				tempKey = ThunderFileParser.readKey(lines, tempMap, tempLine, collectionsProvider);
+				tempKey = ThunderFileParser.readKey(lines, currentMap, tempLine, collectionsProvider);
 			}
 		}
 		throw new ThunderParseException("Block does not close");
@@ -479,7 +487,7 @@ public class ThunderFileParser {
 			}
 
 			//noinspection unchecked
-			final @NotNull DataMap<String, Object> tempMap = collectionsProvider.newMap();
+			final @NotNull DataMap<String, Object> currentMap = collectionsProvider.newMap();
 
 			@NotNull String tempLine;
 			@Nullable String tempKey = null;
@@ -495,14 +503,15 @@ public class ThunderFileParser {
 						} else if (tempKey == null) {
 							throw new ThunderParseException("'" + tempLine + "' (line: " + lines.previousIndex() + ") -> Key must not be null");
 						}
-						tempMap.add(tempKey, ThunderFileParser.internalReadWithOutComments(lines, collectionsProvider));
+						//noinspection unchecked
+						currentMap.add(tempKey, ThunderFileParser.internalReadWithOutComments(lines, collectionsProvider.newMap(), collectionsProvider));
 					} else {
-						tempKey = ThunderFileParser.readKey(lines, tempMap, tempLine, collectionsProvider);
+						tempKey = ThunderFileParser.readKey(lines, currentMap, tempLine, collectionsProvider);
 					}
 				}
 			}
-			tempMap.trimToSize();
-			return tempMap;
+			currentMap.trimToSize();
+			return currentMap;
 		} catch (final @NotNull IndexOutOfBoundsException e) {
 			throw new ThunderParseException("Could not parse content", e);
 		} catch (final @NotNull IOException e) {
@@ -511,10 +520,8 @@ public class ThunderFileParser {
 	}
 
 	private @NotNull DataMap<String, Object> internalReadWithOutComments(final @NotNull ListIterator<String> lines,
+																		 final @NotNull DataMap<String, Object> currentMap,
 																		 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderParseException {
-		//noinspection unchecked
-		final @NotNull DataMap<String, Object> tempMap = collectionsProvider.newMap();
-
 		@NotNull String tempLine;
 		@Nullable String tempKey = null;
 		while (lines.hasNext()) {
@@ -522,12 +529,12 @@ public class ThunderFileParser {
 
 			if (!tempLine.isEmpty() && !tempLine.startsWith("#")) {
 				if (tempLine.equals("}")) {
-					tempMap.trimToSize();
-					return tempMap;
+					currentMap.trimToSize();
+					return currentMap;
 				} else if (tempLine.endsWith("}")) {
-					ThunderFileParser.readKey(lines, tempMap, tempLine.substring(0, tempLine.length() - 1), collectionsProvider);
-					tempMap.trimToSize();
-					return tempMap;
+					ThunderFileParser.readKey(lines, currentMap, tempLine.substring(0, tempLine.length() - 1), collectionsProvider);
+					currentMap.trimToSize();
+					return currentMap;
 				} else if (tempLine.contains("}")) {
 					throw new ThunderParseException("Syntax Error at line '" + lines.previousIndex() + "' -> Illegal Character placement: '}' only allowed as a single Character in line to close blocks");
 				} else if (tempLine.endsWith("{")) {
@@ -536,9 +543,18 @@ public class ThunderFileParser {
 					} else if (tempKey == null) {
 						throw new ThunderParseException("'" + tempLine + "' (line: " + lines.previousIndex() + ") -> Key must not be null");
 					}
-					tempMap.add(tempKey, ThunderFileParser.internalReadWithOutComments(lines, collectionsProvider));
+					//noinspection unchecked
+					currentMap.add(tempKey, ThunderFileParser.internalReadWithOutComments(lines, collectionsProvider.newMap(), collectionsProvider));
+				} else if (tempLine.startsWith("{")) {
+					if (tempKey == null) {
+						throw new ThunderParseException("'" + tempLine + "' (line: " + lines.previousIndex() + ") -> Key must not be null");
+					}
+					//noinspection unchecked
+					final @NotNull DataMap<String, Object> tempMap = collectionsProvider.newMap();
+					ThunderFileParser.readKey(lines, tempMap, tempLine.substring(1).trim(), collectionsProvider);
+					currentMap.add(tempKey, ThunderFileParser.internalReadWithOutComments(lines, tempMap, collectionsProvider));
 				} else {
-					tempKey = ThunderFileParser.readKey(lines, tempMap, tempLine, collectionsProvider);
+					tempKey = ThunderFileParser.readKey(lines, currentMap, tempLine, collectionsProvider);
 				}
 			}
 		}
