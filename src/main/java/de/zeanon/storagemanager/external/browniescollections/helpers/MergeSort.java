@@ -98,12 +98,10 @@ public class MergeSort<E> {
 	private void insertSort(int from, int to) {
 		if (to > from + 1) {
 			for (int i = from + 1; i < to; i++) {
-				for (int j = i; j > from; j--) {
-					if (compare(j, j - 1) < 0) {
-						swap(j, j - 1);
-					} else {
-						break;
-					}
+				int j = i;
+				while (j > from && compare(j, j - 1) < 0) {
+					swap(j, j - 1);
+					j--;
 				}
 			}
 		}
