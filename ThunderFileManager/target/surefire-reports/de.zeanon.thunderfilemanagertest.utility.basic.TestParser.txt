@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: de.zeanon.thunderfilemanagertest.utility.basic.TestParser
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.082 s - in de.zeanon.thunderfilemanagertest.utility.basic.TestParser

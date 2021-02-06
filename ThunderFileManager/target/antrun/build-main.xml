@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main" if="maven.copy.testutils">
+  <copy flatten="true" todir="D:\IntelliJ Projects\StorageManager\ThunderFileManager/../../TestUtils/src/main/resources/dependencies" failonerror="true" overwrite="true" verbose="true">
+    <fileset includes="ThunderFileManager.jar" dir="D:\IntelliJ Projects\StorageManager\ThunderFileManager/target"/>
+  </copy>
+</target>
+</project>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>storagemanager</artifactId>
+        <groupId>de.zeanon</groupId>
+        <version>1.1.81</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>tomlfilemanager</artifactId>
+    <name>TomlFileManager</name>
+
+    <build>
+        <finalName>${project.name}</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <executions>
+                    <execution>
+                        <id>install-toml</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <groupId>de.zeanon</groupId>
+                            <artifactId>toml</artifactId>
+                            <version>1.0.0</version>
+                            <file>src/main/resources/Toml.jar</file>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>com.electronwill</pattern>
+                            <shadedPattern>de.zeanon.tomlfilemanager.external.electronwill</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>de.zeanon.storagemanagercore</pattern>
+                            <shadedPattern>de.zeanon.tomlfilemanager.shaded.storagemanager</shadedPattern>
+                        </relocation>
+                    </relocations>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- Core -->
+        <dependency>
+            <groupId>de.zeanon</groupId>
+            <artifactId>storagemanagercore</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- TOML -->
+        <dependency>
+            <groupId>de.zeanon</groupId>
+            <artifactId>toml</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>

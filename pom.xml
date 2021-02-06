@@ -5,10 +5,19 @@
 
     <groupId>de.zeanon</groupId>
     <artifactId>storagemanager</artifactId>
+    <packaging>pom</packaging>
     <version>1.1.81</version>
     <name>StorageManager</name>
     <description>Store data in a better way</description>
     <url>https://github.com/Zeanon/StorageManager</url>
+
+    <modules>
+        <module>StorageManagerCore</module>
+        <module>ThunderFileManager</module>
+        <module>YamlFileManager</module>
+        <module>TomlFileManager</module>
+        <module>JsonFileManager</module>
+    </modules>
 
     <licenses>
         <license>
@@ -46,7 +55,6 @@
 
     <build>
         <defaultGoal>clean verify -U</defaultGoal>
-        <finalName>${project.name}</finalName>
 
         <pluginManagement>
             <plugins>
@@ -69,29 +77,6 @@
 
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>3.0.0-M1</version>
-                <executions>
-                    <execution>
-                        <id>install-toml</id>
-                        <phase>clean</phase>
-                        <configuration>
-                            <groupId>de.zeanon</groupId>
-                            <artifactId>toml</artifactId>
-                            <version>1.0.0</version>
-                            <file>src/main/resources/Toml.jar</file>
-                            <packaging>jar</packaging>
-                            <generatePom>true</generatePom>
-                        </configuration>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok-maven-plugin</artifactId>
                 <version>1.18.10.0</version>
@@ -103,37 +88,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.json</pattern>
-                            <shadedPattern>de.zeanon.storagemanager.external.json</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>com.esotericsoftware</pattern>
-                            <shadedPattern>de.zeanon.storagemanager.external.esotericsoftware</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>com.electronwill</pattern>
-                            <shadedPattern>de.zeanon.storagemanager.external.electronwill</shadedPattern>
-                        </relocation>
-                    </relocations>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
-                </configuration>
             </plugin>
 
             <plugin>
@@ -186,109 +140,10 @@
                     <threadCount>10</threadCount>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
-                <executions>
-                    <execution>
-                        <id>moveFilesToSchemManager</id>
-                        <phase>verify</phase>
-                        <configuration>
-                            <target if="maven.copy.schemmanager">
-                                <copy todir="${basedir}/../SchemManager/src/main/resources/dependencies"
-                                      flatten="true" overwrite="true"
-                                      verbose="true" failonerror="true">
-                                    <fileset dir="${basedir}/target"
-                                             includes="${project.build.finalName}.jar"/>
-                                </copy>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-
-                    <execution>
-                        <id>moveFilesToBattleArena</id>
-                        <phase>verify</phase>
-                        <configuration>
-                            <target if="maven.copy.battlearena">
-                                <copy todir="${basedir}/../BattleArena/src/main/resources/dependencies"
-                                      flatten="true" overwrite="true"
-                                      verbose="true" failonerror="true">
-                                    <fileset dir="${basedir}/target"
-                                             includes="${project.build.finalName}.jar"/>
-                                </copy>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-
-                    <execution>
-                        <id>moveFilesToTestUtils</id>
-                        <phase>verify</phase>
-                        <configuration>
-                            <target if="maven.copy.testutils">
-                                <copy todir="${basedir}/../TestUtils/src/main/resources/dependencies"
-                                      flatten="true" overwrite="true"
-                                      verbose="true" failonerror="true">
-                                    <fileset dir="${basedir}/target"
-                                             includes="${project.build.finalName}.jar"/>
-                                </copy>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
-    <repositories>
-        <!-- YamlBeans Repo -->
-        <repository>
-            <id>yamlbeans</id>
-            <url>https://mvnrepository.com/artifact/com.esotericsoftware.yamlbeans/yamlbeans</url>
-        </repository>
-
-        <!-- Json Repo -->
-        <repository>
-            <id>json</id>
-            <url>https://mvnrepository.com/artifact/org.json/json</url>
-        </repository>
-    </repositories>
-
     <dependencies>
-        <!-- TOML -->
-        <dependency>
-            <groupId>de.zeanon</groupId>
-            <artifactId>toml</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- YAML -->
-        <dependency>
-            <groupId>com.esotericsoftware.yamlbeans</groupId>
-            <artifactId>yamlbeans</artifactId>
-            <version>1.13</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- JSON -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20190722</version>
-            <scope>compile</scope>
-        </dependency>
-
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>

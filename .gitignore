@@ -165,7 +165,7 @@ Temporary Items
 hs_err_pid*
 
 ### Maven template
-target/
+StorageManagerCore/target/
 src/test/resources/testresults/
 pom.xml.tag
 pom.xml.releaseBackup

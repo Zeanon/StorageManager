@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main" if="maven.copy.schemmanager">
+  <copy flatten="true" todir="D:\IntelliJ Projects\StorageManager\YamlFileManager/../../SchemManager/src/main/resources/dependencies" failonerror="true" overwrite="true" verbose="true">
+    <fileset includes="YamlFileManager.jar" dir="D:\IntelliJ Projects\StorageManager\YamlFileManager/target"/>
+  </copy>
+</target>
+</project>

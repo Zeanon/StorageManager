@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>storagemanager</artifactId>
+        <groupId>de.zeanon</groupId>
+        <version>1.1.81</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>jsonfilemanager</artifactId>
+    <name>JsonFileManager</name>
+
+
+    <build>
+        <finalName>${project.name}</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.json</pattern>
+                            <shadedPattern>de.zeanon.jsonfilemanager.external.json</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>de.zeanon.storagemanagercore</pattern>
+                            <shadedPattern>de.zeanon.jsonfilemanager.shaded.storagemanagercore</shadedPattern>
+                        </relocation>
+                    </relocations>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <!-- Json Repo -->
+        <repository>
+            <id>json</id>
+            <url>https://mvnrepository.com/artifact/org.json/json</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Core -->
+        <dependency>
+            <groupId>de.zeanon</groupId>
+            <artifactId>storagemanagercore</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JSON -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20190722</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+</project>
