@@ -166,6 +166,10 @@ hs_err_pid*
 
 ### Maven template
 StorageManagerCore/target/
+JsonFileManager/target/
+ThunderFileManager/target/
+TomlFileManager/target/
+YamlFileManager/target/
 src/test/resources/testresults/
 pom.xml.tag
 pom.xml.releaseBackup
