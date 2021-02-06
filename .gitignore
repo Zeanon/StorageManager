@@ -170,7 +170,11 @@ JsonFileManager/target/
 ThunderFileManager/target/
 TomlFileManager/target/
 YamlFileManager/target/
-src/test/resources/testresults/
+StorageManagerCore/src/test/resources/testresults/
+JsonFileManager/src/test/resources/testresults/
+ThunderFileManager/src/test/resources/testresults/
+TomlFileManager/src/test/resources/testresults/
+YamlFileManager/src/test/resources/testresults/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
