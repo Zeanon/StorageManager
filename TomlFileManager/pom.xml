@@ -10,8 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>tomlfilemanager</artifactId>
-    <version>1.1.83</version>
     <name>TomlFileManager</name>
+    <version>1.1.84</version>
+
 
     <build>
         <finalName>${project.name}</finalName>
@@ -91,20 +92,18 @@
     </build>
 
     <dependencies>
-        <!-- Core -->
-        <dependency>
-            <groupId>de.zeanon</groupId>
-            <artifactId>storagemanagercore</artifactId>
-            <version>1.1.83</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- TOML -->
         <dependency>
             <groupId>de.zeanon</groupId>
             <artifactId>toml</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
+        </dependency>
+
+        <!-- Core -->
+        <dependency>
+            <groupId>de.zeanon</groupId>
+            <artifactId>storagemanagercore</artifactId>
         </dependency>
     </dependencies>
 </project>

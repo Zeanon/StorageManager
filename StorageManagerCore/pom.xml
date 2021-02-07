@@ -10,8 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>storagemanagercore</artifactId>
-    <version>1.1.83</version>
     <name>StorageManagerCore</name>
+    <version>1.1.84</version>
 
 
     <build>

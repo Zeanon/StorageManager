@@ -10,8 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>jsonfilemanager</artifactId>
-    <version>1.1.83</version>
     <name>JsonFileManager</name>
+    <version>1.1.84</version>
 
 
     <build>
@@ -77,20 +77,18 @@
     </repositories>
 
     <dependencies>
-        <!-- Core -->
-        <dependency>
-            <groupId>de.zeanon</groupId>
-            <artifactId>storagemanagercore</artifactId>
-            <version>1.1.83</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- JSON -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20190722</version>
             <scope>compile</scope>
+        </dependency>
+
+        <!-- Core -->
+        <dependency>
+            <groupId>de.zeanon</groupId>
+            <artifactId>storagemanagercore</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -14,10 +14,10 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings({"rawtypes", "SameParameterValue", "unused"})
 public abstract class JsonFileManager<B extends StorageManagerCore, F extends FlatFile, M extends Map, L extends List> extends StorageManagerCore<B, F, M, L> {
 
-
 	protected JsonFileManager(@NotNull File file, @NotNull Class<? extends M> mapType, @NotNull Class<? extends L> listType) {
 		super(file, mapType, listType);
 	}
+
 
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull File file) {
 		return new JsonFileBuilder(file);
