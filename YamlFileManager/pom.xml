@@ -5,11 +5,12 @@
     <parent>
         <artifactId>storagemanager</artifactId>
         <groupId>de.zeanon</groupId>
-        <version>1.1.81</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>yamlfilemanager</artifactId>
+    <version>1.1.83</version>
     <name>YamlFileManager</name>
 
 
@@ -62,6 +63,23 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>moveFilesToTarget</id>
+                        <phase>verify</phase>
+                        <configuration>
+                            <target>
+                                <copy todir="${basedir}/../Z_target_Z"
+                                      flatten="true" overwrite="true"
+                                      verbose="true" failonerror="true">
+                                    <fileset dir="${basedir}/target"
+                                             includes="${project.build.finalName}.jar"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
@@ -80,7 +98,7 @@
         <dependency>
             <groupId>de.zeanon</groupId>
             <artifactId>storagemanagercore</artifactId>
-            <version>${project.version}</version>
+            <version>1.1.83</version>
             <scope>provided</scope>
         </dependency>
 

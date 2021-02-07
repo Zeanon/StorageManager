@@ -1,6 +1,6 @@
 package de.zeanon.tomlfilemanager;
 
-import de.zeanon.storagemanagercore.StorageManager;
+import de.zeanon.storagemanagercore.StorageManagerCore;
 import de.zeanon.storagemanagercore.internal.base.files.FlatFile;
 import de.zeanon.tomlfilemanager.internal.files.raw.TomlFile;
 import de.zeanon.tomlfilemanager.internal.utility.builder.TomlConfigBuilder;
@@ -12,8 +12,8 @@ import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
 
-@SuppressWarnings("rawtypes")
-public abstract class TomlFileManager<B extends StorageManager, F extends FlatFile, M extends Map, L extends List> extends StorageManager<B, F, M, L> {
+@SuppressWarnings({"rawtypes", "unused"})
+public abstract class TomlFileManager<B extends StorageManagerCore, F extends FlatFile, M extends Map, L extends List> extends StorageManagerCore<B, F, M, L> {
 
 	protected TomlFileManager(@NotNull File file, @NotNull Class<? extends M> mapType, @NotNull Class<? extends L> listType) {
 		super(file, mapType, listType);

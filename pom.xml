@@ -6,7 +6,7 @@
     <groupId>de.zeanon</groupId>
     <artifactId>storagemanager</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.81</version>
+    <version>1.0.0</version>
     <name>StorageManager</name>
     <description>Store data in a better way</description>
     <url>https://github.com/Zeanon/StorageManager</url>

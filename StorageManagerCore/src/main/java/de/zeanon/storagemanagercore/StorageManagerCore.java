@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString
 @EqualsAndHashCode
 @SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess", "rawtypes"})
-public abstract class StorageManager<B extends StorageManager, F extends FlatFile, M extends Map, L extends List> {
+public abstract class StorageManagerCore<B extends StorageManagerCore, F extends FlatFile, M extends Map, L extends List> {
 
 	protected final @NotNull File file;
 	protected @Nullable BufferedInputStream inputStream;
@@ -36,7 +36,7 @@ public abstract class StorageManager<B extends StorageManager, F extends FlatFil
 	protected boolean synchronizeData = false;
 
 	@Contract(pure = true)
-	protected StorageManager(final @NotNull File file, final @NotNull Class<? extends M> mapType, final @NotNull Class<? extends L> listType) {
+	protected StorageManagerCore(final @NotNull File file, final @NotNull Class<? extends M> mapType, final @NotNull Class<? extends L> listType) {
 		this.file = file;
 		this.mapType = mapType;
 		this.listType = listType;

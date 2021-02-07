@@ -5,11 +5,12 @@
     <parent>
         <artifactId>storagemanager</artifactId>
         <groupId>de.zeanon</groupId>
-        <version>1.1.81</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>tomlfilemanager</artifactId>
+    <version>1.1.83</version>
     <name>TomlFileManager</name>
 
     <build>
@@ -57,13 +58,34 @@
                             <pattern>com.electronwill</pattern>
                             <shadedPattern>de.zeanon.tomlfilemanager.external.electronwill</shadedPattern>
                         </relocation>
-                        <relocation>
-                            <pattern>de.zeanon.storagemanagercore</pattern>
-                            <shadedPattern>de.zeanon.tomlfilemanager.shaded.storagemanager</shadedPattern>
-                        </relocation>
                     </relocations>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>moveFilesToTarget</id>
+                        <phase>verify</phase>
+                        <configuration>
+                            <target>
+                                <copy todir="${basedir}/../Z_target_Z"
+                                      flatten="true" overwrite="true"
+                                      verbose="true" failonerror="true">
+                                    <fileset dir="${basedir}/target"
+                                             includes="${project.build.finalName}.jar"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -73,7 +95,7 @@
         <dependency>
             <groupId>de.zeanon</groupId>
             <artifactId>storagemanagercore</artifactId>
-            <version>${project.version}</version>
+            <version>1.1.83</version>
             <scope>provided</scope>
         </dependency>
 

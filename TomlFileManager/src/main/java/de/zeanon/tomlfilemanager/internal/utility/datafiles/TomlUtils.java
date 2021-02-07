@@ -365,6 +365,7 @@ public class TomlUtils {
 	}
 	// </Internal>
 
+	@SuppressWarnings("unused")
 	public enum LineType {
 
 		VALUE,

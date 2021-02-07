@@ -1,6 +1,7 @@
 package de.zeanon.yamlfilemanager.internal.files.section;
 
 import de.zeanon.storagemanagercore.internal.base.sections.CommentEnabledSection;
+import de.zeanon.yamlfilemanager.internal.files.config.YamlConfig;
 import de.zeanon.yamlfilemanager.internal.files.raw.YamlFile;
 import java.util.List;
 import java.util.Map;
