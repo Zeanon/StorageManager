@@ -11,8 +11,29 @@
 
     <artifactId>yamlfilemanager</artifactId>
     <name>YamlFileManager</name>
-    <version>1.1.84</version>
+    <version>1.1.85</version>
 
+
+    <licenses>
+        <license>
+            <name>GNU GENERAL PUBLIC LICENSE</name>
+            <url>https://github.com/Zeanon/StorageManager/blob/master/LICENSE</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>Zeanon</id>
+            <name>Zeanon</name>
+            <email>thezeanon@gmail.com</email>
+            <url>https://github.com/Zeanon</url>
+            <roles>
+                <role>Lead Developer</role>
+                <role>Performance improvements</role>
+            </roles>
+            <timezone>Germany</timezone>
+        </developer>
+    </developers>
 
     <build>
         <finalName>${project.name}</finalName>
