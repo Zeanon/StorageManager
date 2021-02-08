@@ -11,7 +11,7 @@
 
     <artifactId>tomlfilemanager</artifactId>
     <name>TomlFileManager</name>
-    <version>1.1.85</version>
+    <version>1.1.86</version>
 
 
     <licenses>
@@ -38,6 +38,15 @@
     <build>
         <finalName>${project.name}</finalName>
 
+        <resources>
+            <resource>
+                <directory>src/main/resources/dependendencies</directory>
+                <excludes>
+                    <exclude>*.jar</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -51,7 +60,7 @@
                             <groupId>de.zeanon</groupId>
                             <artifactId>toml</artifactId>
                             <version>1.0.0</version>
-                            <file>src/main/resources/Toml.jar</file>
+                            <file>src/main/resources/dependencies/Toml.jar</file>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
                         </configuration>

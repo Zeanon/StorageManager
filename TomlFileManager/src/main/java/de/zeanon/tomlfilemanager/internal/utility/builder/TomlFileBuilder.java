@@ -1,6 +1,6 @@
 package de.zeanon.tomlfilemanager.internal.utility.builder;
 
-import de.zeanon.storagemanagercore.StorageManagerCore;
+import de.zeanon.storagemanagercore.StorageManager;
 import de.zeanon.storagemanagercore.external.browniescollections.BigList;
 import de.zeanon.storagemanagercore.external.browniescollections.GapList;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class TomlFileBuilder extends StorageManagerCore<TomlFileBuilder, TomlFile, Map, List> { //NOSONAR
+public class TomlFileBuilder extends StorageManager<TomlFileBuilder, TomlFile, Map, List> { //NOSONAR
 
 
 	public TomlFileBuilder(final @NotNull File file) {

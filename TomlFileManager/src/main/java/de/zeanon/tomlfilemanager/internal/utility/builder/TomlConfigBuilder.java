@@ -1,7 +1,7 @@
 package de.zeanon.tomlfilemanager.internal.utility.builder;
 
 
-import de.zeanon.storagemanagercore.StorageManagerCore;
+import de.zeanon.storagemanagercore.StorageManager;
 import de.zeanon.storagemanagercore.external.browniescollections.BigList;
 import de.zeanon.storagemanagercore.external.browniescollections.GapList;
 import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode(callSuper = true)
 @Setter(onMethod_ = {@Contract("_ -> this")})
 @SuppressWarnings({"unused", "rawtypes"})
-public class TomlConfigBuilder extends StorageManagerCore<TomlConfigBuilder, TomlConfig, Map, List> { //NOSONAR
+public class TomlConfigBuilder extends StorageManager<TomlConfigBuilder, TomlConfig, Map, List> { //NOSONAR
 
 
 	private @NotNull CommentSetting commentSetting = Comment.PRESERVE;
