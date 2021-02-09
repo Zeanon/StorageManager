@@ -4,6 +4,7 @@ import de.zeanon.jsonfilemanager.internal.builder.JsonFileBuilder;
 import de.zeanon.jsonfilemanager.internal.files.raw.JsonFile;
 import de.zeanon.storagemanagercore.StorageManager;
 import de.zeanon.storagemanagercore.internal.base.files.FlatFile;
+import de.zeanon.storagemanagercore.internal.utility.basic.BaseFileUtils;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
@@ -28,18 +29,26 @@ public abstract class JsonFileManager<B extends StorageManager, F extends FlatFi
 	}
 
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull String name) {
-		return new JsonFileBuilder(new File(name + "." + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(BaseFileUtils.getExtension(name).equals(JsonFile.FileType.JSON.toString())
+											? name
+											: name + "." + JsonFile.FileType.JSON));
 	}
 
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull String directory, final @NotNull String name) {
-		return new JsonFileBuilder(new File(directory, name + "." + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(directory, BaseFileUtils.getExtension(name).equals(JsonFile.FileType.JSON.toString())
+													   ? name
+													   : name + "." + JsonFile.FileType.JSON));
 	}
 
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull File directory, final @NotNull String name) {
-		return new JsonFileBuilder(new File(directory, name + "." + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(directory, BaseFileUtils.getExtension(name).equals(JsonFile.FileType.JSON.toString())
+													   ? name
+													   : name + "." + JsonFile.FileType.JSON));
 	}
 
 	public static @NotNull JsonFileBuilder jsonFile(final @NotNull Path directory, final @NotNull String name) {
-		return new JsonFileBuilder(new File(directory.toFile(), name + "." + JsonFile.FileType.JSON));
+		return new JsonFileBuilder(new File(directory.toFile(), BaseFileUtils.getExtension(name).equals(JsonFile.FileType.JSON.toString())
+																? name
+																: name + "." + JsonFile.FileType.JSON));
 	}
 }

@@ -2,6 +2,7 @@ package de.zeanon.tomlfilemanager;
 
 import de.zeanon.storagemanagercore.StorageManager;
 import de.zeanon.storagemanagercore.internal.base.files.FlatFile;
+import de.zeanon.storagemanagercore.internal.utility.basic.BaseFileUtils;
 import de.zeanon.tomlfilemanager.internal.files.raw.TomlFile;
 import de.zeanon.tomlfilemanager.internal.utility.builder.TomlConfigBuilder;
 import de.zeanon.tomlfilemanager.internal.utility.builder.TomlFileBuilder;
@@ -29,19 +30,27 @@ public abstract class TomlFileManager<B extends StorageManager, F extends FlatFi
 	}
 
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull String name) {
-		return new TomlFileBuilder(new File(name + "." + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(BaseFileUtils.getExtension(name).equals(TomlFile.FileType.TOML.toString())
+											? name
+											: name + "." + TomlFile.FileType.TOML));
 	}
 
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull String directory, final @NotNull String name) {
-		return new TomlFileBuilder(new File(directory, name + "." + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(directory, BaseFileUtils.getExtension(name).equals(TomlFile.FileType.TOML.toString())
+													   ? name
+													   : name + "." + TomlFile.FileType.TOML));
 	}
 
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull File directory, final @NotNull String name) {
-		return new TomlFileBuilder(new File(directory, name + "." + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(directory, BaseFileUtils.getExtension(name).equals(TomlFile.FileType.TOML.toString())
+													   ? name
+													   : name + "." + TomlFile.FileType.TOML));
 	}
 
 	public static @NotNull TomlFileBuilder tomlFile(final @NotNull Path directory, final @NotNull String name) {
-		return new TomlFileBuilder(new File(directory.toFile(), name + "." + TomlFile.FileType.TOML));
+		return new TomlFileBuilder(new File(directory.toFile(), BaseFileUtils.getExtension(name).equals(TomlFile.FileType.TOML.toString())
+																? name
+																: name + "." + TomlFile.FileType.TOML));
 	}
 
 
@@ -54,18 +63,26 @@ public abstract class TomlFileManager<B extends StorageManager, F extends FlatFi
 	}
 
 	public static @NotNull TomlConfigBuilder tomlConfig(final @NotNull String name) {
-		return new TomlConfigBuilder(new File(name + "." + TomlFile.FileType.TOML));
+		return new TomlConfigBuilder(new File(BaseFileUtils.getExtension(name).equals(TomlFile.FileType.TOML.toString())
+											  ? name
+											  : name + "." + TomlFile.FileType.TOML));
 	}
 
 	public static @NotNull TomlConfigBuilder tomlConfig(final @NotNull String directory, final @NotNull String name) {
-		return new TomlConfigBuilder(new File(directory, name + "." + TomlFile.FileType.TOML));
+		return new TomlConfigBuilder(new File(directory, BaseFileUtils.getExtension(name).equals(TomlFile.FileType.TOML.toString())
+														 ? name
+														 : name + "." + TomlFile.FileType.TOML));
 	}
 
 	public static @NotNull TomlConfigBuilder tomlConfig(final @NotNull File directory, final @NotNull String name) {
-		return new TomlConfigBuilder(new File(directory, name + "." + TomlFile.FileType.TOML));
+		return new TomlConfigBuilder(new File(directory, BaseFileUtils.getExtension(name).equals(TomlFile.FileType.TOML.toString())
+														 ? name
+														 : name + "." + TomlFile.FileType.TOML));
 	}
 
 	public static @NotNull TomlConfigBuilder tomlConfig(final @NotNull Path directory, final @NotNull String name) {
-		return new TomlConfigBuilder(new File(directory.toFile(), name + "." + TomlFile.FileType.TOML));
+		return new TomlConfigBuilder(new File(directory.toFile(), BaseFileUtils.getExtension(name).equals(TomlFile.FileType.TOML.toString())
+																  ? name
+																  : name + "." + TomlFile.FileType.TOML));
 	}
 }

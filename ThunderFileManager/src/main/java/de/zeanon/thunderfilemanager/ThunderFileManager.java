@@ -2,6 +2,7 @@ package de.zeanon.thunderfilemanager;
 
 import de.zeanon.storagemanagercore.StorageManager;
 import de.zeanon.storagemanagercore.internal.base.files.FlatFile;
+import de.zeanon.storagemanagercore.internal.utility.basic.BaseFileUtils;
 import de.zeanon.thunderfilemanager.internal.files.raw.ThunderFile;
 import de.zeanon.thunderfilemanager.internal.utility.builder.ThunderConfigBuilder;
 import de.zeanon.thunderfilemanager.internal.utility.builder.ThunderFileBuilder;
@@ -29,19 +30,27 @@ public abstract class ThunderFileManager<B extends StorageManager, F extends Fla
 	}
 
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull String name) {
-		return new ThunderFileBuilder(new File(name + "." + ThunderFile.FileType.THUNDERFILE));
+		return new ThunderFileBuilder(new File(BaseFileUtils.getExtension(name).equals(ThunderFile.FileType.THUNDERFILE.toString())
+											   ? name
+											   : name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull String directory, final @NotNull String name) {
-		return new ThunderFileBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDERFILE));
+		return new ThunderFileBuilder(new File(directory, BaseFileUtils.getExtension(name).equals(ThunderFile.FileType.THUNDERFILE.toString())
+														  ? name
+														  : name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull File directory, final @NotNull String name) {
-		return new ThunderFileBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDERFILE));
+		return new ThunderFileBuilder(new File(directory, BaseFileUtils.getExtension(name).equals(ThunderFile.FileType.THUNDERFILE.toString())
+														  ? name
+														  : name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 	public static @NotNull ThunderFileBuilder thunderFile(final @NotNull Path directory, final @NotNull String name) {
-		return new ThunderFileBuilder(new File(directory.toFile(), name + "." + ThunderFile.FileType.THUNDERFILE));
+		return new ThunderFileBuilder(new File(directory.toFile(), BaseFileUtils.getExtension(name).equals(ThunderFile.FileType.THUNDERFILE.toString())
+																   ? name
+																   : name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 
@@ -54,18 +63,27 @@ public abstract class ThunderFileManager<B extends StorageManager, F extends Fla
 	}
 
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull String name) {
-		return new ThunderConfigBuilder(new File(name + "." + ThunderFile.FileType.THUNDERFILE));
+		return new ThunderConfigBuilder(new File(BaseFileUtils.getExtension(name).equals(ThunderFile.FileType.THUNDERFILE.toString())
+												 ? name
+												 : name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull String directory, final @NotNull String name) {
-		return new ThunderConfigBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDERFILE));
+		return new ThunderConfigBuilder(new File(directory, BaseFileUtils.getExtension(name).equals(ThunderFile.FileType.THUNDERFILE.toString())
+															? name
+															: name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull File directory, final @NotNull String name) {
-		return new ThunderConfigBuilder(new File(directory, name + "." + ThunderFile.FileType.THUNDERFILE));
+		return new ThunderConfigBuilder(new File(directory,
+												 BaseFileUtils.getExtension(name).equals(ThunderFile.FileType.THUNDERFILE.toString())
+												 ? name
+												 : name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 
 	public static @NotNull ThunderConfigBuilder thunderConfig(final @NotNull Path directory, final @NotNull String name) {
-		return new ThunderConfigBuilder(new File(directory.toFile(), name + "." + ThunderFile.FileType.THUNDERFILE));
+		return new ThunderConfigBuilder(new File(directory.toFile(), BaseFileUtils.getExtension(name).equals(ThunderFile.FileType.THUNDERFILE.toString())
+																	 ? name
+																	 : name + "." + ThunderFile.FileType.THUNDERFILE));
 	}
 }
