@@ -37,7 +37,7 @@ public class ThunderUtils {
 		//noinspection unchecked
 		final @NotNull List<String> result = fileData.collectionsProvider().newList();
 		for (final @NotNull DataMap.DataNode<String, Object> entry : fileData.blockEntryList()) {
-			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT) {
 				result.add(entry.getKey());
 			} else {
 				return result;
@@ -188,7 +188,7 @@ public class ThunderUtils {
 			//noinspection unchecked
 			final @NotNull List<String> result = fileData.collectionsProvider().newList();
 			for (final @NotNull DataMap.DataNode<String, Object> entry : Objects.notNull(fileData.blockEntryList(key))) {
-				if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
+				if (entry.getValue() == ThunderFileParser.LineType.COMMENT) {
 					result.add(entry.getKey());
 				} else {
 					return result;
@@ -216,7 +216,7 @@ public class ThunderUtils {
 			//noinspection unchecked
 			final @NotNull List<String> result = fileData.collectionsProvider().newList();
 			for (final @NotNull DataMap.DataNode<String, Object> entry : Objects.notNull(fileData.blockEntryListUseArray(key))) {
-				if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
+				if (entry.getValue() == ThunderFileParser.LineType.COMMENT) {
 					result.add(entry.getKey());
 				} else {
 					return result;
@@ -307,7 +307,7 @@ public class ThunderUtils {
 	private @NotNull List<String> internalGetFooter(final @NotNull List<String> result, final @NotNull List<DataMap.DataNode<String, Object>> entryList) {
 		Collections.reverse(entryList);
 		for (final @NotNull DataMap.DataNode<String, Object> entry : entryList) {
-			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT) {
 				result.add(entry.getKey());
 			} else {
 				Collections.reverse(result);
@@ -320,7 +320,7 @@ public class ThunderUtils {
 
 	private void internalSetHeader(final @Nullable String[] header, final @NotNull List<DataMap.DataNode<String, Object>> entryList, final @NotNull DataMap<String, Object> returnMap) {
 		for (final @NotNull DataMap.DataNode<String, Object> entry : entryList) {
-			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT) {
 				entryList.remove(entry);
 			} else {
 				break;
@@ -329,7 +329,7 @@ public class ThunderUtils {
 		if (header != null) {
 			for (final @Nullable String comment : header) {
 				if (comment != null) {
-					returnMap.add(comment.startsWith("#") ? comment : "# " + comment, ThunderFileParser.LineType.HEADER);
+					returnMap.add(comment.startsWith("#") ? comment : "# " + comment, ThunderFileParser.LineType.COMMENT);
 				}
 			}
 		}
@@ -339,7 +339,7 @@ public class ThunderUtils {
 	private void internalSetFooter(final @Nullable String[] footer, final @NotNull List<DataMap.DataNode<String, Object>> entryList, final @NotNull DataMap<String, Object> returnMap) {
 		Collections.reverse(entryList);
 		for (final @NotNull DataMap.DataNode<String, Object> entry : entryList) {
-			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT) {
 				entryList.remove(entry);
 			} else {
 				break;
@@ -350,7 +350,7 @@ public class ThunderUtils {
 		if (footer != null) {
 			for (final @Nullable String comment : footer) {
 				if (comment != null) {
-					returnMap.add(comment.startsWith("#") ? comment : "# " + comment, ThunderFileParser.LineType.FOOTER);
+					returnMap.add(comment.startsWith("#") ? comment : "# " + comment, ThunderFileParser.LineType.COMMENT);
 				}
 			}
 		}
@@ -360,7 +360,7 @@ public class ThunderUtils {
 		//noinspection unchecked
 		final @NotNull List<String> result = collectionsProvider.newList();
 		for (final @NotNull DataMap.DataNode<String, Object> entry : entryList) {
-			if (entry.getValue() == ThunderFileParser.LineType.COMMENT || entry.getValue() == ThunderFileParser.LineType.HEADER || entry.getValue() == ThunderFileParser.LineType.FOOTER) {
+			if (entry.getValue() == ThunderFileParser.LineType.COMMENT) {
 				result.add(entry.getKey());
 			}
 		}

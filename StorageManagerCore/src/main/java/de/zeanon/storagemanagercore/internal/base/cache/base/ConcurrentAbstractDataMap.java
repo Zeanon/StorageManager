@@ -34,6 +34,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	 * Local lock to ensure internal concurrency
 	 */
 	private transient @NotNull StampedLock localLock = new StampedLock();
+	private transient @NotNull StampedLock modificationLock = new StampedLock();
 	/**
 	 * List that holds the internal nodes
 	 */
@@ -140,8 +141,13 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 					if (this.localLock.validate(tempLock)) {
 						lockStamp = tempLock;
 					} else {
-						this.localLock.unlockRead(lockStamp);
-						lockStamp = this.localLock.writeLock();
+						final long modifyLock = this.modificationLock.writeLock();
+						try {
+							this.localLock.unlockRead(lockStamp);
+							lockStamp = this.localLock.writeLock();
+						} finally {
+							this.modificationLock.unlockWrite(modifyLock);
+						}
 					}
 					if (tempNode.getKey().equals(key) && tempNode.getValue().equals(value)) {
 						tempIterator.remove();
@@ -350,10 +356,12 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	@Override
 	public void add(final @NotNull DataMap.DataNode<K, V> node) {
 		final long lockStamp = this.localLock.writeLock();
+		final long modifyLock = this.modificationLock.writeLock();
 		try {
 			this.localList.add(node);
 		} finally {
 			this.localLock.unlockWrite(lockStamp);
+			this.modificationLock.unlockWrite(modifyLock);
 		}
 	}
 
@@ -377,10 +385,12 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	@Override
 	public void addAll(final @NotNull List<DataNode<K, V>> nodes) {
 		final long lockStamp = this.localLock.writeLock();
+		final long modifyLock = this.modificationLock.writeLock();
 		try {
 			this.localList.addAll(nodes);
 		} finally {
 			this.localLock.unlockWrite(lockStamp);
+			this.modificationLock.unlockWrite(modifyLock);
 		}
 	}
 
@@ -440,8 +450,13 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 					if (this.localLock.validate(tempLock)) {
 						lockStamp = tempLock;
 					} else {
-						this.localLock.unlockRead(lockStamp);
-						lockStamp = this.localLock.writeLock();
+						final long modifyLock = this.modificationLock.writeLock();
+						try {
+							this.localLock.unlockRead(lockStamp);
+							lockStamp = this.localLock.writeLock();
+						} finally {
+							this.modificationLock.unlockWrite(modifyLock);
+						}
 					}
 					if (tempNode.getKey().equals(key)) {
 						tempIterator.remove();
@@ -464,11 +479,13 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	@Override
 	public void clear() {
 		final long lockStamp = this.localLock.writeLock();
+		final long modifyLock = this.modificationLock.writeLock();
 		try {
 			this.localList.clear();
 			this.localList.trimToSize();
 		} finally {
 			this.localLock.unlockWrite(lockStamp);
+			this.modificationLock.unlockWrite(modifyLock);
 		}
 	}
 
@@ -478,10 +495,12 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	@Override
 	public void trimToSize() {
 		final long lockStamp = this.localLock.writeLock();
+		final long modifyLock = this.modificationLock.writeLock();
 		try {
 			this.localList.trimToSize();
 		} finally {
 			this.localLock.unlockWrite(lockStamp);
+			this.modificationLock.unlockWrite(modifyLock);
 		}
 	}
 
@@ -565,6 +584,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	protected void reinitialize(final @NotNull IList<DataNode<K, V>> localList) {
 		this.localList = localList;
 		this.localLock = new StampedLock();
+		this.modificationLock = new StampedLock();
 	}
 
 	/**

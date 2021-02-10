@@ -126,7 +126,7 @@ public class ThunderFileParser {
 
 	private void topLayerWriteWithComments(final @NotNull PrintWriter writer,
 										   final @NotNull DataMap.DataNode<String, Object> entry) {
-		if (entry.getValue() == LineType.COMMENT || entry.getValue() == LineType.HEADER || entry.getValue() == LineType.FOOTER) {
+		if (entry.getValue() == LineType.COMMENT) {
 			writer.print(entry.getKey().startsWith("#") ? entry.getKey() : ("#" + entry.getKey()));
 		} else if (entry.getValue() instanceof DataMap) {
 			writer.print(entry.getKey()
@@ -158,7 +158,7 @@ public class ThunderFileParser {
 										   final @NotNull PrintWriter writer) {
 		for (final @NotNull DataMap.DataNode<String, Object> entry : map.entryList()) {
 			writer.println();
-			if (entry.getValue() == LineType.COMMENT || entry.getValue() == LineType.HEADER || entry.getValue() == LineType.FOOTER) {
+			if (entry.getValue() == LineType.COMMENT) {
 				writer.print(indentationString
 							 + "  "
 							 + (entry.getKey().startsWith("#") ? entry.getKey() : ("#" + entry.getKey())));
@@ -211,12 +211,12 @@ public class ThunderFileParser {
 				tempLock.truncateChannel(0);
 				final @NotNull Iterator<DataMap.DataNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
 				@NotNull DataMap.DataNode<String, Object> initialEntry = mapIterator.next();
-				while (initialEntry.getValue() == LineType.COMMENT || initialEntry.getValue() == LineType.HEADER || initialEntry.getValue() == LineType.FOOTER || initialEntry.getValue() == LineType.BLANK_LINE) {
+				while (initialEntry.getValue() == LineType.COMMENT || initialEntry.getValue() == LineType.BLANK_LINE) {
 					initialEntry = mapIterator.next();
 				}
 				ThunderFileParser.topLayerWriteWithOutComments(writer, initialEntry);
 				mapIterator.forEachRemaining(entry -> {
-					if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.HEADER && entry.getValue() != LineType.FOOTER && entry.getValue() != LineType.BLANK_LINE) {
+					if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.BLANK_LINE) {
 						writer.println();
 						ThunderFileParser.topLayerWriteWithOutComments(writer, entry);
 					}
@@ -266,7 +266,7 @@ public class ThunderFileParser {
 											  final @NotNull String indentationString,
 											  final @NotNull PrintWriter writer) {
 		for (final @NotNull DataMap.DataNode<String, Object> entry : map.entryList()) {
-			if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.HEADER && entry.getValue() != LineType.FOOTER && entry.getValue() != LineType.BLANK_LINE) {
+			if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.BLANK_LINE) {
 				writer.println();
 				if (entry.getValue() instanceof DataMap) {
 					writer.print(indentationString
@@ -644,9 +644,7 @@ public class ThunderFileParser {
 
 		VALUE,
 		COMMENT,
-		BLANK_LINE,
-		HEADER,
-		FOOTER
+		BLANK_LINE
 	}
 
 	private class ThunderParseException extends Exception {

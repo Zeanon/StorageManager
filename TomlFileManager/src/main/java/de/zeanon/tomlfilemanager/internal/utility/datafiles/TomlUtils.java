@@ -30,7 +30,7 @@ public class TomlUtils {
 		//noinspection unchecked
 		final @NotNull List<String> result = fileData.collectionsProvider().newList();
 		for (final @NotNull Map.Entry<String, Object> entry : fileData.blockEntryList()) {
-			if (entry.getValue() == TomlUtils.LineType.COMMENT || entry.getValue() == TomlUtils.LineType.HEADER || entry.getValue() == TomlUtils.LineType.FOOTER) {
+			if (entry.getValue() == LineType.COMMENT) {
 				result.add(entry.getKey());
 			} else {
 				return result;
@@ -181,7 +181,7 @@ public class TomlUtils {
 			//noinspection unchecked
 			final @NotNull List<String> result = fileData.collectionsProvider().newList();
 			for (final @NotNull Map.Entry<String, Object> entry : Objects.notNull(fileData.blockEntryList(key))) {
-				if (entry.getValue() == TomlUtils.LineType.COMMENT || entry.getValue() == TomlUtils.LineType.HEADER || entry.getValue() == TomlUtils.LineType.FOOTER) {
+				if (entry.getValue() == LineType.COMMENT) {
 					result.add(entry.getKey());
 				} else {
 					return result;
@@ -209,7 +209,7 @@ public class TomlUtils {
 			//noinspection unchecked
 			final @NotNull List<String> result = fileData.collectionsProvider().newList();
 			for (final @NotNull Map.Entry<String, Object> entry : Objects.notNull(fileData.blockEntryListUseArray(key))) {
-				if (entry.getValue() == TomlUtils.LineType.COMMENT || entry.getValue() == TomlUtils.LineType.HEADER || entry.getValue() == TomlUtils.LineType.FOOTER) {
+				if (entry.getValue() == LineType.COMMENT) {
 					result.add(entry.getKey());
 				} else {
 					return result;
@@ -300,7 +300,7 @@ public class TomlUtils {
 	private @NotNull List<String> internalGetFooter(final @NotNull List<String> result, final @NotNull List<Map.Entry<String, Object>> entryList) {
 		Collections.reverse(entryList);
 		for (final @NotNull Map.Entry<String, Object> entry : entryList) {
-			if (entry.getValue() == TomlUtils.LineType.COMMENT || entry.getValue() == TomlUtils.LineType.HEADER || entry.getValue() == TomlUtils.LineType.FOOTER) {
+			if (entry.getValue() == LineType.COMMENT) {
 				result.add(entry.getKey());
 			} else {
 				Collections.reverse(result);
@@ -313,7 +313,7 @@ public class TomlUtils {
 
 	private void internalSetHeader(final @Nullable String[] header, final @NotNull List<Map.Entry<String, Object>> entryList, final @NotNull Map<String, Object> returnMap) {
 		for (final @NotNull Map.Entry<String, Object> entry : entryList) {
-			if (entry.getValue() == TomlUtils.LineType.COMMENT || entry.getValue() == TomlUtils.LineType.HEADER || entry.getValue() == TomlUtils.LineType.FOOTER) {
+			if (entry.getValue() == LineType.COMMENT) {
 				entryList.remove(entry);
 			} else {
 				break;
@@ -322,7 +322,7 @@ public class TomlUtils {
 		if (header != null) {
 			for (final @Nullable String comment : header) {
 				if (comment != null) {
-					returnMap.put(comment.startsWith("#") ? comment : "# " + comment, TomlUtils.LineType.HEADER);
+					returnMap.put(comment.startsWith("#") ? comment : "# " + comment, TomlUtils.LineType.COMMENT);
 				}
 			}
 		}
@@ -334,7 +334,7 @@ public class TomlUtils {
 	private void internalSetFooter(final @Nullable String[] footer, final @NotNull List<Map.Entry<String, Object>> entryList, final @NotNull Map<String, Object> returnMap) {
 		Collections.reverse(entryList);
 		for (final @NotNull Map.Entry<String, Object> entry : entryList) {
-			if (entry.getValue() == TomlUtils.LineType.COMMENT || entry.getValue() == TomlUtils.LineType.HEADER || entry.getValue() == TomlUtils.LineType.FOOTER) {
+			if (entry.getValue() == LineType.COMMENT) {
 				entryList.remove(entry);
 			} else {
 				break;
@@ -347,7 +347,7 @@ public class TomlUtils {
 		if (footer != null) {
 			for (final @Nullable String comment : footer) {
 				if (comment != null) {
-					returnMap.put(comment.startsWith("#") ? comment : "# " + comment, TomlUtils.LineType.FOOTER);
+					returnMap.put(comment.startsWith("#") ? comment : "# " + comment, TomlUtils.LineType.COMMENT);
 				}
 			}
 		}
@@ -357,7 +357,7 @@ public class TomlUtils {
 		//noinspection unchecked
 		final @NotNull List<String> result = collectionsProvider.newList();
 		for (final @NotNull Map.Entry<String, Object> entry : entryList) {
-			if (entry.getValue() == TomlUtils.LineType.COMMENT || entry.getValue() == TomlUtils.LineType.HEADER || entry.getValue() == TomlUtils.LineType.FOOTER) {
+			if (entry.getValue() == LineType.COMMENT) {
 				result.add(entry.getKey());
 			}
 		}
@@ -370,8 +370,6 @@ public class TomlUtils {
 
 		VALUE,
 		COMMENT,
-		BLANK_LINE,
-		HEADER,
-		FOOTER
+		BLANK_LINE
 	}
 }
