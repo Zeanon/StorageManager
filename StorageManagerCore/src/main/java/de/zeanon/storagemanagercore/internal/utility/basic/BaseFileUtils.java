@@ -218,7 +218,9 @@ public class BaseFileUtils {
 							|| (!caseSensitive && BaseFileUtils.removeExtension(file.getName()).toLowerCase().contains(sequence.toLowerCase()))
 							|| (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(sequence))) {
 							files.add(file);
-						} else if (deep) {
+						}
+
+						if (deep) {
 							files.addAll(BaseFileUtils.searchFolders(file, true, sequence, caseSensitive));
 						}
 					}
@@ -321,7 +323,9 @@ public class BaseFileUtils {
 							|| (!caseSensitive && BaseFileUtils.removeExtension(file.getName()).toLowerCase().contains(sequence.toLowerCase()))
 							|| (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(sequence))) {
 							files.add(file);
-						} else if (deep && file.isDirectory()) {
+						}
+
+						if (deep && file.isDirectory()) {
 							files.addAll(BaseFileUtils.searchFilesAndFolders(file, true, sequence, caseSensitive));
 						}
 					}
@@ -617,7 +621,8 @@ public class BaseFileUtils {
 			if (fileList != null) {
 				for (final @Nullable File file : fileList) {
 					if (file != null) {
-						if (Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)
+						if (file.isFile()
+							&& Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)
 							&& (sequence == null
 								|| (!caseSensitive && BaseFileUtils.removeExtension(file.getName()).toLowerCase().contains(sequence.toLowerCase()))
 								|| (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(sequence)))) {
@@ -830,7 +835,8 @@ public class BaseFileUtils {
 			if (fileList != null) {
 				for (final @Nullable File file : fileList) {
 					if (file != null) {
-						if (Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)
+						if (file.isFile()
+							&& Arrays.stream(extensions).anyMatch(BaseFileUtils.getExtension(file)::equalsIgnoreCase)
 							&& (sequence == null
 								|| (!caseSensitive && BaseFileUtils.removeExtension(file.getName()).toLowerCase().contains(sequence.toLowerCase()))
 								|| (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(sequence)))) {
