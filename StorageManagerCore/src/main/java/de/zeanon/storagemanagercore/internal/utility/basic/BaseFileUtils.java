@@ -1161,56 +1161,43 @@ public class BaseFileUtils {
 		}
 	}
 
-	public void writeToFileIfCreated(final @NotNull String file,
-									 final @Nullable BufferedInputStream inputStream) {
-		BaseFileUtils.writeToFileIfCreated(file, inputStream, BaseFileUtils.getBufferSize());
+	public boolean writeToFileIfCreated(final @NotNull String file,
+										final @Nullable BufferedInputStream inputStream) {
+		return BaseFileUtils.writeToFileIfCreated(file, inputStream, BaseFileUtils.getBufferSize());
 	}
 
-	public void writeToFileIfCreated(final @NotNull String parent,
-									 final @NotNull String child,
-									 final @Nullable BufferedInputStream inputStream) {
-		BaseFileUtils.writeToFileIfCreated(parent, child, inputStream, BaseFileUtils.getBufferSize());
+	public boolean writeToFileIfCreated(final @NotNull String parent,
+										final @NotNull String child,
+										final @Nullable BufferedInputStream inputStream) {
+		return BaseFileUtils.writeToFileIfCreated(parent, child, inputStream, BaseFileUtils.getBufferSize());
 	}
 
-	public void writeToFileIfCreated(final @NotNull String file,
-									 final @Nullable BufferedInputStream inputStream,
-									 final int bufferSize) {
-		BaseFileUtils.writeToFileIfCreated(new File(file), inputStream, bufferSize);
+	public boolean writeToFileIfCreated(final @NotNull String file,
+										final @Nullable BufferedInputStream inputStream,
+										final int bufferSize) {
+		return BaseFileUtils.writeToFileIfCreated(new File(file), inputStream, bufferSize);
 	}
 
-	public void writeToFileIfCreated(final @NotNull String parent,
-									 final @NotNull String child,
-									 final @Nullable BufferedInputStream inputStream,
-									 final int bufferSize) {
-		BaseFileUtils.writeToFileIfCreated(new File(parent, child), inputStream, bufferSize);
+	public boolean writeToFileIfCreated(final @NotNull String parent,
+										final @NotNull String child,
+										final @Nullable BufferedInputStream inputStream,
+										final int bufferSize) {
+		return BaseFileUtils.writeToFileIfCreated(new File(parent, child), inputStream, bufferSize);
 	}
 
-	public void writeToFileIfCreated(final @NotNull File file,
-									 final @Nullable BufferedInputStream inputStream) {
-		BaseFileUtils.writeToFileIfCreated(file, inputStream, BaseFileUtils.getBufferSize());
+	public boolean writeToFileIfCreated(final @NotNull File file,
+										final @Nullable BufferedInputStream inputStream) {
+		return BaseFileUtils.writeToFileIfCreated(file, inputStream, BaseFileUtils.getBufferSize());
 	}
 
-	public void writeToFileIfCreated(final @NotNull File file,
-									 final @Nullable BufferedInputStream inputStream,
-									 final int bufferSize) {
-		final boolean created = !file.exists();
-		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock()) {
-			if (created && inputStream != null) {
-				try (final @NotNull BufferedOutputStream outputStream = tempLock.createBufferedOutputStream()) {
-					tempLock.lock();
-					final @NotNull byte[] data = new byte[bufferSize];
-					int count;
-					while ((count = inputStream.read(data, 0, bufferSize)) != -1) {
-						outputStream.write(data, 0, count);
-					}
-					outputStream.flush();
-				}
-			}
-		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while writing Data to '"
-										 + file.getAbsolutePath()
-										 + "'",
-										 e);
+	public boolean writeToFileIfCreated(final @NotNull File file,
+										final @Nullable BufferedInputStream inputStream,
+										final int bufferSize) {
+		if (!file.exists()) {
+			BaseFileUtils.writeToFile(file, inputStream, bufferSize);
+			return true;
+		} else {
+			return false;
 		}
 	}
 
