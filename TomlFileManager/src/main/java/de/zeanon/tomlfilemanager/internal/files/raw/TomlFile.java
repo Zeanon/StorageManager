@@ -71,7 +71,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 			throw new RuntimeIOException("Error while loading '"
 										 + this.file().getAbsolutePath()
 										 + "'",
-										 e.getCause());
+										 e);
 		}
 	}
 
@@ -81,7 +81,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 			//noinspection unchecked
 			Toml.write(this.fileData().dataMap(), this.file());
 		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -125,7 +125,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		try {
 			return Toml.read(this.file());
 		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
 		} catch (final @NotNull TomlException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}

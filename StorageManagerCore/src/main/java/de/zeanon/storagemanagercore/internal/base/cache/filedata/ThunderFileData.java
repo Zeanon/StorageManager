@@ -663,11 +663,9 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		@Override
 		public @Nullable
 		V setValue(final @Nullable V value) {
-			try {
-				return this.value;
-			} finally {
-				this.value = value;
-			}
+			final @Nullable V returnValue = this.value;
+			this.value = value;
+			return returnValue;
 		}
 
 

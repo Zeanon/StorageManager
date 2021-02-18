@@ -97,7 +97,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 			throw new RuntimeIOException("Error while loading '"
 										 + this.getAbsolutePath()
 										 + "'",
-										 e.getCause());
+										 e);
 		}
 	}
 
@@ -109,7 +109,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 			throw new RuntimeIOException("Error while writing to "
 										 + this.getAbsolutePath()
 										 + "'",
-										 e.getCause());
+										 e);
 		}
 	}
 
@@ -161,7 +161,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 		try {
 			return ThunderFileParser.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize);
 		} catch (final @NotNull RuntimeIOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e);
 		} catch (final @NotNull ThunderException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}

@@ -153,7 +153,7 @@ public class YamlFileParser {
 			throw new RuntimeIOException("Error while writing to "
 										 + file.getAbsolutePath()
 										 + "'",
-										 e.getCause());
+										 e);
 		}
 	}
 

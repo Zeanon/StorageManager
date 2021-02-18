@@ -86,7 +86,7 @@ public class YamlConfig extends YamlFile implements Config {
 				throw new RuntimeIOException("Error while getting header of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
-											 e.getCause());
+											 e);
 			}
 		}
 	}
@@ -119,7 +119,7 @@ public class YamlConfig extends YamlFile implements Config {
 					throw new RuntimeIOException("Error while setting header of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
-												 e.getCause());
+												 e);
 				}
 			} else {
 				try {
@@ -139,7 +139,7 @@ public class YamlConfig extends YamlFile implements Config {
 					throw new RuntimeIOException("Error while setting header of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
-												 e.getCause());
+												 e);
 				}
 			}
 		} else {
@@ -162,7 +162,7 @@ public class YamlConfig extends YamlFile implements Config {
 				throw new RuntimeIOException("Error while setting header of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
-											 e.getCause());
+											 e);
 			}
 		}
 	}
@@ -187,7 +187,7 @@ public class YamlConfig extends YamlFile implements Config {
 				throw new RuntimeIOException("Error while getting footer of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
-											 e.getCause());
+											 e);
 			}
 		}
 	}
@@ -220,7 +220,7 @@ public class YamlConfig extends YamlFile implements Config {
 					throw new RuntimeIOException("Error while setting footer of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
-												 e.getCause());
+												 e);
 				}
 			} else {
 				try {
@@ -240,7 +240,7 @@ public class YamlConfig extends YamlFile implements Config {
 					throw new RuntimeIOException("Error while setting footer of '"
 												 + this.file().getAbsolutePath()
 												 + "'",
-												 e.getCause());
+												 e);
 				}
 			}
 		} else {
@@ -263,7 +263,7 @@ public class YamlConfig extends YamlFile implements Config {
 				throw new RuntimeIOException("Error while setting footer of '"
 											 + this.file().getAbsolutePath()
 											 + "'",
-											 e.getCause());
+											 e);
 			}
 		}
 	}
@@ -288,7 +288,7 @@ public class YamlConfig extends YamlFile implements Config {
 				throw new RuntimeIOException("Error while getting comments from '"
 											 + this.file().getAbsolutePath()
 											 + "'",
-											 e.getCause());
+											 e);
 			}
 		}
 	}

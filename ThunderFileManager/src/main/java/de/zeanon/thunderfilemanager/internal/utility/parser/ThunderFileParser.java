@@ -74,11 +74,10 @@ public class ThunderFileParser {
 	 * @throws ThunderException    if the Content of the File can not be parsed properly
 	 * @throws ObjectNullException if a passed value is null
 	 */
-	public @NotNull
-	DataMap<String, Object> readData(final @NotNull File file,
-									 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
-									 final @NotNull CommentSetting commentSetting,
-									 final int buffer_size) throws ThunderException {
+	public @NotNull DataMap<String, Object> readData(final @NotNull File file,
+													 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
+													 final @NotNull CommentSetting commentSetting,
+													 final int buffer_size) throws ThunderException {
 		try {
 			if (commentSetting == Comment.PRESERVE) {
 				return ThunderFileParser.initialReadWithComments(file, collectionsProvider, buffer_size);
@@ -88,7 +87,7 @@ public class ThunderFileParser {
 				throw new IllegalArgumentException("Illegal CommentSetting");
 			}
 		} catch (ThunderParseException e) {
-			throw new ThunderException("Error at '" + file.getAbsolutePath() + "' - > " + e.getMessage(), e.getCause());
+			throw new ThunderException("Error at '" + file.getAbsolutePath() + "' - > " + e.getMessage(), e);
 		}
 	}
 
@@ -112,14 +111,14 @@ public class ThunderFileParser {
 				});
 				writer.flush();
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
+				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
 			}
 		} else {
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock()) {
 				tempLock.lock();
 				tempLock.truncateChannel(0);
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
+				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
 			}
 		}
 	}
@@ -223,14 +222,14 @@ public class ThunderFileParser {
 				});
 				writer.flush();
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
+				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
 			}
 		} else {
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock()) {
 				tempLock.lock();
 				tempLock.truncateChannel(0);
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e.getCause());
+				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
 			}
 		}
 	}
@@ -425,7 +424,7 @@ public class ThunderFileParser {
 		} catch (final @NotNull IndexOutOfBoundsException e) {
 			throw new ThunderParseException("Could not parse content", e);
 		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -515,7 +514,7 @@ public class ThunderFileParser {
 		} catch (final @NotNull IndexOutOfBoundsException e) {
 			throw new ThunderParseException("Could not parse content", e);
 		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e.getCause());
+			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
 		}
 	}
 

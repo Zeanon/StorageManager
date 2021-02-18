@@ -154,8 +154,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 */
 	@Override
 	@Contract("null -> fail")
-	public @Nullable
-	List<E> entryListUseArray(final @NotNull String... key) {
+	public @Nullable List<E> entryListUseArray(final @NotNull String... key) {
 		final @Nullable Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -174,8 +173,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 */
 	@Override
 	@Contract("null -> fail")
-	public @Nullable
-	List<E> blockEntryListUseArray(final @NotNull String... key) {
+	public @Nullable List<E> blockEntryListUseArray(final @NotNull String... key) {
 		final @Nullable Object tempObject = this.getUseArray(key);
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
@@ -408,8 +406,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 
 
 	// <Internal>
-	private @Nullable
-	Object internalGet(final @NotNull Map map, final @NotNull String[] key) { //NOSONAR
+	private @Nullable Object internalGet(final @NotNull Map map, final @NotNull String[] key) { //NOSONAR
 		@NotNull Object tempValue = map;
 		for (final String tempKey : key) {
 			if (tempValue instanceof Map) {
@@ -622,11 +619,9 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		@Override
 		public @Nullable
 		V setValue(final @Nullable V value) {
-			try {
-				return this.value;
-			} finally {
-				this.value = value;
-			}
+			final @Nullable V returnValue = this.value;
+			this.value = value;
+			return returnValue;
 		}
 
 

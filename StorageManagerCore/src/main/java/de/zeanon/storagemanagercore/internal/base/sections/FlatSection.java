@@ -61,8 +61,7 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	}
 
 	@Override
-	public @Nullable
-	Object get(final @NotNull String key) {
+	public @Nullable Object get(final @NotNull String key) {
 		return this.flatFile.get(this.getFinalKey(key));
 	}
 
@@ -130,8 +129,7 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	}
 
 	@Override
-	public @Nullable
-	Object getUseArray(final @NotNull String... key) {
+	public @Nullable Object getUseArray(final @NotNull String... key) {
 		return this.flatFile.getUseArray(this.getFinalArrayKey(key));
 	}
 

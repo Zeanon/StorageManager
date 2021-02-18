@@ -132,7 +132,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	@Override
 	public boolean remove(final @NotNull Object key, final @Nullable Object value) {
 		final @NotNull Iterator<DataNode<K, V>> tempIterator = this.localList.iterator();
-		DataNode<K, V> tempNode;
+		@NotNull DataNode<K, V> tempNode;
 		long lockStamp = this.localLock.readLock();
 		try {
 			while ((tempNode = tempIterator.next()) != null) {
@@ -328,8 +328,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	 * previously associated <tt>null</tt> with <tt>key</tt>.)
 	 */
 	@Override
-	public @Nullable
-	V put(final @NotNull K key, final @Nullable V value) {
+	public @Nullable V put(final @NotNull K key, final @Nullable V value) {
 		final long lockStamp = this.localLock.readLock();
 		try {
 			for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
@@ -412,8 +411,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	 * @see #put(Object, Object)
 	 */
 	@Override
-	public @Nullable
-	V get(final @NotNull Object key) {
+	public @Nullable V get(final @NotNull Object key) {
 		final long lockStamp = this.localLock.readLock();
 		try {
 			for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
@@ -438,8 +436,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	 * previously associated <tt>null</tt> with <tt>key</tt>.)
 	 */
 	@Override
-	public @Nullable
-	V remove(final @NotNull Object key) {
+	public @Nullable V remove(final @NotNull Object key) {
 		long lockStamp = this.localLock.readLock();
 		try {
 			final @NotNull Iterator<DataNode<K, V>> tempIterator = this.localList.iterator();
@@ -630,8 +627,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 		/**
 		 * The value assigned to this Node
 		 */
-		private @Nullable
-		V value;
+		private @Nullable V value;
 
 		/**
 		 * Replaces the key corresponding to this entry with the specified
@@ -654,9 +650,9 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 		public @NotNull K setKey(final @NotNull K key) {
 			final long lockStamp = this.localLock.writeLock();
 			try {
-				K tempKey = this.key;
+				final @NotNull K returnKey = this.key;
 				this.key = key;
-				return tempKey;
+				return returnKey;
 			} finally {
 				this.localLock.unlockWrite(lockStamp);
 			}
@@ -682,13 +678,12 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 		 *                                       prevents it from being stored in the backing map
 		 */
 		@Override
-		public @Nullable
-		V setValue(final @Nullable V value) {
+		public @Nullable V setValue(final @Nullable V value) {
 			final long lockStamp = this.localLock.writeLock();
 			try {
-				V tempValue = this.value;
+				final @NotNull V returnValue = this.value;
 				this.value = value;
-				return tempValue;
+				return returnValue;
 			} finally {
 				this.localLock.unlockWrite(lockStamp);
 			}
@@ -727,8 +722,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 		 *                               removed from the backing map.
 		 */
 		@Override
-		public @Nullable
-		V getValue() {
+		public @Nullable V getValue() {
 			final long lockStamp = this.localLock.readLock();
 			try {
 				return this.value;

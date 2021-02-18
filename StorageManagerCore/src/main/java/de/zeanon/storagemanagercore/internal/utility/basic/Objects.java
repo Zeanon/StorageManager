@@ -252,8 +252,7 @@ public class Objects {
 	 * @return the given Object parsed to a String or null if the Object is null
 	 */
 	@Contract("null -> null; !null -> !null")
-	public @Nullable
-	String toString(final @Nullable Object object) {
+	public @Nullable String toString(final @Nullable Object object) {
 		if (object == null) {
 			return null;
 		} else if (object instanceof String) {

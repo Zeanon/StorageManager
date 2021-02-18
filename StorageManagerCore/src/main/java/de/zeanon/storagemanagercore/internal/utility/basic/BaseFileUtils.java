@@ -875,7 +875,7 @@ public class BaseFileUtils {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + file.getAbsolutePath()
 											 + "'",
-											 e.getCause());
+											 e);
 			}
 		}
 	}
@@ -898,7 +898,7 @@ public class BaseFileUtils {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + name
 											 + "'",
-											 e.getCause());
+											 e);
 			}
 		}
 	}
@@ -921,7 +921,7 @@ public class BaseFileUtils {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + file.toAbsolutePath()
 											 + "'",
-											 e.getCause());
+											 e);
 			}
 		}
 	}
@@ -945,7 +945,7 @@ public class BaseFileUtils {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + (directory == null ? name : directory + "/" + name)
 											 + "'",
-											 e.getCause());
+											 e);
 			}
 		}
 	}
@@ -969,7 +969,7 @@ public class BaseFileUtils {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + (directory == null ? name : directory.getAbsolutePath() + "/" + name)
 											 + "'",
-											 e.getCause());
+											 e);
 			}
 		}
 	}
@@ -993,7 +993,7 @@ public class BaseFileUtils {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + (directory == null ? name : directory.toAbsolutePath() + "/" + name)
 											 + "'",
-											 e.getCause());
+											 e);
 			}
 		}
 	}
@@ -1019,7 +1019,7 @@ public class BaseFileUtils {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + resource
 											 + "'",
-											 e.getCause());
+											 e);
 			}
 		}
 	}
@@ -1042,7 +1042,7 @@ public class BaseFileUtils {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + url
 											 + "'",
-											 e.getCause());
+											 e);
 			}
 		}
 	}
@@ -1065,7 +1065,7 @@ public class BaseFileUtils {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + url
 											 + "'",
-											 e.getCause());
+											 e);
 			}
 		}
 	}
@@ -1138,7 +1138,7 @@ public class BaseFileUtils {
 											 + "'"
 											 + System.lineSeparator()
 											 + e.getMessage(),
-											 e.getCause());
+											 e);
 			}
 		} else {
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
@@ -1156,7 +1156,7 @@ public class BaseFileUtils {
 											 + "'"
 											 + System.lineSeparator()
 											 + e.getMessage(),
-											 e.getCause());
+											 e);
 			}
 		}
 	}
@@ -1310,7 +1310,7 @@ public class BaseFileUtils {
 											 + "'"
 											 + System.lineSeparator()
 											 + e.getMessage(),
-											 e.getCause());
+											 e);
 			}
 		} else if (file != null && !file.exists() && isDirectory) {
 			return file.mkdirs();

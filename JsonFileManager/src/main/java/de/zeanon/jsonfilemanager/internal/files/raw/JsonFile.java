@@ -78,7 +78,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 			throw new RuntimeIOException("Error while loading '"
 										 + this.getAbsolutePath()
 										 + "'",
-										 e.getCause());
+										 e);
 		}
 	}
 
@@ -215,7 +215,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 			throw new RuntimeIOException("Error while loading '"
 										 + this.getAbsolutePath()
 										 + "'",
-										 e.getCause());
+										 e);
 		}
 	}
 
@@ -231,15 +231,13 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull
-		String toLowerCase() {
+		public @NotNull String toLowerCase() {
 			return this.extension.toLowerCase();
 		}
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull
-		String toString() {
+		public @NotNull String toString() {
 			return this.extension;
 		}
 	}

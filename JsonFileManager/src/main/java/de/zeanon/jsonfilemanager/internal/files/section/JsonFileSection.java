@@ -38,14 +38,12 @@ public class JsonFileSection extends FlatSection<JsonFile, Map, List> { //NOSONA
 
 
 	@Override
-	public @NotNull
-	JsonFileSection getSection(final @NotNull String sectionKey) {
+	public @NotNull JsonFileSection getSection(final @NotNull String sectionKey) {
 		return new JsonFileSection(this.getFinalKey(sectionKey), this.baseFile);
 	}
 
 	@Override
-	public @NotNull
-	JsonFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+	public @NotNull JsonFileSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new JsonFileSection(this.getFinalArrayKey(sectionKey), this.baseFile);
 	}
 }

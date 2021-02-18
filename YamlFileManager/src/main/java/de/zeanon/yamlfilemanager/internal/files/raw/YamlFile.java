@@ -77,7 +77,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 			throw new RuntimeIOException("Error while loading '"
 										 + this.file().getAbsolutePath()
 										 + "'",
-										 e.getCause());
+										 e);
 		}
 	}
 
@@ -89,7 +89,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 			throw new RuntimeIOException("Error while writing to "
 										 + this.getAbsolutePath()
 										 + "'",
-										 e.getCause());
+										 e);
 		}
 	}
 

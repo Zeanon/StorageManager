@@ -379,9 +379,9 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		 */
 		@Override
 		public @NotNull K setKey(final @NotNull K key) {
-			K tempKey = this.key;
+			final @NotNull K returnKey = this.key;
 			this.key = key;
-			return tempKey;
+			return returnKey;
 		}
 
 		/**
@@ -406,9 +406,9 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		@Override
 		public @Nullable
 		V setValue(final @Nullable V value) {
-			V tempValue = this.value;
+			final @Nullable V returnValue = this.value;
 			this.value = value;
-			return tempValue;
+			return returnValue;
 		}
 
 

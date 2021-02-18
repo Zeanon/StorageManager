@@ -243,7 +243,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 									  + "'"
 									  + System.lineSeparator()
 									  + e.getMessage(),
-									  e.getCause());
+									  e);
 			}
 		}
 
@@ -290,7 +290,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 							this.lockHoldCount.set(1);
 							return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, true);
 						} catch (final @NotNull IOException e) {
-							throw new RuntimeIOException(e.getMessage(), e.getCause());
+							throw new RuntimeIOException(e.getMessage(), e);
 						}
 					});
 				} catch (final @NotNull InterruptedException e) {
@@ -317,7 +317,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 									this.lockHoldCount.set(1);
 									return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, true);
 								} catch (final @NotNull IOException e) {
-									throw new RuntimeIOException(e.getMessage(), e.getCause());
+									throw new RuntimeIOException(e.getMessage(), e);
 								}
 							});
 							return true;
@@ -342,7 +342,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 						}
 						return null;
 					} catch (final @NotNull IOException e) {
-						throw new RuntimeIOException(e.getMessage(), e.getCause());
+						throw new RuntimeIOException(e.getMessage(), e);
 					}
 				} else {
 					return current;
@@ -400,7 +400,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 					this.currentWritingThread.set(Thread.currentThread().getId());
 					return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, false);
 				} catch (final @NotNull IOException e) {
-					throw new RuntimeIOException(e.getMessage(), e.getCause());
+					throw new RuntimeIOException(e.getMessage(), e);
 				}
 			});
 		}
@@ -418,7 +418,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 						this.currentWritingThread.set(-1);
 						return null;
 					} catch (final @NotNull IOException e) {
-						throw new RuntimeIOException(e.getMessage(), e.getCause());
+						throw new RuntimeIOException(e.getMessage(), e);
 					}
 				} else {
 					return current;
@@ -458,7 +458,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 						this.currentWritingThread.set(-1);
 						return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, true);
 					} catch (final @NotNull IOException e) {
-						throw new RuntimeIOException(e.getMessage(), e.getCause());
+						throw new RuntimeIOException(e.getMessage(), e);
 					}
 				} else {
 					throw new IllegalMonitorStateException("Lock could not be converted, lock ist still being held");
@@ -482,7 +482,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 						this.currentWritingThread.set(Thread.currentThread().getId());
 						return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, false);
 					} catch (final @NotNull IOException e) {
-						throw new RuntimeIOException(e.getMessage(), e.getCause());
+						throw new RuntimeIOException(e.getMessage(), e);
 					} catch (final @NotNull InterruptedException e) { //NOSONAR
 						throw new RuntimeInterruptedException(e.getMessage());
 					}
@@ -536,7 +536,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 					this.writeLockActive.set(false);
 					this.currentWritingThread.set(-1);
 				} catch (final @NotNull IOException e) {
-					throw new RuntimeIOException(e.getMessage(), e.getCause());
+					throw new RuntimeIOException(e.getMessage(), e);
 				}
 			} else {
 				try {
@@ -544,7 +544,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 						tempLock.release();
 					}
 				} catch (final @NotNull IOException e) {
-					throw new RuntimeIOException(e.getMessage(), e.getCause());
+					throw new RuntimeIOException(e.getMessage(), e);
 				}
 			}
 		}

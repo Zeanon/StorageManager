@@ -86,8 +86,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	public @Nullable
-	List<String> getHeader(final @NotNull String key) {
+	public @Nullable List<String> getHeader(final @NotNull String key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
@@ -98,8 +97,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 		}
 	}
 
-	public @Nullable
-	List<String> getHeaderUseArray(final @NotNull String... key) {
+	public @Nullable List<String> getHeaderUseArray(final @NotNull String... key) {
 		this.update();
 
 		if (this.getCommentSetting() == Comment.PRESERVE) {
