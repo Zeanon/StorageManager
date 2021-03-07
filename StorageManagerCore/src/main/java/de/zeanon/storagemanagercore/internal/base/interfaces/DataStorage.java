@@ -2,10 +2,10 @@ package de.zeanon.storagemanagercore.internal.base.interfaces;
 
 import de.zeanon.storagemanagercore.internal.base.sections.FlatSection;
 import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
+import de.zeanon.storagemanagercore.internal.utility.basic.Pair;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +26,8 @@ public interface DataStorage {
 	 *
 	 * @return Object from File
 	 */
-	@Nullable Object get(final @NotNull String key);
+	@Nullable
+	Object get(final @NotNull String key);
 
 	/**
 	 * Get an Object from a File
@@ -35,7 +36,8 @@ public interface DataStorage {
 	 *
 	 * @return Object from File
 	 */
-	@Nullable Object getUseArray(final @NotNull String... key);
+	@Nullable
+	Object getUseArray(final @NotNull String... key);
 
 	/**
 	 * Get an Object from the File casted to a certain type
@@ -68,7 +70,8 @@ public interface DataStorage {
 	 *
 	 * @return Returns the value
 	 */
-	default @Nullable String getString(final @NotNull String key) {
+	default @Nullable
+	String getString(final @NotNull String key) {
 		return Objects.toString(this.get(key));
 	}
 
@@ -79,7 +82,8 @@ public interface DataStorage {
 	 *
 	 * @return Returns the value
 	 */
-	default @Nullable String getStringUseArray(final @NotNull String... key) {
+	default @Nullable
+	String getStringUseArray(final @NotNull String... key) {
 		return Objects.toString(this.getUseArray(key));
 	}
 
@@ -647,7 +651,8 @@ public interface DataStorage {
 	 *
 	 * @return the Section corresponding to the given key
 	 */
-	@NotNull FlatSection getSection(final @NotNull String sectionKey); //NOSONAR
+	@NotNull
+	FlatSection getSection(final @NotNull String sectionKey); //NOSONAR
 
 	/**
 	 * Get a Section of the DataStorage
@@ -656,5 +661,6 @@ public interface DataStorage {
 	 *
 	 * @return the Section corresponding to the given key
 	 */
-	@NotNull FlatSection getSectionUseArray(final @NotNull String... sectionKey); //NOSONAR
+	@NotNull
+	FlatSection getSectionUseArray(final @NotNull String... sectionKey); //NOSONAR
 }
