@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 @Getter
@@ -16,7 +17,7 @@ public class Pair<K, V> {
 	private V value;
 
 
-	public Pair(final @NotNull K key, final @NotNull V value) {
+	public Pair(final @NotNull K key, final @Nullable V value) {
 		this.key = key;
 		this.value = value;
 	}
