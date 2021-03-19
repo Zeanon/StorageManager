@@ -33,7 +33,7 @@ class TestParser {
 			e.printStackTrace();
 		}
 
-		Assertions.assertAll("Lock-Results",
+		Assertions.assertAll("Parse-Results",
 							 () -> Assertions.assertTrue(result[0]),
 							 () -> Assertions.assertTrue(result[1]));
 	}
