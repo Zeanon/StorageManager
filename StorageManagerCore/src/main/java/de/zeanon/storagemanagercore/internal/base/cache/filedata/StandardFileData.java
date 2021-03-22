@@ -506,7 +506,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 										final @NotNull String[] key,
 										final int keyIndex) {
 		if (keyIndex < key.length - 1) {
-			final Object tempValue = map.get(key[keyIndex]);
+			final @Nullable Object tempValue = map.get(key[keyIndex]);
 			if (tempValue instanceof Map) {
 				//noinspection unchecked
 				return this.internalContainsKey((Map) tempValue, key, keyIndex + 1);

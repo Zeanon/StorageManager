@@ -505,7 +505,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 			if (tempValue instanceof DataMap) {
 				return this.internalContainsKey((DataMap) tempValue, key, keyIndex + 1);
 			} else {
-				throw new ObjectNullException("File does not contain '" + Arrays.toString(key) + "' -> could not find '" + key[keyIndex] + "'");
+				return false;
 			}
 		} else {
 			return map.containsKey(key[keyIndex]);
