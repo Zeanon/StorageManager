@@ -45,29 +45,11 @@
                 <version>1.8</version>
                 <executions>
                     <execution>
-                        <id>moveFilesToSchemManager</id>
+                        <id>moveFilesToTarget</id>
                         <phase>verify</phase>
                         <configuration>
-                            <target if="maven.copy.schemmanager">
-                                <copy todir="${basedir}/../../SchemManager/src/main/resources/dependencies"
-                                      flatten="true" overwrite="true"
-                                      verbose="true" failonerror="true">
-                                    <fileset dir="${basedir}/target"
-                                             includes="${project.build.finalName}.jar"/>
-                                </copy>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-
-                    <execution>
-                        <id>moveFilesToBattleArena</id>
-                        <phase>verify</phase>
-                        <configuration>
-                            <target if="maven.copy.battlearena">
-                                <copy todir="${basedir}/../../BattleArena/src/main/resources/dependencies"
+                            <target>
+                                <copy todir="${basedir}/../Z_target_Z"
                                       flatten="true" overwrite="true"
                                       verbose="true" failonerror="true">
                                     <fileset dir="${basedir}/target"
@@ -99,11 +81,29 @@
                     </execution>
 
                     <execution>
-                        <id>moveFilesToTarget</id>
+                        <id>moveFilesToSchemManager</id>
                         <phase>verify</phase>
                         <configuration>
-                            <target>
-                                <copy todir="${basedir}/../Z_target_Z"
+                            <target if="maven.copy.schemmanager">
+                                <copy todir="${basedir}/../../SchemManager/src/main/resources/dependencies"
+                                      flatten="true" overwrite="true"
+                                      verbose="true" failonerror="true">
+                                    <fileset dir="${basedir}/target"
+                                             includes="${project.build.finalName}.jar"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>moveFilesToBattleArena</id>
+                        <phase>verify</phase>
+                        <configuration>
+                            <target if="maven.copy.battlearena">
+                                <copy todir="${basedir}/../../BattleArena/src/main/resources/dependencies"
                                       flatten="true" overwrite="true"
                                       verbose="true" failonerror="true">
                                     <fileset dir="${basedir}/target"

@@ -352,6 +352,17 @@ public class BaseFileUtils {
 	 * List all Files in a given directory
 	 *
 	 * @param directory the directory to look into
+	 *
+	 * @return the files of the given directory
+	 */
+	public @NotNull List<File> listFiles(final @NotNull File directory, final boolean deep) throws IOException {
+		return BaseFileUtils.searchFiles(directory, deep, null, false);
+	}
+
+	/**
+	 * List all Files in a given directory
+	 *
+	 * @param directory the directory to look into
 	 * @param sequence  the String the filename has to contain (case insensitive)
 	 *
 	 * @return the files of the given directory

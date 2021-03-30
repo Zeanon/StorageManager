@@ -84,6 +84,24 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
+
+                    <execution>
+                        <id>moveFilesToTestUtils</id>
+                        <phase>verify</phase>
+                        <configuration>
+                            <target if="maven.copy.testutils">
+                                <copy todir="${basedir}/../../TestUtils/src/main/resources/dependencies"
+                                      flatten="true" overwrite="true"
+                                      verbose="true" failonerror="true">
+                                    <fileset dir="${basedir}/target"
+                                             includes="${project.build.finalName}.jar"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

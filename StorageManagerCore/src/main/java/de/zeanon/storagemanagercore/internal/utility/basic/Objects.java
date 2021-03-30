@@ -45,6 +45,43 @@ public class Objects {
 	 * Get an Object of the given Class Type
 	 *
 	 * @param object the Object to be casted
+	 * @param <T>    the Type of def
+	 *
+	 * @return the passed Object casted to the given Type
+	 *
+	 * @throws ObjectNullException if a passed value is null
+	 */
+	@SuppressWarnings("unchecked")
+	@Contract("null -> null")
+	public @Nullable <T> T toDef(final @Nullable Object object) {
+		if (object == null) {
+			return null;
+		} else {
+			Class<T> def = (Class<T>) ((T) new Object()).getClass();
+			if (def == Integer.class) {
+				return (T) (Object) Objects.toInt(object);
+			} else if (def == Long.class) {
+				return (T) (Object) Objects.toLong(object);
+			} else if (def == Double.class) {
+				return (T) (Object) Objects.toDouble(object);
+			} else if (def == Float.class) {
+				return (T) (Object) Objects.toFloat(object);
+			} else if (def == Short.class) {
+				return (T) (Object) Objects.toShort(object);
+			} else if (def == Boolean.class) {
+				return (T) (Object) Objects.toBoolean(object);
+			} else if (def == String.class) {
+				return (T) Objects.toString(object);
+			} else {
+				return (T) object;
+			}
+		}
+	}
+
+	/**
+	 * Get an Object of the given Class Type
+	 *
+	 * @param object the Object to be casted
 	 * @param def    the Class to be casted to
 	 * @param <T>    the Type of def
 	 *
