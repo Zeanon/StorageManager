@@ -904,7 +904,7 @@ public class BaseFileUtils {
 			return null;
 		} else {
 			try {
-				return new BufferedInputStream(new FileInputStream(new File(name)));
+				return new BufferedInputStream(new FileInputStream(name));
 			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + name
@@ -951,7 +951,7 @@ public class BaseFileUtils {
 			return null;
 		} else {
 			try {
-				return new BufferedInputStream(directory == null ? new FileInputStream(new File(name)) : new FileInputStream(new File(directory, name)));
+				return new BufferedInputStream(directory == null ? new FileInputStream(name) : new FileInputStream(new File(directory, name)));
 			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + (directory == null ? name : directory + "/" + name)
@@ -975,7 +975,7 @@ public class BaseFileUtils {
 			return null;
 		} else {
 			try {
-				return new BufferedInputStream(directory == null ? new FileInputStream(new File(name)) : new FileInputStream(new File(directory, name)));
+				return new BufferedInputStream(directory == null ? new FileInputStream(name) : new FileInputStream(new File(directory, name)));
 			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + (directory == null ? name : directory.getAbsolutePath() + "/" + name)
@@ -999,7 +999,7 @@ public class BaseFileUtils {
 			return null;
 		} else {
 			try {
-				return new BufferedInputStream(directory == null ? new FileInputStream(new File(name)) : new FileInputStream(new File(directory.toFile(), name)));
+				return new BufferedInputStream(directory == null ? new FileInputStream(name) : new FileInputStream(new File(directory.toFile(), name)));
 			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + (directory == null ? name : directory.toAbsolutePath() + "/" + name)

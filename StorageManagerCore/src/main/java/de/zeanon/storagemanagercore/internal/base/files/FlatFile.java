@@ -117,8 +117,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * Just delete the File
 	 */
 	public void deleteFile() {
-		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(this.file()).writeLock()) {
-			tempLock.lock();
+		try {
 			Files.delete(this.file().toPath());
 		} catch (final @NotNull IOException e) {
 			throw new RuntimeIOException("Could not delete '"

@@ -7,7 +7,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.charset.CharsetEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -100,7 +99,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 	@Contract("-> new")
 	public @NotNull Writer createWriter() {
-		return Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), StandardCharsets.UTF_8);
+		return Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), "UTF-8");
 	}
 
 	public @NotNull Writer createWriter(final @NotNull String csName) {
@@ -114,12 +113,12 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 	@Contract("-> new")
 	public @NotNull PrintWriter createPrintWriter() {
-		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), StandardCharsets.UTF_8));
+		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), "UTF-8"));
 	}
 
 	@Contract("_ -> new")
 	public @NotNull PrintWriter createPrintWriter(final boolean autoFlush) {
-		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), StandardCharsets.UTF_8), autoFlush);
+		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), "UTF-8"), autoFlush);
 	}
 
 	public @NotNull PrintWriter createPrintWriter(final @NotNull String csName) {
@@ -133,7 +132,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 	@Contract("-> new")
 	public @NotNull Reader createReader() {
-		return Channels.newReader(this.readWriteLockableChannel.getFileChannel(), StandardCharsets.UTF_8);
+		return Channels.newReader(this.readWriteLockableChannel.getFileChannel(), "UTF-8");
 	}
 
 	public @NotNull Reader createReader(final @NotNull String csName) {
@@ -142,7 +141,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 	@Contract("-> new")
 	public @NotNull BufferedReader createBufferedReader() {
-		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), StandardCharsets.UTF_8));
+		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), "UTF-8"));
 	}
 
 	public @NotNull BufferedReader createBufferedReader(final @NotNull String csName) {
@@ -151,7 +150,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 	@Contract("_ -> new")
 	public @NotNull BufferedReader createBufferedReader(final int buffer_size) {
-		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), StandardCharsets.UTF_8), buffer_size);
+		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), "UTF-8"), buffer_size);
 	}
 
 	public @NotNull BufferedReader createBufferedReader(final @NotNull String csName,
@@ -261,6 +260,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 			}
 		}
 
+
 		@Contract(pure = true)
 		private @NotNull RandomAccessFile getRandomAccessFile() {
 			return this.localRandomAccessFile;
@@ -335,7 +335,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		private void unlockRead() {
 			this.fileLock.updateAndGet(current -> {
 				if (this.lockHoldCount.intValue() == 0 || this.fileLock.get() == null || this.writeLockActive.get()) {
-					throw new IllegalMonitorStateException("Lock ist not held");
+					throw new IllegalMonitorStateException("Lock is not held");
 				} else if (this.lockHoldCount.decrementAndGet() == 0) {
 					try {
 						if (current != null && current.isValid()) {
@@ -409,7 +409,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		private void unlockWrite() {
 			this.fileLock.updateAndGet(current -> {
 				if (this.lockHoldCount.intValue() == 0 || this.fileLock.get() == null || !this.writeLockActive.get()) {
-					throw new IllegalMonitorStateException("Lock ist not held");
+					throw new IllegalMonitorStateException("Lock is not held");
 				} else if (this.lockHoldCount.decrementAndGet() == 0) {
 					try {
 						if (current != null && current.isValid()) {
@@ -449,7 +449,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		private void writeToRead() {
 			this.fileLock.updateAndGet(current -> {
 				if (this.lockHoldCount.intValue() == 0 || this.fileLock.get() == null) {
-					throw new IllegalMonitorStateException("Lock ist not held");
+					throw new IllegalMonitorStateException("Lock is not held");
 				} else if (this.lockHoldCount.intValue() == 1) {
 					try {
 						if (current != null && current.isValid()) {
@@ -462,7 +462,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 						throw new RuntimeIOException(e.getMessage(), e);
 					}
 				} else {
-					throw new IllegalMonitorStateException("Lock could not be converted, lock ist still being held");
+					throw new IllegalMonitorStateException("Lock could not be converted, lock is still being held");
 				}
 			});
 		}
@@ -470,7 +470,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		private void readToWrite() {
 			this.fileLock.updateAndGet(current -> {
 				if (this.lockHoldCount.intValue() == 0 || this.fileLock.get() == null) {
-					throw new IllegalMonitorStateException("Lock ist not held");
+					throw new IllegalMonitorStateException("Lock is not held");
 				} else if (this.lockHoldCount.intValue() > 0 && this.fileLock.get() != null) {
 					try {
 						while (this.lockHoldCount.intValue() > 1) {
@@ -518,7 +518,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		private void unlock() {
 			this.fileLock.updateAndGet(current -> {
 				if (this.lockHoldCount.intValue() == 0 || this.fileLock.get() == null) {
-					throw new IllegalMonitorStateException("Lock ist not held");
+					throw new IllegalMonitorStateException("Lock is not held");
 				} else if (this.lockHoldCount.decrementAndGet() == 0) {
 					this.internalUnlock(current);
 					return null;

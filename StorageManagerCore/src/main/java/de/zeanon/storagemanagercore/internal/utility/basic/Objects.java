@@ -57,6 +57,7 @@ public class Objects {
 		if (object == null) {
 			return null;
 		} else {
+			//noinspection RedundantCast
 			Class<T> def = (Class<T>) ((T) new Object()).getClass();
 			if (def == Integer.class) {
 				return (T) (Object) Objects.toInt(object);

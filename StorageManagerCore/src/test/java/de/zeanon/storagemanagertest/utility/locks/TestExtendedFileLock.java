@@ -36,7 +36,7 @@ class TestExtendedFileLock {
 	void locking() throws IOException {
 		BaseFileUtils.createFile(new File("src/test/resources/testresults/extendedfilelock", "test.tf"));
 
-		final @NotNull boolean[] result = new boolean[3];
+		final boolean[] result = new boolean[3];
 
 		final @NotNull ExtendedFileLock test1 = new ExtendedFileLock(new File("src/test/resources/testresults/extendedfilelock", "test.tf"));
 
