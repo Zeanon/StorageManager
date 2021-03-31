@@ -7,6 +7,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -99,7 +100,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 	@Contract("-> new")
 	public @NotNull Writer createWriter() {
-		return Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), "UTF-8");
+		return Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), StandardCharsets.UTF_8);
 	}
 
 	public @NotNull Writer createWriter(final @NotNull String csName) {
@@ -113,12 +114,12 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 	@Contract("-> new")
 	public @NotNull PrintWriter createPrintWriter() {
-		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), "UTF-8"));
+		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), StandardCharsets.UTF_8));
 	}
 
 	@Contract("_ -> new")
 	public @NotNull PrintWriter createPrintWriter(final boolean autoFlush) {
-		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), "UTF-8"), autoFlush);
+		return new PrintWriter(Channels.newWriter(this.readWriteLockableChannel.getFileChannel(), StandardCharsets.UTF_8), autoFlush);
 	}
 
 	public @NotNull PrintWriter createPrintWriter(final @NotNull String csName) {
@@ -132,7 +133,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 	@Contract("-> new")
 	public @NotNull Reader createReader() {
-		return Channels.newReader(this.readWriteLockableChannel.getFileChannel(), "UTF-8");
+		return Channels.newReader(this.readWriteLockableChannel.getFileChannel(), StandardCharsets.UTF_8);
 	}
 
 	public @NotNull Reader createReader(final @NotNull String csName) {
@@ -141,7 +142,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 	@Contract("-> new")
 	public @NotNull BufferedReader createBufferedReader() {
-		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), "UTF-8"));
+		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), StandardCharsets.UTF_8));
 	}
 
 	public @NotNull BufferedReader createBufferedReader(final @NotNull String csName) {
@@ -150,7 +151,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 	@Contract("_ -> new")
 	public @NotNull BufferedReader createBufferedReader(final int buffer_size) {
-		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), "UTF-8"), buffer_size);
+		return new BufferedReader(Channels.newReader(this.readWriteLockableChannel.getFileChannel(), StandardCharsets.UTF_8), buffer_size);
 	}
 
 	public @NotNull BufferedReader createBufferedReader(final @NotNull String csName,

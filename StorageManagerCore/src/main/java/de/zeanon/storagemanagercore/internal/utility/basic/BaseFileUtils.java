@@ -1156,7 +1156,7 @@ public class BaseFileUtils {
 				 final @NotNull BufferedOutputStream outputStream = tempLock.createBufferedOutputStream()) {
 				tempLock.lock();
 				tempLock.truncateChannel(0);
-				final @NotNull byte[] data = new byte[bufferSize];
+				final byte[] data = new byte[bufferSize];
 				int count;
 				while ((count = inputStream.read(data, 0, bufferSize)) != -1) {
 					outputStream.write(data, 0, count);
