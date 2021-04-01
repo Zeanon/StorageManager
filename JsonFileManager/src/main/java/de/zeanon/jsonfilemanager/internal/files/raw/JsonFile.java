@@ -206,8 +206,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 
 	@Override
-	protected @NotNull
-	Map readFile() {
+	protected @NotNull Map readFile() {
 		try {
 			return new JSONObject(new JSONTokener(
 					BaseFileUtils.createNewInputStreamFromFile(this.file()))).toMap();

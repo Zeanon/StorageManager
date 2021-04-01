@@ -498,11 +498,37 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @param value the value you want to set in your File
 	 */
 	@Override
+	public void setWithoutCheck(final @NotNull String key,
+								final @Nullable Object value) {
+		this.insertWithoutCheck(key, value);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Assign the given value to the given key
+	 *
+	 * @param key   the key your value should be associated with
+	 * @param value the value you want to set in your File
+	 */
+	@Override
 	public void setUseArray(final @NotNull String[] key,
 							final @Nullable Object value) {
 		if (this.insertUseArray(key, value)) {
 			this.save();
 		}
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Assign the given value to the given key
+	 *
+	 * @param key   the key your value should be associated with
+	 * @param value the value you want to set in your File
+	 */
+	@Override
+	public void setWithoutCheckUseArray(final @NotNull String[] key,
+										final @Nullable Object value) {
+		this.insertUseArrayWithoutCheck(key, value);
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
@@ -783,18 +809,38 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 						   final @Nullable Object value) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData().toString();
+		final @Nullable Object currentValue = this.fileData.get(key);
+		if ((currentValue == null && value != null) || (currentValue != null && !currentValue.equals(value))) {
+			this.fileData().insert(key, value);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private void insertWithoutCheck(final @NotNull String key,
+									final @Nullable Object value) {
+		this.update();
 		this.fileData().insert(key, value);
-		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean insertUseArray(final @NotNull String[] key,
 								   final @Nullable Object value) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData().toString();
+		final @Nullable Object currentValue = this.fileData.getUseArray(key);
+		if ((currentValue == null && value != null) || (currentValue != null && !currentValue.equals(value))) {
+			this.fileData().insertUseArray(key, value);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private void insertUseArrayWithoutCheck(final @NotNull String[] key,
+											final @Nullable Object value) {
+		this.update();
 		this.fileData().insertUseArray(key, value);
-		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean insertAll(final @NotNull Map<String, Object> map) {

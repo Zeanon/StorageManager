@@ -502,7 +502,23 @@ public interface DataStorage {
 	 * @param key   the key your value should be associated with
 	 * @param value the value you want to set in your File
 	 */
+	void setWithoutCheck(final @NotNull String key, final @Nullable Object value);
+
+	/**
+	 * Set an Object to your File
+	 *
+	 * @param key   the key your value should be associated with
+	 * @param value the value you want to set in your File
+	 */
 	void setUseArray(final @NotNull String[] key, final @Nullable Object value);
+
+	/**
+	 * Set an Object to your File
+	 *
+	 * @param key   the key your value should be associated with
+	 * @param value the value you want to set in your File
+	 */
+	void setWithoutCheckUseArray(final @NotNull String[] key, final @Nullable Object value);
 
 	/**
 	 * Set several key, value pairs
