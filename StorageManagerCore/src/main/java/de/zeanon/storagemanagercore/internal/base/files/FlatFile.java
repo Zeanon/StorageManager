@@ -828,7 +828,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 								   final @Nullable Object value) {
 		this.update();
 
-		final @Nullable Object currentValue = this.fileData.getUseArray(key);
+		final @Nullable Object currentValue = this.fileData().getUseArray(key);
 		if ((currentValue == null && value != null) || (currentValue != null && !currentValue.equals(value))) {
 			this.fileData().insertUseArray(key, value);
 			return true;
