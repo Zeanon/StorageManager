@@ -48,6 +48,22 @@ public class BaseFileUtils {
 		return timeStamp < file.lastModified();
 	}
 
+	public boolean isChildOf(final @NotNull File child, final @NotNull File source) throws IOException {
+		return child.toPath().toRealPath().startsWith(source.toPath().toRealPath());
+	}
+
+	public boolean isChildOf(final @NotNull File child, final @NotNull Path source) throws IOException {
+		return child.toPath().toRealPath().startsWith(source.toRealPath());
+	}
+
+	public boolean isChildOf(final @NotNull Path child, final @NotNull File source) throws IOException {
+		return child.toRealPath().startsWith(source.toPath().toRealPath());
+	}
+
+	public boolean isChildOf(final @NotNull Path child, final @NotNull Path source) throws IOException {
+		return child.toRealPath().startsWith(source.toRealPath());
+	}
+
 	/**
 	 * Creates a given File and, if not existent, it's parents
 	 *

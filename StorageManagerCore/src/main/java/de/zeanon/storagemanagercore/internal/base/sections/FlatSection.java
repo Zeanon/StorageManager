@@ -86,6 +86,26 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	}
 
 	@Override
+	public void setAllWithoutCheck(final @NotNull Map<String, Object> dataMap) {
+		this.flatFile.setAllWithoutCheck(this.getSectionKey(), dataMap);
+	}
+
+	@Override
+	public void setAllWithoutCheck(final @NotNull String blockKey, final @NotNull Map<String, Object> dataMap) {
+		this.flatFile.setAllWithoutCheck(this.getFinalKey(blockKey), dataMap);
+	}
+
+	@Override
+	public void setAllWithoutCheck(final @NotNull Pair<String, Object>... dataPairs) {
+		this.flatFile.setAllWithoutCheck(this.getSectionKey(), dataPairs);
+	}
+
+	@Override
+	public void setAllWithoutCheck(final @NotNull String blockKey, final @NotNull Pair<String, Object>... dataPair) {
+		this.flatFile.setAllWithoutCheck(this.getFinalKey(blockKey), dataPair);
+	}
+
+	@Override
 	public void setAll(final @NotNull Map<String, Object> dataMap) {
 		this.flatFile.setAll(this.getSectionKey(), dataMap);
 	}
@@ -117,9 +137,18 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 		this.flatFile.remove(this.getSectionKey());
 	}
 
+	public void removeWithoutCheck() {
+		this.flatFile.removeWithoutCheck(this.getSectionKey());
+	}
+
 	@Override
 	public void remove(final @NotNull String key) {
 		this.flatFile.remove(this.getFinalKey(key));
+	}
+
+	@Override
+	public void removeWithoutCheck(final @NotNull String key) {
+		this.flatFile.removeWithoutCheck(this.getFinalKey(key));
 	}
 
 	@Override
@@ -130,6 +159,16 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	@Override
 	public void removeAll(final @NotNull String blockKey, final @NotNull String... keys) {
 		this.flatFile.removeAll(this.getFinalKey(blockKey), keys);
+	}
+
+	@Override
+	public void removeAllWithoutCheck(final @NotNull String... keys) {
+		this.flatFile.removeAllWithoutCheck(this.getSectionKey(), keys);
+	}
+
+	@Override
+	public void removeAllWithoutCheck(final @NotNull String blockKey, final @NotNull String... keys) {
+		this.flatFile.removeAllWithoutCheck(this.getFinalKey(blockKey), keys);
 	}
 
 	@Override
@@ -187,12 +226,12 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	}
 
 	@Override
-	public void setWithoutCheckUseArray(final @NotNull String[] key, final @Nullable Object value) {
-		this.flatFile.setWithoutCheckUseArray(this.getFinalArrayKey(key), value);
+	public void setUseArrayWithoutCheck(final @NotNull String[] key, final @Nullable Object value) {
+		this.flatFile.setUseArrayWithoutCheck(this.getFinalArrayKey(key), value);
 	}
 
 	public void setWithoutCheckUseArray(final @Nullable Object value) {
-		this.flatFile.setWithoutCheckUseArray(this.getArraySectionKey(), value);
+		this.flatFile.setUseArrayWithoutCheck(this.getArraySectionKey(), value);
 	}
 
 	@Override
@@ -216,8 +255,33 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	}
 
 	@Override
+	public void setAllUseArrayWithoutCheck(final @NotNull Map<String[], Object> dataMap) {
+		this.flatFile.setAllUseArrayWithoutCheck(this.getArraySectionKey(), dataMap);
+	}
+
+	@Override
+	public void setAllUseArrayWithoutCheck(final @NotNull String[] blockKey, final @NotNull Map<String[], Object> dataMap) {
+		this.flatFile.setAllUseArrayWithoutCheck(this.getFinalArrayKey(blockKey), dataMap);
+	}
+
+	@Override
+	public void setAllUseArrayWithoutCheck(final @NotNull Pair<String[], Object>... dataPairs) {
+		this.flatFile.setAllUseArrayWithoutCheck(this.getArraySectionKey(), dataPairs);
+	}
+
+	@Override
+	public void setAllUseArrayWithoutCheck(final @NotNull String[] blockKey, final @NotNull Pair<String[], Object>... dataPair) {
+		this.flatFile.setAllUseArrayWithoutCheck(this.getFinalArrayKey(blockKey), dataPair);
+	}
+
+	@Override
 	public void removeUseArray(final @NotNull String... key) {
 		this.flatFile.removeUseArray(this.getFinalArrayKey(key));
+	}
+
+	@Override
+	public void removeUseArrayWithoutCheck(final @NotNull String... key) {
+		this.flatFile.removeUseArrayWithoutCheck(this.getFinalArrayKey(key));
 	}
 
 	@Override
@@ -248,6 +312,36 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	@Override
 	public void removeAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
 		this.flatFile.removeAllUseArray(this.getFinalArrayKey(blockKey), keys);
+	}
+
+	@Override
+	public void removeAllUseArrayWithoutCheck(final @NotNull String[]... keys) {
+		this.flatFile.removeAllUseArrayWithoutCheck(this.getArraySectionKey(), keys);
+	}
+
+	@Override
+	public void removeAllWithoutCheck(final @NotNull Collection<String> keys) {
+		this.flatFile.removeAllWithoutCheck(this.getSectionKey(), keys);
+	}
+
+	@Override
+	public void removeAllUseArrayWithoutCheck(final @NotNull Collection<String[]> keys) {
+		this.flatFile.removeAllUseArrayWithoutCheck(this.getArraySectionKey(), keys);
+	}
+
+	@Override
+	public void removeAllUseArrayWithoutCheck(final @NotNull String[] blockKey, final @NotNull String[]... keys) {
+		this.flatFile.removeAllUseArrayWithoutCheck(this.getFinalArrayKey(blockKey), keys);
+	}
+
+	@Override
+	public void removeAllWithoutCheck(final @NotNull String blockKey, final @NotNull Collection<String> keys) {
+		this.flatFile.removeAllWithoutCheck(this.getFinalKey(blockKey), keys);
+	}
+
+	@Override
+	public void removeAllUseArrayWithoutCheck(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys) {
+		this.flatFile.removeAllUseArrayWithoutCheck(this.getFinalArrayKey(blockKey), keys);
 	}
 
 	protected @NotNull String getFinalKey(final @NotNull String key) {

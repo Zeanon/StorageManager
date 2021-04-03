@@ -526,11 +526,12 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @param value the value you want to set in your File
 	 */
 	@Override
-	public void setWithoutCheckUseArray(final @NotNull String[] key,
+	public void setUseArrayWithoutCheck(final @NotNull String[] key,
 										final @Nullable Object value) {
 		this.insertUseArrayWithoutCheck(key, value);
 		this.lastLoaded(System.currentTimeMillis());
 	}
+
 
 	/**
 	 * Assign all given values to their corresponding keys
@@ -638,9 +639,104 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	@Override
 	public void setAllUseArray(final @NotNull String[] blockKey,
 							   final @NotNull Pair<String[], Object>... dataPairs) {
-		if (this.insertAllUseArray(blockKey, dataPairs)) {
-			this.save();
-		}
+		this.insertAllUseArray(blockKey, dataPairs);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param dataMap the pairs to be set
+	 */
+	@Override
+	public void setAllWithoutCheck(final @NotNull Map<String, Object> dataMap) {
+		this.insertAllWithoutCheck(dataMap);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param dataMap the pairs to be set
+	 */
+	@Override
+	public void setAllUseArrayWithoutCheck(final @NotNull Map<String[], Object> dataMap) {
+		this.insertAllUseArrayWithoutCheck(dataMap);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param dataPairs the pairs to be set
+	 */
+	@Override
+	public void setAllWithoutCheck(final @NotNull Pair<String, Object>... dataPairs) {
+		this.insertAllWithoutCheck(dataPairs);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param dataPairs the pairs to be set
+	 */
+	@Override
+	public void setAllUseArrayWithoutCheck(final @NotNull Pair<String[], Object>... dataPairs) {
+		this.insertAllUseArrayWithoutCheck(dataPairs);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param dataMap  the pairs to be set
+	 */
+	@Override
+	public void setAllWithoutCheck(final @NotNull String blockKey,
+								   final @NotNull Map<String, Object> dataMap) {
+		this.insertAllWithoutCheck(blockKey, dataMap);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param dataMap  the pairs to be set
+	 */
+	@Override
+	public void setAllUseArrayWithoutCheck(final @NotNull String[] blockKey,
+										   final @NotNull Map<String[], Object> dataMap) {
+		this.insertAllUseArrayWithoutCheck(blockKey, dataMap);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param blockKey  key to the subBlock to be looked at
+	 * @param dataPairs the pairs to be set
+	 */
+	@Override
+	public void setAllWithoutCheck(final @NotNull String blockKey,
+								   final @NotNull Pair<String, Object>... dataPairs) {
+		this.insertAllWithoutCheck(blockKey, dataPairs);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Assign all given values to their corresponding keys
+	 *
+	 * @param blockKey  key to the subBlock to be looked at
+	 * @param dataPairs the pairs to be set
+	 */
+	@Override
+	public void setAllUseArrayWithoutCheck(final @NotNull String[] blockKey,
+										   final @NotNull Pair<String[], Object>... dataPairs) {
+		this.insertAllUseArrayWithoutCheck(blockKey, dataPairs);
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
@@ -667,6 +763,28 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		if (this.internalRemoveUseArray(key)) {
 			this.save();
 		}
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Remove a key and the corresponding value from the internal cache
+	 *
+	 * @param key the key to remove
+	 */
+	@Override
+	public void removeWithoutCheck(final @NotNull String key) {
+		this.internalRemoveWithoutCheck(key);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Remove a key and the corresponding value from the internal cache
+	 *
+	 * @param key the key to remove
+	 */
+	@Override
+	public void removeUseArrayWithoutCheck(final @NotNull String... key) {
+		this.internalRemoveUseArrayWithoutCheck(key);
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
@@ -779,6 +897,102 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		if (this.internalRemoveAllUseArray(blockKey, keys)) {
 			this.save();
 		}
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param keys the keys to remove
+	 */
+	@Override
+	public void removeAllWithoutCheck(final @NotNull String... keys) {
+		this.internalRemoveAllWithoutCheck(keys);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param keys the keys to remove
+	 */
+	@Override
+	public void removeAllWithoutCheck(final @NotNull Collection<String> keys) {
+		this.internalRemoveAllWithoutCheck(keys);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param keys the keys to remove
+	 */
+	@Override
+	public void removeAllUseArrayWithoutCheck(final @NotNull String[]... keys) {
+		this.internalRemoveAllUseArrayWithoutCheck(keys);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param keys the keys to remove
+	 */
+	@Override
+	public void removeAllUseArrayWithoutCheck(final @NotNull Collection<String[]> keys) {
+		this.internalRemoveAllUseArrayWithoutCheck(keys);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param keys     the keys to remove
+	 */
+	@Override
+	public void removeAllWithoutCheck(final @NotNull String blockKey,
+									  final @NotNull String... keys) {
+		this.internalRemoveAllWithoutCheck(blockKey, keys);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param keys     the keys to remove
+	 */
+	@Override
+	public void removeAllWithoutCheck(final @NotNull String blockKey,
+									  final @NotNull Collection<String> keys) {
+		this.internalRemoveAllWithoutCheck(blockKey, keys);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param keys     the keys to remove
+	 */
+	@Override
+	public void removeAllUseArrayWithoutCheck(final @NotNull String[] blockKey,
+											  final @NotNull String[]... keys) {
+		this.internalRemoveAllUseArrayWithoutCheck(blockKey, keys);
+		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	/**
+	 * Remove all keys and their corresponding values
+	 *
+	 * @param blockKey key to the subBlock to be looked at
+	 * @param keys     the keys to remove
+	 */
+	@Override
+	public void removeAllUseArrayWithoutCheck(final @NotNull String[] blockKey,
+											  final @NotNull Collection<String[]> keys) {
+		this.internalRemoveAllUseArrayWithoutCheck(blockKey, keys);
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
@@ -933,20 +1147,112 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		return !this.fileData().toString().equals(tempData);
 	}
 
+	private void insertAllWithoutCheck(final @NotNull Map<String, Object> map) {
+		this.update();
+
+		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
+			this.fileData().insert(entry.getKey(), entry.getValue());
+		}
+	}
+
+	private void insertAllUseArrayWithoutCheck(final @NotNull Map<String[], Object> map) {
+		this.update();
+
+		for (final @NotNull Map.Entry<String[], Object> entry : map.entrySet()) {
+			this.fileData().insertUseArray(entry.getKey(), entry.getValue());
+		}
+	}
+
+	private void insertAllWithoutCheck(final @NotNull Pair<String, Object>... pairs) {
+		this.update();
+
+		for (final @NotNull Pair<String, Object> entry : pairs) {
+			this.fileData().insert(entry.getKey(), entry.getValue());
+		}
+	}
+
+	private void insertAllUseArrayWithoutCheck(final @NotNull Pair<String[], Object>... pairs) {
+		this.update();
+
+		for (final @NotNull Pair<String[], Object> entry : pairs) {
+			this.fileData().insertUseArray(entry.getKey(), entry.getValue());
+		}
+	}
+
+	private void insertAllWithoutCheck(final @NotNull String key,
+									   final @NotNull Map<String, Object> map) {
+		this.update();
+
+		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
+			this.fileData().insert(key + "." + entry.getKey(), entry.getValue());
+		}
+	}
+
+	private void insertAllUseArrayWithoutCheck(final @NotNull String[] key,
+											   final @NotNull Map<String[], Object> map) {
+		this.update();
+
+		for (final @NotNull Map.Entry<String[], Object> entry : map.entrySet()) {
+			final @NotNull String[] tempKey = new String[key.length + entry.getKey().length];
+			System.arraycopy(key, 0, tempKey, 0, key.length);
+			System.arraycopy(entry.getKey(), 0, tempKey, key.length, entry.getKey().length);
+			this.fileData().insertUseArray(tempKey, entry.getValue());
+		}
+	}
+
+	private void insertAllWithoutCheck(final @NotNull String key,
+									   final @NotNull Pair<String, Object>... pairs) {
+		this.update();
+
+		for (final @NotNull Pair<String, Object> entry : pairs) {
+			this.fileData().insert(key + "." + entry.getKey(), entry.getValue());
+		}
+	}
+
+	private void insertAllUseArrayWithoutCheck(final @NotNull String[] key,
+											   final @NotNull Pair<String[], Object>... pairs) {
+		this.update();
+
+		for (final @NotNull Pair<String[], Object> entry : pairs) {
+			final @NotNull String[] tempKey = new String[key.length + entry.getKey().length];
+			System.arraycopy(key, 0, tempKey, 0, key.length);
+			System.arraycopy(entry.getKey(), 0, tempKey, key.length, entry.getKey().length);
+			this.fileData().insertUseArray(tempKey, entry.getValue());
+		}
+	}
+
 	private boolean internalRemove(final @NotNull String key) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData().toString();
-		this.fileData().remove(key);
-		return !this.fileData().toString().equals(tempData);
+		if (this.fileData.containsKey(key)) {
+			this.fileData().remove(key);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private boolean internalRemoveUseArray(final @NotNull String... key) {
 		this.update();
 
-		final @NotNull String tempData = this.fileData().toString();
+		if (this.fileData.containsKeyUseArray(key)) {
+			this.fileData().removeUseArray(key);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private void internalRemoveWithoutCheck(final @NotNull String key) {
+		this.update();
+
+		this.fileData().remove(key);
+	}
+
+	private void internalRemoveUseArrayWithoutCheck(final @NotNull String... key) {
+		this.update();
+
 		this.fileData().removeUseArray(key);
-		return !this.fileData().toString().equals(tempData);
 	}
 
 	private boolean internalRemoveAll(final @NotNull String... keys) {
@@ -1037,6 +1343,80 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 			this.fileData().removeUseArray(key);
 		}
 		return !this.fileData().toString().equals(tempData);
+	}
+
+	private void internalRemoveAllWithoutCheck(final @NotNull String... keys) {
+		this.update();
+
+		for (final @NotNull String tempKey : keys) {
+			this.fileData().remove(tempKey);
+		}
+	}
+
+	private void internalRemoveAllWithoutCheck(final @NotNull Collection<String> keys) {
+		this.update();
+
+		for (final @NotNull String tempKey : keys) {
+			this.fileData().remove(tempKey);
+		}
+	}
+
+	private void internalRemoveAllUseArrayWithoutCheck(final @NotNull String[]... keys) {
+		this.update();
+
+		for (final String[] tempKey : keys) {
+			this.fileData().removeUseArray(tempKey);
+		}
+	}
+
+	private void internalRemoveAllUseArrayWithoutCheck(final @NotNull Collection<String[]> keys) {
+		this.update();
+
+		for (final String[] tempKey : keys) {
+			this.fileData().removeUseArray(tempKey);
+		}
+	}
+
+	private void internalRemoveAllWithoutCheck(final @NotNull String blockKey,
+											   final @NotNull String... keys) {
+		this.update();
+
+		for (final String tempKey : keys) {
+			this.fileData().remove(blockKey + "." + tempKey);
+		}
+	}
+
+	private void internalRemoveAllWithoutCheck(final @NotNull String blockKey,
+											   final @NotNull Collection<String> keys) {
+		this.update();
+
+		for (final String tempKey : keys) {
+			this.fileData().remove(blockKey + "." + tempKey);
+		}
+	}
+
+	private void internalRemoveAllUseArrayWithoutCheck(final @NotNull String[] blockKey,
+													   final @NotNull String[]... keys) {
+		this.update();
+
+		for (final @NotNull String[] tempKey : keys) {
+			final @NotNull String[] key = new String[blockKey.length + tempKey.length];
+			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
+			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
+			this.fileData().removeUseArray(key);
+		}
+	}
+
+	private void internalRemoveAllUseArrayWithoutCheck(final @NotNull String[] blockKey,
+													   final @NotNull Collection<String[]> keys) {
+		this.update();
+
+		for (final @NotNull String[] tempKey : keys) {
+			final @NotNull String[] key = new String[blockKey.length + tempKey.length];
+			System.arraycopy(blockKey, 0, key, 0, blockKey.length);
+			System.arraycopy(tempKey, 0, key, blockKey.length, tempKey.length);
+			this.fileData().removeUseArray(key);
+		}
 	}
 
 	/**

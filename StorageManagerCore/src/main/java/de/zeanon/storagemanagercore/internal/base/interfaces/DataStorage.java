@@ -518,7 +518,7 @@ public interface DataStorage {
 	 * @param key   the key your value should be associated with
 	 * @param value the value you want to set in your File
 	 */
-	void setWithoutCheckUseArray(final @NotNull String[] key, final @Nullable Object value);
+	void setUseArrayWithoutCheck(final @NotNull String[] key, final @Nullable Object value);
 
 	/**
 	 * Set several key, value pairs
@@ -571,6 +571,56 @@ public interface DataStorage {
 	void setAllUseArray(final @NotNull String[] blockKey, final @NotNull Pair<String[], Object>... dataPairs);
 
 	/**
+	 * Set several key, value pairs
+	 *
+	 * @param dataMap the pairs to be set
+	 */
+	void setAllWithoutCheck(final @NotNull Map<String, Object> dataMap);
+
+	void setAllUseArrayWithoutCheck(final @NotNull Map<String[], Object> dataMap);
+
+	/**
+	 * Set several key, value pairs
+	 *
+	 * @param dataPairs the pairs to be set
+	 */
+	void setAllWithoutCheck(final @NotNull Pair<String, Object>... dataPairs);
+
+	void setAllUseArrayWithoutCheck(final @NotNull Pair<String[], Object>... dataPairs);
+
+	/**
+	 * Set several key, value pairs
+	 *
+	 * @param blockKey the key of the SubBlock
+	 * @param dataMap  the pairs to be set
+	 */
+	void setAllWithoutCheck(final @NotNull String blockKey, final @NotNull Map<String, Object> dataMap);
+
+	/**
+	 * Set several key, value pairs
+	 *
+	 * @param blockKey the key of the SubBlock
+	 * @param dataMap  the pairs to be set
+	 */
+	void setAllUseArrayWithoutCheck(final @NotNull String[] blockKey, final @NotNull Map<String[], Object> dataMap);
+
+	/**
+	 * Set several key, value pairs
+	 *
+	 * @param blockKey  the key of the SubBlock
+	 * @param dataPairs the pairs to be set
+	 */
+	void setAllWithoutCheck(final @NotNull String blockKey, final @NotNull Pair<String, Object>... dataPairs);
+
+	/**
+	 * Set several key, value pairs
+	 *
+	 * @param blockKey  the key of the SubBlock
+	 * @param dataPairs the pairs to be set
+	 */
+	void setAllUseArrayWithoutCheck(final @NotNull String[] blockKey, final @NotNull Pair<String[], Object>... dataPairs);
+
+	/**
 	 * Sets a value to the File if the File doesn't already contain the value
 	 * (Do not mix up with Bukkit addDefault)
 	 *
@@ -610,6 +660,20 @@ public interface DataStorage {
 	 * @param key the key to remove
 	 */
 	void removeUseArray(final @NotNull String... key);
+
+	/**
+	 * Remove a key from the File
+	 *
+	 * @param key the key to remove
+	 */
+	void removeWithoutCheck(final @NotNull String key);
+
+	/**
+	 * Remove a key from the File
+	 *
+	 * @param key the key to remove
+	 */
+	void removeUseArrayWithoutCheck(final @NotNull String... key);
 
 	/**
 	 * Remove given keys from a File
@@ -670,6 +734,66 @@ public interface DataStorage {
 	 * @param keys     the keys to remove
 	 */
 	void removeAllUseArray(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys);
+
+	/**
+	 * Remove given keys from a File
+	 *
+	 * @param keys the keys to remove
+	 */
+	void removeAllWithoutCheck(final @NotNull String... keys);
+
+	/**
+	 * Remove given keys from a File
+	 *
+	 * @param keys the keys to remove
+	 */
+	void removeAllUseArrayWithoutCheck(final @NotNull String[]... keys);
+
+	/**
+	 * Remove given keys from a File
+	 *
+	 * @param keys the keys to remove
+	 */
+	void removeAllWithoutCheck(final @NotNull Collection<String> keys);
+
+	/**
+	 * Remove given keys from a File
+	 *
+	 * @param keys the keys to remove
+	 */
+	void removeAllUseArrayWithoutCheck(final @NotNull Collection<String[]> keys);
+
+	/**
+	 * Remove given keys from a File
+	 *
+	 * @param blockKey the key of the targeted SubBlock
+	 * @param keys     the keys to remove
+	 */
+	void removeAllWithoutCheck(final @NotNull String blockKey, final @NotNull String... keys);
+
+	/**
+	 * Remove given keys from a File
+	 *
+	 * @param blockKey the key of the targeted SubBlock
+	 * @param keys     the keys to remove
+	 */
+	void removeAllUseArrayWithoutCheck(final @NotNull String[] blockKey, final @NotNull String[]... keys);
+
+	/**
+	 * Remove given keys from a File
+	 *
+	 * @param blockKey the key of the targeted SubBlock
+	 * @param keys     the keys to remove
+	 */
+	void removeAllWithoutCheck(final @NotNull String blockKey, final @NotNull Collection<String> keys);
+
+	/**
+	 * Remove given keys from a File
+	 *
+	 * @param blockKey the key of the targeted SubBlock
+	 * @param keys     the keys to remove
+	 */
+	void removeAllUseArrayWithoutCheck(final @NotNull String[] blockKey, final @NotNull Collection<String[]> keys);
 
 
 	/**
