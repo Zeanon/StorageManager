@@ -296,7 +296,7 @@ public class Objects {
 		} else if (object instanceof String) {
 			return (String) object;
 		} else if (object instanceof char[]) {
-			return String.copyValueOf((char[]) object);
+			return String.valueOf((char[]) object);
 		} else {
 			return object.toString();
 		}

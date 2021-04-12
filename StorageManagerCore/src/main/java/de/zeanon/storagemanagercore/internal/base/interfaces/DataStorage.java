@@ -75,6 +75,17 @@ public interface DataStorage {
 	}
 
 	/**
+	 * Get an Object from the File casted to a certain type magically
+	 *
+	 * @param key key to value in the File
+	 *
+	 * @return returns the value of the key casted to def
+	 */
+	default @Nullable <O> O getOfTypeUseArray(final @NotNull String... key) {
+		return Objects.toDef(this.getUseArray(key));
+	}
+
+	/**
 	 * Get an Object from the File casted to a certain type
 	 *
 	 * @param key key to value in the File
