@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @SuppressWarnings("ALL")
 @EqualsAndHashCode(callSuper = true)
-public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> implements DataMap<K, V>, ConcurrentMap<K, V>, Serializable {
+public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractDataMap<K, V> implements DataMap<K, V>, ConcurrentMap<K, V>, Serializable {
 
 
 	private static final long serialVersionUID = -622922610455274342L;
@@ -35,10 +35,6 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	 */
 	private transient @NotNull StampedLock localLock = new StampedLock();
 	private transient @NotNull StampedLock modificationLock = new StampedLock();
-	/**
-	 * List that holds the internal nodes
-	 */
-	private transient @NotNull IList<DataNode<K, V>> localList;
 
 
 	/**
@@ -47,7 +43,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	 * @param localList the List to be used to store the internal nodes
 	 */
 	protected ConcurrentAbstractDataMap(final @NotNull IList<DataNode<K, V>> localList) {
-		this.localList = localList;
+		super(localList);
 	}
 
 
@@ -578,6 +574,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractMap<K, V> 
 	 *
 	 * @param localList the List to be used to store the internal nodes
 	 */
+	@Override
 	protected void reinitialize(final @NotNull IList<DataNode<K, V>> localList) {
 		this.localList = localList;
 		this.localLock = new StampedLock();

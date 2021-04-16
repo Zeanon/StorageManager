@@ -32,7 +32,7 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	/**
 	 * List that holds the internal nodes
 	 */
-	private transient @NotNull IList<DataNode<K, V>> localList;
+	protected transient @NotNull IList<DataNode<K, V>> localList;
 
 
 	/**
@@ -110,8 +110,7 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 	 * previously associated <tt>null</tt> with <tt>key</tt>.)
 	 */
 	@Override
-	public @Nullable
-	V put(final @NotNull K key, final @Nullable V value) {
+	public @Nullable V put(final @NotNull K key, final @Nullable V value) {
 		for (final @NotNull DataMap.DataNode<K, V> tempNode : this.localList) {
 			if (tempNode.getKey().equals(key)) {
 				return tempNode.setValue(value);
