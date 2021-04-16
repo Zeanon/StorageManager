@@ -406,7 +406,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 
 
 	// <Internal>
-	private @Nullable Object internalGet(final @NotNull Map map, final @NotNull String[] key) { //NOSONAR
+	private @Nullable Object internalGet(final @NotNull Map map, final @NotNull String... key) { //NOSONAR
 		@NotNull Object tempValue = map;
 		for (final String tempKey : key) {
 			if (tempValue instanceof Map) {
@@ -420,7 +420,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 
 	@Contract("_, null -> fail")
 	private void initialInsert(final @Nullable Object value,
-							   final @NotNull String[] key) {
+							   final @NotNull String... key) {
 		if (value == null) {
 			this.removeUseArray(key);
 		} else {
@@ -456,7 +456,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	}
 
 	@Contract("null -> fail")
-	private void initialRemove(final @NotNull String[] key) {
+	private void initialRemove(final @NotNull String... key) {
 		if (key.length == 1) {
 			this.dataMap.remove(key[0]);
 		} else {

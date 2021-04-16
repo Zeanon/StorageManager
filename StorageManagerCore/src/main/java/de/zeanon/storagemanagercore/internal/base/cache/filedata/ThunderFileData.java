@@ -402,8 +402,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 
 
 	// <Internal>
-	private @Nullable
-	Object internalGet(final @NotNull DataMap map, final @NotNull String[] key) { //NOSONAR
+	private @Nullable Object internalGet(final @NotNull DataMap map, final @NotNull String... key) { //NOSONAR
 		@Nullable Object tempValue = map;
 		for (final @NotNull String tempKey : key) {
 			if (tempValue instanceof DataMap) {
@@ -416,7 +415,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	}
 
 	@Contract("_, null -> fail")
-	private void initialInsert(final @Nullable Object value, final @NotNull String[] parts) {
+	private void initialInsert(final @Nullable Object value, final @NotNull String... parts) {
 		if (value == null) {
 			this.removeUseArray(parts);
 		} else {
@@ -450,7 +449,7 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	}
 
 	@Contract("null -> fail")
-	private void initialRemove(final @NotNull String[] parts) {
+	private void initialRemove(final @NotNull String... parts) {
 		if (parts.length == 1) {
 			this.dataMap.remove(parts[0]);
 		} else {
