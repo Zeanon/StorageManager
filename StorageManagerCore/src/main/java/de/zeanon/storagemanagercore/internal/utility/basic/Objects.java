@@ -24,9 +24,8 @@ public class Objects {
 	 *
 	 * @return the given object if not null
 	 */
-	@NotNull
 	@Contract("null -> fail; !null -> param1")
-	public <O> O notNull(final @Nullable O object) {
+	public @NotNull <O> O notNull(final @Nullable O object) {
 		return Objects.notNull(object, "Checked Object must not be null");
 	}
 
