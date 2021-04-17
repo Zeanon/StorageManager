@@ -4,7 +4,6 @@ import de.zeanon.storagemanagercore.internal.base.exceptions.FileParseException;
 import de.zeanon.thunderfilemanager.ThunderFileManager;
 import de.zeanon.thunderfilemanager.internal.files.raw.ThunderFile;
 import de.zeanon.thunderfilemanagertest.TestStorageManager;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,7 +20,7 @@ class TestParser {
 	@Test
 	@TestOnly
 	void testResource1() {
-		final @NotNull boolean[] result = new boolean[2];
+		final boolean[] result = new boolean[2];
 
 		try {
 			ThunderFile testFile = ThunderFileManager.thunderFile("src/test/resources/testresults/parser", "test1")

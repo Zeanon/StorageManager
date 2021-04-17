@@ -73,12 +73,30 @@ public class BaseFileUtils {
 		return BaseFileUtils.createFileInternally(file, false);
 	}
 
+	/**
+	 * Creates a given File and, if not existent, it's parents
+	 *
+	 * @param file the File to be created
+	 */
+	public boolean createFile(final @NotNull Path file) {
+		return BaseFileUtils.createFileInternally(file.toFile(), false);
+	}
+
+	/**
+	 * Creates a given File and, if not existent, it's parents
+	 *
+	 * @param file the File to be created
+	 */
 	public boolean createFile(final @NotNull String file) {
 		return BaseFileUtils.createFileInternally(new File(file), false);
 	}
 
 	public boolean createFile(final @NotNull File parent, final @NotNull String child) {
 		return BaseFileUtils.createFileInternally(new File(parent, child), false);
+	}
+
+	public boolean createFile(final @NotNull Path parent, final @NotNull String child) {
+		return BaseFileUtils.createFileInternally(parent.resolve(child).toFile(), false);
 	}
 
 	public boolean createFile(final @NotNull String parent, final @NotNull String child) {
@@ -93,6 +111,15 @@ public class BaseFileUtils {
 	 */
 	public boolean createFolder(final @NotNull File file) {
 		return BaseFileUtils.createFileInternally(file, true);
+	}
+
+	/**
+	 * Creates a given Folder and, if not existent, it's parents
+	 *
+	 * @param file the Folder to be created
+	 */
+	public boolean createFolder(final @NotNull Path file) {
+		return BaseFileUtils.createFileInternally(file.toFile(), true);
 	}
 
 	/**
@@ -120,6 +147,16 @@ public class BaseFileUtils {
 	 * @param parent the parent directory of the file to be created
 	 * @param child  the name of the FIle to be created
 	 */
+	public boolean createFolder(final @NotNull Path parent, final @NotNull String child) {
+		return BaseFileUtils.createFileInternally(parent.resolve(child).toFile(), true);
+	}
+
+	/**
+	 * Creates a given Folder and, if not existent, it's parents
+	 *
+	 * @param parent the parent directory of the file to be created
+	 * @param child  the name of the FIle to be created
+	 */
 	public boolean createFolder(final @NotNull String parent, final @NotNull String child) {
 		return BaseFileUtils.createFileInternally(new File(parent, child), true);
 	}
@@ -131,6 +168,15 @@ public class BaseFileUtils {
 	 */
 	public boolean createParents(final @NotNull File file) {
 		return BaseFileUtils.createFileInternally(file.getParentFile(), true);
+	}
+
+	/**
+	 * Creates the parents of a given File
+	 *
+	 * @param file the File to be used
+	 */
+	public boolean createParents(final @NotNull Path file) {
+		return BaseFileUtils.createFileInternally(file.toFile().getParentFile(), true);
 	}
 
 	/**
@@ -1016,6 +1062,148 @@ public class BaseFileUtils {
 		} else {
 			try {
 				return new BufferedInputStream(directory == null ? new FileInputStream(name) : new FileInputStream(new File(directory.toFile(), name)));
+			} catch (final @NotNull IOException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + (directory == null ? name : directory.toAbsolutePath() + "/" + name)
+											 + "'",
+											 e);
+			}
+		}
+	}
+
+
+	/**
+	 * Create a BufferedInputStream from a File
+	 *
+	 * @param file the File to be read
+	 *
+	 * @return BufferedInputstream containing the contents of the given File
+	 */
+	@Contract("null -> null; !null -> new")
+	public @Nullable BufferedOutputStream createNewOutputStreamFromFile(final @Nullable File file) {
+		if (file == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedOutputStream(new FileOutputStream(file));
+			} catch (final @NotNull IOException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + file.getAbsolutePath()
+											 + "'",
+											 e);
+			}
+		}
+	}
+
+	/**
+	 * Create a BufferedInputStream from a File
+	 *
+	 * @param name the File to be read
+	 *
+	 * @return BufferedInputstream containing the contents of the given File
+	 */
+	@Contract("null -> null; !null -> new")
+	public @Nullable BufferedOutputStream createNewOutputStreamFromFile(final @Nullable String name) {
+		if (name == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedOutputStream(new FileOutputStream(name));
+			} catch (final @NotNull IOException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + name
+											 + "'",
+											 e);
+			}
+		}
+	}
+
+	/**
+	 * Create a BufferedInputStream from a File
+	 *
+	 * @param file the File to be read
+	 *
+	 * @return BufferedInputstream containing the contents of the given File
+	 */
+	@Contract("null -> null; !null -> new")
+	public @Nullable BufferedOutputStream createNewOutputStreamFromFile(final @Nullable Path file) {
+		if (file == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedOutputStream(new FileOutputStream(file.toFile()));
+			} catch (final @NotNull IOException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + file.toAbsolutePath()
+											 + "'",
+											 e);
+			}
+		}
+	}
+
+	/**
+	 * Create a BufferedInputStream from a File
+	 *
+	 * @param name      the File to be read
+	 * @param directory the directory of the file
+	 *
+	 * @return BufferedInputstream containing the contents of the given File
+	 */
+	@Contract("_, null -> null; _, !null -> new")
+	public @Nullable BufferedOutputStream createNewOutputStreamFromFile(final @Nullable String directory, final @Nullable String name) {
+		if (name == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedOutputStream(directory == null ? new FileOutputStream(name) : new FileOutputStream(new File(directory, name)));
+			} catch (final @NotNull IOException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + (directory == null ? name : directory + "/" + name)
+											 + "'",
+											 e);
+			}
+		}
+	}
+
+	/**
+	 * Create a BufferedInputStream from a File
+	 *
+	 * @param name      the File to be read
+	 * @param directory the directory of the file
+	 *
+	 * @return BufferedInputstream containing the contents of the given File
+	 */
+	@Contract("_, null -> null; _, !null -> new")
+	public @Nullable BufferedOutputStream createNewOutputStreamFromFile(final @Nullable File directory, final @Nullable String name) {
+		if (name == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedOutputStream(directory == null ? new FileOutputStream(name) : new FileOutputStream(new File(directory, name)));
+			} catch (final @NotNull IOException e) {
+				throw new RuntimeIOException("Error while creating InputStream from '"
+											 + (directory == null ? name : directory.getAbsolutePath() + "/" + name)
+											 + "'",
+											 e);
+			}
+		}
+	}
+
+	/**
+	 * Create a BufferedInputStream from a File
+	 *
+	 * @param name      the File to be read
+	 * @param directory the directory of the file
+	 *
+	 * @return BufferedInputstream containing the contents of the given File
+	 */
+	@Contract("_, null -> null; _, !null -> new")
+	public @Nullable BufferedOutputStream createNewOutputStreamFromFile(final @Nullable Path directory, final @Nullable String name) {
+		if (name == null) {
+			return null;
+		} else {
+			try {
+				return new BufferedOutputStream(directory == null ? new FileOutputStream(name) : new FileOutputStream(new File(directory.toFile(), name)));
 			} catch (final @NotNull IOException e) {
 				throw new RuntimeIOException("Error while creating InputStream from '"
 											 + (directory == null ? name : directory.toAbsolutePath() + "/" + name)
