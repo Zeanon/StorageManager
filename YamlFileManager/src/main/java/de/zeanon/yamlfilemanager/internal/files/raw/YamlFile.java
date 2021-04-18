@@ -11,7 +11,6 @@ import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.files.CommentEnabledFile;
 import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
-import de.zeanon.storagemanagercore.internal.utility.basic.BaseFileUtils;
 import de.zeanon.yamlfilemanager.internal.files.section.YamlFileSection;
 import de.zeanon.yamlfilemanager.internal.utility.parser.YamlFileParser;
 import java.io.File;
@@ -60,9 +59,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 					   final boolean synchronizeData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, FileType.YAML, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting, commentSetting);
-
-		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
+		super(file, inputStream, FileType.YAML, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting, commentSetting);
 
 		this.fileData().loadData(this.readFile());
 		this.lastLoaded(System.currentTimeMillis());

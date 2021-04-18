@@ -307,7 +307,7 @@ public interface DataStorage {
 	 * @return List
 	 */
 	default @Nullable <E> List<E> getList(final @NotNull String key) {
-		final @Nullable List<Object> tempList = (List<Object>) this.get(key);
+		final @Nullable List<Object> tempList = this.getDirectListReference(key);
 		return tempList == null ? null : tempList.stream().collect(ArrayList::new, (list, entry) -> list.add(Objects.toDef(entry)), List::addAll);
 	}
 
@@ -319,7 +319,7 @@ public interface DataStorage {
 	 * @return List
 	 */
 	default @Nullable <E> List<E> getListUseArray(final @NotNull String... key) {
-		final @Nullable List<Object> tempList = (List<Object>) this.getUseArray(key);
+		final @Nullable List<Object> tempList = this.getDirectListReferenceUseArray(key);
 		return tempList == null ? null : tempList.stream().collect(ArrayList::new, (list, entry) -> list.add(Objects.toDef(entry)), List::addAll);
 	}
 
@@ -357,7 +357,7 @@ public interface DataStorage {
 	 * @return Map
 	 */
 	default <K, V> @Nullable Map<K, V> getMap(final @NotNull String key) {
-		final @Nullable Map<Object, Object> tempMap = (Map<Object, Object>) this.get(key);
+		final @Nullable Map<Object, Object> tempMap = this.getDirectMapReference(key);
 		return tempMap == null ? null : tempMap.entrySet()
 											   .stream()
 											   .collect(Collectors.toMap(entry -> Objects.toDef(entry.getKey()), entry -> Objects.notNull(Objects.toDef(entry.getValue()))));
@@ -371,7 +371,7 @@ public interface DataStorage {
 	 * @return Map
 	 */
 	default <K, V> @Nullable Map<K, V> getMapUseArray(final @NotNull String... key) {
-		final @Nullable Map<Object, Object> tempMap = (Map<Object, Object>) this.getUseArray(key);
+		final @Nullable Map<Object, Object> tempMap = this.getDirectMapReferenceUseArray(key);
 		return tempMap == null ? null : tempMap.entrySet()
 											   .stream()
 											   .collect(Collectors.toMap(entry -> Objects.toDef(entry.getKey()), entry -> Objects.notNull(Objects.toDef(entry.getValue()))));
@@ -413,8 +413,8 @@ public interface DataStorage {
 	 * @return a Pair with a key of type K and a value of type V
 	 */
 	default @Nullable <K, V> Pair<K, V> getPair(final @NotNull String key) {
-		//noinspection unchecked
-		return (Pair<K, V>) this.get(key);
+		final @Nullable Pair<Object, Object> tempPair = this.getDirectPairReference(key);
+		return tempPair == null ? null : new Pair<>(Objects.notNull(Objects.toDef(tempPair.getKey())), Objects.toDef(tempPair.getValue()));
 	}
 
 	/**
@@ -427,8 +427,7 @@ public interface DataStorage {
 	 * @return a Pair with a key of type K and a value of type V
 	 */
 	default @Nullable <K, V> Pair<K, V> getPairUseArray(final @NotNull String... key) {
-		//noinspection unchecked
-		final @Nullable Pair<Object, Object> tempPair = (Pair<Object, Object>) this.getUseArray(key);
+		final @Nullable Pair<Object, Object> tempPair = this.getDirectPairReferenceUseArray(key);
 		return tempPair == null ? null : new Pair<>(Objects.notNull(Objects.toDef(tempPair.getKey())), Objects.toDef(tempPair.getValue()));
 	}
 

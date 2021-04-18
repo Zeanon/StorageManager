@@ -14,7 +14,6 @@ import de.zeanon.storagemanagercore.internal.base.files.CommentEnabledFile;
 import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
 import de.zeanon.storagemanagercore.internal.base.interfaces.DataMap;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
-import de.zeanon.storagemanagercore.internal.utility.basic.BaseFileUtils;
 import de.zeanon.thunderfilemanager.internal.base.exceptions.ThunderException;
 import de.zeanon.thunderfilemanager.internal.files.section.ThunderFileSection;
 import de.zeanon.thunderfilemanager.internal.utility.parser.ThunderFileParser;
@@ -79,14 +78,12 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 						  final boolean synchronizeData,
 						  final @NotNull Class<? extends DataMap> map,
 						  final @NotNull Class<? extends List> list) {
-		super(file, FileType.THUNDERFILE, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting, commentSetting);
+		super(file, inputStream, FileType.THUNDERFILE, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting, commentSetting);
 		this.bufferSize = bufferSize;
 		this.autoFlush = autoFlush;
 		this.concurrentData = concurrentData;
 		this.bigData = bigData;
 		this.indentation = indentation;
-
-		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
 		this.fileData().loadData(this.readFile());
 		this.lastLoaded(System.currentTimeMillis());

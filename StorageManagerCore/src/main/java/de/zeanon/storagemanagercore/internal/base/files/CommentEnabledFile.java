@@ -7,6 +7,7 @@ import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storagemanagercore.internal.base.settings.Comment;
 import de.zeanon.storagemanagercore.internal.utility.basic.Pair;
 import java.io.File;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -55,11 +56,12 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 	 * @param commentSetting the {@link CommentSetting} to be used
 	 */
 	protected CommentEnabledFile(final @NotNull File file,
+								 final @Nullable InputStream inputStream,
 								 final @NotNull FileType fileType,
 								 final @NotNull D fileData,
 								 final @NotNull ReloadSetting reloadSetting,
 								 final @NotNull CommentSetting commentSetting) {
-		super(file, fileType, fileData, reloadSetting);
+		super(file, inputStream, fileType, fileData, reloadSetting);
 		this.commentSetting = commentSetting;
 	}
 

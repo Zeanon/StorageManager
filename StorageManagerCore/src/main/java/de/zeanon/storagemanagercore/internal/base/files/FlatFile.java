@@ -55,6 +55,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 
 	protected FlatFile(final @NotNull File file,
+					   final @Nullable InputStream inputStream,
 					   final @NotNull FileType fileType,
 					   final @NotNull D fileData,
 					   final @NotNull ReloadSetting reloadSetting) {
@@ -64,6 +65,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 			this.fileData = fileData;
 			this.reloadSetting = reloadSetting;
 			this.collectionsProvider = this.fileData().collectionsProvider();
+			BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 		} else {
 			throw new FileTypeException("File '"
 										+ file.getAbsolutePath()

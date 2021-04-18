@@ -60,9 +60,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 					   final boolean synchronizeData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, FileType.JSON, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting);
-
-		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
+		super(file, inputStream, FileType.JSON, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting);
 
 		final @NotNull JSONTokener jsonTokener = new JSONTokener(
 				BaseFileUtils.createNewInputStreamFromFile(this.file()));

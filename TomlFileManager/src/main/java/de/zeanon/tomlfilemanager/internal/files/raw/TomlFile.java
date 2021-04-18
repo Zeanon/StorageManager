@@ -10,7 +10,6 @@ import de.zeanon.storagemanagercore.internal.base.exceptions.FileParseException;
 import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.files.FlatFile;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
-import de.zeanon.storagemanagercore.internal.utility.basic.BaseFileUtils;
 import de.zeanon.tomlfilemanager.internal.files.section.TomlFileSection;
 import java.io.File;
 import java.io.IOException;
@@ -55,9 +54,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 					   final boolean synchronizeData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, FileType.TOML, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting);
-
-		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
+		super(file, inputStream, FileType.TOML, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting);
 
 		this.fileData().loadData(this.readFile());
 		this.lastLoaded(System.currentTimeMillis());
