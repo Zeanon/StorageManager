@@ -12,9 +12,9 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 public class Pair<K, V> {
 
-	private K key;
+	private @NotNull K key;
 
-	private V value;
+	private @Nullable V value;
 
 
 	public Pair(final @NotNull K key, final @Nullable V value) {

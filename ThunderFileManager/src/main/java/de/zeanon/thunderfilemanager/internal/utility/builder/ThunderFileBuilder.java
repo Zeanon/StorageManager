@@ -38,6 +38,8 @@ public class ThunderFileBuilder extends ThunderFileManager<ThunderFileBuilder, T
 	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private @NotNull CommentSetting commentSetting = Comment.SKIP;
 	@Setter(onMethod_ = {@Contract("_ -> this")})
+	private @NotNull String indentation = "  ";
+	@Setter(onMethod_ = {@Contract("_ -> this")})
 	private int bufferSize = 8192;
 
 
@@ -49,7 +51,7 @@ public class ThunderFileBuilder extends ThunderFileManager<ThunderFileBuilder, T
 	@Override
 	@Contract("-> new")
 	public final @NotNull ThunderFile create() {
-		return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.bufferSize, this.autoFlush, this.bigData, this.concurrentData, this.synchronizeData, this.mapType, this.listType);
+		return new LocalThunderFile(super.file, this.inputStream, this.reloadSetting, this.commentSetting, this.indentation, this.bufferSize, this.autoFlush, this.bigData, this.concurrentData, this.synchronizeData, this.mapType, this.listType);
 	}
 
 	@Contract("_ -> this")
@@ -80,6 +82,7 @@ public class ThunderFileBuilder extends ThunderFileManager<ThunderFileBuilder, T
 								 final @Nullable InputStream inputStream,
 								 final @NotNull ReloadSetting reloadSetting,
 								 final @NotNull CommentSetting commentSetting,
+								 final @NotNull String indentation,
 								 final int bufferSize,
 								 final boolean autoFlush,
 								 final boolean bigData,
@@ -87,7 +90,7 @@ public class ThunderFileBuilder extends ThunderFileManager<ThunderFileBuilder, T
 								 final boolean synchronizeData,
 								 final @NotNull Class<? extends DataMap> map,
 								 final @NotNull Class<? extends List> list) {
-			super(file, inputStream, reloadSetting, commentSetting, bufferSize, autoFlush, bigData, concurrentData, synchronizeData, map, list);
+			super(file, inputStream, reloadSetting, commentSetting, indentation, bufferSize, autoFlush, bigData, concurrentData, synchronizeData, map, list);
 		}
 	}
 }

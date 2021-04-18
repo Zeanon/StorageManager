@@ -48,6 +48,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	private boolean autoFlush;
 	private boolean concurrentData;
 	private boolean bigData;
+	private @NotNull String indentation;
 
 
 	/**
@@ -70,6 +71,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 						  final @Nullable InputStream inputStream,
 						  final @NotNull ReloadSetting reloadSetting,
 						  final @NotNull CommentSetting commentSetting,
+						  final @NotNull String indentation,
 						  final int bufferSize,
 						  final boolean autoFlush,
 						  final boolean concurrentData,
@@ -82,29 +84,18 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 		this.autoFlush = autoFlush;
 		this.concurrentData = concurrentData;
 		this.bigData = bigData;
+		this.indentation = indentation;
 
 		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
-		try {
-			this.fileData().loadData(ThunderFileParser.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize));
-			this.lastLoaded(System.currentTimeMillis());
-		} catch (final @NotNull ThunderException e) {
-			throw new FileParseException("Error while parsing '"
-										 + this.getAbsolutePath()
-										 + "'",
-										 e);
-		} catch (final @NotNull RuntimeIOException e) {
-			throw new RuntimeIOException("Error while loading '"
-										 + this.getAbsolutePath()
-										 + "'",
-										 e);
-		}
+		this.fileData().loadData(this.readFile());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
 	public void save() {
 		try {
-			ThunderFileParser.writeData(this.file(), this.fileData(), this.getCommentSetting(), this.getAutoFlush());
+			ThunderFileParser.writeData(this.file(), this.fileData(), this.getCommentSetting(), this.getIndentation(), this.getAutoFlush());
 		} catch (final @NotNull RuntimeIOException e) {
 			throw new RuntimeIOException("Error while writing to "
 										 + this.getAbsolutePath()
@@ -157,7 +148,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 
 
 	@Override
-	protected @NotNull DataMap readFile() {
+	protected @NotNull DataMap<String, Object> readFile() {
 		try {
 			return ThunderFileParser.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize);
 		} catch (final @NotNull RuntimeIOException e) {

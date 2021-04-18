@@ -64,21 +64,8 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 
 		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
-		try {
-			//noinspection unchecked
-			this.fileData().loadData((Map<String, Object>) new YamlReader(new FileReader(this.file())).read());
-			this.lastLoaded(System.currentTimeMillis());
-		} catch (final @NotNull YamlException e) {
-			throw new FileParseException("Error while parsing '"
-										 + this.file().getAbsolutePath()
-										 + "'",
-										 e);
-		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while loading '"
-										 + this.file().getAbsolutePath()
-										 + "'",
-										 e);
-		}
+		this.fileData().loadData(this.readFile());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override

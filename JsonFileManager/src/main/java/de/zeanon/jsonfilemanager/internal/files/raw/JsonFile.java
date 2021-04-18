@@ -64,22 +64,10 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
-		try {
-			final @NotNull JSONTokener jsonTokener = new JSONTokener(
-					BaseFileUtils.createNewInputStreamFromFile(this.file()));
-			this.fileData().loadData(new JSONObject(jsonTokener).toMap());
-			this.lastLoaded(System.currentTimeMillis());
-		} catch (final @NotNull JSONException e) {
-			throw new FileParseException("Error while parsing '"
-										 + this.getAbsolutePath()
-										 + "'",
-										 e);
-		} catch (final @NotNull RuntimeIOException e) {
-			throw new RuntimeIOException("Error while loading '"
-										 + this.getAbsolutePath()
-										 + "'",
-										 e);
-		}
+		final @NotNull JSONTokener jsonTokener = new JSONTokener(
+				BaseFileUtils.createNewInputStreamFromFile(this.file()));
+		this.fileData().loadData(this.readFile());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 
@@ -91,7 +79,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 * @return Map
 	 */
 	@Override
-	public @Nullable <K, V> Map<K, V> getMap(final @NotNull String key) {
+	public @Nullable <K, V> Map<K, V> getDirectMapReference(final @NotNull String key) {
 		this.update();
 
 		if (!this.hasKey(key)) {
@@ -126,7 +114,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 * @return Map
 	 */
 	@Override
-	public @Nullable <K, V> Map<K, V> getMapUseArray(final @NotNull String... key) {
+	public @Nullable <K, V> Map<K, V> getDirectMapReferenceUseArray(final @NotNull String... key) {
 		this.update();
 
 		if (!this.hasKeyUseArray(key)) {
@@ -206,7 +194,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 
 	@Override
-	protected @NotNull Map readFile() {
+	protected @NotNull Map<String, Object> readFile() {
 		try {
 			return new JSONObject(new JSONTokener(
 					BaseFileUtils.createNewInputStreamFromFile(this.file()))).toMap();

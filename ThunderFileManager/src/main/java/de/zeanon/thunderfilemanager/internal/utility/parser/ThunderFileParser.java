@@ -50,11 +50,12 @@ public class ThunderFileParser {
 	public void writeData(final @NotNull File file,
 						  final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, //NOSONAR
 						  final @NotNull CommentSetting commentSetting,
+						  final @NotNull String indentationString,
 						  final boolean autoFlush) {
 		if (commentSetting == Comment.PRESERVE) {
-			ThunderFileParser.initialWriteWithComments(file, fileData, autoFlush);
+			ThunderFileParser.initialWriteWithComments(file, indentationString, fileData, autoFlush);
 		} else if (commentSetting == Comment.SKIP) {
-			ThunderFileParser.initialWriteWithOutComments(file, fileData, autoFlush);
+			ThunderFileParser.initialWriteWithOutComments(file, indentationString, fileData, autoFlush);
 		} else {
 			throw new IllegalArgumentException("Illegal CommentSetting");
 		}
@@ -96,6 +97,7 @@ public class ThunderFileParser {
 	// <Write Data>
 	// <Write Data with Comments>
 	private void initialWriteWithComments(final @NotNull File file,
+										  final @NotNull String indentationString,
 										  final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, //NOSONAR
 										  final boolean autoFlush) {
 		if (!fileData.isEmpty()) {
@@ -104,10 +106,10 @@ public class ThunderFileParser {
 				tempLock.lock();
 				tempLock.truncateChannel(0);
 				final @NotNull Iterator<DataMap.DataNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
-				ThunderFileParser.topLayerWriteWithComments(writer, mapIterator.next());
+				ThunderFileParser.topLayerWriteWithComments(writer, indentationString, mapIterator.next());
 				mapIterator.forEachRemaining(entry -> {
 					writer.println();
-					ThunderFileParser.topLayerWriteWithComments(writer, entry);
+					ThunderFileParser.topLayerWriteWithComments(writer, indentationString, entry);
 				});
 				writer.flush();
 			} catch (final @NotNull IOException e) {
@@ -124,6 +126,7 @@ public class ThunderFileParser {
 	}
 
 	private void topLayerWriteWithComments(final @NotNull PrintWriter writer,
+										   final @NotNull String indentationString,
 										   final @NotNull DataMap.DataNode<String, Object> entry) {
 		if (entry.getValue() == LineType.COMMENT) {
 			writer.print(entry.getKey().startsWith("#") ? entry.getKey() : ("#" + entry.getKey()));
@@ -131,21 +134,21 @@ public class ThunderFileParser {
 			writer.print(entry.getKey()
 						 + " {");
 			//noinspection unchecked
-			ThunderFileParser.internalWriteWithComments((DataMap<String, Object>) entry.getValue(), "", writer);
+			ThunderFileParser.internalWriteWithComments((DataMap<String, Object>) entry.getValue(), "", indentationString, writer);
 		} else if (entry.getValue() instanceof Collection) {
 			writer.println(entry.getKey()
 						   + " = [");
 			//noinspection unchecked
-			ThunderFileParser.writeCollection((List<String>) entry.getValue(), "  ", writer);
+			ThunderFileParser.writeCollection((List<String>) entry.getValue(), indentationString, writer);
 		} else if (Objects.isArray(entry.getValue())) {
 			writer.println(entry.getKey()
 						   + " = [");
-			ThunderFileParser.writeArray(entry.getValue(), "  ", writer);
+			ThunderFileParser.writeArray(entry.getValue(), indentationString, writer);
 		} else if (entry.getValue() instanceof Pair) {
 			writer.print(entry.getKey()
 						 + " = ["
-						 + (((Pair) entry.getValue()).getKey() == null ? ":" : (((Pair) entry.getValue()).getKey() + " :"))
-						 + (((Pair) entry.getValue()).getValue() == null ? "]" : (" " + ((Pair) entry.getValue()).getValue() + "]")));
+						 + ((Pair) entry.getValue()).getKey() + " :"
+						 + (((Pair) entry.getValue()).getValue() == null ? "]" : " " + ((Pair) entry.getValue()).getValue() + "]"));
 		} else if (entry.getValue() != LineType.BLANK_LINE) {
 			writer.print(entry.getKey()
 						 + (entry.getValue() == null ? " =" : (" = " + entry.getValue())));
@@ -153,54 +156,56 @@ public class ThunderFileParser {
 	}
 
 	private void internalWriteWithComments(final @NotNull DataMap<String, Object> map,
+										   final @NotNull String currentIndentation,
 										   final @NotNull String indentationString,
 										   final @NotNull PrintWriter writer) {
 		for (final @NotNull DataMap.DataNode<String, Object> entry : map.entryList()) {
 			writer.println();
 			if (entry.getValue() == LineType.COMMENT) {
-				writer.print(indentationString
-							 + "  "
+				writer.print(currentIndentation
+							 + indentationString
 							 + (entry.getKey().startsWith("#") ? entry.getKey() : ("#" + entry.getKey())));
 			} else if (entry.getValue() instanceof DataMap) {
-				writer.print(indentationString
-							 + "  "
+				writer.print(currentIndentation
+							 + indentationString
 							 + entry.getKey()
 							 + " {");
 				//noinspection unchecked
-				ThunderFileParser.internalWriteWithComments((DataMap<String, Object>) entry.getValue(), indentationString + "  ", writer);
+				ThunderFileParser.internalWriteWithComments((DataMap<String, Object>) entry.getValue(), currentIndentation + indentationString, indentationString, writer);
 			} else if (entry.getValue() instanceof Collection) {
-				writer.println(indentationString
-							   + "  "
+				writer.println(currentIndentation
+							   + indentationString
 							   + entry.getKey()
 							   + " = [");
-				ThunderFileParser.writeCollection((Collection) entry.getValue(), indentationString + "  ", writer);
+				ThunderFileParser.writeCollection((Collection) entry.getValue(), currentIndentation + indentationString, writer);
 			} else if (Objects.isArray(entry.getValue())) {
-				writer.println(indentationString
-							   + "  "
+				writer.println(currentIndentation
+							   + indentationString
 							   + entry.getKey()
 							   + " = [");
-				ThunderFileParser.writeArray(entry.getValue(), indentationString + "  ", writer);
+				ThunderFileParser.writeArray(entry.getValue(), currentIndentation + indentationString, writer);
 			} else if (entry.getValue() instanceof Pair) {
-				writer.print(indentationString
-							 + "  "
+				writer.print(currentIndentation
+							 + indentationString
 							 + entry.getKey()
 							 + " = ["
-							 + (((Pair) entry.getValue()).getKey() == null ? ":" : (((Pair) entry.getValue()).getKey() + " :"))
-							 + (((Pair) entry.getValue()).getValue() == null ? "]" : (" " + ((Pair) entry.getValue()).getValue() + "]")));
+							 + ((Pair) entry.getValue()).getKey() + " :"
+							 + (((Pair) entry.getValue()).getValue() == null ? "]" : " " + ((Pair) entry.getValue()).getValue() + "]"));
 			} else if (entry.getValue() != LineType.BLANK_LINE) {
-				writer.print(indentationString
-							 + "  "
+				writer.print(currentIndentation
+							 + indentationString
 							 + entry.getKey()
 							 + (entry.getValue() == null ? " =" : (" = " + entry.getValue())));
 			}
 		}
 		writer.println();
-		writer.print(indentationString + "}");
+		writer.print(currentIndentation + "}");
 	}
 	// </Write Data with Comments>
 
 	// <Write Data without Comments>
 	private void initialWriteWithOutComments(final @NotNull File file,
+											 final @NotNull String indentationString,
 											 final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, //NOSONAR
 											 final boolean autoFlush) {
 		if (!fileData.isEmpty()) {
@@ -213,11 +218,11 @@ public class ThunderFileParser {
 				while (initialEntry.getValue() == LineType.COMMENT || initialEntry.getValue() == LineType.BLANK_LINE) {
 					initialEntry = mapIterator.next();
 				}
-				ThunderFileParser.topLayerWriteWithOutComments(writer, initialEntry);
+				ThunderFileParser.topLayerWriteWithOutComments(writer, indentationString, initialEntry);
 				mapIterator.forEachRemaining(entry -> {
 					if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.BLANK_LINE) {
 						writer.println();
-						ThunderFileParser.topLayerWriteWithOutComments(writer, entry);
+						ThunderFileParser.topLayerWriteWithOutComments(writer, indentationString, entry);
 					}
 				});
 				writer.flush();
@@ -235,6 +240,7 @@ public class ThunderFileParser {
 	}
 
 	private void topLayerWriteWithOutComments(final @NotNull PrintWriter writer,
+											  final @NotNull String indentationString,
 											  final @NotNull DataMap.DataNode<String, Object> entry) {
 		if (entry.getValue() instanceof DataMap) {
 			writer.print(entry.getKey()
@@ -245,16 +251,16 @@ public class ThunderFileParser {
 			writer.println(entry.getKey()
 						   + " = [");
 			//noinspection unchecked
-			ThunderFileParser.writeCollection((List<String>) entry.getValue(), "  ", writer);
+			ThunderFileParser.writeCollection((List<String>) entry.getValue(), indentationString, writer);
 		} else if (Objects.isArray(entry.getValue())) {
 			writer.println(entry.getKey()
 						   + " = [");
-			ThunderFileParser.writeArray(entry.getValue(), "  ", writer);
+			ThunderFileParser.writeArray(entry.getValue(), indentationString, writer);
 		} else if (entry.getValue() instanceof Pair) {
 			writer.print(entry.getKey()
 						 + " = ["
-						 + (((Pair) entry.getValue()).getKey() == null ? ":" : (((Pair) entry.getValue()).getKey() + " :"))
-						 + (((Pair) entry.getValue()).getValue() == null ? "]" : (" " + ((Pair) entry.getValue()).getValue() + "]")));
+						 + ((Pair) entry.getValue()).getKey() + " :"
+						 + (((Pair) entry.getValue()).getValue() == null ? "]" : " " + ((Pair) entry.getValue()).getValue() + "]"));
 		} else {
 			writer.print(entry.getKey()
 						 + (entry.getValue() == null ? " =" : (" = " + entry.getValue())));
@@ -269,33 +275,33 @@ public class ThunderFileParser {
 				writer.println();
 				if (entry.getValue() instanceof DataMap) {
 					writer.print(indentationString
-								 + "  "
+								 + indentationString
 								 + entry.getKey()
 								 + " {");
 					//noinspection unchecked
-					ThunderFileParser.internalWriteWithoutComments((DataMap<String, Object>) entry.getValue(), indentationString + "  ", writer);
+					ThunderFileParser.internalWriteWithoutComments((DataMap<String, Object>) entry.getValue(), indentationString + indentationString, writer);
 				} else if (entry.getValue() instanceof Collection) {
 					writer.println(indentationString
-								   + "  "
+								   + indentationString
 								   + entry.getKey()
 								   + " = [");
-					ThunderFileParser.writeCollection((Collection) entry.getValue(), indentationString + "  ", writer);
+					ThunderFileParser.writeCollection((Collection) entry.getValue(), indentationString + indentationString, writer);
 				} else if (Objects.isArray(entry.getValue())) {
 					writer.println(indentationString
-								   + "  "
+								   + indentationString
 								   + entry.getKey()
 								   + " = [");
-					ThunderFileParser.writeArray(entry.getValue(), indentationString + "  ", writer);
+					ThunderFileParser.writeArray(entry.getValue(), indentationString + indentationString, writer);
 				} else if (entry.getValue() instanceof Pair) {
 					writer.print(indentationString
-								 + "  "
+								 + indentationString
 								 + entry.getKey()
 								 + " = ["
-								 + (((Pair) entry.getValue()).getKey() == null ? ":" : (((Pair) entry.getValue()).getKey() + " :"))
-								 + (((Pair) entry.getValue()).getValue() == null ? "]" : (" " + ((Pair) entry.getValue()).getValue() + "]")));
+								 + ((Pair) entry.getValue()).getKey() + " :"
+								 + (((Pair) entry.getValue()).getValue() == null ? "]" : " " + ((Pair) entry.getValue()).getValue() + "]"));
 				} else {
 					writer.print(indentationString
-								 + "  "
+								 + indentationString
 								 + entry.getKey()
 								 + (entry.getValue() == null ? " =" : (" = " + entry.getValue())));
 				}

@@ -3,9 +3,11 @@ package de.zeanon.storagemanagercore.internal.base.interfaces;
 import de.zeanon.storagemanagercore.internal.base.sections.FlatSection;
 import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
 import de.zeanon.storagemanagercore.internal.utility.basic.Pair;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -305,7 +307,8 @@ public interface DataStorage {
 	 * @return List
 	 */
 	default @Nullable <E> List<E> getList(final @NotNull String key) {
-		return (List<E>) this.get(key);
+		final @Nullable List<Object> tempList = (List<Object>) this.get(key);
+		return tempList == null ? null : tempList.stream().collect(ArrayList::new, (list, entry) -> list.add(Objects.toDef(entry)), List::addAll);
 	}
 
 	/**
@@ -316,6 +319,33 @@ public interface DataStorage {
 	 * @return List
 	 */
 	default @Nullable <E> List<E> getListUseArray(final @NotNull String... key) {
+		final @Nullable List<Object> tempList = (List<Object>) this.getUseArray(key);
+		return tempList == null ? null : tempList.stream().collect(ArrayList::new, (list, entry) -> list.add(Objects.toDef(entry)), List::addAll);
+	}
+
+	/**
+	 * BEWARE THIS WILL RETURN A DIRECT REFERENCE TO THE BACKED VALUE
+	 * <p>
+	 * Get a List from a File
+	 *
+	 * @param key key to List in the File
+	 *
+	 * @return List
+	 */
+	default @Nullable <E> List<E> getDirectListReference(final @NotNull String key) {
+		return (List<E>) this.get(key);
+	}
+
+	/**
+	 * BEWARE THIS WILL RETURN A DIRECT REFERENCE TO THE BACKED VALUE
+	 * <p>
+	 * Get a List from a File
+	 *
+	 * @param key key to List in the File
+	 *
+	 * @return List
+	 */
+	default @Nullable <E> List<E> getDirectListReferenceUseArray(final @NotNull String... key) {
 		return (List<E>) this.getUseArray(key);
 	}
 
@@ -327,7 +357,10 @@ public interface DataStorage {
 	 * @return Map
 	 */
 	default <K, V> @Nullable Map<K, V> getMap(final @NotNull String key) {
-		return (Map<K, V>) this.get(key);
+		final @Nullable Map<Object, Object> tempMap = (Map<Object, Object>) this.get(key);
+		return tempMap == null ? null : tempMap.entrySet()
+											   .stream()
+											   .collect(Collectors.toMap(entry -> Objects.toDef(entry.getKey()), entry -> Objects.notNull(Objects.toDef(entry.getValue()))));
 	}
 
 	/**
@@ -338,6 +371,35 @@ public interface DataStorage {
 	 * @return Map
 	 */
 	default <K, V> @Nullable Map<K, V> getMapUseArray(final @NotNull String... key) {
+		final @Nullable Map<Object, Object> tempMap = (Map<Object, Object>) this.getUseArray(key);
+		return tempMap == null ? null : tempMap.entrySet()
+											   .stream()
+											   .collect(Collectors.toMap(entry -> Objects.toDef(entry.getKey()), entry -> Objects.notNull(Objects.toDef(entry.getValue()))));
+	}
+
+	/**
+	 * BEWARE THIS WILL RETURN A DIRECT REFERENCE TO THE BACKED VALUE
+	 * <p>
+	 * Get a Map from a File
+	 *
+	 * @param key key to Map in the File
+	 *
+	 * @return Map
+	 */
+	default <K, V> @Nullable Map<K, V> getDirectMapReference(final @NotNull String key) {
+		return (Map<K, V>) this.get(key);
+	}
+
+	/**
+	 * BEWARE THIS WILL RETURN A DIRECT REFERENCE TO THE BACKED VALUE
+	 * <p>
+	 * Get a Map from a File
+	 *
+	 * @param key key to Map in the File
+	 *
+	 * @return Map
+	 */
+	default <K, V> @Nullable Map<K, V> getDirectMapReferenceUseArray(final @NotNull String... key) {
 		return (Map<K, V>) this.getUseArray(key);
 	}
 
@@ -365,6 +427,39 @@ public interface DataStorage {
 	 * @return a Pair with a key of type K and a value of type V
 	 */
 	default @Nullable <K, V> Pair<K, V> getPairUseArray(final @NotNull String... key) {
+		//noinspection unchecked
+		final @Nullable Pair<Object, Object> tempPair = (Pair<Object, Object>) this.getUseArray(key);
+		return tempPair == null ? null : new Pair<>(Objects.notNull(Objects.toDef(tempPair.getKey())), Objects.toDef(tempPair.getValue()));
+	}
+
+	/**
+	 * BEWARE THIS WILL RETURN A DIRECT REFERENCE TO THE BACKED VALUE
+	 * <p>
+	 * Get a Pair from a File
+	 *
+	 * @param key the key to the Pair in the File
+	 * @param <K> the Key-Type of the Pair
+	 * @param <V> the ValueType of the Pair
+	 *
+	 * @return a Pair with a key of type K and a value of type V
+	 */
+	default @Nullable <K, V> Pair<K, V> getDirectPairReference(final @NotNull String key) {
+		//noinspection unchecked
+		return (Pair<K, V>) this.get(key);
+	}
+
+	/**
+	 * BEWARE THIS WILL RETURN A DIRECT REFERENCE TO THE BACKED VALUE
+	 * <p>
+	 * Get a Pair from a File
+	 *
+	 * @param key the key to the Pair in the File
+	 * @param <K> the Key-Type of the Pair
+	 * @param <V> the ValueType of the Pair
+	 *
+	 * @return a Pair with a key of type K and a value of type V
+	 */
+	default @Nullable <K, V> Pair<K, V> getDirectPairReferenceUseArray(final @NotNull String... key) {
 		//noinspection unchecked
 		return (Pair<K, V>) this.getUseArray(key);
 	}

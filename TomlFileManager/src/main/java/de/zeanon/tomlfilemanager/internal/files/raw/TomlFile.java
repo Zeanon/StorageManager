@@ -59,20 +59,8 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 		BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
 
-		try {
-			this.fileData().loadData(com.electronwill.toml.Toml.read(this.file()));
-			this.lastLoaded(System.currentTimeMillis());
-		} catch (final @NotNull TomlException e) {
-			throw new FileParseException("Error while parsing '"
-										 + this.getAbsolutePath()
-										 + "'",
-										 e);
-		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while loading '"
-										 + this.file().getAbsolutePath()
-										 + "'",
-										 e);
-		}
+		this.fileData().loadData(this.readFile());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
@@ -121,7 +109,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 
 	@Override
-	protected @NotNull Map readFile() {
+	protected @NotNull Map<String, Object> readFile() {
 		try {
 			return Toml.read(this.file());
 		} catch (final @NotNull IOException e) {

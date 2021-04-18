@@ -50,6 +50,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 							final @Nullable InputStream inputStream,
 							final @NotNull ReloadSetting reloadSetting,
 							final @NotNull CommentSetting commentSetting,
+							final @NotNull String indentation,
 							final int bufferSize,
 							final boolean autoFlush,
 							final boolean bigMap,
@@ -57,7 +58,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 							final boolean synchronizeData,
 							final @NotNull Class<? extends DataMap> map,
 							final @NotNull Class<? extends List> list) {
-		super(file, inputStream, reloadSetting, commentSetting, bufferSize, autoFlush, bigMap, concurrentData, synchronizeData, map, list);
+		super(file, inputStream, reloadSetting, commentSetting, indentation, bufferSize, autoFlush, bigMap, concurrentData, synchronizeData, map, list);
 	}
 
 
