@@ -1,7 +1,7 @@
 package de.zeanon.jsonfilemanager;
 
-import de.zeanon.jsonfilemanager.internal.builder.JsonFileBuilder;
 import de.zeanon.jsonfilemanager.internal.files.raw.JsonFile;
+import de.zeanon.jsonfilemanager.internal.utility.builder.JsonFileBuilder;
 import de.zeanon.storagemanagercore.StorageManager;
 import de.zeanon.storagemanagercore.internal.base.files.FlatFile;
 import de.zeanon.storagemanagercore.internal.utility.basic.BaseFileUtils;

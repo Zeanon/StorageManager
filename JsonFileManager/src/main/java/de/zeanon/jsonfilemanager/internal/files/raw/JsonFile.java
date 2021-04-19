@@ -62,9 +62,12 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 					   final @NotNull Class<? extends List> list) {
 		super(file, inputStream, FileType.JSON, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting);
 
-		final @NotNull JSONTokener jsonTokener = new JSONTokener(
-				BaseFileUtils.createNewInputStreamFromFile(this.file()));
-		this.fileData().loadData(this.readFile());
+		if (this.file().length() == 0) {
+			this.save();
+		} else {
+			this.fileData().loadData(this.readFile());
+		}
+
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
