@@ -83,6 +83,19 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	}
 
 	/**
+	 * Initializes a new FileData
+	 *
+	 * @param collectionsProvider the internal Provider to be used
+	 * @param synchronizeData     whether the internal Map should be synchronized
+	 */
+	@Contract(pure = true)
+	protected ThunderFileData(final @NotNull CollectionsProvider<M, L> collectionsProvider, final boolean synchronizeData, final @NotNull M dataMap) {
+		this.collectionsProvider = collectionsProvider;
+		this.synchronizeData = synchronizeData;
+		this.dataMap = dataMap;
+	}
+
+	/**
 	 * Get a List consisting of DataMap.DataNode objects of the top most layer of the internal DataMap
 	 *
 	 * @return the entryList of the internal dataMap

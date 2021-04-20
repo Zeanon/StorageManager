@@ -13,6 +13,7 @@ import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.files.CommentEnabledFile;
 import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
 import de.zeanon.storagemanagercore.internal.base.interfaces.DataMap;
+import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
 import de.zeanon.thunderfilemanager.internal.base.exceptions.ThunderException;
 import de.zeanon.thunderfilemanager.internal.files.section.ThunderFileSection;
@@ -128,7 +129,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	 */
 	@Override
 	public @NotNull ThunderFileSection getSection(final @NotNull String sectionKey) {
-		return new LocalSection(sectionKey, this);
+		return new LocalSection(sectionKey, this, this.fileData());
 	}
 
 	/**
@@ -140,7 +141,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	 */
 	@Override
 	public @NotNull ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new LocalSection(sectionKey, this);
+		return new LocalSection(sectionKey, this, this.fileData());
 	}
 
 
@@ -180,14 +181,15 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 
 	private static class LocalSection extends ThunderFileSection {
 
-		private LocalSection(final @NotNull String sectionKey, final @NotNull ThunderFile thunderFile) {
-			super(sectionKey, thunderFile);
+		private LocalSection(final @NotNull String sectionKey, final @NotNull ThunderFile thunderFile, final @NotNull FileData<DataMap, ?, List> fileData) {
+			super(sectionKey, thunderFile, fileData);
 		}
 
-		private LocalSection(final @NotNull String[] sectionKey, final @NotNull ThunderFile thunderFile) {
-			super(sectionKey, thunderFile);
+		private LocalSection(final @NotNull String[] sectionKey, final @NotNull ThunderFile thunderFile, final @NotNull FileData<DataMap, ?, List> fileData) {
+			super(sectionKey, thunderFile, fileData);
 		}
 	}
+
 
 	private static class LocalFileData extends ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> { //NOSONAR
 

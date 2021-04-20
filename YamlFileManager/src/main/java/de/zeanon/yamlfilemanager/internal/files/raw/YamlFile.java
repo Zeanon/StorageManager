@@ -10,6 +10,7 @@ import de.zeanon.storagemanagercore.internal.base.exceptions.FileParseException;
 import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.files.CommentEnabledFile;
 import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
+import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
 import de.zeanon.yamlfilemanager.internal.files.section.YamlFileSection;
 import de.zeanon.yamlfilemanager.internal.utility.parser.YamlFileParser;
@@ -96,7 +97,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 	 */
 	@Override
 	public @NotNull YamlFileSection getSection(final @NotNull String sectionKey) {
-		return new LocalSection(sectionKey, this);
+		return new LocalSection(sectionKey, this, this.fileData());
 	}
 
 	/**
@@ -108,7 +109,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 	 */
 	@Override
 	public @NotNull YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new LocalSection(sectionKey, this);
+		return new LocalSection(sectionKey, this, this.fileData());
 	}
 
 
@@ -149,12 +150,12 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 
 	private static class LocalSection extends YamlFileSection {
 
-		private LocalSection(final @NotNull String sectionKey, final @NotNull YamlFile yamlFile) {
-			super(sectionKey, yamlFile);
+		private LocalSection(final @NotNull String sectionKey, final @NotNull YamlFile yamlFile, final @NotNull FileData<Map, ?, List> fileData) {
+			super(sectionKey, yamlFile, fileData);
 		}
 
-		private LocalSection(final @NotNull String[] sectionKey, final @NotNull YamlFile yamlFile) {
-			super(sectionKey, yamlFile);
+		private LocalSection(final @NotNull String[] sectionKey, final @NotNull YamlFile yamlFile, final @NotNull FileData<Map, ?, List> fileData) {
+			super(sectionKey, yamlFile, fileData);
 		}
 	}
 

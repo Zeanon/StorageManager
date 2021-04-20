@@ -64,6 +64,7 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * -- Setter --
 	 * Define if the Map should be synchronized
 	 */
+	@Getter
 	@Setter
 	private boolean synchronizeData;
 
@@ -80,6 +81,19 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		this.synchronizeData = synchronizeData;
 		//noinspection unchecked
 		this.dataMap = this.synchronizeData ? ((M) Collections.synchronizedMap(this.collectionsProvider().newMap())) : this.collectionsProvider().newMap(); //NOSONAR
+	}
+
+	/**
+	 * Initializes a new FileData
+	 *
+	 * @param collectionsProvider the internal Provider to be used
+	 * @param synchronizeData     whether the internal Map should be synchronized
+	 */
+	@Contract(pure = true)
+	protected StandardFileData(final @NotNull CollectionsProvider<M, L> collectionsProvider, final boolean synchronizeData, final @NotNull M dataMap) {
+		this.collectionsProvider = collectionsProvider;
+		this.synchronizeData = synchronizeData;
+		this.dataMap = dataMap;
 	}
 
 	/**

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,27 +22,23 @@ import org.jetbrains.annotations.Nullable;
  * @see FlatSection
  */
 @ToString(callSuper = true)
+@Accessors(fluent = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
 public abstract class CommentEnabledSection<F extends CommentEnabledFile<? extends FileData<M, ?, L>, M, L>, M extends Map, L extends List> extends FlatSection<F, M, L> {
 
 
-	@NotNull private final F commentEnabledFile;
-
-
-	protected CommentEnabledSection(final @NotNull String sectionKey, final @NotNull F commentEnabledFile) {
-		super(sectionKey, commentEnabledFile);
-		this.commentEnabledFile = commentEnabledFile;
+	protected CommentEnabledSection(final @NotNull String sectionKey, final @NotNull F commentEnabledFile, final @NotNull FileData<M, ?, L> fileData) {
+		super(sectionKey, commentEnabledFile, fileData);
 	}
 
-	protected CommentEnabledSection(final @NotNull String[] sectionKey, final @NotNull F commentEnabledFile) {
-		super(sectionKey, commentEnabledFile);
-		this.commentEnabledFile = commentEnabledFile;
+	protected CommentEnabledSection(final @NotNull String[] sectionKey, final @NotNull F commentEnabledFile, final @NotNull FileData<M, ?, L> fileData) {
+		super(sectionKey, commentEnabledFile, fileData);
 	}
 
 
 	public void setCommentSetting(final @NotNull CommentSetting commentSetting) {
-		this.commentEnabledFile.setCommentSetting(commentSetting);
+		this.flatFile().setCommentSetting(commentSetting);
 	}
 
 	/**

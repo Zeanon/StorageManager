@@ -16,7 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +43,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	private final @NotNull D fileData;
 	private final @NotNull FileType fileType;
 	private final @NotNull CollectionsProvider<M, L> collectionsProvider;
-	@Setter(AccessLevel.PROTECTED)
+	@Setter
 	private volatile long lastLoaded;
 	/**
 	 * Default: {@link Reload#INTELLIGENT}
@@ -641,7 +644,9 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	@Override
 	public void setAllUseArray(final @NotNull String[] blockKey,
 							   final @NotNull Pair<String[], Object>... dataPairs) {
-		this.insertAllUseArray(blockKey, dataPairs);
+		if (this.insertAllUseArray(blockKey, dataPairs)) {
+			this.save();
+		}
 		this.lastLoaded(System.currentTimeMillis());
 	}
 
@@ -1008,18 +1013,18 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	}
 
 	/**
-	 * Read the Content of the File and parse it
-	 */
-	protected abstract @NotNull M readFile();
-
-	/**
 	 * Checks if the File needs to be reloaded and does so if true.
 	 */
-	protected void update() {
+	public void update() {
 		if (this.shouldReload()) {
 			this.reload();
 		}
 	}
+
+	/**
+	 * Read the Content of the File and parse it
+	 */
+	protected abstract @NotNull M readFile();
 
 	private boolean insert(final @NotNull String key,
 						   final @Nullable Object value) {

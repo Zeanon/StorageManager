@@ -9,6 +9,7 @@ import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProv
 import de.zeanon.storagemanagercore.internal.base.exceptions.FileParseException;
 import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.files.FlatFile;
+import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
 import de.zeanon.tomlfilemanager.internal.files.section.TomlFileSection;
 import java.io.File;
@@ -89,7 +90,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 */
 	@Override
 	public @NotNull TomlFileSection getSection(final @NotNull String sectionKey) {
-		return new LocalSection(sectionKey, this);
+		return new LocalSection(sectionKey, this, this.fileData());
 	}
 
 	/**
@@ -101,7 +102,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 */
 	@Override
 	public @NotNull TomlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new LocalSection(sectionKey, this);
+		return new LocalSection(sectionKey, this, this.fileData());
 	}
 
 
@@ -141,12 +142,12 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 	private static class LocalSection extends TomlFileSection {
 
-		private LocalSection(final @NotNull String sectionKey, final @NotNull TomlFile tomlFile) {
-			super(sectionKey, tomlFile);
+		private LocalSection(final @NotNull String sectionKey, final @NotNull TomlFile tomlFile, final @NotNull FileData<Map, ?, List> fileData) {
+			super(sectionKey, tomlFile, fileData);
 		}
 
-		private LocalSection(final @NotNull String[] sectionKey, final @NotNull TomlFile tomlFile) {
-			super(sectionKey, tomlFile);
+		private LocalSection(final @NotNull String[] sectionKey, final @NotNull TomlFile tomlFile, final @NotNull FileData<Map, ?, List> fileData) {
+			super(sectionKey, tomlFile, fileData);
 		}
 	}
 

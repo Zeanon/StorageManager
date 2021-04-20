@@ -2,10 +2,7 @@ package de.zeanon.thunderfilemanager.internal.files.config;
 
 import de.zeanon.storagemanagercore.internal.base.exceptions.FileParseException;
 import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
-import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
-import de.zeanon.storagemanagercore.internal.base.interfaces.Config;
-import de.zeanon.storagemanagercore.internal.base.interfaces.DataMap;
-import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
+import de.zeanon.storagemanagercore.internal.base.interfaces.*;
 import de.zeanon.storagemanagercore.internal.base.settings.Comment;
 import de.zeanon.thunderfilemanager.internal.files.raw.ThunderFile;
 import de.zeanon.thunderfilemanager.internal.files.section.ThunderConfigSection;
@@ -305,7 +302,7 @@ public class ThunderConfig extends ThunderFile implements Config {
 	 */
 	@Override
 	public @NotNull ThunderConfigSection getSection(final @NotNull String sectionKey) {
-		return new LocalSection(sectionKey, this);
+		return new LocalSection(sectionKey, this, this.fileData());
 	}
 
 	/**
@@ -317,20 +314,22 @@ public class ThunderConfig extends ThunderFile implements Config {
 	 */
 	@Override
 	public @NotNull ThunderConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new LocalSection(sectionKey, this);
+		return new LocalSection(sectionKey, this, this.fileData());
 	}
 
 
 	private static class LocalSection extends ThunderConfigSection {
 
 		private LocalSection(final @NotNull String sectionKey,
-							 final @NotNull ThunderConfig thunderConfig) {
-			super(sectionKey, thunderConfig);
+							 final @NotNull ThunderConfig thunderConfig,
+							 final @NotNull FileData<DataMap, ?, List> fileData) {
+			super(sectionKey, thunderConfig, fileData);
 		}
 
 		private LocalSection(final @NotNull String[] sectionKey,
-							 final @NotNull ThunderConfig thunderConfig) {
-			super(sectionKey, thunderConfig);
+							 final @NotNull ThunderConfig thunderConfig,
+							 final @NotNull FileData<DataMap, ?, List> fileData) {
+			super(sectionKey, thunderConfig, fileData);
 		}
 	}
 }

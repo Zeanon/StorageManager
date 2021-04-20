@@ -1,107 +1,69 @@
 package de.zeanon.tomlfilemanager.internal.files.section;
 
-import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
-import de.zeanon.storagemanagercore.internal.base.interfaces.Config;
+import de.zeanon.storagemanagercore.internal.base.cache.filedata.StandardFileData;
+import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
+import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
+import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
 import de.zeanon.tomlfilemanager.internal.files.config.TomlConfig;
 import java.util.List;
+import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Section for {@link TomlConfig}
+ *
+ * @author Zeanon
+ * @version 1.1.0
+ */
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("unused")
-public class TomlConfigSection extends TomlFileSection implements Config {
+@SuppressWarnings({"unused", "rawtypes"})
+public class TomlConfigSection extends TomlFileSection { //NOSONAR
 
 
-	private final @NotNull TomlConfig baseFile;
-
-
-	protected TomlConfigSection(final @NotNull String sectionKey, final @NotNull TomlConfig baseFile) {
-		super(sectionKey, baseFile);
-		this.baseFile = baseFile;
+	protected TomlConfigSection(final @NotNull String sectionKey, final @NotNull TomlConfig baseFile, final @NotNull FileData<Map, ?, List> fileData) {
+		super(sectionKey, baseFile, fileData);
 	}
 
-	protected TomlConfigSection(final @NotNull String[] sectionKey, final @NotNull TomlConfig baseFile) {
-		super(sectionKey, baseFile);
-		this.baseFile = baseFile;
-	}
-
-
-	@Override
-	public void setCommentSetting(final @NotNull CommentSetting commentSetting) {
-		this.baseFile.setCommentSetting(commentSetting);
-	}
-
-	@Override
-	public @Nullable
-	List<String> getHeader() {
-		return this.baseFile.getHeader(this.getSectionKey());
-	}
-
-	@Override
-	public void setHeader(final @Nullable String... header) {
-		this.baseFile.setHeader(this.getSectionKey(), header);
-	}
-
-	public @Nullable
-	List<String> getHeader(final @NotNull String blockKey) {
-		return this.baseFile.getHeader(this.getFinalKey(blockKey));
-	}
-
-	public void setHeader(final @NotNull String blockKey, final @Nullable List<String> header) {
-		this.baseFile.setHeader(this.getFinalKey(blockKey), header);
-	}
-
-
-	@Override
-	public @NotNull List<String> getFooter() {
-		return this.baseFile.getFooter(this.getSectionKey());
-	}
-
-	@Override
-	public void setFooter(final @Nullable String... footer) {
-		this.baseFile.setFooter(this.getSectionKey(), footer);
-	}
-
-	public @NotNull List<String> getFooter(final @NotNull String blockKey) {
-		return this.baseFile.getFooter(this.getFinalKey(blockKey));
-	}
-
-	public void setFooter(final @NotNull String blockKey, final @Nullable List<String> footer) {
-		this.baseFile.setFooter(this.getFinalKey(blockKey), footer);
-	}
-
-
-	@Override
-	public @NotNull List<String> getComments() {
-		return this.baseFile.getComments(this.getSectionKey());
-	}
-
-	public @NotNull List<String> getComments(final @NotNull String blockKey) {
-		return this.baseFile.getComments(this.getFinalKey(blockKey));
-	}
-
-	public @NotNull List<String> getBlockComments() {
-		return this.baseFile.getBlockComments(this.getSectionKey());
-	}
-
-	public @NotNull List<String> getBlockComments(final @NotNull String blockKey) {
-		return this.baseFile.getBlockComments(this.getFinalKey(blockKey));
+	protected TomlConfigSection(final @NotNull String[] sectionKey, final @NotNull TomlConfig baseFile, final @NotNull FileData<Map, ?, List> fileData) {
+		super(sectionKey, baseFile, fileData);
 	}
 
 
 	@Override
 	public @NotNull TomlConfigSection getSection(final @NotNull String sectionKey) {
-		return new TomlConfigSection(this.getFinalKey(sectionKey), this.baseFile);
+		return new TomlConfigSection(sectionKey, (TomlConfig) this.flatFile(), this.fileData());
 	}
 
 	@Override
 	public @NotNull TomlConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new TomlConfigSection(this.getFinalArrayKey(sectionKey), this.baseFile);
+		return new TomlConfigSection(sectionKey, (TomlConfig) this.flatFile(), this.fileData());
+	}
+
+
+	@Override
+	protected FileData<Map, ?, List> getFileData(@NotNull String key, @NotNull FileData<Map, ?, List> fileData) {
+		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), Objects.notNull(this.getDirectMapReference(key)));
+	}
+
+	@Override
+	protected FileData<Map, ?, List> getSectionFileDataUseArray(@NotNull String[] key, @NotNull FileData<Map, ?, List> fileData) {
+		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), Objects.notNull(this.getDirectMapReferenceUseArray(key)));
+	}
+
+
+	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> { //NOSONAR
+
+		private static final long serialVersionUID = -3736783796296434140L;
+
+		@SuppressWarnings("rawtypes")
+		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize, final @NotNull Map dataMap) { //NOSONAR
+			super(collectionsProvider, synchronize, dataMap);
+		}
 	}
 }

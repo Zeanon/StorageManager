@@ -1,6 +1,10 @@
 package de.zeanon.yamlfilemanager.internal.files.section;
 
+import de.zeanon.storagemanagercore.internal.base.cache.filedata.StandardFileData;
+import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
+import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
 import de.zeanon.storagemanagercore.internal.base.sections.CommentEnabledSection;
+import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
 import de.zeanon.yamlfilemanager.internal.files.config.YamlConfig;
 import de.zeanon.yamlfilemanager.internal.files.raw.YamlFile;
 import java.util.List;
@@ -24,27 +28,44 @@ import org.jetbrains.annotations.NotNull;
 public class YamlFileSection extends CommentEnabledSection<YamlFile, Map, List> { //NOSONAR
 
 
-	private final @NotNull YamlFile baseFile;
-
-
-	protected YamlFileSection(final @NotNull String sectionKey, final @NotNull YamlFile baseFile) {
-		super(sectionKey, baseFile);
-		this.baseFile = baseFile;
+	protected YamlFileSection(final @NotNull String sectionKey, final @NotNull YamlFile baseFile, final @NotNull FileData<Map, ?, List> fileData) {
+		super(sectionKey, baseFile, fileData);
 	}
 
-	protected YamlFileSection(final @NotNull String[] sectionKey, final @NotNull YamlFile baseFile) {
-		super(sectionKey, baseFile);
-		this.baseFile = baseFile;
+	protected YamlFileSection(final @NotNull String[] sectionKey, final @NotNull YamlFile baseFile, final @NotNull FileData<Map, ?, List> fileData) {
+		super(sectionKey, baseFile, fileData);
 	}
 
 
 	@Override
 	public @NotNull YamlFileSection getSection(final @NotNull String sectionKey) {
-		return new YamlFileSection(this.getFinalKey(sectionKey), this.baseFile);
+		return new YamlFileSection(sectionKey, this.flatFile(), this.fileData());
 	}
 
 	@Override
 	public @NotNull YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new YamlFileSection(this.getFinalArrayKey(sectionKey), this.baseFile);
+		return new YamlFileSection(sectionKey, this.flatFile(), this.fileData());
+	}
+
+
+	@Override
+	protected FileData<Map, ?, List> getFileData(@NotNull String key, @NotNull FileData<Map, ?, List> fileData) {
+		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), Objects.notNull(this.getDirectMapReference(key)));
+	}
+
+	@Override
+	protected FileData<Map, ?, List> getSectionFileDataUseArray(@NotNull String[] key, @NotNull FileData<Map, ?, List> fileData) {
+		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), Objects.notNull(this.getDirectMapReferenceUseArray(key)));
+	}
+
+
+	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> { //NOSONAR
+
+		private static final long serialVersionUID = -3736783796296434140L;
+
+		@SuppressWarnings("rawtypes")
+		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize, final @NotNull Map dataMap) { //NOSONAR
+			super(collectionsProvider, synchronize, dataMap);
+		}
 	}
 }

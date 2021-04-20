@@ -9,6 +9,7 @@ import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProv
 import de.zeanon.storagemanagercore.internal.base.exceptions.FileParseException;
 import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.files.FlatFile;
+import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReadWriteFileLock;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storagemanagercore.internal.utility.basic.BaseFileUtils;
@@ -174,10 +175,9 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 *
 	 * @return the Section using the given sectionKey
 	 */
-	@NotNull
 	@Override
-	public JsonFileSection getSection(final @NotNull String sectionKey) {
-		return new LocalSection(sectionKey, this);
+	public @NotNull JsonFileSection getSection(final @NotNull String sectionKey) {
+		return new LocalSection(sectionKey, this, this.fileData());
 	}
 
 	/**
@@ -188,9 +188,8 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public @NotNull
-	JsonFileSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new LocalSection(sectionKey, this);
+	public @NotNull JsonFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+		return new LocalSection(sectionKey, this, this.fileData());
 	}
 
 
@@ -230,14 +229,15 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		}
 	}
 
+
 	private static class LocalSection extends JsonFileSection {
 
-		private LocalSection(final @NotNull String sectionKey, final @NotNull JsonFile jsonFile) {
-			super(sectionKey, jsonFile);
+		private LocalSection(final @NotNull String sectionKey, final @NotNull JsonFile jsonFile, final @NotNull FileData<Map, ?, List> fileData) {
+			super(sectionKey, jsonFile, fileData);
 		}
 
-		private LocalSection(final @NotNull String[] sectionKey, final @NotNull JsonFile jsonFile) {
-			super(sectionKey, jsonFile);
+		private LocalSection(final @NotNull String[] sectionKey, final @NotNull JsonFile jsonFile, final @NotNull FileData<Map, ?, List> fileData) {
+			super(sectionKey, jsonFile, fileData);
 		}
 	}
 

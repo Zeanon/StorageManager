@@ -5,6 +5,7 @@ import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.files.FlatFile;
 import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
 import de.zeanon.storagemanagercore.internal.base.interfaces.Config;
+import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storagemanagercore.internal.base.settings.Comment;
 import de.zeanon.tomlfilemanager.internal.files.raw.TomlFile;
@@ -504,7 +505,7 @@ public class TomlConfig extends TomlFile implements Config {
 	 */
 	@Override
 	public @NotNull TomlConfigSection getSection(final @NotNull String sectionKey) {
-		return new TomlConfig.LocalSection(sectionKey, this);
+		return new TomlConfig.LocalSection(sectionKey, this, this.fileData());
 	}
 
 	/**
@@ -516,20 +517,22 @@ public class TomlConfig extends TomlFile implements Config {
 	 */
 	@Override
 	public @NotNull TomlConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new TomlConfig.LocalSection(sectionKey, this);
+		return new TomlConfig.LocalSection(sectionKey, this, this.fileData());
 	}
 
 
 	private static class LocalSection extends TomlConfigSection {
 
 		private LocalSection(final @NotNull String sectionKey,
-							 final @NotNull TomlConfig tomlConfig) {
-			super(sectionKey, tomlConfig);
+							 final @NotNull TomlConfig tomlConfig,
+							 final @NotNull FileData<Map, ?, List> fileData) {
+			super(sectionKey, tomlConfig, fileData);
 		}
 
 		private LocalSection(final @NotNull String[] sectionKey,
-							 final @NotNull TomlConfig tomlConfig) {
-			super(sectionKey, tomlConfig);
+							 final @NotNull TomlConfig tomlConfig,
+							 final @NotNull FileData<Map, ?, List> fileData) {
+			super(sectionKey, tomlConfig, fileData);
 		}
 	}
 }

@@ -38,8 +38,7 @@ public interface DataStorage {
 	 *
 	 * @return Object from File
 	 */
-	@Nullable
-	Object getUseArray(final @NotNull String... key);
+	@Nullable Object getUseArray(final @NotNull String... key);
 
 	/**
 	 * Get an Object from the File casted to a certain type
