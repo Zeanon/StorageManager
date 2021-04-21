@@ -45,13 +45,13 @@ public class TomlConfigSection extends TomlFileSection { //NOSONAR
 	}
 
 
-	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> { //NOSONAR
+	private static class LocalFileData extends StandardFileData<Map, Map.Entry, List> { //NOSONAR
 
 		private static final long serialVersionUID = -3736783796296434140L;
 
 		@SuppressWarnings("rawtypes")
-		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize, final @NotNull Map dataMap) { //NOSONAR
-			super(collectionsProvider, synchronize, dataMap);
+		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final @NotNull Map dataMap) { //NOSONAR
+			super(collectionsProvider, dataMap);
 		}
 	}
 }

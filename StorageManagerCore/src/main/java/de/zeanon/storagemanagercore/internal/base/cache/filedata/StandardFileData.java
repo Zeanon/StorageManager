@@ -8,14 +8,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -54,45 +52,27 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	 * @return the internal DataMap
 	 */
 	private transient @NotNull M dataMap;
-	/**
-	 * Defines whether the internal Map should be wrapped by {@link Collections#synchronizedMap(Map)}
-	 * <p>
-	 * -- Getter --
-	 *
-	 * @return if the Map is synchronized
-	 * <p>
-	 * -- Setter --
-	 * Define if the Map should be synchronized
-	 */
-	@Getter
-	@Setter
-	private boolean synchronizeData;
 
 
 	/**
 	 * Initializes a new FileData
 	 *
 	 * @param collectionsProvider the internal Provider to be used
-	 * @param synchronizeData     whether the internal Map should be synchronized
 	 */
 	@Contract(pure = true)
-	protected StandardFileData(final @NotNull CollectionsProvider<M, L> collectionsProvider, final boolean synchronizeData) {
+	protected StandardFileData(final @NotNull CollectionsProvider<M, L> collectionsProvider) {
 		this.collectionsProvider = collectionsProvider;
-		this.synchronizeData = synchronizeData;
-		//noinspection unchecked
-		this.dataMap = this.synchronizeData ? ((M) Collections.synchronizedMap(this.collectionsProvider().newMap())) : this.collectionsProvider().newMap(); //NOSONAR
+		this.dataMap = this.collectionsProvider().newMap(); //NOSONAR
 	}
 
 	/**
 	 * Initializes a new FileData
 	 *
 	 * @param collectionsProvider the internal Provider to be used
-	 * @param synchronizeData     whether the internal Map should be synchronized
 	 */
 	@Contract(pure = true)
-	protected StandardFileData(final @NotNull CollectionsProvider<M, L> collectionsProvider, final boolean synchronizeData, final @NotNull M dataMap) {
+	protected StandardFileData(final @NotNull CollectionsProvider<M, L> collectionsProvider, final @NotNull M dataMap) {
 		this.collectionsProvider = collectionsProvider;
-		this.synchronizeData = synchronizeData;
 		this.dataMap = dataMap;
 	}
 
@@ -205,11 +185,9 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 	@Override
 	public void loadData(final @Nullable M map) {
 		if (map != null) {
-			//noinspection unchecked
-			this.dataMap = this.synchronizeData ? ((M) Collections.synchronizedMap(map)) : map;
+			this.dataMap = map;
 		} else {
-			//noinspection unchecked
-			this.dataMap = this.synchronizeData ? ((M) Collections.synchronizedMap(this.collectionsProvider().newMap())) : this.collectionsProvider().newMap(); //NOSONAR
+			this.dataMap = this.collectionsProvider().newMap(); //NOSONAR
 		}
 	}
 

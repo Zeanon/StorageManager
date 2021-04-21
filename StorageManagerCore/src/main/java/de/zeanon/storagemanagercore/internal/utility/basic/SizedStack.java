@@ -80,15 +80,17 @@ public class SizedStack<T> {
 	 * @return a new SizedStack with the given size
 	 */
 	public void resize(final int newSize) {
-		final @NotNull SizedStack<T> temp = new SizedStack<>(newSize);
-		while (!this.empty() && temp.size < newSize) {
-			temp.pushBottom(this.pop());
+		if (newSize != this.maxSize) {
+			final @NotNull SizedStack<T> temp = new SizedStack<>(newSize);
+			while (!this.empty() && temp.size < newSize) {
+				temp.pushBottom(this.pop());
+			}
+			this.maxSize = temp.maxSize;
+			this.data = temp.data;
+			this.head = temp.head;
+			this.tail = temp.tail;
+			this.size = temp.size;
 		}
-		this.maxSize = temp.maxSize;
-		this.data = temp.data;
-		this.head = temp.head;
-		this.tail = temp.tail;
-		this.size = temp.size;
 	}
 
 	public boolean empty() {

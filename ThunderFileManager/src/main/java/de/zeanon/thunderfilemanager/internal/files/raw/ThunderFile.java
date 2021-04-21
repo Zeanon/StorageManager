@@ -79,7 +79,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 						  final boolean synchronizeData,
 						  final @NotNull Class<? extends DataMap> map,
 						  final @NotNull Class<? extends List> list) {
-		super(file, inputStream, FileType.THUNDERFILE, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting, commentSetting);
+		super(file, inputStream, FileType.THUNDERFILE, new LocalFileData(new CollectionsProvider<>(map, list, synchronizeData)), reloadSetting, commentSetting, false);
 		this.bufferSize = bufferSize;
 		this.autoFlush = autoFlush;
 		this.concurrentData = concurrentData;
@@ -148,7 +148,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	@Override
 	protected @NotNull DataMap<String, Object> readFile() {
 		try {
-			return ThunderFileParser.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.bufferSize);
+			return ThunderFileParser.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.getBufferSize());
 		} catch (final @NotNull RuntimeIOException e) {
 			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e);
 		} catch (final @NotNull ThunderException e) {
@@ -195,8 +195,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 
 		private static final long serialVersionUID = -4787829380861376534L;
 
-		private LocalFileData(final @NotNull CollectionsProvider<DataMap, List> collectionsProvider, final boolean synchronize) { //NOSONAR
-			super(collectionsProvider, synchronize);
+		private LocalFileData(final @NotNull CollectionsProvider<DataMap, List> collectionsProvider) { //NOSONAR
+			super(collectionsProvider);
 		}
 	}
 }

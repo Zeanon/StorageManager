@@ -49,22 +49,22 @@ public class TomlFileSection extends FlatSection<TomlFile, Map, List> { //NOSONA
 
 	@Override
 	protected FileData<Map, ?, List> getSectionFileData(@NotNull String key, @NotNull FileData<Map, ?, List> fileData) {
-		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), (Map) Objects.notNull(fileData.get(key)));
+		return new LocalFileData(fileData.collectionsProvider(), (Map) Objects.notNull(fileData.get(key)));
 	}
 
 	@Override
 	protected FileData<Map, ?, List> getSectionFileDataUseArray(@NotNull String[] key, @NotNull FileData<Map, ?, List> fileData) {
-		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), (Map) Objects.notNull(fileData.getUseArray(key)));
+		return new LocalFileData(fileData.collectionsProvider(), (Map) Objects.notNull(fileData.getUseArray(key)));
 	}
 
 
-	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> { //NOSONAR
+	private static class LocalFileData extends StandardFileData<Map, Map.Entry, List> { //NOSONAR
 
 		private static final long serialVersionUID = -3736783796296434140L;
 
 		@SuppressWarnings("rawtypes")
-		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize, final @NotNull Map dataMap) { //NOSONAR
-			super(collectionsProvider, synchronize, dataMap);
+		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final @NotNull Map dataMap) { //NOSONAR
+			super(collectionsProvider, dataMap);
 		}
 	}
 }

@@ -4,10 +4,12 @@ import de.zeanon.storagemanagercore.external.browniescollections.GapList;
 import de.zeanon.storagemanagercore.internal.base.exceptions.ProviderException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,21 +35,18 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 	 * The Map implementation to be used
 	 */
 	@Getter
+	@Setter
 	private @NotNull Class<? extends M> mapType;
 	/**
 	 * The List implementation to be used
 	 */
 	@Getter
+	@Setter
 	private @NotNull Class<? extends L> listType;
 
-
-	public void setMapType(final @NotNull Class<? extends M> mapType) {
-		this.mapType = mapType;
-	}
-
-	public void setListType(final @NotNull Class<? extends L> listType) {
-		this.listType = listType;
-	}
+	@Getter
+	@Setter
+	private boolean synchronizeData;
 
 
 	/**
@@ -55,7 +54,9 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 	 */
 	public @NotNull M newMap() {
 		try {
-			return this.mapType.getDeclaredConstructor().newInstance();
+			//noinspection unchecked
+			return this.synchronizeData ? (M) Collections.synchronizedMap((Map) this.mapType.getDeclaredConstructor().newInstance())
+										: this.mapType.getDeclaredConstructor().newInstance();
 		} catch (final @NotNull InstantiationException
 				| InvocationTargetException
 				| NoSuchMethodException
@@ -69,7 +70,9 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 	 */
 	public @NotNull L newList() {
 		try {
-			return this.listType.getDeclaredConstructor().newInstance();
+			//noinspection unchecked
+			return this.synchronizeData ? (L) Collections.synchronizedList((List) this.listType.getDeclaredConstructor().newInstance())
+										: this.listType.getDeclaredConstructor().newInstance();
 		} catch (final @NotNull InstantiationException
 				| IllegalAccessException
 				| InvocationTargetException
@@ -87,8 +90,11 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 			for (final @NotNull Object parameter : parameters) {
 				parameterTypes.add(parameter.getClass());
 			}
-			return this.mapType.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0]))
-							   .newInstance(parameters);
+			//noinspection unchecked
+			return this.synchronizeData ? (M) Collections.synchronizedMap((Map) this.mapType.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0]))
+																							.newInstance(parameters))
+										: this.mapType.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0]))
+													  .newInstance(parameters);
 		} catch (final @NotNull InstantiationException
 				| InvocationTargetException
 				| NoSuchMethodException
@@ -103,8 +109,11 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 	public @NotNull M newMap(final @NotNull Class<?>[] parameterTypes,
 							 final @NotNull Object... parameters) {
 		try {
-			return this.mapType.getDeclaredConstructor(parameterTypes)
-							   .newInstance(parameters);
+			//noinspection unchecked
+			return this.synchronizeData ? (M) Collections.synchronizedMap((Map) this.mapType.getDeclaredConstructor(parameterTypes)
+																							.newInstance(parameters))
+										: this.mapType.getDeclaredConstructor(parameterTypes)
+													  .newInstance(parameters);
 		} catch (final @NotNull InstantiationException
 				| InvocationTargetException
 				| NoSuchMethodException
@@ -122,8 +131,11 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 			for (final @NotNull Object parameter : parameters) {
 				parameterTypes.add(parameter.getClass());
 			}
-			return this.listType.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0]))
-								.newInstance(parameters);
+			//noinspection unchecked
+			return this.synchronizeData ? (L) Collections.synchronizedList((List) this.listType.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0]))
+																							   .newInstance(parameters))
+										: this.listType.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0]))
+													   .newInstance(parameters);
 		} catch (final @NotNull InstantiationException
 				| IllegalAccessException
 				| InvocationTargetException
@@ -138,8 +150,11 @@ public class CollectionsProvider<M extends Map, L extends List> implements Seria
 	public @NotNull L newList(final @NotNull Class<?>[] parameterTypes,
 							  final @NotNull Object... parameters) {
 		try {
-			return this.listType.getDeclaredConstructor(parameterTypes)
-								.newInstance(parameters);
+			//noinspection unchecked
+			return this.synchronizeData ? (L) Collections.synchronizedList((List) this.listType.getDeclaredConstructor(parameterTypes)
+																							   .newInstance(parameters))
+										: this.listType.getDeclaredConstructor(parameterTypes)
+													   .newInstance(parameters);
 		} catch (final @NotNull InstantiationException
 				| IllegalAccessException
 				| InvocationTargetException

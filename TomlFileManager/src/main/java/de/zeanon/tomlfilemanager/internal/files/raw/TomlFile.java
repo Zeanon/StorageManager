@@ -55,10 +55,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 					   final boolean synchronizeData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, inputStream, FileType.TOML, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting);
-
-		this.fileData().loadData(this.readFile());
-		this.lastLoaded(System.currentTimeMillis());
+		super(file, inputStream, FileType.TOML, new LocalFileData(new CollectionsProvider<>(map, list, synchronizeData)), reloadSetting);
 	}
 
 	@Override
@@ -155,8 +152,8 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 		private static final long serialVersionUID = -9141241112197467155L;
 
-		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) { //NOSONAR
-			super(collectionsProvider, synchronize);
+		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider) { //NOSONAR
+			super(collectionsProvider);
 		}
 	}
 }

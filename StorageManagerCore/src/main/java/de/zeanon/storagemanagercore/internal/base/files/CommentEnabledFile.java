@@ -65,6 +65,17 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 		this.commentSetting = commentSetting;
 	}
 
+	protected CommentEnabledFile(final @NotNull File file,
+								 final @Nullable InputStream inputStream,
+								 final @NotNull FileType fileType,
+								 final @NotNull D fileData,
+								 final @NotNull ReloadSetting reloadSetting,
+								 final @NotNull CommentSetting commentSetting,
+								 final boolean immediatelyReadData) {
+		super(file, inputStream, fileType, fileData, reloadSetting, immediatelyReadData);
+		this.commentSetting = commentSetting;
+	}
+
 	/**
 	 * Reload with a specific {@link CommentSetting}
 	 *

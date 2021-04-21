@@ -6,16 +6,14 @@ import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException
 import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
 import de.zeanon.storagemanagercore.internal.base.interfaces.DataMap;
+import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReadWriteFileLock;
 import de.zeanon.storagemanagercore.internal.base.settings.Comment;
 import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
 import de.zeanon.storagemanagercore.internal.utility.basic.Pair;
 import de.zeanon.storagemanagercore.internal.utility.filelock.ExtendedFileLock;
 import de.zeanon.thunderfilemanager.internal.base.exceptions.ThunderException;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -48,18 +46,93 @@ public class ThunderFileParser {
 	 * @throws ObjectNullException if a passed value is null
 	 */
 	public void writeData(final @NotNull File file,
-						  final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, //NOSONAR
+						  final @NotNull FileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, //NOSONAR
 						  final @NotNull CommentSetting commentSetting,
 						  final @NotNull String indentationString,
 						  final boolean autoFlush) {
-		if (commentSetting == Comment.PRESERVE) {
-			ThunderFileParser.initialWriteWithComments(file, indentationString, fileData, autoFlush);
-		} else if (commentSetting == Comment.SKIP) {
-			ThunderFileParser.initialWriteWithOutComments(file, indentationString, fileData, autoFlush);
-		} else {
-			throw new IllegalArgumentException("Illegal CommentSetting");
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
+			 final @NotNull PrintWriter writer = tempLock.createPrintWriter(autoFlush)) {
+			tempLock.lock();
+			tempLock.truncateChannel(0);
+
+			if (!fileData.isEmpty()) {
+				final @NotNull Iterator<DataMap.DataNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
+				if (commentSetting == Comment.PRESERVE) {
+					ThunderFileParser.initialWriteWithComments(writer, mapIterator, indentationString);
+				} else if (commentSetting == Comment.SKIP) {
+					ThunderFileParser.initialWriteWithOutComments(writer, mapIterator, indentationString);
+				} else {
+					throw new IllegalArgumentException("Illegal CommentSetting");
+				}
+			}
+		} catch (final @NotNull IOException e) {
+			throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
 		}
 	}
+
+	public void writeData(final @NotNull OutputStream outputStream,
+						  final @NotNull FileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, //NOSONAR
+						  final @NotNull CommentSetting commentSetting,
+						  final @NotNull String indentationString,
+						  final boolean autoFlush) {
+		if (!fileData.isEmpty()) {
+			try (final @NotNull PrintWriter writer = new PrintWriter(outputStream, autoFlush)) {
+				final @NotNull Iterator<DataMap.DataNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
+				if (commentSetting == Comment.PRESERVE) {
+					ThunderFileParser.initialWriteWithComments(writer, mapIterator, indentationString);
+				} else if (commentSetting == Comment.SKIP) {
+					ThunderFileParser.initialWriteWithOutComments(writer, mapIterator, indentationString);
+				} else {
+					throw new IllegalArgumentException("Illegal CommentSetting");
+				}
+			}
+		}
+	}
+
+	public void writeDataFromMap(final @NotNull File file,
+								 final @NotNull DataMap<String, Object> dataMap, //NOSONAR
+								 final @NotNull CommentSetting commentSetting,
+								 final @NotNull String indentationString,
+								 final boolean autoFlush) {
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
+			 final @NotNull PrintWriter writer = tempLock.createPrintWriter(autoFlush)) {
+			tempLock.lock();
+			tempLock.truncateChannel(0);
+
+			if (!dataMap.isEmpty()) {
+				final @NotNull Iterator<DataMap.DataNode<String, Object>> mapIterator = dataMap.entryList().iterator();
+				if (commentSetting == Comment.PRESERVE) {
+					ThunderFileParser.initialWriteWithComments(writer, mapIterator, indentationString);
+				} else if (commentSetting == Comment.SKIP) {
+					ThunderFileParser.initialWriteWithOutComments(writer, mapIterator, indentationString);
+				} else {
+					throw new IllegalArgumentException("Illegal CommentSetting");
+				}
+			}
+		} catch (final @NotNull IOException e) {
+			throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
+		}
+	}
+
+	public void writeDataFromMap(final @NotNull OutputStream outputStream,
+								 final @NotNull DataMap<String, Object> dataMap, //NOSONAR
+								 final @NotNull CommentSetting commentSetting,
+								 final @NotNull String indentationString,
+								 final boolean autoFlush) {
+		if (!dataMap.isEmpty()) {
+			try (final @NotNull PrintWriter writer = new PrintWriter(outputStream, autoFlush)) {
+				final @NotNull Iterator<DataMap.DataNode<String, Object>> mapIterator = dataMap.entryList().iterator();
+				if (commentSetting == Comment.PRESERVE) {
+					ThunderFileParser.initialWriteWithComments(writer, mapIterator, indentationString);
+				} else if (commentSetting == Comment.SKIP) {
+					ThunderFileParser.initialWriteWithOutComments(writer, mapIterator, indentationString);
+				} else {
+					throw new IllegalArgumentException("Illegal CommentSetting");
+				}
+			}
+		}
+	}
+
 
 	/**
 	 * Read the Data of a File
@@ -76,19 +149,155 @@ public class ThunderFileParser {
 	 * @throws ObjectNullException if a passed value is null
 	 */
 	public @NotNull DataMap<String, Object> readData(final @NotNull File file,
-													 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
+													 final @NotNull CollectionsProvider<DataMap, List> collectionsProvider,
 													 final @NotNull CommentSetting commentSetting,
 													 final int buffer_size) throws ThunderException {
 		try {
+			final @NotNull ListIterator<String> lines;
+			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
+				 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
+				tempLock.lock();
+				lines = reader.lines().collect(Collectors.toList()).listIterator();
+			} catch (final @NotNull IOException e) {
+				throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
+			}
 			if (commentSetting == Comment.PRESERVE) {
-				return ThunderFileParser.initialReadWithComments(file, collectionsProvider, buffer_size);
+				return ThunderFileParser.initialReadWithComments(lines, collectionsProvider);
 			} else if (commentSetting == Comment.SKIP) {
-				return ThunderFileParser.initialReadWithOutComments(file, collectionsProvider, buffer_size);
+				return ThunderFileParser.initialReadWithOutComments(lines, collectionsProvider);
+			} else {
+				throw new IllegalArgumentException("Illegal CommentSetting");
+			}
+		} catch (final @NotNull ThunderParseException e) {
+			throw new ThunderException("Error while parsing '" + file.getAbsolutePath() + "' - > " + e.getMessage(), e);
+		}
+	}
+
+	public @NotNull DataMap<String, Object> readData(final @NotNull InputStream inputStream,
+													 final @NotNull CollectionsProvider<DataMap, List> collectionsProvider,
+													 final @NotNull CommentSetting commentSetting,
+													 final int buffer_size) throws ThunderException {
+		try {
+			final @NotNull ListIterator<String> lines;
+			try (final @NotNull BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream), buffer_size)) {
+				lines = reader.lines().collect(Collectors.toList()).listIterator();
+			} catch (final @NotNull IOException e) {
+				throw new RuntimeIOException("Error while reading content from the given InputStream", e);
+			}
+			if (commentSetting == Comment.PRESERVE) {
+				return ThunderFileParser.initialReadWithComments(lines, collectionsProvider);
+			} else if (commentSetting == Comment.SKIP) {
+				return ThunderFileParser.initialReadWithOutComments(lines, collectionsProvider);
 			} else {
 				throw new IllegalArgumentException("Illegal CommentSetting");
 			}
 		} catch (ThunderParseException e) {
-			throw new ThunderException("Error at '" + file.getAbsolutePath() + "' - > " + e.getMessage(), e);
+			throw new ThunderException("Error while parsing the given InputStream - > " + e.getMessage(), e);
+		}
+	}
+
+	public void readDataToFileData(final @NotNull File file,
+								   final @NotNull FileData<DataMap, ?, List> fileData,
+								   final @NotNull CollectionsProvider<DataMap, List> collectionsProvider,
+								   final @NotNull CommentSetting commentSetting,
+								   final int buffer_size) throws ThunderException {
+		try {
+			final @NotNull ListIterator<String> lines;
+			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
+				 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
+				tempLock.lock();
+				lines = reader.lines().collect(Collectors.toList()).listIterator();
+			} catch (final @NotNull IOException e) {
+				throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
+			}
+			if (commentSetting == Comment.PRESERVE) {
+				fileData.loadData(ThunderFileParser.initialReadWithComments(lines, collectionsProvider));
+			} else if (commentSetting == Comment.SKIP) {
+				fileData.loadData(ThunderFileParser.initialReadWithOutComments(lines, collectionsProvider))
+				;
+			} else {
+				throw new IllegalArgumentException("Illegal CommentSetting");
+			}
+		} catch (final @NotNull ThunderParseException e) {
+			throw new ThunderException("Error while parsing '" + file.getAbsolutePath() + "' - > " + e.getMessage(), e);
+		}
+	}
+
+	public void readDataToFileData(final @NotNull InputStream inputStream,
+								   final @NotNull FileData<DataMap, ?, List> fileData,
+								   final @NotNull CollectionsProvider<DataMap, List> collectionsProvider,
+								   final @NotNull CommentSetting commentSetting,
+								   final int buffer_size) throws ThunderException {
+		try {
+			final @NotNull ListIterator<String> lines;
+			try (final @NotNull BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream), buffer_size)) {
+				lines = reader.lines().collect(Collectors.toList()).listIterator();
+			} catch (final @NotNull IOException e) {
+				throw new RuntimeIOException("Error while reading content from the given InputStream", e);
+			}
+			if (commentSetting == Comment.PRESERVE) {
+				fileData.loadData(ThunderFileParser.initialReadWithComments(lines, collectionsProvider));
+			} else if (commentSetting == Comment.SKIP) {
+				fileData.loadData(ThunderFileParser.initialReadWithOutComments(lines, collectionsProvider));
+			} else {
+				throw new IllegalArgumentException("Illegal CommentSetting");
+			}
+		} catch (ThunderParseException e) {
+			throw new ThunderException("Error while parsing the given InputStream - > " + e.getMessage(), e);
+		}
+	}
+
+	public ThunderFileData<DataMap, ?, List> readDataAsFileData(final @NotNull File file,
+																final @NotNull CollectionsProvider<DataMap, List> collectionsProvider,
+																final @NotNull CommentSetting commentSetting,
+																final int buffer_size) throws ThunderException {
+		try {
+			final @NotNull ListIterator<String> lines;
+			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
+				 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
+				tempLock.lock();
+				lines = reader.lines().collect(Collectors.toList()).listIterator();
+			} catch (final @NotNull IOException e) {
+				throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
+			}
+
+			final @NotNull ThunderFileData<DataMap, ?, List> fileData = new LocalFileData(collectionsProvider);
+			if (commentSetting == Comment.PRESERVE) {
+				fileData.loadData(ThunderFileParser.initialReadWithComments(lines, collectionsProvider));
+			} else if (commentSetting == Comment.SKIP) {
+				fileData.loadData(ThunderFileParser.initialReadWithOutComments(lines, collectionsProvider));
+			} else {
+				throw new IllegalArgumentException("Illegal CommentSetting");
+			}
+			return fileData;
+		} catch (final @NotNull ThunderParseException e) {
+			throw new ThunderException("Error while parsing '" + file.getAbsolutePath() + "' - > " + e.getMessage(), e);
+		}
+	}
+
+	public ThunderFileData<DataMap, ?, List> readDataAsFileData(final @NotNull InputStream inputStream,
+																final @NotNull CollectionsProvider<DataMap, List> collectionsProvider,
+																final @NotNull CommentSetting commentSetting,
+																final int buffer_size) throws ThunderException {
+		try {
+			final @NotNull ListIterator<String> lines;
+			try (final @NotNull BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream), buffer_size)) {
+				lines = reader.lines().collect(Collectors.toList()).listIterator();
+			} catch (final @NotNull IOException e) {
+				throw new RuntimeIOException("Error while reading content from the given InputStream", e);
+			}
+
+			final @NotNull ThunderFileData<DataMap, ?, List> fileData = new LocalFileData(collectionsProvider);
+			if (commentSetting == Comment.PRESERVE) {
+				fileData.loadData(ThunderFileParser.initialReadWithComments(lines, collectionsProvider));
+			} else if (commentSetting == Comment.SKIP) {
+				fileData.loadData(ThunderFileParser.initialReadWithOutComments(lines, collectionsProvider));
+			} else {
+				throw new IllegalArgumentException("Illegal CommentSetting");
+			}
+			return fileData;
+		} catch (ThunderParseException e) {
+			throw new ThunderException("Error while parsing the given InputStream - > " + e.getMessage(), e);
 		}
 	}
 
@@ -96,33 +305,15 @@ public class ThunderFileParser {
 	// <Internal>
 	// <Write Data>
 	// <Write Data with Comments>
-	private void initialWriteWithComments(final @NotNull File file,
-										  final @NotNull String indentationString,
-										  final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, //NOSONAR
-										  final boolean autoFlush) {
-		if (!fileData.isEmpty()) {
-			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
-				 final @NotNull PrintWriter writer = tempLock.createPrintWriter(autoFlush)) {
-				tempLock.lock();
-				tempLock.truncateChannel(0);
-				final @NotNull Iterator<DataMap.DataNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
-				ThunderFileParser.topLayerWriteWithComments(writer, indentationString, mapIterator.next());
-				mapIterator.forEachRemaining(entry -> {
-					writer.println();
-					ThunderFileParser.topLayerWriteWithComments(writer, indentationString, entry);
-				});
-				writer.flush();
-			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
-			}
-		} else {
-			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock()) {
-				tempLock.lock();
-				tempLock.truncateChannel(0);
-			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
-			}
-		}
+	private void initialWriteWithComments(final @NotNull PrintWriter writer,
+										  final @NotNull Iterator<DataMap.DataNode<String, Object>> mapIterator,
+										  final @NotNull String indentationString) { //NOSONAR
+		ThunderFileParser.topLayerWriteWithComments(writer, indentationString, mapIterator.next());
+		mapIterator.forEachRemaining(entry -> {
+			writer.println();
+			ThunderFileParser.topLayerWriteWithComments(writer, indentationString, entry);
+		});
+		writer.flush();
 	}
 
 	private void topLayerWriteWithComments(final @NotNull PrintWriter writer,
@@ -204,39 +395,21 @@ public class ThunderFileParser {
 	// </Write Data with Comments>
 
 	// <Write Data without Comments>
-	private void initialWriteWithOutComments(final @NotNull File file,
-											 final @NotNull String indentationString,
-											 final @NotNull ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, //NOSONAR
-											 final boolean autoFlush) {
-		if (!fileData.isEmpty()) {
-			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
-				 final @NotNull PrintWriter writer = tempLock.createPrintWriter(autoFlush)) {
-				tempLock.lock();
-				tempLock.truncateChannel(0);
-				final @NotNull Iterator<DataMap.DataNode<String, Object>> mapIterator = fileData.blockEntryList().iterator();
-				@NotNull DataMap.DataNode<String, Object> initialEntry = mapIterator.next();
-				while (initialEntry.getValue() == LineType.COMMENT || initialEntry.getValue() == LineType.BLANK_LINE) {
-					initialEntry = mapIterator.next();
-				}
-				ThunderFileParser.topLayerWriteWithOutComments(writer, indentationString, initialEntry);
-				mapIterator.forEachRemaining(entry -> {
-					if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.BLANK_LINE) {
-						writer.println();
-						ThunderFileParser.topLayerWriteWithOutComments(writer, indentationString, entry);
-					}
-				});
-				writer.flush();
-			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
-			}
-		} else {
-			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock()) {
-				tempLock.lock();
-				tempLock.truncateChannel(0);
-			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
-			}
+	private void initialWriteWithOutComments(final @NotNull PrintWriter writer,
+											 final @NotNull Iterator<DataMap.DataNode<String, Object>> mapIterator,
+											 final @NotNull String indentationString) { //NOSONAR
+		@NotNull DataMap.DataNode<String, Object> initialEntry = mapIterator.next();
+		while (initialEntry.getValue() == LineType.COMMENT || initialEntry.getValue() == LineType.BLANK_LINE) {
+			initialEntry = mapIterator.next();
 		}
+		ThunderFileParser.topLayerWriteWithOutComments(writer, indentationString, initialEntry);
+		mapIterator.forEachRemaining(entry -> {
+			if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.BLANK_LINE) {
+				writer.println();
+				ThunderFileParser.topLayerWriteWithOutComments(writer, indentationString, entry);
+			}
+		});
+		writer.flush();
 	}
 
 	private void topLayerWriteWithOutComments(final @NotNull PrintWriter writer,
@@ -388,17 +561,9 @@ public class ThunderFileParser {
 
 	// <Read Data>
 	// <Read Data with Comments>
-	private @NotNull DataMap<String, Object> initialReadWithComments(final @NotNull File file,
-																	 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
-																	 final int buffer_size) throws ThunderParseException {
+	private @NotNull DataMap<String, Object> initialReadWithComments(final @NotNull ListIterator<String> lines,
+																	 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderParseException {
 		try {
-			final @NotNull ListIterator<String> lines;
-			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
-				 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
-				tempLock.lock();
-				lines = reader.lines().collect(Collectors.toList()).listIterator();
-			}
-
 			//noinspection unchecked
 			final @NotNull DataMap<String, Object> currentMap = collectionsProvider.newMap();
 
@@ -429,8 +594,6 @@ public class ThunderFileParser {
 			return currentMap;
 		} catch (final @NotNull IndexOutOfBoundsException e) {
 			throw new ThunderParseException("Could not parse content", e);
-		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -480,17 +643,9 @@ public class ThunderFileParser {
 	// </Read Data with Comments>
 
 	// <Read Data without Comments>
-	private @NotNull DataMap<String, Object> initialReadWithOutComments(final @NotNull File file,
-																		final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider,
-																		final int buffer_size) throws ThunderParseException {
+	private @NotNull DataMap<String, Object> initialReadWithOutComments(final @NotNull ListIterator<String> lines,
+																		final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderParseException {
 		try {
-			final @NotNull ListIterator<String> lines;
-			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
-				 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
-				tempLock.lock();
-				lines = reader.lines().collect(Collectors.toList()).listIterator();
-			}
-
 			//noinspection unchecked
 			final @NotNull DataMap<String, Object> currentMap = collectionsProvider.newMap();
 
@@ -519,8 +674,6 @@ public class ThunderFileParser {
 			return currentMap;
 		} catch (final @NotNull IndexOutOfBoundsException e) {
 			throw new ThunderParseException("Could not parse content", e);
-		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -650,6 +803,15 @@ public class ThunderFileParser {
 		VALUE,
 		COMMENT,
 		BLANK_LINE
+	}
+
+	private static class LocalFileData extends ThunderFileData<DataMap, DataMap.DataNode<String, Object>, List> { //NOSONAR
+
+		private static final long serialVersionUID = -4787829380861376534L;
+
+		private LocalFileData(final @NotNull CollectionsProvider<DataMap, List> collectionsProvider) { //NOSONAR
+			super(collectionsProvider);
+		}
 	}
 
 	private class ThunderParseException extends Exception {

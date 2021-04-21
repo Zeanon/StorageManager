@@ -63,13 +63,28 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 					   final @NotNull FileType fileType,
 					   final @NotNull D fileData,
 					   final @NotNull ReloadSetting reloadSetting) {
+		this(file, inputStream, fileType, fileData, reloadSetting, true);
+	}
+
+	protected FlatFile(final @NotNull File file,
+					   final @Nullable InputStream inputStream,
+					   final @NotNull FileType fileType,
+					   final @NotNull D fileData,
+					   final @NotNull ReloadSetting reloadSetting,
+					   final boolean immediatelyReadData) {
 		if (fileType.isTypeOf(file)) {
 			this.fileType = fileType;
 			this.file = file;
 			this.fileData = fileData;
 			this.reloadSetting = reloadSetting;
 			this.collectionsProvider = this.fileData().collectionsProvider();
+
 			BaseFileUtils.writeToFileIfCreated(this.file(), BaseFileUtils.createNewInputStream(inputStream));
+
+			if (immediatelyReadData) {
+				this.fileData().loadData(this.readFile());
+				this.lastLoaded(System.currentTimeMillis());
+			}
 		} else {
 			throw new FileTypeException("File '"
 										+ file.getAbsolutePath()
@@ -230,13 +245,6 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * Set whether the internal data should be concurrent
 	 */
 	public abstract void setConcurrentData(final boolean concurrentData);
-
-	/**
-	 * Set whether the internal data should be synchronized
-	 */
-	public void synchronizeData(final boolean synchronize) {
-		this.fileData().synchronizeData(synchronize);
-	}
 
 	/**
 	 * Checks whether the FileData contains the given key

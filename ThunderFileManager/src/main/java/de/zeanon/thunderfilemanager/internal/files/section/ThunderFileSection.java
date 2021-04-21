@@ -47,21 +47,21 @@ public class ThunderFileSection extends CommentEnabledSection<ThunderFile, DataM
 
 	@Override
 	protected FileData<DataMap, ?, List> getSectionFileData(@NotNull String key, @NotNull FileData<DataMap, ?, List> fileData) {
-		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), (DataMap) Objects.notNull(fileData.get(key)));
+		return new LocalFileData(fileData.collectionsProvider(), (DataMap) Objects.notNull(fileData.get(key)));
 	}
 
 	@Override
 	protected FileData<DataMap, ?, List> getSectionFileDataUseArray(@NotNull String[] key, @NotNull FileData<DataMap, ?, List> fileData) {
-		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), (DataMap) Objects.notNull(fileData.getUseArray(key)));
+		return new LocalFileData(fileData.collectionsProvider(), (DataMap) Objects.notNull(fileData.getUseArray(key)));
 	}
 
-	private static class LocalFileData extends ThunderFileData<DataMap, DataMap.Entry<String, Object>, List> { //NOSONAR
+	private static class LocalFileData extends ThunderFileData<DataMap, DataMap.Entry, List> { //NOSONAR
 
 		private static final long serialVersionUID = -3736783796296434140L;
 
 		@SuppressWarnings("rawtypes")
-		private LocalFileData(final @NotNull CollectionsProvider<DataMap, List> collectionsProvider, final boolean synchronize, final @NotNull DataMap dataMap) { //NOSONAR
-			super(collectionsProvider, synchronize, dataMap);
+		private LocalFileData(final @NotNull CollectionsProvider<DataMap, List> collectionsProvider, final @NotNull DataMap dataMap) { //NOSONAR
+			super(collectionsProvider, dataMap);
 		}
 	}
 }

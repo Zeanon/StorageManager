@@ -41,7 +41,7 @@ import org.json.JSONTokener;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> { //NOSONAR
+public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry, List>, Map, List> { //NOSONAR
 
 
 	/**
@@ -61,15 +61,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 					   final boolean synchronizeData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, inputStream, FileType.JSON, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting);
-
-		if (this.file().length() == 0) {
-			this.save();
-		} else {
-			this.fileData().loadData(this.readFile());
-		}
-
-		this.lastLoaded(System.currentTimeMillis());
+		super(file, inputStream, FileType.JSON, new LocalFileData(new CollectionsProvider<>(map, list, synchronizeData)), reloadSetting);
 	}
 
 
@@ -195,14 +187,19 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 
 	@Override
 	protected @NotNull Map<String, Object> readFile() {
-		try {
-			return new JSONObject(new JSONTokener(
-					BaseFileUtils.createNewInputStreamFromFile(this.file()))).toMap();
-		} catch (final @NotNull RuntimeIOException e) {
-			throw new RuntimeIOException("Error while loading '"
-										 + this.getAbsolutePath()
-										 + "'",
-										 e);
+		if (this.file().length() == 0) {
+			this.save();
+			//noinspection unchecked
+			return this.collectionsProvider().newMap();
+		} else {
+			try (final @NotNull InputStream inputStream = BaseFileUtils.createNewInputStreamFromFile(this.file())) {
+				return new JSONObject(new JSONTokener(inputStream)).toMap();
+			} catch (final RuntimeIOException | IOException e) {
+				throw new RuntimeIOException("Error while loading '"
+											 + this.getAbsolutePath()
+											 + "'",
+											 e);
+			}
 		}
 	}
 
@@ -241,13 +238,13 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		}
 	}
 
-	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> { //NOSONAR
+	private static class LocalFileData extends StandardFileData<Map, Map.Entry, List> { //NOSONAR
 
 		private static final long serialVersionUID = -3736783796296434140L;
 
 		@SuppressWarnings("rawtypes")
-		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) { //NOSONAR
-			super(collectionsProvider, synchronize);
+		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider) { //NOSONAR
+			super(collectionsProvider);
 		}
 	}
 }

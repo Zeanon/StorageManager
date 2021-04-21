@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings({"unused", "rawtypes"})
-public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry<String, Object>, List>, Map, List> { //NOSONAR
+public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry, List>, Map, List> { //NOSONAR
 
 
 	/**
@@ -60,10 +60,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 					   final boolean synchronizeData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, inputStream, FileType.YAML, new LocalFileData(new CollectionsProvider<>(map, list), synchronizeData), reloadSetting, commentSetting);
-
-		this.fileData().loadData(this.readFile());
-		this.lastLoaded(System.currentTimeMillis());
+		super(file, inputStream, FileType.YAML, new LocalFileData(new CollectionsProvider<>(map, list, synchronizeData)), reloadSetting, commentSetting);
 	}
 
 	@Override
@@ -159,12 +156,12 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 		}
 	}
 
-	private static class LocalFileData extends StandardFileData<Map, Map.Entry<String, Object>, List> { //NOSONAR
+	private static class LocalFileData extends StandardFileData<Map, Map.Entry, List> { //NOSONAR
 
 		private static final long serialVersionUID = 244477712346401950L;
 
-		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider, final boolean synchronize) { //NOSONAR
-			super(collectionsProvider, synchronize);
+		private LocalFileData(final @NotNull CollectionsProvider<Map, List> collectionsProvider) { //NOSONAR
+			super(collectionsProvider);
 		}
 	}
 }
