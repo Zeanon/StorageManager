@@ -42,7 +42,7 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 		this.sectionKey = sectionKey;
 		this.arraySectionKey = sectionKey.split("\\.");
 		this.flatFile = flatFile;
-		this.fileData = this.getFileData(sectionKey, fileData);
+		this.fileData = this.getSectionFileData(sectionKey, fileData);
 	}
 
 	@Contract(pure = true)
@@ -78,6 +78,75 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	public boolean hasKeyUseArray(final @NotNull String... key) {
 		this.update();
 		return this.fileData().containsKeyUseArray(key);
+	}
+
+	/**
+	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
+	 * their entryLists
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Contract("-> new")
+	public @NotNull List<?> entryList() {
+		return this.fileData().entryList();
+	}
+
+	/**
+	 * Get a List consisting of Map.Entry objects of the top most layer of the internal DataMap
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Contract("-> new")
+	public @NotNull List<?> blockEntryList() {
+		return this.fileData().blockEntryList();
+	}
+
+	/**
+	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
+	 * their entryLists
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	public @Nullable List<?> entryList(final @NotNull String key) {
+		return this.fileData().entryList(key);
+	}
+
+	/**
+	 * Get a List consisting of Map.Entry objects of only the given Block
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	public @Nullable List<?> blockEntryList(final @NotNull String key) {
+		return this.fileData().blockEntryList(key);
+	}
+
+	/**
+	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
+	 * their entryLists
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Contract("null -> fail")
+	public @Nullable List<?> entryListUseArray(final @NotNull String... key) {
+		return this.fileData().entryListUseArray(key);
+	}
+
+	/**
+	 * Get a List consisting of Map.Entry objects of only the given Block
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Contract("null -> fail")
+	public @Nullable List<?> blockEntryListUseArray(final @NotNull String... key) {
+		return this.fileData().blockEntryListUseArray(key);
 	}
 
 	@Override
@@ -795,7 +864,7 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	}
 
 
-	protected abstract FileData<M, ?, L> getFileData(final @NotNull String key, final @NotNull FileData<M, ?, L> fileData);
+	protected abstract FileData<M, ?, L> getSectionFileData(final @NotNull String key, final @NotNull FileData<M, ?, L> fileData);
 
 	protected abstract FileData<M, ?, L> getSectionFileDataUseArray(final @NotNull String[] key, final @NotNull FileData<M, ?, L> fileData);
 

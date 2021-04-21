@@ -46,13 +46,13 @@ public class ThunderFileSection extends CommentEnabledSection<ThunderFile, DataM
 	}
 
 	@Override
-	protected FileData<DataMap, ?, List> getFileData(@NotNull String key, @NotNull FileData<DataMap, ?, List> fileData) {
-		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), (DataMap) Objects.notNull(this.getDirectMapReference(key)));
+	protected FileData<DataMap, ?, List> getSectionFileData(@NotNull String key, @NotNull FileData<DataMap, ?, List> fileData) {
+		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), (DataMap) Objects.notNull(fileData.get(key)));
 	}
 
 	@Override
 	protected FileData<DataMap, ?, List> getSectionFileDataUseArray(@NotNull String[] key, @NotNull FileData<DataMap, ?, List> fileData) {
-		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), (DataMap) Objects.notNull(this.getDirectMapReferenceUseArray(key)));
+		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), (DataMap) Objects.notNull(fileData.getUseArray(key)));
 	}
 
 	private static class LocalFileData extends ThunderFileData<DataMap, DataMap.Entry<String, Object>, List> { //NOSONAR

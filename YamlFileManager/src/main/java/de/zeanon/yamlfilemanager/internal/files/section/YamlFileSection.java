@@ -49,13 +49,13 @@ public class YamlFileSection extends CommentEnabledSection<YamlFile, Map, List> 
 
 
 	@Override
-	protected FileData<Map, ?, List> getFileData(@NotNull String key, @NotNull FileData<Map, ?, List> fileData) {
-		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), Objects.notNull(this.getDirectMapReference(key)));
+	protected FileData<Map, ?, List> getSectionFileData(@NotNull String key, @NotNull FileData<Map, ?, List> fileData) {
+		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), (Map) Objects.notNull(fileData.get(key)));
 	}
 
 	@Override
 	protected FileData<Map, ?, List> getSectionFileDataUseArray(@NotNull String[] key, @NotNull FileData<Map, ?, List> fileData) {
-		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), Objects.notNull(this.getDirectMapReferenceUseArray(key)));
+		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), (Map) Objects.notNull(fileData.getUseArray(key)));
 	}
 
 

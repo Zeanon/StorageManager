@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -261,6 +262,75 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	public boolean hasKeyUseArray(final @NotNull String... key) {
 		this.update();
 		return this.fileData().containsKeyUseArray(key);
+	}
+
+	/**
+	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
+	 * their entryLists
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Contract("-> new")
+	public @NotNull List<?> entryList() {
+		return this.fileData().entryList();
+	}
+
+	/**
+	 * Get a List consisting of Map.Entry objects of the top most layer of the internal DataMap
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Contract("-> new")
+	public @NotNull List<?> blockEntryList() {
+		return this.fileData().blockEntryList();
+	}
+
+	/**
+	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
+	 * their entryLists
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	public @Nullable List<?> entryList(final @NotNull String key) {
+		return this.fileData().entryList(key);
+	}
+
+	/**
+	 * Get a List consisting of Map.Entry objects of only the given Block
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	public @Nullable List<?> blockEntryList(final @NotNull String key) {
+		return this.fileData().blockEntryList(key);
+	}
+
+	/**
+	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
+	 * their entryLists
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Contract("null -> fail")
+	public @Nullable List<?> entryListUseArray(final @NotNull String... key) {
+		return this.fileData().entryListUseArray(key);
+	}
+
+	/**
+	 * Get a List consisting of Map.Entry objects of only the given Block
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Contract("null -> fail")
+	public @Nullable List<?> blockEntryListUseArray(final @NotNull String... key) {
+		return this.fileData().blockEntryListUseArray(key);
 	}
 
 	/**

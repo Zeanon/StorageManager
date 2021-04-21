@@ -3,7 +3,6 @@ package de.zeanon.tomlfilemanager.internal.files.section;
 import de.zeanon.storagemanagercore.internal.base.cache.filedata.StandardFileData;
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
-import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
 import de.zeanon.tomlfilemanager.internal.files.config.TomlConfig;
 import java.util.List;
 import java.util.Map;
@@ -43,17 +42,6 @@ public class TomlConfigSection extends TomlFileSection { //NOSONAR
 	@Override
 	public @NotNull TomlConfigSection getSectionUseArray(final @NotNull String... sectionKey) {
 		return new TomlConfigSection(sectionKey, (TomlConfig) this.flatFile(), this.fileData());
-	}
-
-
-	@Override
-	protected FileData<Map, ?, List> getFileData(@NotNull String key, @NotNull FileData<Map, ?, List> fileData) {
-		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), Objects.notNull(this.getDirectMapReference(key)));
-	}
-
-	@Override
-	protected FileData<Map, ?, List> getSectionFileDataUseArray(@NotNull String[] key, @NotNull FileData<Map, ?, List> fileData) {
-		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), Objects.notNull(this.getDirectMapReferenceUseArray(key)));
 	}
 
 

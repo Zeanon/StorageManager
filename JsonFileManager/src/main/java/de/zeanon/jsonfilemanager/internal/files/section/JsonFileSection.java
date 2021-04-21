@@ -37,22 +37,22 @@ public class JsonFileSection extends FlatSection<JsonFile, Map, List> { //NOSONA
 
 	@Override
 	public @NotNull JsonFileSection getSection(final @NotNull String sectionKey) {
-		return new JsonFileSection(sectionKey, this.flatFile(), this.fileData);
+		return new JsonFileSection(sectionKey, this.flatFile(), this.fileData());
 	}
 
 	@Override
 	public @NotNull JsonFileSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new JsonFileSection(sectionKey, this.flatFile(), this.fileData);
+		return new JsonFileSection(sectionKey, this.flatFile(), this.fileData());
 	}
 
 	@Override
-	protected @NotNull FileData<Map, ?, List> getFileData(final @NotNull String key, final @NotNull FileData<Map, ?, List> fileData) {
-		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), Objects.notNull(this.getDirectMapReference(key)));
+	protected @NotNull FileData<Map, ?, List> getSectionFileData(final @NotNull String key, final @NotNull FileData<Map, ?, List> fileData) {
+		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), (Map) Objects.notNull(fileData.get(key)));
 	}
 
 	@Override
 	protected @NotNull FileData<Map, ?, List> getSectionFileDataUseArray(final @NotNull String[] key, final @NotNull FileData<Map, ?, List> fileData) {
-		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), Objects.notNull(this.getDirectMapReferenceUseArray(key)));
+		return new LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), (Map) Objects.notNull(fileData.getUseArray(key)));
 	}
 
 

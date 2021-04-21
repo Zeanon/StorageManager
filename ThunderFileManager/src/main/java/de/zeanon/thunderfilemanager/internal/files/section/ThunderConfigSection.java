@@ -4,7 +4,6 @@ import de.zeanon.storagemanagercore.internal.base.cache.filedata.ThunderFileData
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.interfaces.DataMap;
 import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
-import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
 import de.zeanon.thunderfilemanager.internal.files.config.ThunderConfig;
 import java.util.List;
 import lombok.EqualsAndHashCode;
@@ -44,15 +43,6 @@ public class ThunderConfigSection extends ThunderFileSection { //NOSONAR
 		return new ThunderConfigSection(sectionKey, (ThunderConfig) this.flatFile(), this.fileData);
 	}
 
-	@Override
-	protected FileData<DataMap, ?, List> getFileData(@NotNull String key, @NotNull FileData<DataMap, ?, List> fileData) {
-		return new ThunderConfigSection.LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), (DataMap) Objects.notNull(this.getDirectMapReference(key)));
-	}
-
-	@Override
-	protected FileData<DataMap, ?, List> getSectionFileDataUseArray(@NotNull String[] key, @NotNull FileData<DataMap, ?, List> fileData) {
-		return new ThunderConfigSection.LocalFileData(fileData.collectionsProvider(), fileData.synchronizeData(), (DataMap) Objects.notNull(this.getDirectMapReferenceUseArray(key)));
-	}
 
 	private static class LocalFileData extends ThunderFileData<DataMap, DataMap.Entry<String, Object>, List> { //NOSONAR
 
