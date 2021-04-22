@@ -83,7 +83,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry, List>, M
 
 		final @Nullable Object map;
 		try {
-			map = this.get(key);
+			map = this.getObject(key);
 		} catch (final @NotNull JSONException e) {
 			//noinspection unchecked
 			return this.collectionsProvider().newMap();
@@ -118,7 +118,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry, List>, M
 
 		final @Nullable Object map;
 		try {
-			map = this.getUseArray(key);
+			map = this.getObjectUseArray(key);
 		} catch (final @NotNull JSONException e) {
 			//noinspection unchecked
 			return this.collectionsProvider().newMap();

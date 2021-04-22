@@ -150,13 +150,13 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	}
 
 	@Override
-	public @Nullable Object get(final @NotNull String key) {
+	public @Nullable Object getObject(final @NotNull String key) {
 		this.update();
 		return this.fileData().get(key);
 	}
 
 	@Override
-	public @Nullable Object getUseArray(final @NotNull String... key) {
+	public @Nullable Object getObjectUseArray(final @NotNull String... key) {
 		this.update();
 		return this.fileData().getUseArray(key);
 	}
@@ -255,7 +255,7 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 		//noinspection unchecked
 		final @NotNull FlatSection<F, M, L> currentSection = this.getSection(blockKey);
 		for (final @NotNull String tempKey : keys) {
-			tempMap.put(blockKey, currentSection.get(tempKey));
+			tempMap.put(blockKey, currentSection.getObject(tempKey));
 		}
 		return tempMap;
 	}
@@ -278,7 +278,7 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 		//noinspection unchecked
 		final @NotNull FlatSection<F, M, L> currentSection = this.getSectionUseArray(blockKey);
 		for (final @NotNull String[] tempKey : keys) {
-			tempMap.put(blockKey, currentSection.getUseArray(tempKey));
+			tempMap.put(blockKey, currentSection.getObjectUseArray(tempKey));
 		}
 		return tempMap;
 	}
@@ -301,7 +301,7 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 		//noinspection unchecked
 		final @NotNull FlatSection<F, M, L> currentSection = this.getSectionUseArray(blockKey);
 		for (final @NotNull String[] tempKey : keys) {
-			tempMap.put(blockKey, currentSection.getUseArray(tempKey));
+			tempMap.put(blockKey, currentSection.getObjectUseArray(tempKey));
 		}
 		return tempMap;
 	}
@@ -324,7 +324,7 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 		//noinspection unchecked
 		final @NotNull FlatSection<F, M, L> currentSection = this.getSection(blockKey);
 		for (final @NotNull String tempKey : keys) {
-			tempMap.put(blockKey, currentSection.get(tempKey));
+			tempMap.put(blockKey, currentSection.getObject(tempKey));
 		}
 		return tempMap;
 	}

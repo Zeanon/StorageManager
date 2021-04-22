@@ -1,5 +1,6 @@
 package de.zeanon.storagemanagercore.internal.base.interfaces;
 
+import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storagemanagercore.internal.base.sections.FlatSection;
 import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
 import de.zeanon.storagemanagercore.internal.utility.basic.Pair;
@@ -29,7 +30,7 @@ public interface DataStorage {
 	 * @return Object from File
 	 */
 	@Nullable
-	Object get(final @NotNull String key);
+	Object getObject(final @NotNull String key);
 
 	/**
 	 * Get an Object from a File
@@ -38,7 +39,7 @@ public interface DataStorage {
 	 *
 	 * @return Object from File
 	 */
-	@Nullable Object getUseArray(final @NotNull String... key);
+	@Nullable Object getObjectUseArray(final @NotNull String... key);
 
 	/**
 	 * Get an Object from the File casted to a certain type
@@ -49,7 +50,7 @@ public interface DataStorage {
 	 * @return returns the value of the key casted to def
 	 */
 	default @Nullable <O> O get(final @NotNull String key, final @NotNull Class<O> def) {
-		return Objects.toDef(this.get(key), def);
+		return Objects.toDef(this.getObject(key), def);
 	}
 
 	/**
@@ -61,7 +62,7 @@ public interface DataStorage {
 	 * @return returns the value of the key casted to def
 	 */
 	default @Nullable <O> O get(final @NotNull String key, final @NotNull O def) {
-		return Objects.toDef(this.get(key), def);
+		return Objects.toDef(this.getObject(key), def);
 	}
 
 	/**
@@ -71,8 +72,8 @@ public interface DataStorage {
 	 *
 	 * @return returns the value of the key casted to def
 	 */
-	default @Nullable <O> O getOfType(final @NotNull String key) {
-		return Objects.toDef(this.get(key));
+	default @Nullable <O> O get(final @NotNull String key) {
+		return Objects.toDef(this.getObject(key));
 	}
 
 	/**
@@ -82,8 +83,8 @@ public interface DataStorage {
 	 *
 	 * @return returns the value of the key casted to def
 	 */
-	default @Nullable <O> O getOfTypeUseArray(final @NotNull String... key) {
-		return Objects.toDef(this.getUseArray(key));
+	default @Nullable <O> O get(final @NotNull String... key) {
+		return Objects.toDef(this.getObjectUseArray(key));
 	}
 
 	/**
@@ -95,7 +96,19 @@ public interface DataStorage {
 	 * @return returns the value of the key casted to def
 	 */
 	default @Nullable <O> O getUseArray(final @NotNull String[] key, final @NotNull Class<O> def) {
-		return Objects.toDef(this.getUseArray(key), def);
+		return Objects.toDef(this.getObjectUseArray(key), def);
+	}
+
+	/**
+	 * Get an Object from the File casted to a certain type
+	 *
+	 * @param key key to value in the File
+	 * @param def the Class to be casted to
+	 *
+	 * @return returns the value of the key casted to def
+	 */
+	default @Nullable <O> O getUseArray(final @NotNull String[] key, final @NotNull O def) {
+		return Objects.toDef(this.getObjectUseArray(key), def);
 	}
 
 	/**
@@ -106,7 +119,7 @@ public interface DataStorage {
 	 * @return Returns the value
 	 */
 	default @Nullable String getString(final @NotNull String key) {
-		return Objects.toString(this.get(key));
+		return Objects.toString(this.getObject(key));
 	}
 
 	/**
@@ -117,7 +130,7 @@ public interface DataStorage {
 	 * @return Returns the value
 	 */
 	default @Nullable String getStringUseArray(final @NotNull String... key) {
-		return Objects.toString(this.getUseArray(key));
+		return Objects.toString(this.getObjectUseArray(key));
 	}
 
 	/**
@@ -128,7 +141,7 @@ public interface DataStorage {
 	 * @return Boolean from File
 	 */
 	default boolean getBoolean(final @NotNull String key) {
-		return Objects.toBoolean(this.get(key));
+		return Objects.toBoolean(this.getObject(key));
 	}
 
 	/**
@@ -139,7 +152,7 @@ public interface DataStorage {
 	 * @return Boolean from File
 	 */
 	default boolean getBooleanUseArray(final @NotNull String... key) {
-		return Objects.toBoolean(this.getUseArray(key));
+		return Objects.toBoolean(this.getObjectUseArray(key));
 	}
 
 	/**
@@ -174,7 +187,7 @@ public interface DataStorage {
 	 * @return Byte from File
 	 */
 	default byte getByte(final @NotNull String key) {
-		return Objects.toByte(this.get(key));
+		return Objects.toByte(this.getObject(key));
 	}
 
 	/**
@@ -185,7 +198,7 @@ public interface DataStorage {
 	 * @return Byte from File
 	 */
 	default byte getByteUseArray(final @NotNull String... key) {
-		return Objects.toByte(this.getUseArray(key));
+		return Objects.toByte(this.getObjectUseArray(key));
 	}
 
 	/**
@@ -196,7 +209,7 @@ public interface DataStorage {
 	 * @return Double from File
 	 */
 	default double getDouble(final @NotNull String key) {
-		return Objects.toDouble(this.get(key));
+		return Objects.toDouble(this.getObject(key));
 	}
 
 	/**
@@ -207,7 +220,7 @@ public interface DataStorage {
 	 * @return Double from File
 	 */
 	default double getDoubleUseArray(final @NotNull String... key) {
-		return Objects.toDouble(this.getUseArray(key));
+		return Objects.toDouble(this.getObjectUseArray(key));
 	}
 
 	/**
@@ -218,7 +231,7 @@ public interface DataStorage {
 	 * @return Float from File
 	 */
 	default float getFloat(final @NotNull String key) {
-		return Objects.toFloat(this.get(key));
+		return Objects.toFloat(this.getObject(key));
 	}
 
 	/**
@@ -229,7 +242,7 @@ public interface DataStorage {
 	 * @return Float from File
 	 */
 	default float getFloatUseArray(final @NotNull String... key) {
-		return Objects.toFloat(this.getUseArray(key));
+		return Objects.toFloat(this.getObjectUseArray(key));
 	}
 
 	/**
@@ -240,7 +253,7 @@ public interface DataStorage {
 	 * @return Int from File
 	 */
 	default int getInt(final @NotNull String key) {
-		return Objects.toInt(this.get(key));
+		return Objects.toInt(this.getObject(key));
 	}
 
 	/**
@@ -251,7 +264,7 @@ public interface DataStorage {
 	 * @return Int from File
 	 */
 	default int getIntUseArray(final @NotNull String... key) {
-		return Objects.toInt(this.getUseArray(key));
+		return Objects.toInt(this.getObjectUseArray(key));
 	}
 
 	/**
@@ -262,7 +275,7 @@ public interface DataStorage {
 	 * @return Short from File
 	 */
 	default short getShort(final @NotNull String key) {
-		return Objects.toShort(this.get(key));
+		return Objects.toShort(this.getObject(key));
 	}
 
 	/**
@@ -273,7 +286,7 @@ public interface DataStorage {
 	 * @return Short from File
 	 */
 	default short getShortUseArray(final @NotNull String... key) {
-		return Objects.toShort(this.getUseArray(key));
+		return Objects.toShort(this.getObjectUseArray(key));
 	}
 
 	/**
@@ -284,7 +297,7 @@ public interface DataStorage {
 	 * @return Long from File
 	 */
 	default long getLong(final @NotNull String key) {
-		return Objects.toLong(this.get(key));
+		return Objects.toLong(this.getObject(key));
 	}
 
 	/**
@@ -295,7 +308,7 @@ public interface DataStorage {
 	 * @return Long from File
 	 */
 	default long getLongUseArray(final @NotNull String... key) {
-		return Objects.toLong(this.getUseArray(key));
+		return Objects.toLong(this.getObjectUseArray(key));
 	}
 
 	/**
@@ -332,7 +345,7 @@ public interface DataStorage {
 	 * @return List
 	 */
 	default @Nullable <E> List<E> getDirectListReference(final @NotNull String key) {
-		return (List<E>) this.get(key);
+		return (List<E>) this.getObject(key);
 	}
 
 	/**
@@ -345,7 +358,7 @@ public interface DataStorage {
 	 * @return List
 	 */
 	default @Nullable <E> List<E> getDirectListReferenceUseArray(final @NotNull String... key) {
-		return (List<E>) this.getUseArray(key);
+		return (List<E>) this.getObjectUseArray(key);
 	}
 
 	/**
@@ -386,7 +399,7 @@ public interface DataStorage {
 	 * @return Map
 	 */
 	default <K, V> @Nullable Map<K, V> getDirectMapReference(final @NotNull String key) {
-		return (Map<K, V>) this.get(key);
+		return (Map<K, V>) this.getObject(key);
 	}
 
 	/**
@@ -399,7 +412,7 @@ public interface DataStorage {
 	 * @return Map
 	 */
 	default <K, V> @Nullable Map<K, V> getDirectMapReferenceUseArray(final @NotNull String... key) {
-		return (Map<K, V>) this.getUseArray(key);
+		return (Map<K, V>) this.getObjectUseArray(key);
 	}
 
 	/**
@@ -443,7 +456,7 @@ public interface DataStorage {
 	 */
 	default @Nullable <K, V> Pair<K, V> getDirectPairReference(final @NotNull String key) {
 		//noinspection unchecked
-		return (Pair<K, V>) this.get(key);
+		return (Pair<K, V>) this.getObject(key);
 	}
 
 	/**
@@ -459,7 +472,7 @@ public interface DataStorage {
 	 */
 	default @Nullable <K, V> Pair<K, V> getDirectPairReferenceUseArray(final @NotNull String... key) {
 		//noinspection unchecked
-		return (Pair<K, V>) this.getUseArray(key);
+		return (Pair<K, V>) this.getObjectUseArray(key);
 	}
 
 	/**
@@ -551,7 +564,7 @@ public interface DataStorage {
 			this.set(key, value);
 			return value;
 		} else {
-			return Objects.toDef(this.get(key), value);
+			return Objects.toDef(this.getObject(key), value);
 		}
 	}
 
@@ -563,12 +576,12 @@ public interface DataStorage {
 	 *
 	 * @return the value set in the File
 	 */
-	default @Nullable <O> O getOrSetDefaultUseArray(final @NotNull String[] key, final @NotNull O value) {
-		if (!this.hasKeyUseArray(key)) {
+	default @NotNull <O> O getOrSetDefaultUseArray(final @NotNull String[] key, final @NotNull O value) {
+		try {
+			return Objects.notNull(Objects.toDef(this.getObjectUseArray(key), value));
+		} catch (final @NotNull ObjectNullException e) {
 			this.setUseArray(key, value);
 			return value;
-		} else {
-			return Objects.toDef(this.getUseArray(key), value);
 		}
 	}
 
