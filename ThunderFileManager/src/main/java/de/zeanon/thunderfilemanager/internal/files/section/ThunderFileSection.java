@@ -2,6 +2,7 @@ package de.zeanon.thunderfilemanager.internal.files.section;
 
 import de.zeanon.storagemanagercore.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
+import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.DataMap;
 import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
 import de.zeanon.storagemanagercore.internal.base.sections.CommentEnabledSection;
@@ -42,6 +43,36 @@ public class ThunderFileSection extends CommentEnabledSection<ThunderFile, DataM
 
 	@Override
 	public @NotNull ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+		return new ThunderFileSection(sectionKey, this.flatFile(), this.fileData);
+	}
+
+	@Override
+	public @NotNull ThunderFileSection getOrCreateSection(final @NotNull String sectionKey) {
+		try {
+			return this.getSectionUseArray(sectionKey);
+		} catch (final @NotNull ObjectNullException e) {
+			return this.createSectionUseArray(sectionKey);
+		}
+	}
+
+	@Override
+	public @NotNull ThunderFileSection getOrCreateSectionUseArray(final @NotNull String... sectionKey) {
+		try {
+			return this.getSectionUseArray(sectionKey);
+		} catch (final @NotNull ObjectNullException e) {
+			return this.createSectionUseArray(sectionKey);
+		}
+	}
+
+	@Override
+	public @NotNull ThunderFileSection createSection(final @NotNull String sectionKey) {
+		this.set(sectionKey, this.collectionsProvider().newMap());
+		return new ThunderFileSection(sectionKey, this.flatFile(), this.fileData);
+	}
+
+	@Override
+	public @NotNull ThunderFileSection createSectionUseArray(final @NotNull String... sectionKey) {
+		this.setUseArray(sectionKey, this.collectionsProvider().newMap());
 		return new ThunderFileSection(sectionKey, this.flatFile(), this.fileData);
 	}
 

@@ -2,6 +2,7 @@ package de.zeanon.tomlfilemanager.internal.files.section;
 
 import de.zeanon.storagemanagercore.internal.base.cache.filedata.StandardFileData;
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
+import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
 import de.zeanon.storagemanagercore.internal.base.sections.FlatSection;
 import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
@@ -43,6 +44,36 @@ public class TomlFileSection extends FlatSection<TomlFile, Map, List> { //NOSONA
 
 	@Override
 	public @NotNull TomlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+		return new TomlFileSection(sectionKey, this.flatFile(), this.fileData());
+	}
+
+	@Override
+	public @NotNull TomlFileSection getOrCreateSection(final @NotNull String sectionKey) {
+		try {
+			return this.getSectionUseArray(sectionKey);
+		} catch (final @NotNull ObjectNullException e) {
+			return this.createSectionUseArray(sectionKey);
+		}
+	}
+
+	@Override
+	public @NotNull TomlFileSection getOrCreateSectionUseArray(final @NotNull String... sectionKey) {
+		try {
+			return this.getSectionUseArray(sectionKey);
+		} catch (final @NotNull ObjectNullException e) {
+			return this.createSectionUseArray(sectionKey);
+		}
+	}
+
+	@Override
+	public @NotNull TomlFileSection createSection(final @NotNull String sectionKey) {
+		this.set(sectionKey, this.collectionsProvider().newMap());
+		return new TomlFileSection(sectionKey, this.flatFile(), this.fileData());
+	}
+
+	@Override
+	public @NotNull TomlFileSection createSectionUseArray(final @NotNull String... sectionKey) {
+		this.setUseArray(sectionKey, this.collectionsProvider().newMap());
 		return new TomlFileSection(sectionKey, this.flatFile(), this.fileData());
 	}
 

@@ -7,6 +7,7 @@ import de.zeanon.storagemanagercore.external.browniescollections.GapList;
 import de.zeanon.storagemanagercore.internal.base.cache.filedata.StandardFileData;
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.exceptions.FileParseException;
+import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.files.CommentEnabledFile;
 import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
@@ -106,6 +107,36 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 	 */
 	@Override
 	public @NotNull YamlFileSection getSectionUseArray(final @NotNull String... sectionKey) {
+		return new LocalSection(sectionKey, this, this.fileData());
+	}
+
+	@Override
+	public @NotNull YamlFileSection getOrCreateSection(final @NotNull String sectionKey) {
+		try {
+			return this.getSectionUseArray(sectionKey);
+		} catch (final @NotNull ObjectNullException e) {
+			return this.createSectionUseArray(sectionKey);
+		}
+	}
+
+	@Override
+	public @NotNull YamlFileSection getOrCreateSectionUseArray(final @NotNull String... sectionKey) {
+		try {
+			return this.getSectionUseArray(sectionKey);
+		} catch (final @NotNull ObjectNullException e) {
+			return this.createSectionUseArray(sectionKey);
+		}
+	}
+
+	@Override
+	public @NotNull YamlFileSection createSection(final @NotNull String sectionKey) {
+		this.set(sectionKey, this.collectionsProvider().newMap());
+		return new LocalSection(sectionKey, this, this.fileData());
+	}
+
+	@Override
+	public @NotNull YamlFileSection createSectionUseArray(final @NotNull String... sectionKey) {
+		this.setUseArray(sectionKey, this.collectionsProvider().newMap());
 		return new LocalSection(sectionKey, this, this.fileData());
 	}
 

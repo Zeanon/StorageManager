@@ -1,5 +1,6 @@
 package de.zeanon.storagemanagercore.internal.base.sections;
 
+import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.files.FlatFile;
 import de.zeanon.storagemanagercore.internal.base.interfaces.DataStorage;
 import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
@@ -53,6 +54,10 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 		this.fileData = this.getSectionFileDataUseArray(sectionKey, fileData);
 	}
 
+
+	public @NotNull CollectionsProvider<M, L> collectionsProvider() {
+		return this.fileData().collectionsProvider();
+	}
 
 	/**
 	 * Checks whether the FileData contains the given key

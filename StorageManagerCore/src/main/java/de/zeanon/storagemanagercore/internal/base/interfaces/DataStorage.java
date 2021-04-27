@@ -930,4 +930,20 @@ public interface DataStorage {
 	 * @return the Section corresponding to the given key
 	 */
 	@NotNull FlatSection getSectionUseArray(final @NotNull String... sectionKey); //NOSONAR
+
+	@NotNull FlatSection createSection(final @NotNull String sectionKey);
+
+	@NotNull FlatSection createSectionUseArray(final @NotNull String... sectionKey);
+
+	default void setSection(final @NotNull String sectionKey, final @NotNull FlatSection flatSection) {
+		this.set(sectionKey, flatSection.fileData().dataMap());
+	}
+
+	default void setSectionUseArray(final @NotNull String[] sectionKey, final @NotNull FlatSection flatSection) {
+		this.setUseArray(sectionKey, flatSection.fileData().dataMap());
+	}
+
+	@NotNull FlatSection getOrCreateSection(final @NotNull String sectionKey);
+
+	@NotNull FlatSection getOrCreateSectionUseArray(final @NotNull String... sectionKey);
 }
