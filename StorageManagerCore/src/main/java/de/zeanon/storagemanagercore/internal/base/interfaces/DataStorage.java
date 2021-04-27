@@ -30,7 +30,7 @@ public interface DataStorage {
 	 * @return Object from File
 	 */
 	@Nullable
-	Object getObject(final @NotNull String key);
+	Object get(final @NotNull String key);
 
 	/**
 	 * Get an Object from a File
@@ -39,7 +39,7 @@ public interface DataStorage {
 	 *
 	 * @return Object from File
 	 */
-	@Nullable Object getObjectUseArray(final @NotNull String... key);
+	@Nullable Object getUseArray(final @NotNull String... key);
 
 	/**
 	 * Get an Object from the File casted to a certain type
@@ -50,7 +50,7 @@ public interface DataStorage {
 	 * @return returns the value of the key casted to def
 	 */
 	default @Nullable <O> O get(final @NotNull String key, final @NotNull Class<O> def) {
-		return Objects.toDef(this.getObject(key), def);
+		return Objects.toDef(this.get(key), def);
 	}
 
 	/**
@@ -62,29 +62,7 @@ public interface DataStorage {
 	 * @return returns the value of the key casted to def
 	 */
 	default @Nullable <O> O get(final @NotNull String key, final @NotNull O def) {
-		return Objects.toDef(this.getObject(key), def);
-	}
-
-	/**
-	 * Get an Object from the File casted to a certain type magically
-	 *
-	 * @param key key to value in the File
-	 *
-	 * @return returns the value of the key casted to def
-	 */
-	default @Nullable <O> O get(final @NotNull String key) {
-		return Objects.toDef(this.getObject(key));
-	}
-
-	/**
-	 * Get an Object from the File casted to a certain type magically
-	 *
-	 * @param key key to value in the File
-	 *
-	 * @return returns the value of the key casted to def
-	 */
-	default @Nullable <O> O getUseArray(final @NotNull String... key) {
-		return Objects.toDef(this.getObjectUseArray(key));
+		return Objects.toDef(this.get(key), def);
 	}
 
 	/**
@@ -96,7 +74,7 @@ public interface DataStorage {
 	 * @return returns the value of the key casted to def
 	 */
 	default @Nullable <O> O getUseArray(final @NotNull String[] key, final @NotNull Class<O> def) {
-		return Objects.toDef(this.getObjectUseArray(key), def);
+		return Objects.toDef(this.getUseArray(key), def);
 	}
 
 	/**
@@ -108,7 +86,7 @@ public interface DataStorage {
 	 * @return returns the value of the key casted to def
 	 */
 	default @Nullable <O> O getUseArray(final @NotNull String[] key, final @NotNull O def) {
-		return Objects.toDef(this.getObjectUseArray(key), def);
+		return Objects.toDef(this.getUseArray(key), def);
 	}
 
 	/**
@@ -119,7 +97,7 @@ public interface DataStorage {
 	 * @return Returns the value
 	 */
 	default @Nullable String getString(final @NotNull String key) {
-		return Objects.toString(this.getObject(key));
+		return Objects.toString(this.get(key));
 	}
 
 	/**
@@ -130,7 +108,7 @@ public interface DataStorage {
 	 * @return Returns the value
 	 */
 	default @Nullable String getStringUseArray(final @NotNull String... key) {
-		return Objects.toString(this.getObjectUseArray(key));
+		return Objects.toString(this.getUseArray(key));
 	}
 
 	/**
@@ -141,7 +119,7 @@ public interface DataStorage {
 	 * @return Boolean from File
 	 */
 	default boolean getBoolean(final @NotNull String key) {
-		return Objects.toBoolean(this.getObject(key));
+		return Objects.toBoolean(this.get(key));
 	}
 
 	/**
@@ -152,7 +130,7 @@ public interface DataStorage {
 	 * @return Boolean from File
 	 */
 	default boolean getBooleanUseArray(final @NotNull String... key) {
-		return Objects.toBoolean(this.getObjectUseArray(key));
+		return Objects.toBoolean(this.getUseArray(key));
 	}
 
 	/**
@@ -187,7 +165,7 @@ public interface DataStorage {
 	 * @return Byte from File
 	 */
 	default byte getByte(final @NotNull String key) {
-		return Objects.toByte(this.getObject(key));
+		return Objects.toByte(this.get(key));
 	}
 
 	/**
@@ -198,7 +176,7 @@ public interface DataStorage {
 	 * @return Byte from File
 	 */
 	default byte getByteUseArray(final @NotNull String... key) {
-		return Objects.toByte(this.getObjectUseArray(key));
+		return Objects.toByte(this.getUseArray(key));
 	}
 
 	/**
@@ -209,7 +187,7 @@ public interface DataStorage {
 	 * @return Double from File
 	 */
 	default double getDouble(final @NotNull String key) {
-		return Objects.toDouble(this.getObject(key));
+		return Objects.toDouble(this.get(key));
 	}
 
 	/**
@@ -220,7 +198,7 @@ public interface DataStorage {
 	 * @return Double from File
 	 */
 	default double getDoubleUseArray(final @NotNull String... key) {
-		return Objects.toDouble(this.getObjectUseArray(key));
+		return Objects.toDouble(this.getUseArray(key));
 	}
 
 	/**
@@ -231,7 +209,7 @@ public interface DataStorage {
 	 * @return Float from File
 	 */
 	default float getFloat(final @NotNull String key) {
-		return Objects.toFloat(this.getObject(key));
+		return Objects.toFloat(this.get(key));
 	}
 
 	/**
@@ -242,7 +220,7 @@ public interface DataStorage {
 	 * @return Float from File
 	 */
 	default float getFloatUseArray(final @NotNull String... key) {
-		return Objects.toFloat(this.getObjectUseArray(key));
+		return Objects.toFloat(this.getUseArray(key));
 	}
 
 	/**
@@ -253,7 +231,7 @@ public interface DataStorage {
 	 * @return Int from File
 	 */
 	default int getInt(final @NotNull String key) {
-		return Objects.toInt(this.getObject(key));
+		return Objects.toInt(this.get(key));
 	}
 
 	/**
@@ -264,7 +242,7 @@ public interface DataStorage {
 	 * @return Int from File
 	 */
 	default int getIntUseArray(final @NotNull String... key) {
-		return Objects.toInt(this.getObjectUseArray(key));
+		return Objects.toInt(this.getUseArray(key));
 	}
 
 	/**
@@ -275,7 +253,7 @@ public interface DataStorage {
 	 * @return Short from File
 	 */
 	default short getShort(final @NotNull String key) {
-		return Objects.toShort(this.getObject(key));
+		return Objects.toShort(this.get(key));
 	}
 
 	/**
@@ -286,7 +264,7 @@ public interface DataStorage {
 	 * @return Short from File
 	 */
 	default short getShortUseArray(final @NotNull String... key) {
-		return Objects.toShort(this.getObjectUseArray(key));
+		return Objects.toShort(this.getUseArray(key));
 	}
 
 	/**
@@ -297,7 +275,7 @@ public interface DataStorage {
 	 * @return Long from File
 	 */
 	default long getLong(final @NotNull String key) {
-		return Objects.toLong(this.getObject(key));
+		return Objects.toLong(this.get(key));
 	}
 
 	/**
@@ -308,7 +286,7 @@ public interface DataStorage {
 	 * @return Long from File
 	 */
 	default long getLongUseArray(final @NotNull String... key) {
-		return Objects.toLong(this.getObjectUseArray(key));
+		return Objects.toLong(this.getUseArray(key));
 	}
 
 	/**
@@ -318,9 +296,9 @@ public interface DataStorage {
 	 *
 	 * @return List
 	 */
-	default @Nullable <E> List<E> getList(final @NotNull String key) {
-		final @Nullable List<Object> tempList = this.getDirectListReference(key);
-		return tempList == null ? null : tempList.stream().collect(ArrayList::new, (list, entry) -> list.add(Objects.toDef(entry)), List::addAll);
+	default @Nullable List<String> getList(final @NotNull String key) {
+		final @Nullable List<String> tempList = this.getDirectListReference(key);
+		return tempList == null ? null : tempList.stream().collect(ArrayList::new, ArrayList::add, List::addAll);
 	}
 
 	/**
@@ -330,22 +308,9 @@ public interface DataStorage {
 	 *
 	 * @return List
 	 */
-	default @Nullable <E> List<E> getListUseArray(final @NotNull String... key) {
-		final @Nullable List<Object> tempList = this.getDirectListReferenceUseArray(key);
-		return tempList == null ? null : tempList.stream().collect(ArrayList::new, (list, entry) -> list.add(Objects.toDef(entry)), List::addAll);
-	}
-
-	/**
-	 * BEWARE THIS WILL RETURN A DIRECT REFERENCE TO THE BACKED VALUE
-	 * <p>
-	 * Get a List from a File
-	 *
-	 * @param key key to List in the File
-	 *
-	 * @return List
-	 */
-	default @Nullable <E> List<E> getDirectListReference(final @NotNull String key) {
-		return (List<E>) this.getObject(key);
+	default @Nullable List<String> getListUseArray(final @NotNull String... key) {
+		final @Nullable List<String> tempList = this.getDirectListReferenceUseArray(key);
+		return tempList == null ? null : tempList.stream().collect(ArrayList::new, ArrayList::add, List::addAll);
 	}
 
 	/**
@@ -357,8 +322,21 @@ public interface DataStorage {
 	 *
 	 * @return List
 	 */
-	default @Nullable <E> List<E> getDirectListReferenceUseArray(final @NotNull String... key) {
-		return (List<E>) this.getObjectUseArray(key);
+	default @Nullable List<String> getDirectListReference(final @NotNull String key) {
+		return (List<String>) this.get(key);
+	}
+
+	/**
+	 * BEWARE THIS WILL RETURN A DIRECT REFERENCE TO THE BACKED VALUE
+	 * <p>
+	 * Get a List from a File
+	 *
+	 * @param key key to List in the File
+	 *
+	 * @return List
+	 */
+	default @Nullable List<String> getDirectListReferenceUseArray(final @NotNull String... key) {
+		return (List<String>) this.getUseArray(key);
 	}
 
 	/**
@@ -368,11 +346,11 @@ public interface DataStorage {
 	 *
 	 * @return Map
 	 */
-	default <K, V> @Nullable Map<K, V> getMap(final @NotNull String key) {
-		final @Nullable Map<Object, Object> tempMap = this.getDirectMapReference(key);
+	default @Nullable Map<String, Object> getMap(final @NotNull String key) {
+		final @Nullable Map<String, Object> tempMap = this.getDirectMapReference(key);
 		return tempMap == null ? null : tempMap.entrySet()
 											   .stream()
-											   .collect(Collectors.toMap(entry -> Objects.toDef(entry.getKey()), entry -> Objects.notNull(Objects.toDef(entry.getValue()))));
+											   .collect(Collectors.toMap(Map.Entry::getKey, entry -> Objects.notNull(entry.getValue())));
 	}
 
 	/**
@@ -382,11 +360,11 @@ public interface DataStorage {
 	 *
 	 * @return Map
 	 */
-	default <K, V> @Nullable Map<K, V> getMapUseArray(final @NotNull String... key) {
-		final @Nullable Map<Object, Object> tempMap = this.getDirectMapReferenceUseArray(key);
+	default @Nullable Map<String, Object> getMapUseArray(final @NotNull String... key) {
+		final @Nullable Map<String, Object> tempMap = this.getDirectMapReferenceUseArray(key);
 		return tempMap == null ? null : tempMap.entrySet()
 											   .stream()
-											   .collect(Collectors.toMap(entry -> Objects.toDef(entry.getKey()), entry -> Objects.notNull(Objects.toDef(entry.getValue()))));
+											   .collect(Collectors.toMap(Map.Entry::getKey, entry -> Objects.notNull(entry.getValue())));
 	}
 
 	/**
@@ -398,8 +376,8 @@ public interface DataStorage {
 	 *
 	 * @return Map
 	 */
-	default <K, V> @Nullable Map<K, V> getDirectMapReference(final @NotNull String key) {
-		return (Map<K, V>) this.getObject(key);
+	default @Nullable Map<String, Object> getDirectMapReference(final @NotNull String key) {
+		return (Map<String, Object>) this.get(key);
 	}
 
 	/**
@@ -411,36 +389,32 @@ public interface DataStorage {
 	 *
 	 * @return Map
 	 */
-	default <K, V> @Nullable Map<K, V> getDirectMapReferenceUseArray(final @NotNull String... key) {
-		return (Map<K, V>) this.getObjectUseArray(key);
+	default @Nullable Map<String, Object> getDirectMapReferenceUseArray(final @NotNull String... key) {
+		return (Map<String, Object>) this.getUseArray(key);
 	}
 
 	/**
 	 * Get a Pair from a File
 	 *
 	 * @param key the key to the Pair in the File
-	 * @param <K> the Key-Type of the Pair
-	 * @param <V> the ValueType of the Pair
 	 *
 	 * @return a Pair with a key of type K and a value of type V
 	 */
-	default @Nullable <K, V> Pair<K, V> getPair(final @NotNull String key) {
-		final @Nullable Pair<Object, Object> tempPair = this.getDirectPairReference(key);
-		return tempPair == null ? null : new Pair<>(Objects.notNull(Objects.toDef(tempPair.getKey())), Objects.toDef(tempPair.getValue()));
+	default @Nullable Pair<String, Object> getPair(final @NotNull String key) {
+		final @Nullable Pair<String, Object> tempPair = this.getDirectPairReference(key);
+		return tempPair == null ? null : new Pair<>(Objects.notNull(tempPair.getKey()), tempPair.getValue());
 	}
 
 	/**
 	 * Get a Pair from a File
 	 *
 	 * @param key the key to the Pair in the File
-	 * @param <K> the Key-Type of the Pair
-	 * @param <V> the ValueType of the Pair
 	 *
 	 * @return a Pair with a key of type K and a value of type V
 	 */
-	default @Nullable <K, V> Pair<K, V> getPairUseArray(final @NotNull String... key) {
-		final @Nullable Pair<Object, Object> tempPair = this.getDirectPairReferenceUseArray(key);
-		return tempPair == null ? null : new Pair<>(Objects.notNull(Objects.toDef(tempPair.getKey())), Objects.toDef(tempPair.getValue()));
+	default @Nullable Pair<String, Object> getPairUseArray(final @NotNull String... key) {
+		final @Nullable Pair<String, Object> tempPair = this.getDirectPairReferenceUseArray(key);
+		return tempPair == null ? null : new Pair<>(Objects.notNull(tempPair.getKey()), tempPair.getValue());
 	}
 
 	/**
@@ -449,14 +423,12 @@ public interface DataStorage {
 	 * Get a Pair from a File
 	 *
 	 * @param key the key to the Pair in the File
-	 * @param <K> the Key-Type of the Pair
-	 * @param <V> the ValueType of the Pair
 	 *
 	 * @return a Pair with a key of type K and a value of type V
 	 */
-	default @Nullable <K, V> Pair<K, V> getDirectPairReference(final @NotNull String key) {
+	default @Nullable Pair<String, Object> getDirectPairReference(final @NotNull String key) {
 		//noinspection unchecked
-		return (Pair<K, V>) this.getObject(key);
+		return (Pair<String, Object>) this.get(key);
 	}
 
 	/**
@@ -465,14 +437,12 @@ public interface DataStorage {
 	 * Get a Pair from a File
 	 *
 	 * @param key the key to the Pair in the File
-	 * @param <K> the Key-Type of the Pair
-	 * @param <V> the ValueType of the Pair
 	 *
 	 * @return a Pair with a key of type K and a value of type V
 	 */
-	default @Nullable <K, V> Pair<K, V> getDirectPairReferenceUseArray(final @NotNull String... key) {
+	default @Nullable Pair<String, Object> getDirectPairReferenceUseArray(final @NotNull String... key) {
 		//noinspection unchecked
-		return (Pair<K, V>) this.getObjectUseArray(key);
+		return (Pair<String, Object>) this.getUseArray(key);
 	}
 
 	/**
@@ -564,7 +534,7 @@ public interface DataStorage {
 			this.set(key, value);
 			return value;
 		} else {
-			return Objects.toDef(this.getObject(key), value);
+			return Objects.toDef(this.get(key), value);
 		}
 	}
 
@@ -578,7 +548,7 @@ public interface DataStorage {
 	 */
 	default @NotNull <O> O getOrSetDefaultUseArray(final @NotNull String[] key, final @NotNull O value) {
 		try {
-			return Objects.notNull(Objects.toDef(this.getObjectUseArray(key), value));
+			return Objects.notNull(Objects.toDef(this.getUseArray(key), value));
 		} catch (final @NotNull ObjectNullException e) {
 			this.setUseArray(key, value);
 			return value;

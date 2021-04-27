@@ -247,10 +247,10 @@ public class ThunderFileParser {
 		}
 	}
 
-	public ThunderFileData<DataMap, ?, List> readDataAsFileData(final @NotNull File file,
-																final @NotNull CollectionsProvider<DataMap, List> collectionsProvider,
-																final @NotNull CommentSetting commentSetting,
-																final int buffer_size) throws ThunderException {
+	public @NotNull ThunderFileData<DataMap, ?, List> readDataAsFileData(final @NotNull File file,
+																		 final @NotNull CollectionsProvider<DataMap, List> collectionsProvider,
+																		 final @NotNull CommentSetting commentSetting,
+																		 final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull ListIterator<String> lines;
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
@@ -275,10 +275,10 @@ public class ThunderFileParser {
 		}
 	}
 
-	public ThunderFileData<DataMap, ?, List> readDataAsFileData(final @NotNull InputStream inputStream,
-																final @NotNull CollectionsProvider<DataMap, List> collectionsProvider,
-																final @NotNull CommentSetting commentSetting,
-																final int buffer_size) throws ThunderException {
+	public @NotNull ThunderFileData<DataMap, ?, List> readDataAsFileData(final @NotNull InputStream inputStream,
+																		 final @NotNull CollectionsProvider<DataMap, List> collectionsProvider,
+																		 final @NotNull CommentSetting commentSetting,
+																		 final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull ListIterator<String> lines;
 			try (final @NotNull BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream), buffer_size)) {

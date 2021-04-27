@@ -377,7 +377,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return the value mapped to the key or null if the key does not exist
 	 */
 	@Override
-	public @Nullable Object getObject(final @NotNull String key) {
+	public @Nullable Object get(final @NotNull String key) {
 		this.update();
 		return this.fileData().get(key);
 	}
@@ -390,7 +390,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return the value mapped to the key or null if the key does not exist
 	 */
 	@Override
-	public @Nullable Object getObjectUseArray(final @NotNull String... key) {
+	public @Nullable Object getUseArray(final @NotNull String... key) {
 		this.update();
 		return this.fileData().getUseArray(key);
 	}

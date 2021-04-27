@@ -74,7 +74,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry, List>, M
 	 * @return Map
 	 */
 	@Override
-	public @Nullable <K, V> Map<K, V> getDirectMapReference(final @NotNull String key) {
+	public @Nullable Map<String, Object> getDirectMapReference(final @NotNull String key) {
 		this.update();
 
 		if (!this.hasKey(key)) {
@@ -84,7 +84,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry, List>, M
 
 		final @Nullable Object map;
 		try {
-			map = this.getObject(key);
+			map = this.get(key);
 		} catch (final @NotNull JSONException e) {
 			//noinspection unchecked
 			return this.collectionsProvider().newMap();
@@ -92,10 +92,9 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry, List>, M
 
 		if (map instanceof Map) {
 			//noinspection unchecked
-			return (Map<K, V>) this.fileData().get(key);
+			return (Map<String, Object>) this.fileData().get(key);
 		} else if (map instanceof JSONObject) {
-			//noinspection unchecked
-			return (Map<K, V>) JsonUtils.jsonToMap((JSONObject) map, this.collectionsProvider());
+			return JsonUtils.jsonToMap((JSONObject) map, this.collectionsProvider());
 		} else {
 			return null;
 		}
@@ -109,7 +108,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry, List>, M
 	 * @return Map
 	 */
 	@Override
-	public @Nullable <K, V> Map<K, V> getDirectMapReferenceUseArray(final @NotNull String... key) {
+	public @Nullable Map<String, Object> getDirectMapReferenceUseArray(final @NotNull String... key) {
 		this.update();
 
 		if (!this.hasKeyUseArray(key)) {
@@ -119,7 +118,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry, List>, M
 
 		final @Nullable Object map;
 		try {
-			map = this.getObjectUseArray(key);
+			map = this.getUseArray(key);
 		} catch (final @NotNull JSONException e) {
 			//noinspection unchecked
 			return this.collectionsProvider().newMap();
@@ -127,10 +126,9 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry, List>, M
 
 		if (map instanceof Map) {
 			//noinspection unchecked
-			return (Map<K, V>) this.fileData().getUseArray(key);
+			return (Map<String, Object>) this.fileData().getUseArray(key);
 		} else if (map instanceof JSONObject) {
-			//noinspection unchecked
-			return (Map<K, V>) JsonUtils.jsonToMap((JSONObject) map, this.collectionsProvider());
+			return JsonUtils.jsonToMap((JSONObject) map, this.collectionsProvider());
 		} else {
 			return null;
 		}
