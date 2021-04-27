@@ -83,7 +83,7 @@ public interface DataStorage {
 	 *
 	 * @return returns the value of the key casted to def
 	 */
-	default @Nullable <O> O get(final @NotNull String... key) {
+	default @Nullable <O> O getUseArray(final @NotNull String... key) {
 		return Objects.toDef(this.getObjectUseArray(key));
 	}
 
