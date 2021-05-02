@@ -11,18 +11,18 @@ import org.jetbrains.annotations.Nullable;
 @EqualsAndHashCode
 public class Pair<K, V> {
 
-	private @NotNull K key;
+	private @Nullable K key;
 
 	private @Nullable V value;
 
 
-	public Pair(final @NotNull K key, final @Nullable V value) {
+	public Pair(final @Nullable K key, final @Nullable V value) {
 		this.key = key;
 		this.value = value;
 	}
 
-	public @NotNull K setKey(final @NotNull K key) {
-		final @NotNull K currentKey = this.key;
+	public @Nullable K setKey(final @NotNull K key) {
+		final @Nullable K currentKey = this.key;
 		this.key = key;
 		return currentKey;
 	}

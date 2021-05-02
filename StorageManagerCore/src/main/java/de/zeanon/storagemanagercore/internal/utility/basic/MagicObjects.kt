@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package de.zeanon.storagemanagercore.internal.utility.basic
 
 /**

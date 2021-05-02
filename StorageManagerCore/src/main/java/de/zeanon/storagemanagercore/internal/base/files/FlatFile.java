@@ -6,6 +6,7 @@ import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.*;
 import de.zeanon.storagemanagercore.internal.base.settings.Reload;
 import de.zeanon.storagemanagercore.internal.utility.basic.BaseFileUtils;
+import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
 import de.zeanon.storagemanagercore.internal.utility.basic.Pair;
 import de.zeanon.storagemanagercore.internal.utility.filelock.ExtendedFileLock;
 import java.io.*;
@@ -1169,7 +1170,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 		final @NotNull String tempData = this.fileData().toString();
 		for (final @NotNull Pair<String, Object> entry : pairs) {
-			this.fileData().insert(entry.getKey(), entry.getValue());
+			this.fileData().insert(Objects.notNull(entry.getKey()), entry.getValue());
 		}
 		return !this.fileData().toString().equals(tempData);
 	}
@@ -1226,7 +1227,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 		final @NotNull String tempData = this.fileData().toString();
 		for (final @NotNull Pair<String[], Object> entry : pairs) {
-			final @NotNull String[] tempKey = new String[key.length + entry.getKey().length];
+			final @NotNull String[] tempKey = new String[key.length + Objects.notNull(entry.getKey()).length];
 			System.arraycopy(key, 0, tempKey, 0, key.length);
 			System.arraycopy(entry.getKey(), 0, tempKey, key.length, entry.getKey().length);
 			this.fileData().insertUseArray(tempKey, entry.getValue());
@@ -1254,7 +1255,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		for (final @NotNull Pair<String, Object> entry : pairs) {
-			this.fileData().insert(entry.getKey(), entry.getValue());
+			this.fileData().insert(Objects.notNull(entry.getKey()), entry.getValue());
 		}
 	}
 
@@ -1301,7 +1302,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		for (final @NotNull Pair<String[], Object> entry : pairs) {
-			final @NotNull String[] tempKey = new String[key.length + entry.getKey().length];
+			final @NotNull String[] tempKey = new String[key.length + Objects.notNull(entry.getKey()).length];
 			System.arraycopy(key, 0, tempKey, 0, key.length);
 			System.arraycopy(entry.getKey(), 0, tempKey, key.length, entry.getKey().length);
 			this.fileData().insertUseArray(tempKey, entry.getValue());
