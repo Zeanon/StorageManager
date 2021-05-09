@@ -4,6 +4,7 @@ import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProv
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Zeanon
  * @version 2.1.0
  */
-@SuppressWarnings({"unused", "rawtypes"})
+@SuppressWarnings({"rawtypes", "unused"})
 public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 
 	/**
@@ -163,6 +164,11 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 * @return the internally stored Data
 	 */
 	@NotNull M dataMap();
+
+	default @NotNull Stream<E> stream() {
+		//noinspection unchecked
+		return this.dataMap().entrySet().stream();
+	}
 
 	/**
 	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to

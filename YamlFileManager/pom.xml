@@ -36,9 +36,11 @@
     </developers>
 
     <build>
+        <defaultGoal>clean verify -U</defaultGoal>
         <finalName>${project.name}</finalName>
 
         <plugins>
+            <!-- Shade Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -62,6 +64,7 @@
                 </configuration>
             </plugin>
 
+            <!-- Antrun Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>

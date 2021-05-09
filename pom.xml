@@ -66,24 +66,29 @@
 
     <build>
         <defaultGoal>clean verify -U</defaultGoal>
+        <finalName>${project.name}</finalName>
 
         <pluginManagement>
             <plugins>
+                <!-- Site Plugin -->
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.8.2</version>
                 </plugin>
 
+                <!-- JavaDoc -->
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.1.1</version>
                 </plugin>
 
+                <!-- SCM Plugin -->
                 <plugin>
                     <artifactId>maven-scm-publish-plugin</artifactId>
                     <version>1.1</version>
                 </plugin>
 
+                <!-- Surefire Plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -94,6 +99,7 @@
                     </configuration>
                 </plugin>
 
+                <!-- Lombok -->
                 <plugin>
                     <groupId>org.projectlombok</groupId>
                     <artifactId>lombok-maven-plugin</artifactId>
@@ -108,6 +114,7 @@
                     </executions>
                 </plugin>
 
+                <!-- Jar Plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
@@ -123,6 +130,7 @@
                     </configuration>
                 </plugin>
 
+                <!-- Compiler Plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
