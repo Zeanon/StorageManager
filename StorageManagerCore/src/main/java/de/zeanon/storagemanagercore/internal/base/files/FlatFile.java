@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -56,15 +57,6 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	@Setter
 	@Accessors(fluent = true, chain = false)
 	private @NotNull ReloadSetting reloadSetting;
-
-
-	protected FlatFile(final @NotNull File file,
-					   final @Nullable InputStream inputStream,
-					   final @NotNull FileType fileType,
-					   final @NotNull D fileData,
-					   final @NotNull ReloadSetting reloadSetting) {
-		this(file, inputStream, fileType, fileData, reloadSetting, true);
-	}
 
 	protected FlatFile(final @NotNull File file,
 					   final @Nullable InputStream inputStream,
@@ -188,6 +180,14 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 */
 	public void setDataFromUrl(final @Nullable URL url) {
 		BaseFileUtils.writeToFile(this.file(), BaseFileUtils.createNewInputStreamFromUrl(url));
+		this.reload();
+	}
+
+	/**
+	 * Set the Contents of the FileData and File from a given FlatFile
+	 */
+	public void setDataFromFlatFile(final @NotNull FlatFile<D, M, L> flatFile) {
+		this.loadDataFromFileData(flatFile.fileData());
 		this.reload();
 	}
 
@@ -826,6 +826,30 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 										   final @NotNull Pair<String[], Object>... dataPairs) {
 		this.insertAllUseArrayWithoutCheck(blockKey, dataPairs);
 		this.lastLoaded(System.currentTimeMillis());
+	}
+
+	public void replace(final @NotNull CharSequence target,
+						final @NotNull CharSequence replacement) {
+		this.update();
+
+		final @NotNull Stream<String> lines;
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(this.file, false).readLock();
+			 final @NotNull BufferedReader reader = tempLock.createBufferedReader()) {
+			tempLock.lock();
+			lines = reader.lines();
+		} catch (final @NotNull IOException e) {
+			throw new RuntimeIOException("Error while reading content from '" + this.file.getAbsolutePath() + "'", e);
+		}
+
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(this.file).writeLock();
+			 final @NotNull PrintWriter writer = tempLock.createPrintWriter()) {
+			tempLock.lock();
+			tempLock.truncateChannel(0);
+
+			lines.map(line -> line.replace(target, replacement)).forEach(writer::println);
+		} catch (final @NotNull IOException e) {
+			throw new RuntimeIOException("Error while writing to '" + this.file.getAbsolutePath() + "'", e);
+		}
 	}
 
 	/**

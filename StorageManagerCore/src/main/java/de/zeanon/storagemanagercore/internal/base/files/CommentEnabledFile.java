@@ -60,16 +60,6 @@ public abstract class CommentEnabledFile<D extends FileData<M, ?, L>, M extends 
 								 final @NotNull FileType fileType,
 								 final @NotNull D fileData,
 								 final @NotNull ReloadSetting reloadSetting,
-								 final @NotNull CommentSetting commentSetting) {
-		super(file, inputStream, fileType, fileData, reloadSetting);
-		this.commentSetting = commentSetting;
-	}
-
-	protected CommentEnabledFile(final @NotNull File file,
-								 final @Nullable InputStream inputStream,
-								 final @NotNull FileType fileType,
-								 final @NotNull D fileData,
-								 final @NotNull ReloadSetting reloadSetting,
 								 final @NotNull CommentSetting commentSetting,
 								 final boolean immediatelyReadData) {
 		super(file, inputStream, fileType, fileData, reloadSetting, immediatelyReadData);

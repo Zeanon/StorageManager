@@ -56,7 +56,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 					   final boolean synchronizeData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, inputStream, FileType.TOML, new LocalFileData(new CollectionsProvider<>(map, list, synchronizeData)), reloadSetting);
+		super(file, inputStream, FileType.TOML, new LocalFileData(new CollectionsProvider<>(map, list, synchronizeData)), reloadSetting, true);
 	}
 
 	@Override

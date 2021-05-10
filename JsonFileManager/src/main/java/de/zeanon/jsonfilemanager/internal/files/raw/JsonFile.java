@@ -62,7 +62,7 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry, List>, M
 					   final boolean synchronizeData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, inputStream, FileType.JSON, new LocalFileData(new CollectionsProvider<>(map, list, synchronizeData)), reloadSetting);
+		super(file, inputStream, FileType.JSON, new LocalFileData(new CollectionsProvider<>(map, list, synchronizeData)), reloadSetting, true);
 	}
 
 
