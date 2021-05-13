@@ -22,7 +22,7 @@ public interface FileType {
 	 * @return the given FilePath with the added extension
 	 */
 	default @NotNull String addExtensionTo(final @NotNull String filePath) {
-		return (filePath + "." + this.toString());
+		return (filePath + "." + this);
 	}
 
 	/**
@@ -31,7 +31,7 @@ public interface FileType {
 	 * @return the given FilePath with the added extension
 	 */
 	default @NotNull Path addExtensionTo(final @NotNull Path filePath) {
-		return Paths.get(filePath + "." + this.toString());
+		return Paths.get(filePath + "." + this);
 	}
 
 	/**
@@ -40,7 +40,7 @@ public interface FileType {
 	 * @return the given File with the added extension
 	 */
 	default @NotNull File addExtensionTo(final @NotNull File file) {
-		return new File(file.getAbsolutePath() + "." + this.toString());
+		return new File(file.getAbsolutePath() + "." + this);
 	}
 
 	/**
