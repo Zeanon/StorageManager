@@ -39,7 +39,8 @@ Just add the Jars of the modules you need as a local dependency(https://maven.ap
 
 3. Important! Use a shade plugin to make sure that the library is shaded into your final .jar file when your
 plugin is compiled. 
-The relocation is optional but heavily recommended.
+Make sure, that every module is shaded into the same base folder(like 'de.zeanon.test.shaded.storagemanagercore' and 'de.zeanon.test.shaded.thunderfilemanager').
+You always need the Core for everything to work, the other ones are optional, depending on the languages you want to support.
 
 ```xml
 <plugin>
