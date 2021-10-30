@@ -421,6 +421,16 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractDataMap<K,
 		}
 	}
 
+	@Override
+	public @Nullable V getFromIndex(final int index) {
+		final long lockStamp = this.localLock.readLock();
+		try {
+			return this.localList.get(index).getValue();
+		} finally {
+			this.localLock.unlockRead(lockStamp);
+		}
+	}
+
 	/**
 	 * Removes the mapping for the specified key from this map if present.
 	 *

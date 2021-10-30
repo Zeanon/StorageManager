@@ -1,9 +1,9 @@
 package de.zeanon.thunderfilemanager.internal.files.section;
 
-import de.zeanon.storagemanagercore.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.interfaces.DataMap;
 import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
+import de.zeanon.thunderfilemanager.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.thunderfilemanager.internal.files.config.ThunderConfig;
 import java.util.List;
 import lombok.EqualsAndHashCode;

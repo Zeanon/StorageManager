@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public class TestStorageManager {
+public class TestThunderFileManager {
 
 	public static void clear(final @NotNull String className) {
 		System.out.println("[INFO] Clearing TestResources Folder to run tests in '" + className + "'");
@@ -27,7 +27,7 @@ public class TestStorageManager {
 				System.out.println("[INFO] Folder does not exist");
 			}
 			System.out.println(result ? "[INFO] Cleared Folder" : "[INFO] Failed to clear Folder");
-		} catch (RuntimeIOException e) {
+		} catch (final RuntimeIOException e) {
 			System.out.println(e.getMessage());
 		}
 	}

@@ -43,12 +43,12 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 	@Contract(pure = true)
 	public ExtendedFileLock(final @NotNull File file) throws IOException {
-		this(file, true);
+		this(file, true, true);
 	}
 
 	@Contract(pure = true)
-	public ExtendedFileLock(final @NotNull File file, final boolean writeMetaData) throws IOException {
-		this.readWriteLockableChannel = ReadWriteLockableChannel.getOrCreateChannel(file, writeMetaData);
+	public ExtendedFileLock(final @NotNull File file, final boolean writeSynchronized, final boolean writeMetaData) throws IOException {
+		this.readWriteLockableChannel = ReadWriteLockableChannel.getOrCreateChannel(file, writeSynchronized, writeMetaData);
 		this.writeLock = new WriteLock(this);
 		this.readLock = new ReadLock(this);
 	}
@@ -210,6 +210,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 		private final @NotNull String absolutePath;
 		private final boolean writeMetaData;
+		private final boolean writeSynchronized;
 
 		private final transient @NotNull AtomicReference<FileLock> fileLock = new AtomicReference<>();
 		private final transient @NotNull AtomicBoolean writeLockActive = new AtomicBoolean();
@@ -223,7 +224,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 
 		@Contract(pure = true)
-		private ReadWriteLockableChannel(final @NotNull File file, final boolean writeMetaData) throws IOException { //NOSONAR
+		private ReadWriteLockableChannel(final @NotNull File file, final boolean writeSynchronized, final boolean writeMetaData) throws IOException { //NOSONAR
 			try {
 				if (!file.exists()) {
 					if (file.getParentFile() != null && !file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
@@ -233,9 +234,10 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 						throw new IOException("Could not create '" + file.getAbsolutePath() + "'");
 					}
 				}
-				this.localRandomAccessFile = new RandomAccessFile(file, writeMetaData ? "rws" : "rwd");
+				this.localRandomAccessFile = new RandomAccessFile(file, writeSynchronized ? (writeMetaData ? "rws" : "rwd") : "rw");
 				this.absolutePath = file.getAbsolutePath();
 				this.writeMetaData = writeMetaData;
+				this.writeSynchronized = writeSynchronized;
 				this.instanceCount.incrementAndGet();
 			} catch (final @NotNull IOException e) {
 				throw new IOException("Error while creating '"
@@ -248,11 +250,11 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		}
 
 		@Contract(pure = true)
-		private static @NotNull ReadWriteLockableChannel getOrCreateChannel(final @NotNull File file, final boolean writeMetaData) throws IOException {
+		private static @NotNull ReadWriteLockableChannel getOrCreateChannel(final @NotNull File file, final boolean writeSynchronized, final boolean writeMetaData) throws IOException {
 			final long lockStamp = ReadWriteLockableChannel.factoryLock.readLock();
 			try {
 				if (!ReadWriteLockableChannel.openChannels.containsKey(file.getAbsolutePath())) {
-					ReadWriteLockableChannel.openChannels.putIfAbsent(file.getAbsolutePath(), new ReadWriteLockableChannel(file, writeMetaData));
+					ReadWriteLockableChannel.openChannels.putIfAbsent(file.getAbsolutePath(), new ReadWriteLockableChannel(file, writeSynchronized, writeMetaData));
 				}
 				return ReadWriteLockableChannel.openChannels.get(file.getAbsolutePath());
 			} finally {
@@ -552,7 +554,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 
 		private @NotNull Object readResolve() throws IOException {
-			return ReadWriteLockableChannel.getOrCreateChannel(new File(this.absolutePath), this.writeMetaData);
+			return ReadWriteLockableChannel.getOrCreateChannel(new File(this.absolutePath), this.writeSynchronized, this.writeMetaData);
 		}
 	}
 
@@ -634,28 +636,6 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 		@Override
 		@Contract("-> new")
-		public @NotNull PrintWriter createPrintWriter() {
-			return this.extendedFileLock.createPrintWriter();
-		}
-
-		@Override
-		@Contract("_ -> new")
-		public @NotNull PrintWriter createPrintWriter(final boolean autoFlush) {
-			return this.extendedFileLock.createPrintWriter(autoFlush);
-		}
-
-		@Override
-		public @NotNull PrintWriter createPrintWriter(final @NotNull String csName) {
-			return this.extendedFileLock.createPrintWriter(csName);
-		}
-
-		@Override
-		public @NotNull PrintWriter createPrintWriter(final @NotNull String csName, final boolean autoFlush) {
-			return this.extendedFileLock.createPrintWriter(csName, autoFlush);
-		}
-
-		@Override
-		@Contract("-> new")
 		public @NotNull Reader createReader() {
 			return this.extendedFileLock.createReader();
 		}
@@ -667,49 +647,14 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 		@Override
 		@Contract("-> new")
-		public @NotNull BufferedReader createBufferedReader() {
-			return this.extendedFileLock.createBufferedReader();
-		}
-
-		@Override
-		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName) {
-			return this.extendedFileLock.createBufferedReader(csName);
-		}
-
-		@Override
-		@Contract("_ -> new")
-		public @NotNull BufferedReader createBufferedReader(final int buffer_size) {
-			return this.extendedFileLock.createBufferedReader(buffer_size);
-		}
-
-		@Override
-		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName,
-															final int buffer_size) {
-			return this.extendedFileLock.createBufferedReader(csName, buffer_size);
-		}
-
-		@Override
-		@Contract("-> new")
 		public @NotNull InputStream createInputStream() {
 			return this.extendedFileLock.createInputStream();
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull BufferedInputStream createBufferedInputStream() {
-			return this.extendedFileLock.createBufferedInputStream();
-		}
-
-		@Override
-		@Contract("-> new")
 		public @NotNull OutputStream createOutputStream() {
 			return this.extendedFileLock.createOutputStream();
-		}
-
-		@Override
-		@Contract("-> new")
-		public @NotNull BufferedOutputStream createBufferedOutputStream() {
-			return this.extendedFileLock.createBufferedOutputStream();
 		}
 
 		@Override
@@ -803,28 +748,6 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 		@Override
 		@Contract("-> new")
-		public @NotNull PrintWriter createPrintWriter() {
-			return this.extendedFileLock.createPrintWriter();
-		}
-
-		@Override
-		@Contract("_ -> new")
-		public @NotNull PrintWriter createPrintWriter(final boolean autoFlush) {
-			return this.extendedFileLock.createPrintWriter(autoFlush);
-		}
-
-		@Override
-		public @NotNull PrintWriter createPrintWriter(final @NotNull String csName) {
-			return this.extendedFileLock.createPrintWriter(csName);
-		}
-
-		@Override
-		public @NotNull PrintWriter createPrintWriter(final @NotNull String csName, final boolean autoFlush) {
-			return this.extendedFileLock.createPrintWriter(csName, autoFlush);
-		}
-
-		@Override
-		@Contract("-> new")
 		public @NotNull Reader createReader() {
 			return this.extendedFileLock.createReader();
 		}
@@ -836,49 +759,14 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 
 		@Override
 		@Contract("-> new")
-		public @NotNull BufferedReader createBufferedReader() {
-			return this.extendedFileLock.createBufferedReader();
-		}
-
-		@Override
-		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName) {
-			return this.extendedFileLock.createBufferedReader(csName);
-		}
-
-		@Override
-		@Contract("_ -> new")
-		public @NotNull BufferedReader createBufferedReader(final int buffer_size) {
-			return this.extendedFileLock.createBufferedReader(buffer_size);
-		}
-
-		@Override
-		public @NotNull BufferedReader createBufferedReader(final @NotNull String csName,
-															final int buffer_size) {
-			return this.extendedFileLock.createBufferedReader(csName, buffer_size);
-		}
-
-		@Override
-		@Contract("-> new")
 		public @NotNull InputStream createInputStream() {
 			return this.extendedFileLock.createInputStream();
 		}
 
 		@Override
 		@Contract("-> new")
-		public @NotNull BufferedInputStream createBufferedInputStream() {
-			return this.extendedFileLock.createBufferedInputStream();
-		}
-
-		@Override
-		@Contract("-> new")
 		public @NotNull OutputStream createOutputStream() {
 			return this.extendedFileLock.createOutputStream();
-		}
-
-		@Override
-		@Contract("-> new")
-		public @NotNull BufferedOutputStream createBufferedOutputStream() {
-			return this.extendedFileLock.createBufferedOutputStream();
 		}
 
 		@Override

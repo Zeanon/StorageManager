@@ -833,7 +833,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		this.update();
 
 		final @NotNull Stream<String> lines;
-		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(this.file, false).readLock();
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(this.file, true, false).readLock();
 			 final @NotNull BufferedReader reader = tempLock.createBufferedReader()) {
 			tempLock.lock();
 			lines = reader.lines();

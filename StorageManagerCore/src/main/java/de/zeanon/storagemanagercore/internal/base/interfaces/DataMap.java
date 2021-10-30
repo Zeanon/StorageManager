@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public interface DataMap<K, V> extends Map<K, V>, Cloneable {
 
+	@Nullable V getFromIndex(final int index);
+
 	/**
 	 * Associates the specified value with the specified key in this map.
 	 *

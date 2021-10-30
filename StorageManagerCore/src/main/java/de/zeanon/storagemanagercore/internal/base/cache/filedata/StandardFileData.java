@@ -2,7 +2,6 @@ package de.zeanon.storagemanagercore.internal.base.cache.filedata;
 
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
-import de.zeanon.storagemanagercore.internal.base.interfaces.DataMap;
 import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -486,9 +485,9 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		//noinspection unchecked
 		final @NotNull List<Map.Entry<String, Object>> tempList = this.collectionsProvider.newList();
 		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
-			if (entry.getValue() instanceof DataMap) {
+			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
-				tempList.add(new Node<>(entry.getKey(), this.internalEntryList((DataMap) entry.getValue())));
+				tempList.add(new Node<>(entry.getKey(), this.internalEntryList((Map) entry.getValue())));
 			}
 		}
 		return tempList;

@@ -1,4 +1,4 @@
-package de.zeanon.storagemanagercore.internal.base.cache.filedata;
+package de.zeanon.thunderfilemanager.internal.base.cache.filedata;
 
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;

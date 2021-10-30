@@ -1,12 +1,12 @@
 package de.zeanon.thunderfilemanager.internal.files.section;
 
-import de.zeanon.storagemanagercore.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.DataMap;
 import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
 import de.zeanon.storagemanagercore.internal.base.sections.CommentEnabledSection;
 import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
+import de.zeanon.thunderfilemanager.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.thunderfilemanager.internal.files.raw.ThunderFile;
 import java.util.List;
 import lombok.EqualsAndHashCode;
@@ -77,12 +77,12 @@ public class ThunderFileSection extends CommentEnabledSection<ThunderFile, DataM
 	}
 
 	@Override
-	protected FileData<DataMap, ?, List> getSectionFileData(@NotNull String key, @NotNull FileData<DataMap, ?, List> fileData) {
+	protected FileData<DataMap, ?, List> getSectionFileData(@NotNull final String key, @NotNull final FileData<DataMap, ?, List> fileData) {
 		return new LocalFileData(fileData.collectionsProvider(), (DataMap) Objects.notNull(fileData.get(key)));
 	}
 
 	@Override
-	protected FileData<DataMap, ?, List> getSectionFileDataUseArray(@NotNull String[] key, @NotNull FileData<DataMap, ?, List> fileData) {
+	protected FileData<DataMap, ?, List> getSectionFileDataUseArray(@NotNull final String[] key, @NotNull final FileData<DataMap, ?, List> fileData) {
 		return new LocalFileData(fileData.collectionsProvider(), (DataMap) Objects.notNull(fileData.getUseArray(key)));
 	}
 

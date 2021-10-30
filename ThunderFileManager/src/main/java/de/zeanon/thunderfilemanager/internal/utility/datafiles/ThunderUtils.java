@@ -1,10 +1,10 @@
 package de.zeanon.thunderfilemanager.internal.utility.datafiles;
 
-import de.zeanon.storagemanagercore.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.DataMap;
 import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
+import de.zeanon.thunderfilemanager.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.thunderfilemanager.internal.utility.parser.ThunderFileParser;
 import java.util.Arrays;
 import java.util.Collections;

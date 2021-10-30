@@ -49,7 +49,7 @@ public class YamlFileParser {
 
 	public @NotNull List<String> read(final @NotNull File file,
 									  final int buffer_size) throws IOException {
-		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
+		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, true, false).readLock();
 			 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
 			tempLock.lock();
 			return reader.lines().collect(Collectors.toList());

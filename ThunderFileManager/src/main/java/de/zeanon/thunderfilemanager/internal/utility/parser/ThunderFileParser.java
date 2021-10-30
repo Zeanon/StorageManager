@@ -1,6 +1,5 @@
 package de.zeanon.thunderfilemanager.internal.utility.parser;
 
-import de.zeanon.storagemanagercore.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
@@ -12,6 +11,7 @@ import de.zeanon.storagemanagercore.internal.base.settings.Comment;
 import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
 import de.zeanon.storagemanagercore.internal.utility.basic.Pair;
 import de.zeanon.storagemanagercore.internal.utility.filelock.ExtendedFileLock;
+import de.zeanon.thunderfilemanager.internal.base.cache.filedata.ThunderFileData;
 import de.zeanon.thunderfilemanager.internal.base.exceptions.ThunderException;
 import java.io.*;
 import java.util.Collection;
@@ -154,7 +154,7 @@ public class ThunderFileParser {
 													 final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull ListIterator<String> lines;
-			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
+			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, true, false).readLock();
 				 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
 				tempLock.lock();
 				lines = reader.lines().collect(Collectors.toList()).listIterator();
@@ -191,7 +191,7 @@ public class ThunderFileParser {
 			} else {
 				throw new IllegalArgumentException("Illegal CommentSetting");
 			}
-		} catch (ThunderParseException e) {
+		} catch (final ThunderParseException e) {
 			throw new ThunderException("Error while parsing the given InputStream - > " + e.getMessage(), e);
 		}
 	}
@@ -203,7 +203,7 @@ public class ThunderFileParser {
 								   final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull ListIterator<String> lines;
-			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
+			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, true, false).readLock();
 				 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
 				tempLock.lock();
 				lines = reader.lines().collect(Collectors.toList()).listIterator();
@@ -242,7 +242,7 @@ public class ThunderFileParser {
 			} else {
 				throw new IllegalArgumentException("Illegal CommentSetting");
 			}
-		} catch (ThunderParseException e) {
+		} catch (final ThunderParseException e) {
 			throw new ThunderException("Error while parsing the given InputStream - > " + e.getMessage(), e);
 		}
 	}
@@ -253,7 +253,7 @@ public class ThunderFileParser {
 																		 final int buffer_size) throws ThunderException {
 		try {
 			final @NotNull ListIterator<String> lines;
-			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, false).readLock();
+			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file, true, false).readLock();
 				 final @NotNull BufferedReader reader = tempLock.createBufferedReader(buffer_size)) {
 				tempLock.lock();
 				lines = reader.lines().collect(Collectors.toList()).listIterator();
@@ -296,7 +296,7 @@ public class ThunderFileParser {
 				throw new IllegalArgumentException("Illegal CommentSetting");
 			}
 			return fileData;
-		} catch (ThunderParseException e) {
+		} catch (final ThunderParseException e) {
 			throw new ThunderException("Error while parsing the given InputStream - > " + e.getMessage(), e);
 		}
 	}
@@ -697,7 +697,7 @@ public class ThunderFileParser {
 					throw new ThunderParseException("Syntax Error at line '" + lines.previousIndex() + "' -> Illegal Character placement: '}' only allowed as a single Character in line to close blocks");
 				} else if (tempLine.endsWith("{")) {
 					if (!tempLine.equals("{")) {
-						tempKey = tempLine.substring(0, tempLine.length() - 1).trim();
+						tempKey = ThunderFileParser.trimString(tempLine.substring(0, tempLine.length() - 1));
 					} else if (tempKey == null) {
 						throw new ThunderParseException("'" + tempLine + "' (line: " + lines.previousIndex() + ") -> Key must not be null");
 					}
@@ -726,8 +726,9 @@ public class ThunderFileParser {
 									 final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderParseException {
 		if (tempLine.contains("=")) {
 			final @NotNull String[] line = tempLine.split("=", 2);
-			line[0] = line[0].trim();
-			line[1] = line[1].trim();
+			line[0] = ThunderFileParser.trimString(line[0]);
+			line[1] = ThunderFileParser.trimString(line[1]);
+
 			if (line[1].startsWith("[")) {
 				if (line[1].endsWith("]")) {
 					if (line[1].startsWith("[") && line[1].endsWith("]") && line[1].contains(":") && !line[1].replaceFirst(":", "").contains(":")) {
@@ -737,7 +738,7 @@ public class ThunderFileParser {
 						} else if (pair.length < 2) {
 							throw new ThunderParseException("'" + tempLine + "' (line: " + lines.previousIndex() + ") ->  Illegal Object(Pairs need two values");
 						} else {
-							tempMap.add(line[0], new Pair<>(pair[0].trim(), pair[1].trim()));
+							tempMap.add(line[0], new Pair<>(ThunderFileParser.trimString(pair[0]), ThunderFileParser.trimString(pair[1])));
 							return null;
 						}
 					} else {
@@ -745,7 +746,7 @@ public class ThunderFileParser {
 						//noinspection unchecked
 						final @NotNull List<String> list = collectionsProvider.newList();
 						for (final @NotNull String value : listArray) {
-							list.add(value.trim());
+							list.add(ThunderFileParser.trimString(value));
 						}
 						tempMap.add(line[0], list);
 						return null;
@@ -755,11 +756,7 @@ public class ThunderFileParser {
 					return null;
 				}
 			} else {
-				if (line[1].equalsIgnoreCase("true") || line[1].equalsIgnoreCase("false")) {
-					tempMap.add(line[0], line[1].equalsIgnoreCase("true"));
-				} else {
-					tempMap.add(line[0], line[1]);
-				}
+				tempMap.add(line[0], line[1]);
 				return null;
 			}
 		} else {
@@ -775,16 +772,17 @@ public class ThunderFileParser {
 	private @NotNull List<String> readList(final @NotNull ListIterator<String> lines,
 										   final @NotNull CollectionsProvider<? extends DataMap, ? extends List> collectionsProvider) throws ThunderParseException {
 		@NotNull String tempLine;
+		@NotNull String tempValue;
 		//noinspection unchecked
 		final @NotNull List<String> tempList = collectionsProvider.newList();
 		while (lines.hasNext()) {
 			tempLine = lines.next().trim();
 			if (tempLine.startsWith("-")) {
 				if (tempLine.endsWith("]")) {
-					tempList.add(tempLine.substring(1, tempLine.length() - 1).trim());
+					tempList.add(ThunderFileParser.trimString(tempLine.substring(1, tempLine.length() - 1)));
 					return tempList;
 				} else {
-					tempList.add(tempLine.substring(1).trim());
+					tempList.add(ThunderFileParser.trimString(tempLine.substring(1)));
 				}
 			} else if (tempLine.endsWith("]")) {
 				return tempList;
@@ -793,6 +791,14 @@ public class ThunderFileParser {
 			}
 		}
 		throw new ThunderParseException("Syntax Error at line '" + lines.previousIndex() + "' -> List not closed properly");
+	}
+
+	private String trimString(final @NotNull String string) {
+		@NotNull String tempString = string.trim();
+		if ((tempString.startsWith("\"") || tempString.startsWith("'")) && (tempString.endsWith("\"") || tempString.endsWith("'"))) {
+			tempString = tempString.substring(1, tempString.length() - 1);
+		}
+		return tempString;
 	}
 	// </Read Data>
 	// </Internal>
