@@ -215,6 +215,11 @@ public abstract class AbstractDataMap<K, V> extends AbstractMap<K, V> implements
 		return null;
 	}
 
+	@Override
+	public @Nullable V getFromIndex(final int index) {
+		return this.localList.get(index).getValue();
+	}
+
 	/**
 	 * Removes the mapping for the specified key from this map if present.
 	 *
