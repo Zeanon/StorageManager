@@ -245,6 +245,10 @@ public class Objects {
 		return collection != null && collection.parallelStream().anyMatch(string::equalsIgnoreCase);
 	}
 
+	public <O> boolean containsOnly(final @Nullable Collection<O> collection, final @NotNull O entry) {
+		return collection != null && collection.parallelStream().allMatch(item -> item.equals(entry));
+	}
+
 	/**
 	 * Castes a given Object to a String
 	 *

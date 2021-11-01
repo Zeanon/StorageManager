@@ -55,4 +55,96 @@ class TestExtendedFileLock {
 							 () -> Assertions.assertTrue(result[1]),
 							 () -> Assertions.assertTrue(result[2]));
 	}
+
+	@Test
+	@TestOnly
+	void reEntrantWriteRead() throws IOException {
+		BaseFileUtils.createFile(new File("src/test/resources/testresults/extendedfilelock", "test.tf"));
+
+		final @NotNull ExtendedFileLock test = new ExtendedFileLock(new File("src/test/resources/testresults/extendedfilelock", "test.tf"));
+
+		final boolean[] result = new boolean[3];
+
+		try {
+			result[0] = test.writeLock().tryLock();
+			result[1] = test.writeLock().tryLock();
+			result[2] = test.readLock().tryLock();
+		} finally {
+			test.close();
+		}
+
+		Assertions.assertAll("Lock-Results",
+							 () -> Assertions.assertTrue(result[0]),
+							 () -> Assertions.assertTrue(result[1]),
+							 () -> Assertions.assertTrue(result[2]));
+	}
+
+	@Test
+	@TestOnly
+	void reEntrantReadWrite() throws IOException {
+		BaseFileUtils.createFile(new File("src/test/resources/testresults/extendedfilelock", "test.tf"));
+
+		final @NotNull ExtendedFileLock test = new ExtendedFileLock(new File("src/test/resources/testresults/extendedfilelock", "test.tf"));
+
+		final boolean[] result = new boolean[3];
+
+		try {
+			result[0] = test.readLock().tryLock();
+			result[1] = test.readLock().tryLock();
+			result[2] = test.writeLock().tryLock();
+		} finally {
+			test.close();
+		}
+
+		Assertions.assertAll("Lock-Results",
+							 () -> Assertions.assertTrue(result[0]),
+							 () -> Assertions.assertTrue(result[1]),
+							 () -> Assertions.assertTrue(result[2]));
+	}
+
+	@Test
+	@TestOnly
+	void reEntrantReadWriteRead() throws IOException {
+		BaseFileUtils.createFile(new File("src/test/resources/testresults/extendedfilelock", "test.tf"));
+
+		final @NotNull ExtendedFileLock test = new ExtendedFileLock(new File("src/test/resources/testresults/extendedfilelock", "test.tf"));
+
+		final boolean[] result = new boolean[3];
+
+		try {
+			result[0] = test.readLock().tryLock();
+			result[1] = test.writeLock().tryLock();
+			result[2] = test.readLock().tryLock();
+		} finally {
+			test.close();
+		}
+
+		Assertions.assertAll("Lock-Results",
+							 () -> Assertions.assertTrue(result[0]),
+							 () -> Assertions.assertTrue(result[1]),
+							 () -> Assertions.assertTrue(result[2]));
+	}
+
+	@Test
+	@TestOnly
+	void reEntrantWriteReadWrite() throws IOException {
+		BaseFileUtils.createFile(new File("src/test/resources/testresults/extendedfilelock", "test.tf"));
+
+		final @NotNull ExtendedFileLock test = new ExtendedFileLock(new File("src/test/resources/testresults/extendedfilelock", "test.tf"));
+
+		final boolean[] result = new boolean[3];
+
+		try {
+			result[0] = test.writeLock().tryLock();
+			result[1] = test.readLock().tryLock();
+			result[2] = test.writeLock().tryLock();
+		} finally {
+			test.close();
+		}
+
+		Assertions.assertAll("Lock-Results",
+							 () -> Assertions.assertTrue(result[0]),
+							 () -> Assertions.assertTrue(result[1]),
+							 () -> Assertions.assertTrue(result[2]));
+	}
 }
