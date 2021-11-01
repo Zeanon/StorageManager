@@ -24,6 +24,11 @@ public class SizedStack<T> {
 	private int head;
 	private int tail;
 
+	/**
+	 * Create the SizedStack
+	 *
+	 * @param size defines the size of the Stack
+	 */
 	public SizedStack(int size) {
 		this.maxSize = size;
 		//noinspection unchecked
@@ -32,21 +37,34 @@ public class SizedStack<T> {
 		this.tail = 0;
 		this.size = 0;
 	}
-
+	
+	/**
+	 * Push a new Element on the top of the Stack
+	 *
+	 * @param element is the object which get pushed
+	 */
 	public T push(final @Nullable T element) {
 		this.data[this.head] = element;
 		this.increaseHead();
 		this.increaseSize();
 		return element;
 	}
-
+	
+	/**
+	 * Push a new Element on the bottom of the Stack
+	 *
+	 * @param element is the object which get pushed
+	 */
 	public T pushBottom(final @Nullable T element) {
 		this.decreaseTail();
 		this.data[this.tail] = element;
 		this.increaseSize();
 		return element;
 	}
-
+	
+	/**
+	 * Return and delete the Element from the top of the Stack
+	 */
 	public T pop() {
 		this.decreaseHead();
 		this.decreaseSize();
@@ -54,7 +72,10 @@ public class SizedStack<T> {
 		this.data[this.head] = null;
 		return result;
 	}
-
+	
+	/**
+	 * Return and delete the Element from the bottom of the Stack
+	 */
 	public T popBottom() {
 		this.decreaseSize();
 		final T result = this.data[this.tail];
@@ -62,11 +83,17 @@ public class SizedStack<T> {
 		this.increaseTail();
 		return result;
 	}
-
+	
+	/**
+	 * Return the Element from the top of the Stack
+	 */
 	public T peek() {
 		return this.data[this.head];
 	}
-
+	
+	/**
+	 * Return the Element from the bottom of the Stack
+	 */
 	public T peekBottom() {
 		return this.data[this.tail];
 	}
@@ -92,7 +119,7 @@ public class SizedStack<T> {
 			this.size = temp.size;
 		}
 	}
-
+	
 	public boolean empty() {
 		return this.size == 0;
 	}
@@ -163,6 +190,11 @@ public class SizedStack<T> {
 		return result;
 	}
 
+	/**
+	 * Compares whether two stacks are equal in outer behaviour
+	 *
+	 * @param o the Object to be compared
+	 */
 	@Override
 	public boolean equals(final Object o) {
 		if (o == this) {
