@@ -402,6 +402,7 @@ public class ThunderFileParser {
 		while (initialEntry.getValue() == LineType.COMMENT || initialEntry.getValue() == LineType.BLANK_LINE) {
 			initialEntry = mapIterator.next();
 		}
+
 		ThunderFileParser.topLayerWriteWithOutComments(writer, indentationString, initialEntry);
 		mapIterator.forEachRemaining(entry -> {
 			if (entry.getValue() != LineType.COMMENT && entry.getValue() != LineType.BLANK_LINE) {
