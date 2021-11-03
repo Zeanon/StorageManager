@@ -57,7 +57,7 @@ public abstract class ConcurrentAbstractDataMap<K, V> extends AbstractDataMap<K,
 	 * else
 	 * return map.get(key);
 	 * }
-	 * <p>
+	 * 
 	 * except that the action is performed atomically.
 	 *
 	 * @param key   key with which the specified value is to be associated
