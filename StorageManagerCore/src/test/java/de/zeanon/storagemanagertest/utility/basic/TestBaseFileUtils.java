@@ -2,6 +2,7 @@ package de.zeanon.storagemanagertest.utility.basic;
 
 import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.utility.basic.BaseFileUtils;
+import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
 import de.zeanon.storagemanagertest.TestStorageManager;
 import java.io.File;
 import java.io.IOException;
@@ -29,8 +30,8 @@ class TestBaseFileUtils {
 	static void listFiles() {
 		boolean result;
 		try {
-			result = BaseFileUtils.listFiles(new File("src/test/resources/testresults/basefileutils")).size() == 3;
-		} catch (IOException e) {
+			result = Objects.notNull(BaseFileUtils.listFiles(new File("src/test/resources/testresults/basefileutils"))).size() == 3;
+		} catch (final IOException e) {
 			e.printStackTrace();
 			result = false;
 		}
@@ -44,7 +45,7 @@ class TestBaseFileUtils {
 		boolean result = true;
 		try {
 			BaseFileUtils.writeToFileIfCreated("src/test/resources/testresults/basefileutils", "test1.tf", BaseFileUtils.createNewInputStreamFromFile("src/test/resources/testsources", "resource.tf"));
-		} catch (RuntimeIOException e) {
+		} catch (final RuntimeIOException e) {
 			e.printStackTrace();
 			result = false;
 		}
@@ -58,7 +59,7 @@ class TestBaseFileUtils {
 		boolean result = true;
 		try {
 			BaseFileUtils.writeToFileIfCreated("src/test/resources/testresults/basefileutils", "test1.tf", null);
-		} catch (RuntimeIOException e) {
+		} catch (final RuntimeIOException e) {
 			e.printStackTrace();
 			result = false;
 		}
@@ -72,7 +73,7 @@ class TestBaseFileUtils {
 		boolean result = true;
 		try {
 			BaseFileUtils.writeToFileIfCreated("src/test/resources/testresults/basefileutils", "test2.tf", BaseFileUtils.createNewInputStreamFromFile("src/test/resources/testsources", "resource.tf"));
-		} catch (RuntimeIOException e) {
+		} catch (final RuntimeIOException e) {
 			e.printStackTrace();
 			result = false;
 		}
@@ -86,7 +87,7 @@ class TestBaseFileUtils {
 		boolean result = true;
 		try {
 			BaseFileUtils.writeToFile("src/test/resources/testresults/basefileutils", "test2.tf", null);
-		} catch (RuntimeIOException e) {
+		} catch (final RuntimeIOException e) {
 			result = false;
 		}
 
@@ -99,7 +100,7 @@ class TestBaseFileUtils {
 		boolean result = true;
 		try {
 			BaseFileUtils.createFile("src/test/resources/testresults/basefileutils", "test3.tf");
-		} catch (RuntimeIOException e) {
+		} catch (final RuntimeIOException e) {
 			e.printStackTrace();
 			result = false;
 		}
@@ -113,7 +114,7 @@ class TestBaseFileUtils {
 		boolean result = true;
 		try {
 			BaseFileUtils.writeToFile("src/test/resources/testresults/basefileutils", "test3.tf", BaseFileUtils.createNewInputStreamFromFile("src/test/resources/testsources", "resource.tf"));
-		} catch (RuntimeIOException e) {
+		} catch (final RuntimeIOException e) {
 			result = false;
 		}
 
