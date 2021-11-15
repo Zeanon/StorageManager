@@ -6,7 +6,7 @@
     <groupId>de.zeanon</groupId>
     <artifactId>storagemanager</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>${revision}</version>
     <name>StorageManager</name>
     <description>Store data in a better way</description>
     <url>https://github.com/Zeanon/StorageManager</url>
@@ -52,6 +52,8 @@
     </developers>
 
     <properties>
+        <revision>1.0.0</revision>
+
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.test.skip>true</maven.test.skip>
