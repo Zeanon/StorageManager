@@ -336,10 +336,16 @@ public class ThunderFileParser {
 						   + " = [");
 			ThunderFileParser.writeArray(entry.getValue(), indentationString, writer);
 		} else if (entry.getValue() instanceof Pair) {
-			writer.print(entry.getKey()
+			final @NotNull Pair value = (Pair) entry.getValue();
+			writer.print(indentationString
+						 + indentationString
+						 + entry.getKey()
 						 + " = ["
-						 + ((Pair) entry.getValue()).getKey() + " :"
-						 + (((Pair) entry.getValue()).getValue() == null ? "]" : " " + ((Pair) entry.getValue()).getValue() + "]"));
+						 + (value.getKey() == null ? ":"
+												   : value.getKey() + " :")
+						 + (value.getValue() == null ? ""
+													 : " " + value.getValue())
+						 + "]");
 		} else if (entry.getValue() != LineType.BLANK_LINE) {
 			writer.print(entry.getKey()
 						 + (entry.getValue() == null ? " =" : (" = " + entry.getValue())));
@@ -376,12 +382,16 @@ public class ThunderFileParser {
 							   + " = [");
 				ThunderFileParser.writeArray(entry.getValue(), currentIndentation + indentationString, writer);
 			} else if (entry.getValue() instanceof Pair) {
-				writer.print(currentIndentation
+				final @NotNull Pair value = (Pair) entry.getValue();
+				writer.print(indentationString
 							 + indentationString
 							 + entry.getKey()
 							 + " = ["
-							 + ((Pair) entry.getValue()).getKey() + " :"
-							 + (((Pair) entry.getValue()).getValue() == null ? "]" : " " + ((Pair) entry.getValue()).getValue() + "]"));
+							 + (value.getKey() == null ? ":"
+													   : value.getKey() + " :")
+							 + (value.getValue() == null ? ""
+														 : " " + value.getValue())
+							 + "]");
 			} else if (entry.getValue() != LineType.BLANK_LINE) {
 				writer.print(currentIndentation
 							 + indentationString
@@ -431,10 +441,16 @@ public class ThunderFileParser {
 						   + " = [");
 			ThunderFileParser.writeArray(entry.getValue(), indentationString, writer);
 		} else if (entry.getValue() instanceof Pair) {
-			writer.print(entry.getKey()
+			final @NotNull Pair value = (Pair) entry.getValue();
+			writer.print(indentationString
+						 + indentationString
+						 + entry.getKey()
 						 + " = ["
-						 + ((Pair) entry.getValue()).getKey() + " :"
-						 + (((Pair) entry.getValue()).getValue() == null ? "]" : " " + ((Pair) entry.getValue()).getValue() + "]"));
+						 + (value.getKey() == null ? ":"
+												   : value.getKey() + " :")
+						 + (value.getValue() == null ? ""
+													 : " " + value.getValue())
+						 + "]");
 		} else {
 			writer.print(entry.getKey()
 						 + (entry.getValue() == null ? " =" : (" = " + entry.getValue())));
@@ -467,12 +483,16 @@ public class ThunderFileParser {
 								   + " = [");
 					ThunderFileParser.writeArray(entry.getValue(), indentationString + indentationString, writer);
 				} else if (entry.getValue() instanceof Pair) {
+					final @NotNull Pair value = (Pair) entry.getValue();
 					writer.print(indentationString
 								 + indentationString
 								 + entry.getKey()
 								 + " = ["
-								 + ((Pair) entry.getValue()).getKey() + " :"
-								 + (((Pair) entry.getValue()).getValue() == null ? "]" : " " + ((Pair) entry.getValue()).getValue() + "]"));
+								 + (value.getKey() == null ? ":"
+														   : value.getKey() + " :")
+								 + (value.getValue() == null ? ""
+															 : " " + value.getValue())
+								 + "]");
 				} else {
 					writer.print(indentationString
 								 + indentationString
@@ -492,7 +512,8 @@ public class ThunderFileParser {
 								 final @NotNull PrintWriter writer) {
 		for (final @Nullable Object line : list) {
 			writer.println(indentationString
-						   + (line == null ? "  -" : ("  - " + line)));
+						   + (line == null ? "  -"
+										   : ("  - " + line)));
 		}
 		writer.print(indentationString + "]");
 	}
@@ -503,7 +524,8 @@ public class ThunderFileParser {
 		if (array instanceof Object[]) {
 			for (final @Nullable Object line : (Object[]) array) {
 				writer.println(indentationString
-							   + (line == null ? "  -" : ("  - " + line)));
+							   + (line == null ? "  -"
+											   : ("  - " + line)));
 			}
 		} else if (array instanceof boolean[]) {
 			for (final boolean line : (boolean[]) array) {
