@@ -934,7 +934,10 @@ public class BaseFileUtils {
 								|| (!caseSensitive && BaseFileUtils.removeExtension(file.getName()).toLowerCase().contains(sequence.toLowerCase()))
 								|| (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(sequence)))) {
 							files.add(file);
-						} else if (file.isDirectory()) {
+						} else if (file.isDirectory()
+								   && (sequence == null
+									   || (!caseSensitive && BaseFileUtils.removeExtension(file.getName()).toLowerCase().contains(sequence.toLowerCase()))
+									   || (caseSensitive && BaseFileUtils.removeExtension(file.getName()).contains(sequence)))) {
 							files.add(file);
 							if (deep) {
 								files.addAll(Objects.notNull(BaseFileUtils.searchFilesOfTypeAndFolders(file, true, sequence, caseSensitive, extensions)));
