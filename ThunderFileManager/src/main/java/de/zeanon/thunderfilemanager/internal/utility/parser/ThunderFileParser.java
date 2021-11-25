@@ -754,7 +754,7 @@ public class ThunderFileParser {
 
 			if (line[1].startsWith("[")) {
 				if (line[1].endsWith("]")) {
-					if (line[1].startsWith("[") && line[1].endsWith("]") && line[1].contains(":") && !line[1].replaceFirst(":", "").contains(":")) {
+					if (line[1].contains(":")) {
 						final @NotNull String[] pair = line[1].substring(1, line[1].length() - 1).split(":");
 						if (pair.length > 2) {
 							throw new ThunderParseException("'" + tempLine + "' (line: " + lines.previousIndex() + ") ->  Illegal Object(Pairs may only have two values");
@@ -783,12 +783,7 @@ public class ThunderFileParser {
 				return null;
 			}
 		} else {
-			if (lines.next().contains("{")) {
-				lines.previous();
-				return tempLine;
-			} else {
-				throw new ThunderParseException("'" + tempLine + "' (line: " + lines.previousIndex() + ") -> Line does not contain value or subblock");
-			}
+			throw new ThunderParseException("'" + tempLine + "' (line: " + lines.previousIndex() + ") -> Line does not contain value or subblock");
 		}
 	}
 
