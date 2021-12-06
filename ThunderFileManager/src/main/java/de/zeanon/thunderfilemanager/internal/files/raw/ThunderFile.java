@@ -80,7 +80,7 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 						  final boolean synchronizeData,
 						  final @NotNull Class<? extends DataMap> map,
 						  final @NotNull Class<? extends List> list) {
-		super(file, inputStream, FileType.THUNDERFILE, new LocalFileData(new CollectionsProvider<>(map, list, synchronizeData)), reloadSetting, commentSetting, false);
+		super(file, inputStream, FileType.THUNDERFILE, new LocalFileData(new CollectionsProvider<>(map, list, synchronizeData)), reloadSetting, commentSetting);
 		this.bufferSize = bufferSize;
 		this.autoFlush = autoFlush;
 		this.concurrentData = concurrentData;

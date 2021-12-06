@@ -52,11 +52,11 @@
     </developers>
 
     <properties>
-        <revision>1.0.0</revision>
+        <revision>1.1.103</revision>
 
+        <maven.test.skip>false</maven.test.skip>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.test.skip>true</maven.test.skip>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>

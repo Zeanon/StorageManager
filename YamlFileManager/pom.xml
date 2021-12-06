@@ -11,7 +11,7 @@
 
     <artifactId>yamlfilemanager</artifactId>
     <name>YamlFileManager</name>
-    <version>1.1.103</version>
+    <version>${revision}</version>
 
 
     <licenses>

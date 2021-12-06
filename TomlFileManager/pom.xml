@@ -11,7 +11,7 @@
 
     <artifactId>tomlfilemanager</artifactId>
     <name>TomlFileManager</name>
-    <version>1.1.103</version>
+    <version>${revision}</version>
 
 
     <licenses>

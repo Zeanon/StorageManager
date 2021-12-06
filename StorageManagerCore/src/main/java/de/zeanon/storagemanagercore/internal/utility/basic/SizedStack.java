@@ -29,7 +29,7 @@ public class SizedStack<T> {
 	 *
 	 * @param size defines the size of the Stack
 	 */
-	public SizedStack(int size) {
+	public SizedStack(final int size) {
 		this.maxSize = size;
 		//noinspection unchecked
 		this.data = (T[]) new Object[this.maxSize];
@@ -37,7 +37,7 @@ public class SizedStack<T> {
 		this.tail = 0;
 		this.size = 0;
 	}
-	
+
 	/**
 	 * Push a new Element on the top of the Stack
 	 *
@@ -49,7 +49,7 @@ public class SizedStack<T> {
 		this.increaseSize();
 		return element;
 	}
-	
+
 	/**
 	 * Push a new Element on the bottom of the Stack
 	 *
@@ -61,7 +61,7 @@ public class SizedStack<T> {
 		this.increaseSize();
 		return element;
 	}
-	
+
 	/**
 	 * Return and delete the Element from the top of the Stack
 	 */
@@ -72,7 +72,7 @@ public class SizedStack<T> {
 		this.data[this.head] = null;
 		return result;
 	}
-	
+
 	/**
 	 * Return and delete the Element from the bottom of the Stack
 	 */
@@ -83,14 +83,14 @@ public class SizedStack<T> {
 		this.increaseTail();
 		return result;
 	}
-	
+
 	/**
 	 * Return the Element from the top of the Stack
 	 */
 	public T peek() {
 		return this.data[this.head];
 	}
-	
+
 	/**
 	 * Return the Element from the bottom of the Stack
 	 */
@@ -119,7 +119,7 @@ public class SizedStack<T> {
 			this.size = temp.size;
 		}
 	}
-	
+
 	public boolean empty() {
 		return this.size == 0;
 	}

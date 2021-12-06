@@ -40,7 +40,7 @@ class TestParser {
 	@Test
 	@TestOnly
 	void testResource2() {
-		Assertions.assertDoesNotThrow(() -> {
+		Assertions.assertThrows(FileParseException.class, () -> {
 			final ThunderFile testFile = ThunderFileManager.thunderFile("src/test/resources/testresults/parser", "test2")
 														   .fromFile("src/test/resources/testsources", "resourceBroken.tf")
 														   .create();

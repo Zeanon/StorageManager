@@ -61,7 +61,9 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 					   final boolean synchronizeData,
 					   final @NotNull Class<? extends Map> map,
 					   final @NotNull Class<? extends List> list) {
-		super(file, inputStream, FileType.YAML, new LocalFileData(new CollectionsProvider<>(map, list, synchronizeData)), reloadSetting, commentSetting, true);
+		super(file, inputStream, FileType.YAML, new LocalFileData(new CollectionsProvider<>(map, list, synchronizeData)), reloadSetting, commentSetting);
+		this.fileData().loadData(this.readFile());
+		this.lastLoaded(System.currentTimeMillis());
 	}
 
 	@Override
