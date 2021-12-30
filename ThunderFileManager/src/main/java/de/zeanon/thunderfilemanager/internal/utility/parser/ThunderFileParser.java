@@ -2,7 +2,6 @@ package de.zeanon.thunderfilemanager.internal.utility.parser;
 
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
-import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
 import de.zeanon.storagemanagercore.internal.base.interfaces.DataMap;
 import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
@@ -42,8 +41,8 @@ public class ThunderFileParser {
 	 * @param fileData       the FileData containing the Data to be written
 	 * @param commentSetting the CommentSetting to be used
 	 *
-	 * @throws RuntimeIOException  if the File can not be accessed properly
-	 * @throws ObjectNullException if a passed value is null
+	 * @throws UncheckedIOException if the File can not be accessed properly
+	 * @throws ObjectNullException  if a passed value is null
 	 */
 	public void writeData(final @NotNull File file,
 						  final @NotNull FileData<DataMap, DataMap.DataNode<String, Object>, List> fileData, //NOSONAR
@@ -66,7 +65,7 @@ public class ThunderFileParser {
 				}
 			}
 		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
+			throw new UncheckedIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -110,7 +109,7 @@ public class ThunderFileParser {
 				}
 			}
 		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
+			throw new UncheckedIOException("Error while writing to '" + file.getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -144,9 +143,9 @@ public class ThunderFileParser {
 	 *
 	 * @return a Map containing the Data of the File
 	 *
-	 * @throws RuntimeIOException  if the File can not be accessed properly
-	 * @throws ThunderException    if the Content of the File can not be parsed properly
-	 * @throws ObjectNullException if a passed value is null
+	 * @throws UncheckedIOException if the File can not be accessed properly
+	 * @throws ThunderException     if the Content of the File can not be parsed properly
+	 * @throws ObjectNullException  if a passed value is null
 	 */
 	public @NotNull DataMap<String, Object> readData(final @NotNull File file,
 													 final @NotNull CollectionsProvider<DataMap, List> collectionsProvider,
@@ -159,7 +158,7 @@ public class ThunderFileParser {
 				tempLock.lock();
 				lines = reader.lines().collect(Collectors.toList()).listIterator();
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
+				throw new UncheckedIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
 			}
 			if (commentSetting == Comment.PRESERVE) {
 				return ThunderFileParser.initialReadWithComments(lines, collectionsProvider);
@@ -182,7 +181,7 @@ public class ThunderFileParser {
 			try (final @NotNull BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream), buffer_size)) {
 				lines = reader.lines().collect(Collectors.toList()).listIterator();
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while reading content from the given InputStream", e);
+				throw new UncheckedIOException("Error while reading content from the given InputStream", e);
 			}
 			if (commentSetting == Comment.PRESERVE) {
 				return ThunderFileParser.initialReadWithComments(lines, collectionsProvider);
@@ -208,7 +207,7 @@ public class ThunderFileParser {
 				tempLock.lock();
 				lines = reader.lines().collect(Collectors.toList()).listIterator();
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
+				throw new UncheckedIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
 			}
 			if (commentSetting == Comment.PRESERVE) {
 				fileData.loadData(ThunderFileParser.initialReadWithComments(lines, collectionsProvider));
@@ -233,7 +232,7 @@ public class ThunderFileParser {
 			try (final @NotNull BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream), buffer_size)) {
 				lines = reader.lines().collect(Collectors.toList()).listIterator();
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while reading content from the given InputStream", e);
+				throw new UncheckedIOException("Error while reading content from the given InputStream", e);
 			}
 			if (commentSetting == Comment.PRESERVE) {
 				fileData.loadData(ThunderFileParser.initialReadWithComments(lines, collectionsProvider));
@@ -258,7 +257,7 @@ public class ThunderFileParser {
 				tempLock.lock();
 				lines = reader.lines().collect(Collectors.toList()).listIterator();
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
+				throw new UncheckedIOException("Error while reading content from '" + file.getAbsolutePath() + "'", e);
 			}
 
 			final @NotNull ThunderFileData<DataMap, ?, List> fileData = new LocalFileData(collectionsProvider);
@@ -284,7 +283,7 @@ public class ThunderFileParser {
 			try (final @NotNull BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream), buffer_size)) {
 				lines = reader.lines().collect(Collectors.toList()).listIterator();
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while reading content from the given InputStream", e);
+				throw new UncheckedIOException("Error while reading content from the given InputStream", e);
 			}
 
 			final @NotNull ThunderFileData<DataMap, ?, List> fileData = new LocalFileData(collectionsProvider);

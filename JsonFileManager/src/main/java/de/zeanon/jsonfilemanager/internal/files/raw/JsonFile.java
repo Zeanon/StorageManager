@@ -8,17 +8,13 @@ import de.zeanon.storagemanagercore.internal.base.cache.filedata.StandardFileDat
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.exceptions.FileParseException;
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
-import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.files.FlatFile;
 import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReadWriteFileLock;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
 import de.zeanon.storagemanagercore.internal.utility.basic.BaseFileUtils;
 import de.zeanon.storagemanagercore.internal.utility.filelock.ExtendedFileLock;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,8 +49,8 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry, List>, M
 	 * @param map             the Map implementation to be used, default is HashMap or ConcurrentHashMap if concurrent
 	 * @param list            the List implementation to be used, default ist GapList
 	 *
-	 * @throws FileParseException if the Content of the File can not be parsed properly
-	 * @throws RuntimeIOException if the File can not be accessed properly
+	 * @throws FileParseException   if the Content of the File can not be parsed properly
+	 * @throws UncheckedIOException if the File can not be accessed properly
 	 */
 	protected JsonFile(final @NotNull File file,
 					   final @Nullable InputStream inputStream,
@@ -144,10 +140,10 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry, List>, M
 			tempLock.truncateChannel(0);
 			writer.write(new JSONObject(this.fileData().dataMap()).toString(3));
 		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while writing to "
-										 + this.file().getAbsolutePath()
-										 + "'",
-										 e);
+			throw new UncheckedIOException("Error while writing to "
+										   + this.file().getAbsolutePath()
+										   + "'",
+										   e);
 		}
 	}
 
@@ -225,11 +221,16 @@ public class JsonFile extends FlatFile<StandardFileData<Map, Map.Entry, List>, M
 		} else {
 			try (final @NotNull InputStream inputStream = BaseFileUtils.createNewInputStreamFromFile(this.file())) {
 				return new JSONObject(new JSONTokener(inputStream)).toMap();
-			} catch (final RuntimeIOException | IOException e) {
-				throw new RuntimeIOException("Error while loading '"
-											 + this.getAbsolutePath()
-											 + "'",
-											 e);
+			} catch (final IOException e) {
+				throw new UncheckedIOException("Error while loading '"
+											   + this.getAbsolutePath()
+											   + "'",
+											   e);
+			} catch (final UncheckedIOException e) {
+				throw new UncheckedIOException("Error while loading '"
+											   + this.getAbsolutePath()
+											   + "'",
+											   e.getCause());
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 package de.zeanon.storagemanagertest;
 
-import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import java.io.File;
+import java.io.UncheckedIOException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +27,7 @@ public class TestStorageManager {
 				System.out.println("[INFO] Folder does not exist");
 			}
 			System.out.println(result ? "[INFO] Cleared Folder" : "[INFO] Failed to clear Folder");
-		} catch (RuntimeIOException e) {
+		} catch (final UncheckedIOException e) {
 			System.out.println(e.getMessage());
 		}
 	}

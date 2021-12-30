@@ -1,7 +1,6 @@
 package de.zeanon.tomlfilemanager.internal.files.config;
 
 import de.zeanon.storagemanagercore.internal.base.exceptions.FileParseException;
-import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.files.FlatFile;
 import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
 import de.zeanon.storagemanagercore.internal.base.interfaces.Config;
@@ -13,6 +12,7 @@ import de.zeanon.tomlfilemanager.internal.files.section.TomlConfigSection;
 import de.zeanon.tomlfilemanager.internal.utility.datafiles.TomlUtils;
 import java.io.File;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +44,8 @@ public class TomlConfig extends TomlFile implements Config {
 	 * @param map             the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
 	 * @param list            the List implementation to be used, default ist GapList
 	 *
-	 * @throws RuntimeIOException if the File can not be accessed properly
-	 * @throws FileParseException if the Content of the File can not be parsed properly
+	 * @throws UncheckedIOException if the File can not be accessed properly
+	 * @throws FileParseException   if the Content of the File can not be parsed properly
 	 */
 	@SuppressWarnings("rawtypes")
 	protected TomlConfig(final @NotNull File file,

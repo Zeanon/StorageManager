@@ -1,11 +1,11 @@
 package de.zeanon.storagemanagertest.utility.basic;
 
-import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.utility.basic.BaseFileUtils;
 import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
 import de.zeanon.storagemanagertest.TestStorageManager;
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import org.jetbrains.annotations.TestOnly;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -45,7 +45,7 @@ class TestBaseFileUtils {
 		boolean result = true;
 		try {
 			BaseFileUtils.writeToFileIfCreated("src/test/resources/testresults/basefileutils", "test1.tf", BaseFileUtils.createNewInputStreamFromFile("src/test/resources/testsources", "resource.tf"));
-		} catch (final RuntimeIOException e) {
+		} catch (final UncheckedIOException e) {
 			e.printStackTrace();
 			result = false;
 		}
@@ -59,7 +59,7 @@ class TestBaseFileUtils {
 		boolean result = true;
 		try {
 			BaseFileUtils.writeToFileIfCreated("src/test/resources/testresults/basefileutils", "test1.tf", null);
-		} catch (final RuntimeIOException e) {
+		} catch (final UncheckedIOException e) {
 			e.printStackTrace();
 			result = false;
 		}
@@ -73,7 +73,7 @@ class TestBaseFileUtils {
 		boolean result = true;
 		try {
 			BaseFileUtils.writeToFileIfCreated("src/test/resources/testresults/basefileutils", "test2.tf", BaseFileUtils.createNewInputStreamFromFile("src/test/resources/testsources", "resource.tf"));
-		} catch (final RuntimeIOException e) {
+		} catch (final UncheckedIOException e) {
 			e.printStackTrace();
 			result = false;
 		}
@@ -87,7 +87,7 @@ class TestBaseFileUtils {
 		boolean result = true;
 		try {
 			BaseFileUtils.writeToFile("src/test/resources/testresults/basefileutils", "test2.tf", null);
-		} catch (final RuntimeIOException e) {
+		} catch (final UncheckedIOException e) {
 			result = false;
 		}
 
@@ -100,7 +100,7 @@ class TestBaseFileUtils {
 		boolean result = true;
 		try {
 			BaseFileUtils.createFile("src/test/resources/testresults/basefileutils", "test3.tf");
-		} catch (final RuntimeIOException e) {
+		} catch (final UncheckedIOException e) {
 			e.printStackTrace();
 			result = false;
 		}
@@ -114,7 +114,7 @@ class TestBaseFileUtils {
 		boolean result = true;
 		try {
 			BaseFileUtils.writeToFile("src/test/resources/testresults/basefileutils", "test3.tf", BaseFileUtils.createNewInputStreamFromFile("src/test/resources/testsources", "resource.tf"));
-		} catch (final RuntimeIOException e) {
+		} catch (final UncheckedIOException e) {
 			result = false;
 		}
 

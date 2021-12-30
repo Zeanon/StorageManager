@@ -2,7 +2,6 @@ package de.zeanon.yamlfilemanager.internal.files.config;
 
 import com.esotericsoftware.yamlbeans.YamlException;
 import de.zeanon.storagemanagercore.internal.base.exceptions.FileParseException;
-import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
 import de.zeanon.storagemanagercore.internal.base.interfaces.Config;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
@@ -12,6 +11,7 @@ import de.zeanon.yamlfilemanager.internal.utility.parser.YamlFileParser;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
@@ -46,8 +46,8 @@ public class YamlConfig extends YamlFile implements Config {
 	 * @param map             the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
 	 * @param list            the List implementation to be used, default ist GapList
 	 *
-	 * @throws RuntimeIOException if the File can not be accessed properly
-	 * @throws FileParseException if the Content of the File can not be parsed properly
+	 * @throws UncheckedIOException if the File can not be accessed properly
+	 * @throws FileParseException   if the Content of the File can not be parsed properly
 	 */
 	protected YamlConfig(final @NotNull File file,
 						 final @Nullable InputStream inputStream,
@@ -83,10 +83,10 @@ public class YamlConfig extends YamlFile implements Config {
 											 + "'",
 											 e);
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while getting header of '"
-											 + this.file().getAbsolutePath()
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while getting header of '"
+											   + this.file().getAbsolutePath()
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -116,10 +116,10 @@ public class YamlConfig extends YamlFile implements Config {
 												 + "'",
 												 e);
 				} catch (final @NotNull IOException e) {
-					throw new RuntimeIOException("Error while setting header of '"
-												 + this.file().getAbsolutePath()
-												 + "'",
-												 e);
+					throw new UncheckedIOException("Error while setting header of '"
+												   + this.file().getAbsolutePath()
+												   + "'",
+												   e);
 				}
 			} else {
 				try {
@@ -136,10 +136,10 @@ public class YamlConfig extends YamlFile implements Config {
 												 + "'",
 												 e);
 				} catch (final @NotNull IOException e) {
-					throw new RuntimeIOException("Error while setting header of '"
-												 + this.file().getAbsolutePath()
-												 + "'",
-												 e);
+					throw new UncheckedIOException("Error while setting header of '"
+												   + this.file().getAbsolutePath()
+												   + "'",
+												   e);
 				}
 			}
 		} else {
@@ -159,10 +159,10 @@ public class YamlConfig extends YamlFile implements Config {
 											 + "'",
 											 e);
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while setting header of '"
-											 + this.file().getAbsolutePath()
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while setting header of '"
+											   + this.file().getAbsolutePath()
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -184,10 +184,10 @@ public class YamlConfig extends YamlFile implements Config {
 											 + "'",
 											 e);
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while getting footer of '"
-											 + this.file().getAbsolutePath()
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while getting footer of '"
+											   + this.file().getAbsolutePath()
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -217,10 +217,10 @@ public class YamlConfig extends YamlFile implements Config {
 												 + "'",
 												 e);
 				} catch (final @NotNull IOException e) {
-					throw new RuntimeIOException("Error while setting footer of '"
-												 + this.file().getAbsolutePath()
-												 + "'",
-												 e);
+					throw new UncheckedIOException("Error while setting footer of '"
+												   + this.file().getAbsolutePath()
+												   + "'",
+												   e);
 				}
 			} else {
 				try {
@@ -237,10 +237,10 @@ public class YamlConfig extends YamlFile implements Config {
 												 + "'",
 												 e);
 				} catch (final @NotNull IOException e) {
-					throw new RuntimeIOException("Error while setting footer of '"
-												 + this.file().getAbsolutePath()
-												 + "'",
-												 e);
+					throw new UncheckedIOException("Error while setting footer of '"
+												   + this.file().getAbsolutePath()
+												   + "'",
+												   e);
 				}
 			}
 		} else {
@@ -260,10 +260,10 @@ public class YamlConfig extends YamlFile implements Config {
 											 + "'",
 											 e);
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while setting footer of '"
-											 + this.file().getAbsolutePath()
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while setting footer of '"
+											   + this.file().getAbsolutePath()
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -285,10 +285,10 @@ public class YamlConfig extends YamlFile implements Config {
 											 + "'",
 											 e);
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while getting comments from '"
-											 + this.file().getAbsolutePath()
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while getting comments from '"
+											   + this.file().getAbsolutePath()
+											   + "'",
+											   e);
 			}
 		}
 	}

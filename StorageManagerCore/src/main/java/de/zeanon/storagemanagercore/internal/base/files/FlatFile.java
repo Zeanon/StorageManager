@@ -2,7 +2,6 @@ package de.zeanon.storagemanagercore.internal.base.files;
 
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.exceptions.FileTypeException;
-import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.*;
 import de.zeanon.storagemanagercore.internal.base.settings.Reload;
 import de.zeanon.storagemanagercore.internal.utility.basic.BaseFileUtils;
@@ -91,11 +90,16 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	public @NotNull String getCanonicalPath() {
 		try {
 			return this.file().getCanonicalPath();
-		} catch (final @NotNull IOException | SecurityException e) {
-			throw new RuntimeIOException("Could not get Canonical Path of '"
-										 + this.file().getAbsolutePath()
-										 + "'",
-										 e);
+		} catch (final @NotNull IOException e) {
+			throw new UncheckedIOException("Could not get Canonical Path of '"
+										   + this.file().getAbsolutePath()
+										   + "'",
+										   e);
+		} catch (final @NotNull SecurityException e) {
+			throw new SecurityException("Could not get Canonical Path of '"
+										+ this.file().getAbsolutePath()
+										+ "'",
+										e);
 		}
 	}
 
@@ -130,10 +134,10 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 		try {
 			Files.delete(this.file().toPath());
 		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Could not delete '"
-										 + this.file().getAbsolutePath()
-										 + "'",
-										 e);
+			throw new UncheckedIOException("Could not delete '"
+										   + this.file().getAbsolutePath()
+										   + "'",
+										   e);
 		}
 	}
 
@@ -832,7 +836,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 			tempLock.lock();
 			lines = reader.lines();
 		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while reading content from '" + this.file.getAbsolutePath() + "'", e);
+			throw new UncheckedIOException("Error while reading content from '" + this.file.getAbsolutePath() + "'", e);
 		}
 
 		try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(this.file).writeLock();
@@ -842,7 +846,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 
 			lines.map(line -> line.replace(target, replacement)).forEach(writer::println);
 		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while writing to '" + this.file.getAbsolutePath() + "'", e);
+			throw new UncheckedIOException("Error while writing to '" + this.file.getAbsolutePath() + "'", e);
 		}
 	}
 

@@ -8,17 +8,13 @@ import de.zeanon.storagemanagercore.internal.base.cache.filedata.StandardFileDat
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.exceptions.FileParseException;
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
-import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.files.CommentEnabledFile;
 import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
 import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
 import de.zeanon.yamlfilemanager.internal.files.section.YamlFileSection;
 import de.zeanon.yamlfilemanager.internal.utility.parser.YamlFileParser;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +47,8 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 	 * @param map             the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
 	 * @param list            the List implementation to be used, default ist GapList
 	 *
-	 * @throws RuntimeIOException if the File can not be accessed properly
-	 * @throws FileParseException if the Content of the File can not be parsed properly
+	 * @throws UncheckedIOException if the File can not be accessed properly
+	 * @throws FileParseException   if the Content of the File can not be parsed properly
 	 */
 	protected YamlFile(final @NotNull File file,
 					   final @Nullable InputStream inputStream,
@@ -70,11 +66,11 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 	public void save() {
 		try {
 			YamlFileParser.writeData(this.file(), this.fileData().dataMap(), this.getCommentSetting(), this.collectionsProvider());
-		} catch (final @NotNull RuntimeIOException e) {
-			throw new RuntimeIOException("Error while writing to "
-										 + this.getAbsolutePath()
-										 + "'",
-										 e);
+		} catch (final @NotNull UncheckedIOException e) {
+			throw new UncheckedIOException("Error while writing to "
+										   + this.getAbsolutePath()
+										   + "'",
+										   e.getCause());
 		}
 	}
 
@@ -151,7 +147,7 @@ public class YamlFile extends CommentEnabledFile<StandardFileData<Map, Map.Entry
 		} catch (final @NotNull YamlException e) {
 			throw new FileParseException("Error while parsing '" + this.file().getAbsolutePath() + "'", e);
 		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
+			throw new UncheckedIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
 		}
 	}
 

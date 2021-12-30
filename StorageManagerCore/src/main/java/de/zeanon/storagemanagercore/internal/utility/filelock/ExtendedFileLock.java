@@ -1,7 +1,6 @@
 package de.zeanon.storagemanagercore.internal.utility.filelock;
 
 import de.zeanon.storagemanagercore.external.browniescollections.GapList;
-import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReadWriteFileLock;
 import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
 import java.io.*;
@@ -326,7 +325,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 							this.lockHoldCount.set(1);
 							return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, true);
 						} catch (final @NotNull IOException e) {
-							throw new RuntimeIOException(e.getMessage(), e);
+							throw new UncheckedIOException(e.getMessage(), e);
 						}
 					});
 				} catch (final @NotNull InterruptedException e) {
@@ -356,7 +355,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 									this.lockHoldCount.set(1);
 									return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, true);
 								} catch (final @NotNull IOException e) {
-									throw new RuntimeIOException(e.getMessage(), e);
+									throw new UncheckedIOException(e.getMessage(), e);
 								}
 							});
 							return true;
@@ -382,7 +381,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 						this.readingThreads.clear();
 						return null;
 					} catch (final @NotNull IOException e) {
-						throw new RuntimeIOException(e.getMessage(), e);
+						throw new UncheckedIOException(e.getMessage(), e);
 					}
 				} else {
 					this.readingThreads.remove(Thread.currentThread().getId());
@@ -448,7 +447,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 					this.currentWritingThread.set(Thread.currentThread().getId());
 					return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, false);
 				} catch (final @NotNull IOException e) {
-					throw new RuntimeIOException(e.getMessage(), e);
+					throw new UncheckedIOException(e.getMessage(), e);
 				}
 			});
 		}
@@ -469,7 +468,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 						this.currentWritingThread.set(-1);
 						return null;
 					} catch (final @NotNull IOException e) {
-						throw new RuntimeIOException(e.getMessage(), e);
+						throw new UncheckedIOException(e.getMessage(), e);
 					}
 				} else {
 					this.writeLockActive.decrementAndGet();
@@ -511,7 +510,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 						this.currentWritingThread.set(-1);
 						return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, true);
 					} catch (final @NotNull IOException e) {
-						throw new RuntimeIOException(e.getMessage(), e);
+						throw new UncheckedIOException(e.getMessage(), e);
 					}
 				} else {
 					throw new LockNotHeldException("Lock is not held");
@@ -537,7 +536,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 						this.currentWritingThread.set(Thread.currentThread().getId());
 						return this.localRandomAccessFile.getChannel().lock(0, Long.MAX_VALUE, false);
 					} catch (final @NotNull IOException e) {
-						throw new RuntimeIOException(e.getMessage(), e);
+						throw new UncheckedIOException(e.getMessage(), e);
 					} catch (final @NotNull InterruptedException e) { //NOSONAR
 						throw new RuntimeInterruptedException(e.getMessage());
 					}
@@ -551,13 +550,16 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		private void close() throws IOException {
 			final long lockStamp = ReadWriteLockableChannel.factoryLock.writeLock();
 			try {
-				this.unlock();
+				try {
+					this.unlock();
+				} catch (final @NotNull LockNotHeldException e) {
+					//Do nothing, no lock is held, so nothing has to be changed
+				}
+
 				if (this.instanceCount.decrementAndGet() == 0) {
 					ReadWriteLockableChannel.openChannels.remove(this.getFilePath());
 					this.localRandomAccessFile.close();
 				}
-			} catch (final @NotNull LockNotHeldException e) {
-				//Do nothing, no lock is held, so nothing has to be changed
 			} finally {
 				ReadWriteLockableChannel.factoryLock.unlockWrite(lockStamp);
 			}
@@ -581,7 +583,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 							}
 							return null;
 						} catch (final @NotNull IOException e) {
-							throw new RuntimeIOException(e.getMessage(), e);
+							throw new UncheckedIOException(e.getMessage(), e);
 						}
 					}
 
@@ -598,7 +600,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 								}
 								return null;
 							} catch (final @NotNull IOException e) {
-								throw new RuntimeIOException(e.getMessage(), e);
+								throw new UncheckedIOException(e.getMessage(), e);
 							}
 						}
 					}

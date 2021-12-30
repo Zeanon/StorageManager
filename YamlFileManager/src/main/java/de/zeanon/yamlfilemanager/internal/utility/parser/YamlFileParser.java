@@ -2,16 +2,12 @@ package de.zeanon.yamlfilemanager.internal.utility.parser;
 
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
-import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReadWriteFileLock;
 import de.zeanon.storagemanagercore.internal.base.settings.Comment;
 import de.zeanon.storagemanagercore.internal.utility.filelock.ExtendedFileLock;
 import de.zeanon.yamlfilemanager.internal.utility.datafiles.YamlUtils;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -150,10 +146,10 @@ public class YamlFileParser {
 				YamlFileParser.write(YamlUtils.parseComments(unEdited, header, collectionsProvider), tempLock);
 			}
 		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while writing to "
-										 + file.getAbsolutePath()
-										 + "'",
-										 e);
+			throw new UncheckedIOException("Error while writing to "
+										   + file.getAbsolutePath()
+										   + "'",
+										   e);
 		}
 	}
 

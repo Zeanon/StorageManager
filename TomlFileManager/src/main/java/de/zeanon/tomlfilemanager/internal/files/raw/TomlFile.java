@@ -8,7 +8,6 @@ import de.zeanon.storagemanagercore.internal.base.cache.filedata.StandardFileDat
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.exceptions.FileParseException;
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
-import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.files.FlatFile;
 import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReloadSetting;
@@ -16,6 +15,7 @@ import de.zeanon.tomlfilemanager.internal.files.section.TomlFileSection;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +47,8 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 	 * @param map             the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
 	 * @param list            the List implementation to be used, default ist GapList
 	 *
-	 * @throws RuntimeIOException if the File can not be accessed properly
-	 * @throws FileParseException if the Content of the File can not be parsed properly
+	 * @throws UncheckedIOException if the File can not be accessed properly
+	 * @throws FileParseException   if the Content of the File can not be parsed properly
 	 */
 	protected TomlFile(final @NotNull File file,
 					   final @Nullable InputStream inputStream,
@@ -67,7 +67,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 			//noinspection unchecked
 			Toml.write(this.fileData().dataMap(), this.file());
 		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e);
+			throw new UncheckedIOException("Error while writing to " + this.file().getAbsolutePath() + "'", e);
 		}
 	}
 
@@ -141,7 +141,7 @@ public class TomlFile extends FlatFile<StandardFileData<Map, Map.Entry<String, O
 		try {
 			return Toml.read(this.file());
 		} catch (final @NotNull IOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
+			throw new UncheckedIOException("Error while loading '" + this.file().getAbsolutePath() + "'", e);
 		} catch (final @NotNull TomlException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}

@@ -9,7 +9,6 @@ import de.zeanon.storagemanagercore.internal.base.cache.datamap.GapDataMap;
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.exceptions.FileParseException;
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
-import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.files.CommentEnabledFile;
 import de.zeanon.storagemanagercore.internal.base.interfaces.CommentSetting;
 import de.zeanon.storagemanagercore.internal.base.interfaces.DataMap;
@@ -21,6 +20,7 @@ import de.zeanon.thunderfilemanager.internal.files.section.ThunderFileSection;
 import de.zeanon.thunderfilemanager.internal.utility.parser.ThunderFileParser;
 import java.io.File;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -65,8 +65,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	 * @param map             the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
 	 * @param list            the List implementation to be used, default ist GapList
 	 *
-	 * @throws RuntimeIOException if the File can not be accessed properly
-	 * @throws FileParseException if the Content of the File can not be parsed properly
+	 * @throws UncheckedIOException if the File can not be accessed properly
+	 * @throws FileParseException   if the Content of the File can not be parsed properly
 	 */
 	protected ThunderFile(final @NotNull File file,
 						  final @Nullable InputStream inputStream,
@@ -95,11 +95,11 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	public void save() {
 		try {
 			ThunderFileParser.writeData(this.file(), this.fileData(), this.getCommentSetting(), this.getIndentation(), this.getAutoFlush());
-		} catch (final @NotNull RuntimeIOException e) {
-			throw new RuntimeIOException("Error while writing to "
-										 + this.getAbsolutePath()
-										 + "'",
-										 e);
+		} catch (final @NotNull UncheckedIOException e) {
+			throw new UncheckedIOException("Error while writing to "
+										   + this.getAbsolutePath()
+										   + "'",
+										   e.getCause());
 		}
 	}
 
@@ -181,8 +181,8 @@ public class ThunderFile extends CommentEnabledFile<ThunderFileData<DataMap, Dat
 	protected @NotNull DataMap<String, Object> readFile() {
 		try {
 			return ThunderFileParser.readData(this.file(), this.collectionsProvider(), this.getCommentSetting(), this.getBufferSize());
-		} catch (final @NotNull RuntimeIOException e) {
-			throw new RuntimeIOException("Error while loading '" + this.getAbsolutePath() + "'", e);
+		} catch (final @NotNull UncheckedIOException e) {
+			throw new UncheckedIOException("Error while loading '" + this.getAbsolutePath() + "'", e.getCause());
 		} catch (final @NotNull ThunderException e) {
 			throw new FileParseException("Error while parsing '" + this.getAbsolutePath() + "'", e);
 		}

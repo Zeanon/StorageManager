@@ -1,7 +1,6 @@
 package de.zeanon.thunderfilemanager.internal.files.config;
 
 import de.zeanon.storagemanagercore.internal.base.exceptions.FileParseException;
-import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.*;
 import de.zeanon.storagemanagercore.internal.base.settings.Comment;
 import de.zeanon.thunderfilemanager.internal.files.raw.ThunderFile;
@@ -9,6 +8,7 @@ import de.zeanon.thunderfilemanager.internal.files.section.ThunderConfigSection;
 import de.zeanon.thunderfilemanager.internal.utility.datafiles.ThunderUtils;
 import java.io.File;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -40,8 +40,8 @@ public class ThunderConfig extends ThunderFile implements Config {
 	 * @param map             the Map implementation to be used, default is GapDataMap or ConcurrentGapDataMap if concurrent
 	 * @param list            the List implementation to be used, default ist GapList
 	 *
-	 * @throws RuntimeIOException if the File can not be accessed properly
-	 * @throws FileParseException if the Content of the File can not be parsed properly
+	 * @throws UncheckedIOException if the File can not be accessed properly
+	 * @throws FileParseException   if the Content of the File can not be parsed properly
 	 */
 	protected ThunderConfig(final @NotNull File file,
 							final @Nullable InputStream inputStream,

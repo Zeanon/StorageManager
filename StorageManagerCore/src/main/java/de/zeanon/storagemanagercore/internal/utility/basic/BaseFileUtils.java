@@ -2,7 +2,6 @@ package de.zeanon.storagemanagercore.internal.utility.basic;
 
 import de.zeanon.storagemanagercore.external.browniescollections.GapList;
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
-import de.zeanon.storagemanagercore.internal.base.exceptions.RuntimeIOException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReadWriteFileLock;
 import de.zeanon.storagemanagercore.internal.utility.filelock.ExtendedFileLock;
 import java.io.*;
@@ -968,10 +967,10 @@ public class BaseFileUtils {
 			try {
 				return new BufferedInputStream(new FileInputStream(file));
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + file.getAbsolutePath()
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + file.getAbsolutePath()
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -991,10 +990,10 @@ public class BaseFileUtils {
 			try {
 				return new BufferedInputStream(new FileInputStream(name));
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + name
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + name
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -1014,10 +1013,10 @@ public class BaseFileUtils {
 			try {
 				return new BufferedInputStream(new FileInputStream(file.toFile()));
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + file.toAbsolutePath()
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + file.toAbsolutePath()
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -1038,10 +1037,10 @@ public class BaseFileUtils {
 			try {
 				return new BufferedInputStream(directory == null ? new FileInputStream(name) : new FileInputStream(new File(directory, name)));
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + (directory == null ? name : directory + "/" + name)
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + (directory == null ? name : directory + "/" + name)
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -1062,10 +1061,10 @@ public class BaseFileUtils {
 			try {
 				return new BufferedInputStream(directory == null ? new FileInputStream(name) : new FileInputStream(new File(directory, name)));
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + (directory == null ? name : directory.getAbsolutePath() + "/" + name)
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + (directory == null ? name : directory.getAbsolutePath() + "/" + name)
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -1086,10 +1085,10 @@ public class BaseFileUtils {
 			try {
 				return new BufferedInputStream(directory == null ? new FileInputStream(name) : new FileInputStream(new File(directory.toFile(), name)));
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + (directory == null ? name : directory.toAbsolutePath() + "/" + name)
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + (directory == null ? name : directory.toAbsolutePath() + "/" + name)
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -1110,10 +1109,10 @@ public class BaseFileUtils {
 			try {
 				return new BufferedOutputStream(new FileOutputStream(file));
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + file.getAbsolutePath()
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + file.getAbsolutePath()
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -1133,10 +1132,10 @@ public class BaseFileUtils {
 			try {
 				return new BufferedOutputStream(new FileOutputStream(name));
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + name
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + name
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -1156,10 +1155,10 @@ public class BaseFileUtils {
 			try {
 				return new BufferedOutputStream(new FileOutputStream(file.toFile()));
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + file.toAbsolutePath()
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + file.toAbsolutePath()
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -1180,10 +1179,10 @@ public class BaseFileUtils {
 			try {
 				return new BufferedOutputStream(directory == null ? new FileOutputStream(name) : new FileOutputStream(new File(directory, name)));
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + (directory == null ? name : directory + "/" + name)
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + (directory == null ? name : directory + "/" + name)
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -1204,10 +1203,10 @@ public class BaseFileUtils {
 			try {
 				return new BufferedOutputStream(directory == null ? new FileOutputStream(name) : new FileOutputStream(new File(directory, name)));
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + (directory == null ? name : directory.getAbsolutePath() + "/" + name)
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + (directory == null ? name : directory.getAbsolutePath() + "/" + name)
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -1228,10 +1227,10 @@ public class BaseFileUtils {
 			try {
 				return new BufferedOutputStream(directory == null ? new FileOutputStream(name) : new FileOutputStream(new File(directory.toFile(), name)));
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + (directory == null ? name : directory.toAbsolutePath() + "/" + name)
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + (directory == null ? name : directory.toAbsolutePath() + "/" + name)
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -1254,10 +1253,10 @@ public class BaseFileUtils {
 										   .getResourceAsStream(resource),
 						"Resource does not exist"));
 			} catch (final @NotNull ObjectNullException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + resource
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + resource
+											   + "'",
+											   new IOException(e));
 			}
 		}
 	}
@@ -1277,10 +1276,10 @@ public class BaseFileUtils {
 			try {
 				return new BufferedInputStream(url.openStream());
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + url
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + url
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -1300,10 +1299,10 @@ public class BaseFileUtils {
 			try {
 				return new BufferedInputStream(new URL(url).openStream());
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating InputStream from '"
-											 + url
-											 + "'",
-											 e);
+				throw new UncheckedIOException("Error while creating InputStream from '"
+											   + url
+											   + "'",
+											   e);
 			}
 		}
 	}
@@ -1371,12 +1370,12 @@ public class BaseFileUtils {
 				tempLock.lock();
 				tempLock.truncateChannel(0);
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while clearing '"
-											 + file.getAbsolutePath()
-											 + "'"
-											 + System.lineSeparator()
-											 + e.getMessage(),
-											 e);
+				throw new UncheckedIOException("Error while clearing '"
+											   + file.getAbsolutePath()
+											   + "'"
+											   + System.lineSeparator()
+											   + e.getMessage(),
+											   e);
 			}
 		} else {
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock();
@@ -1389,12 +1388,12 @@ public class BaseFileUtils {
 					outputStream.write(data, 0, count);
 				}
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while writing Data to '"
-											 + file.getAbsolutePath()
-											 + "'"
-											 + System.lineSeparator()
-											 + e.getMessage(),
-											 e);
+				throw new UncheckedIOException("Error while writing Data to '"
+											   + file.getAbsolutePath()
+											   + "'"
+											   + System.lineSeparator()
+											   + e.getMessage(),
+											   e);
 			}
 		}
 	}
@@ -1543,12 +1542,12 @@ public class BaseFileUtils {
 			try (final @NotNull ReadWriteFileLock tempLock = new ExtendedFileLock(file).writeLock()) {
 				return true;
 			} catch (final @NotNull IOException e) {
-				throw new RuntimeIOException("Error while creating '"
-											 + file.getAbsolutePath()
-											 + "'"
-											 + System.lineSeparator()
-											 + e.getMessage(),
-											 e);
+				throw new UncheckedIOException("Error while creating '"
+											   + file.getAbsolutePath()
+											   + "'"
+											   + System.lineSeparator()
+											   + e.getMessage(),
+											   e);
 			}
 		} else if (file != null && !file.exists() && isDirectory) {
 			return file.mkdirs();
