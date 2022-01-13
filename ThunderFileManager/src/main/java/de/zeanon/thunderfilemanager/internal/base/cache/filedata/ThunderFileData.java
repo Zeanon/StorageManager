@@ -4,6 +4,8 @@ import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProv
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.DataMap;
 import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
+import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
+import de.zeanon.thunderfilemanager.internal.utility.parser.ThunderFileParser;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,6 +13,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -74,6 +78,20 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	protected ThunderFileData(final @NotNull CollectionsProvider<M, L> collectionsProvider, final @NotNull M dataMap) {
 		this.collectionsProvider = collectionsProvider;
 		this.dataMap = dataMap;
+	}
+
+
+	/**
+	 * Get a List consisting of DataMap.DataNode objects whereas values being instances of DataMap are also getting parsed to
+	 * their entryLists
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Override
+	@Contract("-> new")
+	public @NotNull List<E> entryList() {
+		//noinspection unchecked
+		return this.internalEntryList(this.dataMap);
 	}
 
 	/**
@@ -163,17 +181,72 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		}
 	}
 
-	/**
-	 * Get a List consisting of DataMap.DataNode objects whereas values being instances of DataMap are also getting parsed to
-	 * their entryLists
-	 *
-	 * @return the entryList of the internal dataMap
-	 */
 	@Override
-	@Contract("-> new")
-	public @NotNull List<E> entryList() {
+	public @NotNull List<String> getKeys() {
 		//noinspection unchecked
-		return this.internalEntryList(this.dataMap);
+		return this.internalGetKeys(this.dataMap);
+	}
+
+	@Override
+	public @NotNull List<String> getBlockKeys() {
+		//noinspection unchecked
+		return this.collectionsProvider.newList(new Class[]{Set.class}, ((DataMap<String, Object>) this.dataMap).entryList()
+																												.stream()
+																												.filter(node -> !(node.getValue() instanceof ThunderFileParser.LineType))
+																												.map(Map.Entry::getKey)
+																												.collect(Collectors.toList()));
+	}
+
+	@Override
+	public @Nullable List<String> getKeys(final @NotNull String key) {
+		final @Nullable Object tempObject = this.get(key);
+		if (tempObject instanceof DataMap) {
+			//noinspection unchecked
+			return this.internalGetKeys((DataMap) tempObject);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public @Nullable List<String> getBlockKeys(final @NotNull String key) {
+		final @Nullable Object tempObject = this.get(key);
+		if (tempObject instanceof DataMap) {
+			//noinspection unchecked
+			return this.collectionsProvider.newList(new Class[]{Set.class}, ((DataMap<String, Object>) tempObject).entryList()
+																												  .stream()
+																												  .filter(node -> !(node.getValue() instanceof ThunderFileParser.LineType))
+																												  .map(Map.Entry::getKey)
+																												  .collect(Collectors.toList()));
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public @Nullable List<String[]> getKeysUseArray(final @NotNull String... key) {
+		final @Nullable Object tempObject = this.getUseArray(key);
+		if (tempObject instanceof DataMap) {
+			//noinspection unchecked
+			return this.internalGetKeysUseArray((DataMap) tempObject);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public @Nullable List<String> getBlockKeysUseArray(final @NotNull String... key) {
+		final @Nullable Object tempObject = this.getUseArray(key);
+		if (tempObject instanceof DataMap) {
+			//noinspection unchecked
+			return this.collectionsProvider.newList(new Class[]{Set.class}, ((DataMap<String, Object>) tempObject).entryList()
+																												  .stream()
+																												  .filter(node -> !(node.getValue() instanceof ThunderFileParser.LineType))
+																												  .map(Map.Entry::getKey)
+																												  .collect(Collectors.toList()));
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -482,9 +555,45 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		//noinspection unchecked
 		final @NotNull List<DataMap.DataNode<String, Object>> tempList = this.collectionsProvider.newList();
 		for (final @NotNull DataMap.DataNode<String, Object> entry : map.entryList()) {
-			if (entry.getValue() instanceof DataMap) {
+			if (!(entry.getValue() instanceof ThunderFileParser.LineType) && entry.getValue() instanceof DataMap) {
 				//noinspection unchecked
 				tempList.add(new Node<>(entry.getKey(), this.internalEntryList((DataMap) entry.getValue())));
+			}
+		}
+		return tempList;
+	}
+
+	private @NotNull List<String> internalGetKeys(final @NotNull DataMap<String, Object> map) {
+		//noinspection unchecked
+		final @NotNull List<String> tempList = this.collectionsProvider.newList();
+		for (final @NotNull DataMap.DataNode<String, Object> entry : map.entryList()) {
+			if (!(entry.getValue() instanceof ThunderFileParser.LineType)) {
+				if (entry.getValue() instanceof DataMap) {
+					//noinspection unchecked
+					for (final @NotNull String key : this.internalGetKeys((DataMap<String, Object>) entry.getValue())) {
+						tempList.add(entry.getKey() + "." + key);
+					}
+				} else {
+					tempList.add(entry.getKey());
+				}
+			}
+		}
+		return tempList;
+	}
+
+	private @NotNull List<String[]> internalGetKeysUseArray(final @NotNull DataMap<String, Object> map) {
+		//noinspection unchecked
+		final @NotNull List<String[]> tempList = this.collectionsProvider.newList();
+		for (final @NotNull DataMap.DataNode<String, Object> entry : map.entryList()) {
+			if (!(entry.getValue() instanceof ThunderFileParser.LineType)) {
+				if (entry.getValue() instanceof DataMap) {
+					//noinspection unchecked
+					for (final @NotNull String[] key : this.internalGetKeysUseArray((DataMap<String, Object>) entry.getValue())) {
+						tempList.add(Objects.addElementInFrontOfArray(entry.getKey(), key));
+					}
+				} else {
+					tempList.add(new String[]{entry.getKey()});
+				}
 			}
 		}
 		return tempList;
@@ -506,11 +615,13 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 	private int internalSize(final @NotNull DataMap<String, Object> map) {
 		int size = 0;
 		for (final @NotNull DataMap.DataNode entry : map.entryList()) { //NOSONAR
-			if (entry.getValue() instanceof DataMap) {
-				//noinspection unchecked
-				size += this.internalSize((DataMap) entry.getValue());
-			} else {
-				size++;
+			if (!(entry.getValue() instanceof ThunderFileParser.LineType)) {
+				if (entry.getValue() instanceof DataMap) {
+					//noinspection unchecked
+					size += this.internalSize((DataMap) entry.getValue());
+				} else {
+					size++;
+				}
 			}
 		}
 		return size;

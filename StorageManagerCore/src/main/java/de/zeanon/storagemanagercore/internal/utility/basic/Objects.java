@@ -1,6 +1,7 @@
 package de.zeanon.storagemanagercore.internal.utility.basic;
 
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
+import java.lang.reflect.Array;
 import java.util.Collection;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Contract;
@@ -247,6 +248,18 @@ public class Objects {
 
 	public <O> boolean containsOnly(final @Nullable Collection<O> collection, final @NotNull O entry) {
 		return collection != null && collection.parallelStream().allMatch(item -> item.equals(entry));
+	}
+
+	public static <A> A[] addElementInFrontOfArray(final A element, final A[] array) {
+		final int newArraySize = Array.getLength(array) + 1;
+		//noinspection unchecked
+		final @NotNull A[] newArray = (A[]) Array.newInstance(element.getClass(), newArraySize);
+		//Add first element
+		newArray[0] = element;
+		if (newArraySize - 1 >= 0) {
+			System.arraycopy(array, 0, newArray, 1, newArraySize - 1);
+		}
+		return newArray;
 	}
 
 	/**

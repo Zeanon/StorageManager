@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,8 +30,7 @@ public interface DataStorage {
 	 *
 	 * @return Object from File
 	 */
-	@Nullable
-	Object get(final @NotNull String key);
+	@Nullable Object get(final @NotNull String key);
 
 	/**
 	 * Get an Object from a File
@@ -573,6 +573,75 @@ public interface DataStorage {
 	 * @return true if key exists
 	 */
 	boolean hasKeyUseArray(final @NotNull String... key);
+
+	/**
+	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
+	 * their entryLists
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Contract("-> new")
+	@NotNull List<?> entryList();
+
+	/**
+	 * Get a List consisting of Map.Entry objects of the top most layer of the internal DataMap
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Contract("-> new")
+	@NotNull List<?> blockEntryList();
+
+	/**
+	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
+	 * their entryLists
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Nullable List<?> entryList(final @NotNull String key);
+
+	/**
+	 * Get a List consisting of Map.Entry objects of only the given Block
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Nullable List<?> blockEntryList(final @NotNull String key);
+
+	/**
+	 * Get a List consisting of Map.Entry objects whereas values being instances of Map are also getting parsed to
+	 * their entryLists
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Contract("null -> fail")
+	@Nullable List<?> entryListUseArray(final @NotNull String... key);
+
+	/**
+	 * Get a List consisting of Map.Entry objects of only the given Block
+	 *
+	 * @param key the Key to the SubBlock the entryList should be generated from
+	 *
+	 * @return the entryList of the internal dataMap
+	 */
+	@Contract("null -> fail")
+	@Nullable List<?> blockEntryListUseArray(final @NotNull String... key);
+
+	List<String> getKeys();
+
+	List<String> getBlockKeys();
+
+	List<String> getKeys(final @NotNull String key);
+
+	List<String> getBlockKeys(final @NotNull String key);
+
+	List<String[]> getKeysUseArray(final @NotNull String... key);
+
+	List<String> getBlockKeysUseArray(final @NotNull String... key);
 
 
 	/**

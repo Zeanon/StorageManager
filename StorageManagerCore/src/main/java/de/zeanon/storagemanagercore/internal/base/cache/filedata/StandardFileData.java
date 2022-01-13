@@ -2,7 +2,9 @@ package de.zeanon.storagemanagercore.internal.base.cache.filedata;
 
 import de.zeanon.storagemanagercore.internal.base.cache.provider.CollectionsProvider;
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
+import de.zeanon.storagemanagercore.internal.base.interfaces.DataMap;
 import de.zeanon.storagemanagercore.internal.base.interfaces.FileData;
+import de.zeanon.storagemanagercore.internal.utility.basic.Objects;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -171,6 +173,63 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 		if (tempObject instanceof Map) {
 			//noinspection unchecked
 			return this.collectionsProvider.newList(new Class[]{Set.class}, ((Map) tempObject).entrySet());
+		} else {
+			return null;
+		}
+	}
+
+
+	@Override
+	public @NotNull List<String> getKeys() {
+		//noinspection unchecked
+		return this.internalGetKeys(this.dataMap);
+	}
+
+	@Override
+	public @NotNull List<String> getBlockKeys() {
+		//noinspection unchecked
+		return this.collectionsProvider.newList(new Class[]{Set.class}, this.dataMap.keySet());
+	}
+
+	@Override
+	public @Nullable List<String> getKeys(final @NotNull String key) {
+		final @Nullable Object tempObject = this.get(key);
+		if (tempObject instanceof Map) {
+			//noinspection unchecked
+			return this.internalGetKeys((Map) tempObject);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public @Nullable List<String> getBlockKeys(final @NotNull String key) {
+		final @Nullable Object tempObject = this.get(key);
+		if (tempObject instanceof Map) {
+			//noinspection unchecked
+			return this.collectionsProvider.newList(new Class[]{Set.class}, ((Map) tempObject).keySet());
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public @Nullable List<String[]> getKeysUseArray(final @NotNull String... key) {
+		final @Nullable Object tempObject = this.getUseArray(key);
+		if (tempObject instanceof Map) {
+			//noinspection unchecked
+			return this.internalGetKeysUseArray((Map) tempObject);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public @Nullable List<String> getBlockKeysUseArray(final @NotNull String... key) {
+		final @Nullable Object tempObject = this.getUseArray(key);
+		if (tempObject instanceof Map) {
+			//noinspection unchecked
+			return this.collectionsProvider.newList(new Class[]{Set.class}, ((Map) tempObject).keySet());
 		} else {
 			return null;
 		}
@@ -488,6 +547,38 @@ public class StandardFileData<M extends Map, E extends Map.Entry, L extends List
 			if (entry.getValue() instanceof Map) {
 				//noinspection unchecked
 				tempList.add(new Node<>(entry.getKey(), this.internalEntryList((Map) entry.getValue())));
+			}
+		}
+		return tempList;
+	}
+
+	private @NotNull List<String> internalGetKeys(final @NotNull Map<String, Object> map) {
+		//noinspection unchecked
+		final @NotNull List<String> tempList = this.collectionsProvider.newList();
+		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
+			if (entry.getValue() instanceof DataMap) {
+				//noinspection unchecked
+				for (final @NotNull String key : this.internalGetKeys((DataMap<String, Object>) entry.getValue())) {
+					tempList.add(entry.getKey() + "." + key);
+				}
+			} else {
+				tempList.add(entry.getKey());
+			}
+		}
+		return tempList;
+	}
+
+	private @NotNull List<String[]> internalGetKeysUseArray(final @NotNull Map<String, Object> map) {
+		//noinspection unchecked
+		final @NotNull List<String[]> tempList = this.collectionsProvider.newList();
+		for (final @NotNull Map.Entry<String, Object> entry : map.entrySet()) {
+			if (entry.getValue() instanceof DataMap) {
+				//noinspection unchecked
+				for (final @NotNull String[] key : this.internalGetKeysUseArray((DataMap<String, Object>) entry.getValue())) {
+					tempList.add(Objects.addElementInFrontOfArray(entry.getKey(), key));
+				}
+			} else {
+				tempList.add(new String[]{entry.getKey()});
 			}
 		}
 		return tempList;

@@ -193,8 +193,7 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@Nullable
-	List<E> entryList(final @NotNull String key);
+	@Nullable List<E> entryList(final @NotNull String key);
 
 	/**
 	 * Get a List consisting of AbstractDataMap.DataNode objects of only the given Block
@@ -203,8 +202,7 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@Nullable
-	List<E> blockEntryList(final @NotNull String key);
+	@Nullable List<E> blockEntryList(final @NotNull String key);
 
 	/**
 	 * Get a List consisting of AbstractDataMap.DataNode objects whereas values being instances of AbstractDataMap are also getting parsed to
@@ -214,8 +212,7 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@Nullable
-	List<E> entryListUseArray(final @NotNull String... key);
+	@Nullable List<E> entryListUseArray(final @NotNull String... key);
 
 	/**
 	 * Get a List consisting of AbstractDataMap.DataNode objects of only the given Block
@@ -224,8 +221,19 @@ public interface FileData<M extends Map, E extends Map.Entry, L extends List> {
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
-	@Nullable
-	List<E> blockEntryListUseArray(final @NotNull String... key);
+	@Nullable List<E> blockEntryListUseArray(final @NotNull String... key);
+
+	@NotNull List<String> getKeys();
+
+	@NotNull List<String> getBlockKeys();
+
+	@Nullable List<String> getKeys(final @NotNull String key);
+
+	@Nullable List<String> getBlockKeys(final @NotNull String key);
+
+	@Nullable List<String[]> getKeysUseArray(final @NotNull String... key);
+
+	@Nullable List<String> getBlockKeysUseArray(final @NotNull String... key);
 
 	/**
 	 * Returns a String representation of the FileData

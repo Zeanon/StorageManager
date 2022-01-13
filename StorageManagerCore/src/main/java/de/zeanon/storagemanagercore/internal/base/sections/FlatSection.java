@@ -92,6 +92,7 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
+	@Override
 	@Contract("-> new")
 	public @NotNull List<?> entryList() {
 		return this.fileData().entryList();
@@ -102,6 +103,7 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
+	@Override
 	@Contract("-> new")
 	public @NotNull List<?> blockEntryList() {
 		return this.fileData().blockEntryList();
@@ -115,6 +117,7 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
+	@Override
 	public @Nullable List<?> entryList(final @NotNull String key) {
 		return this.fileData().entryList(key);
 	}
@@ -126,6 +129,7 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
+	@Override
 	public @Nullable List<?> blockEntryList(final @NotNull String key) {
 		return this.fileData().blockEntryList(key);
 	}
@@ -138,6 +142,7 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
+	@Override
 	@Contract("null -> fail")
 	public @Nullable List<?> entryListUseArray(final @NotNull String... key) {
 		return this.fileData().entryListUseArray(key);
@@ -150,10 +155,43 @@ public abstract class FlatSection<F extends FlatFile<? extends FileData<M, ?, L>
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
+	@Override
 	@Contract("null -> fail")
 	public @Nullable List<?> blockEntryListUseArray(final @NotNull String... key) {
 		return this.fileData().blockEntryListUseArray(key);
 	}
+
+
+	@Override
+	public List<String> getKeys() {
+		return this.fileData().getKeys();
+	}
+
+	@Override
+	public List<String> getBlockKeys() {
+		return this.fileData().getBlockKeys();
+	}
+
+	@Override
+	public List<String> getKeys(final @NotNull String key) {
+		return this.fileData().getKeys(key);
+	}
+
+	@Override
+	public List<String> getBlockKeys(final @NotNull String key) {
+		return this.fileData().getBlockKeys(key);
+	}
+
+	@Override
+	public List<String[]> getKeysUseArray(final @NotNull String... key) {
+		return this.fileData().getKeysUseArray(key);
+	}
+
+	@Override
+	public List<String> getBlockKeysUseArray(final @NotNull String... key) {
+		return this.fileData().getBlockKeysUseArray(key);
+	}
+
 
 	@Override
 	public @Nullable Object get(final @NotNull String key) {

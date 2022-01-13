@@ -38,12 +38,12 @@ public class ThunderFileSection extends CommentEnabledSection<ThunderFile, DataM
 
 	@Override
 	public @NotNull ThunderFileSection getSection(final @NotNull String sectionKey) {
-		return new ThunderFileSection(sectionKey, this.flatFile(), this.fileData);
+		return new ThunderFileSection(sectionKey, this.flatFile(), this.fileData());
 	}
 
 	@Override
 	public @NotNull ThunderFileSection getSectionUseArray(final @NotNull String... sectionKey) {
-		return new ThunderFileSection(sectionKey, this.flatFile(), this.fileData);
+		return new ThunderFileSection(sectionKey, this.flatFile(), this.fileData());
 	}
 
 	@Override

@@ -280,6 +280,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return the entryList of the internal dataMap
 	 */
 	@Contract("-> new")
+	@Override
 	public @NotNull List<?> entryList() {
 		return this.fileData().entryList();
 	}
@@ -290,6 +291,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return the entryList of the internal dataMap
 	 */
 	@Contract("-> new")
+	@Override
 	public @NotNull List<?> blockEntryList() {
 		return this.fileData().blockEntryList();
 	}
@@ -302,6 +304,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
+	@Override
 	public @Nullable List<?> entryList(final @NotNull String key) {
 		return this.fileData().entryList(key);
 	}
@@ -313,6 +316,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 *
 	 * @return the entryList of the internal dataMap
 	 */
+	@Override
 	public @Nullable List<?> blockEntryList(final @NotNull String key) {
 		return this.fileData().blockEntryList(key);
 	}
@@ -326,6 +330,7 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return the entryList of the internal dataMap
 	 */
 	@Contract("null -> fail")
+	@Override
 	public @Nullable List<?> entryListUseArray(final @NotNull String... key) {
 		return this.fileData().entryListUseArray(key);
 	}
@@ -338,9 +343,42 @@ public abstract class FlatFile<D extends FileData<M, ?, L>, M extends Map, L ext
 	 * @return the entryList of the internal dataMap
 	 */
 	@Contract("null -> fail")
+	@Override
 	public @Nullable List<?> blockEntryListUseArray(final @NotNull String... key) {
 		return this.fileData().blockEntryListUseArray(key);
 	}
+
+
+	@Override
+	public List<String> getKeys() {
+		return this.fileData().getKeys();
+	}
+
+	@Override
+	public List<String> getBlockKeys() {
+		return this.fileData().getBlockKeys();
+	}
+
+	@Override
+	public List<String> getKeys(final @NotNull String key) {
+		return this.fileData().getKeys(key);
+	}
+
+	@Override
+	public List<String> getBlockKeys(final @NotNull String key) {
+		return this.fileData().getBlockKeys(key);
+	}
+
+	@Override
+	public List<String[]> getKeysUseArray(final @NotNull String... key) {
+		return this.fileData().getKeysUseArray(key);
+	}
+
+	@Override
+	public List<String> getBlockKeysUseArray(final @NotNull String... key) {
+		return this.fileData().getBlockKeysUseArray(key);
+	}
+
 
 	/**
 	 * replaces a give CharSequence with another in the File.
