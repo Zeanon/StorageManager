@@ -555,9 +555,13 @@ public class ThunderFileData<M extends DataMap, E extends Map.Entry, L extends L
 		//noinspection unchecked
 		final @NotNull List<DataMap.DataNode<String, Object>> tempList = this.collectionsProvider.newList();
 		for (final @NotNull DataMap.DataNode<String, Object> entry : map.entryList()) {
-			if (!(entry.getValue() instanceof ThunderFileParser.LineType) && entry.getValue() instanceof DataMap) {
-				//noinspection unchecked
-				tempList.add(new Node<>(entry.getKey(), this.internalEntryList((DataMap) entry.getValue())));
+			if (!(entry.getValue() instanceof ThunderFileParser.LineType)) {
+				if (entry.getValue() instanceof DataMap) {
+					//noinspection unchecked
+					tempList.add(new Node<>(entry.getKey(), this.internalEntryList((DataMap) entry.getValue())));
+				} else {
+					tempList.add(entry);
+				}
 			}
 		}
 		return tempList;

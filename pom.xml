@@ -52,7 +52,7 @@
     </developers>
 
     <properties>
-        <revision>1.1.104</revision>
+        <revision>1.1.105</revision>
 
         <maven.test.skip>false</maven.test.skip>
         <maven.compiler.source>1.8</maven.compiler.source>
