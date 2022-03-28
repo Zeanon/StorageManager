@@ -9,9 +9,9 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.charset.CharsetEncoder;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -227,7 +227,7 @@ public class ExtendedFileLock implements AutoCloseable, Serializable {
 		private static final long serialVersionUID = 115260807719631111L;
 
 
-		private static final transient @NotNull ConcurrentMap<String, ReadWriteLockableChannel> openChannels = new ConcurrentHashMap<>();
+		private static final transient @NotNull Map<String, ReadWriteLockableChannel> openChannels = new HashMap<>();
 		private static final transient @NotNull StampedLock factoryLock = new StampedLock();
 
 
