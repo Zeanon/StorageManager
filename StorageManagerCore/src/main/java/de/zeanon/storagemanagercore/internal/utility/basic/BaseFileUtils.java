@@ -4,6 +4,13 @@ import de.zeanon.storagemanagercore.external.browniescollections.GapList;
 import de.zeanon.storagemanagercore.internal.base.exceptions.ObjectNullException;
 import de.zeanon.storagemanagercore.internal.base.interfaces.ReadWriteFileLock;
 import de.zeanon.storagemanagercore.internal.utility.filelock.ExtendedFileLock;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
@@ -12,12 +19,6 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.UtilityClass;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -1319,8 +1320,7 @@ public class BaseFileUtils {
 		} else {
 			try {
 				return new BufferedInputStream(Objects.notNull(
-						BaseFileUtils.class.getClassLoader()
-										   .getResourceAsStream(resource),
+						ClassLoader.getSystemResourceAsStream(resource),
 						"Resource does not exist"));
 			} catch (final @NotNull ObjectNullException e) {
 				throw new UncheckedIOException("Error while creating InputStream from '"
