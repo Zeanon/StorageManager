@@ -1,4 +1,3 @@
-
 # StorageManager
 StorageManager - A Library to store data in a better way.
 
